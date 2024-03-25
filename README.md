@@ -7,3 +7,8 @@ Team Members:
     - Patrick
     - James (jche0346@student.monash.edu)
     - Michael (mwan0129@student.monash.edu)
+    - Alexander Chan (acha0145@student.monash.edu)
+    - James Chea (jche0346@student.monash.edu)
+    - Anand Vannalath (avan0055@student.monash.edu)
+    - Victor Huang (vhua006@student.monash.edu)
+    - Sandy (ssen0027@student.monash.edu)
