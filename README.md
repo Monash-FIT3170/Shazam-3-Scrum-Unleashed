@@ -1,7 +1,5 @@
 # Shazam-3-scrum-unleashed
 Project 3 - FIT3170 - 2024
-<<<<<<< Updated upstream
-=======
 
 Team Members:
 
@@ -9,4 +7,5 @@ Team Members:
     - Patrick
     - James Chea (jche0346@student.monash.edu)
     - Anand Vannalath (avan0055@student.monash.edu)
->>>>>>> Stashed changes
+    - Victor Huang (vhua006@student.monash.edu)
+    - Sandy (ssen0027@student.monash.edu)
