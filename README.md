@@ -5,6 +5,8 @@ Team Members:
 
     - Aaron Abbott (aabb0010@student.monash.edu) Repo Admin
     - Patrick
+    - James (jche0346@student.monash.edu)
+    - Suryadeep (ssin0061)
     - Alexander Chan (acha0145@student.monash.edu)
     - James Chea (jche0346@student.monash.edu)
     - Anand Vannalath (avan0055@student.monash.edu)
