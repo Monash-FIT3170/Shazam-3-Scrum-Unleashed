@@ -13,4 +13,5 @@ Team Members:
     - Victor Huang (vhua006@student.monash.edu)
     - Sandy (ssen0027@student.monash.edu)
     - Snekith (skar0053@student.monash.edu)
+    - Jovan Vales (jval0006@student.monash.edu)
 
