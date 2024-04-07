@@ -13,4 +13,5 @@ Team Members:
     - Victor Huang (vhua006@student.monash.edu)
     - Sandy (ssen0027@student.monash.edu)
     - Snekith (skar0053@student.monash.edu)
+    - Levi Kogan (lkog0002@student.monash.edu)
 
