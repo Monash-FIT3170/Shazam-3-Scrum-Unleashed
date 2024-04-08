@@ -1,4 +1,5 @@
 # Shazam-3-scrum-unleashed
+
 Project 3 - FIT3170 - 2024
 
 Team Members:
@@ -13,4 +14,3 @@ Team Members:
     - Victor Huang (vhua006@student.monash.edu)
     - Sandy (ssen0027@student.monash.edu)
     - Snekith (skar0053@student.monash.edu)
-
