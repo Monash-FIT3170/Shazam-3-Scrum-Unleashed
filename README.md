@@ -29,3 +29,8 @@ Team Members:
    - Prettier - Code formatter
    - ESLint
    - Typescript
+
+# Before committing/merge request
+Remember to run the 2 following commands to ensure the code passes the automated linting test
+1. `npm run format`
+2. `npm run lint`
