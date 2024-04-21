@@ -1,17 +1,16 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
+import DisplayIcon from "./Components/DisplayIcon"
+import Home from "./Pages/Home";
 
 function App() {
-  const [count, setCount] = useState(0);
 
   return (
-    <>
-      <h1 className="text-blue-500">branch with tailwind installed 
+    <div className='flex items-center justify-center w-screen h-screen'>
+      <div ><Home/>
 
-      </h1>
-    </>
+      </div>
+    </div>
   );
 }
 
