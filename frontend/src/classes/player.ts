@@ -5,6 +5,7 @@ export class Player {
   private name: string;
   private id: number;
   private isSpectating: boolean;
+  private currentView: number;
   //private abilities: Ability[];
   //the winstreak is how many DUELS a player has won in a row. not the matches.
   private winstreak: number;
@@ -16,6 +17,8 @@ export class Player {
     this.name = name;
     this.id = id;
     this.isSpectating = false;
+    //by default the player is viewing their own view
+    this.currentView = id;
     //this.abilities = [];
     this.winstreak = 0;
     this.winstreakHigh = 0;
@@ -42,6 +45,9 @@ export class Player {
   public getIsBot(): boolean {
     return this.isBot;
   }
+  public getCurrentView(): number {
+    return this.currentView;
+  }
 
   //setters
   public setIsSpectating(isSpectating: boolean) {
@@ -55,6 +61,9 @@ export class Player {
   }
   public setIsBot(isBot: boolean) {
     this.isBot = isBot;
+  }
+  public setCurrentView(currentView: number) {
+    this.currentView = currentView;
   }
 
   //additional methods
@@ -74,4 +83,19 @@ export class Player {
   public decrementNumSpectators(lessSpec: number) {
     this.numSpectators -= lessSpec;
   }
+
+  //currently the winsteak tracks duels won, not matches.
+  public wonDuel(){
+    this.incrementWinstreak();
+  }
+  public lostDuel(){
+    this.resetWinstreak();
+  }
+
+  public lostMatch(winId: number) {
+    this.resetWinstreak();
+    this.setCurrentView(winId);
+    this.setIsSpectating(true);
+  }
+
 }
