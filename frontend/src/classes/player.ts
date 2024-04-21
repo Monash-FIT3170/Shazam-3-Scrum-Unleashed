@@ -85,10 +85,10 @@ export class Player {
   }
 
   //currently the winsteak tracks duels won, not matches.
-  public wonDuel(){
+  public wonDuel() {
     this.incrementWinstreak();
   }
-  public lostDuel(){
+  public lostDuel() {
     this.resetWinstreak();
   }
 
@@ -97,5 +97,4 @@ export class Player {
     this.setCurrentView(winId);
     this.setIsSpectating(true);
   }
-
 }
