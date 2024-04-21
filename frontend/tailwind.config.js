@@ -4,7 +4,8 @@ module.exports = {
   theme: {
     extend: {
     colors: {
-      primarybuttonColor: '#377AE3', 
+      primarybuttonColor: '#377AE3',
+      inputColor: "#14171D", 
     },
   },
 },
