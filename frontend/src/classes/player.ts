@@ -4,7 +4,6 @@
 export class Player {
   private name: string;
   private id: number;
-  private isSpectating: boolean;
   private currentView: number;
   //private abilities: Ability[];
   //the winstreak is how many DUELS a player has won in a row. not the matches.
@@ -16,7 +15,6 @@ export class Player {
   constructor(name: string, id: number, isBot: boolean) {
     this.name = name;
     this.id = id;
-    this.isSpectating = false;
     //by default the player is viewing their own view
     this.currentView = id;
     //this.abilities = [];
@@ -50,9 +48,7 @@ export class Player {
   }
 
   //setters
-  public setIsSpectating(isSpectating: boolean) {
-    this.isSpectating = isSpectating;
-  }
+
   public setWinstreak(winstreak: number) {
     this.winstreak = winstreak;
   }
@@ -94,7 +90,12 @@ export class Player {
 
   public lostMatch(winId: number) {
     this.resetWinstreak();
+    //winID is the id of the winner
     this.setCurrentView(winId);
-    this.setIsSpectating(true);
+  }
+
+  //get the view infomation, which is returned as [playerID: number, spectating: boolean] so the spectating flag is true if they are currently spectating
+  public getViewInfo(): [number, boolean] {
+    return [this.currentView, this.id != this.currentView];
   }
 }
