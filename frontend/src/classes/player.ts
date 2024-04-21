@@ -31,9 +31,6 @@ export class Player {
   public getId(): number {
     return this.id;
   }
-  public getIsSpectating(): boolean {
-    return this.isSpectating;
-  }
   public getWinstreak(): number {
     return this.winstreak;
   }
