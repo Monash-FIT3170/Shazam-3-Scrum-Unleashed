@@ -16,6 +16,7 @@ Team Members:
     - Snekith (skar0053@student.monash.edu)
     - Jovan Vales (jval0006student.monash.edu)
     - Fathy Abdelshahid (fabd0009@student.monash.edu)
+    - Rory Tobin-Underwood (rtob0002@student.monash.edu)
 
 # Prepare for development
 
