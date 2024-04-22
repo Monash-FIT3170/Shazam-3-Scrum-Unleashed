@@ -14,6 +14,7 @@ Team Members:
     - Victor Huang (vhua006@student.monash.edu)
     - Sandy (ssen0027@student.monash.edu)
     - Snekith (skar0053@student.monash.edu)
+    - Jovan Vales (jval0006student.monash.edu)
     - Fathy Abdelshahid (fabd0009@student.monash.edu)
 
 # Prepare for development
