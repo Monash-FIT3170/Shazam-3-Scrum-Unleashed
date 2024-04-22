@@ -4,8 +4,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        primarybuttonColor: "#377AE3",
-        inputColor: "#14171D",
+        primary: "#377AE3",
+        "primary-dark": "#14171D",
       },
     },
   },

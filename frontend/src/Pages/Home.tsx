@@ -1,4 +1,4 @@
-import DisplayIcon from "../Components/DisplayIcon";
+import DisplayIcon from "../Components/DisplayLogo";
 
 const Home = () => {
   return (
@@ -7,14 +7,12 @@ const Home = () => {
         <DisplayIcon />
       </div>
       <div className="w-screen h-12 mt-8">
-        <button className="text-white bg-primarybuttonColor text-2xl font-bold w-1/3 rounded-xl h-full">
-          {" "}
+        <button className="text-white bg-primary text-2xl font-bold w-1/3 rounded-xl h-full">
           JOIN ROOM
         </button>
       </div>
       <div className="w-screen h-12 mt-4">
-        <button className="text-white bg-primarybuttonColor text-2xl font-bold w-1/3 rounded-xl h-full">
-          {" "}
+        <button className="text-white bg-primary text-2xl font-bold w-1/3 rounded-xl h-full">
           CREATE ROOM
         </button>
       </div>

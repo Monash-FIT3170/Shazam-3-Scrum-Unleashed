@@ -2,7 +2,7 @@ import rock from "../assets/Rock.svg";
 import paper from "../assets/Paper.svg";
 import scissors from "../assets/Scissors.svg";
 
-const DisplayIcon = () => {
+const DisplayLogo = () => {
   return (
     <div>
       <div className="flex justify-center transform scale-150">
@@ -16,4 +16,4 @@ const DisplayIcon = () => {
   );
 };
 
-export default DisplayIcon;
+export default DisplayLogo;
