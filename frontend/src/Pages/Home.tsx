@@ -1,10 +1,10 @@
-import DisplayIcon from "../components/DisplayLogo";
+import DisplayLogo from "../components/DisplayLogo";
 
 const Home = () => {
   return (
     <div>
       <div>
-        <DisplayIcon />
+        <DisplayLogo />
       </div>
       <div className="w-screen h-12 mt-8">
         <button className="text-white bg-primary text-2xl font-bold w-1/3 rounded-xl h-full">

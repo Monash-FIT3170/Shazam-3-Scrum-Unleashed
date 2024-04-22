@@ -1,10 +1,10 @@
-import DisplayIcon from "../components/DisplayLogo";
+import DisplayLogo from "../components/DisplayLogo";
 
 const JoinRoom = () => {
   return (
     <div>
       <div>
-        <DisplayIcon />
+        <DisplayLogo />
       </div>
       <div>
         <h1 className="text-white font-bold mt-6 uppercase">
