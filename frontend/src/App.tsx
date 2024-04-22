@@ -5,7 +5,7 @@ function App() {
   return (
     <div className="flex items-center justify-center w-screen mt-4">
       <div>
-        <JoinRoom/>
+        <JoinRoom />
       </div>
     </div>
   );
