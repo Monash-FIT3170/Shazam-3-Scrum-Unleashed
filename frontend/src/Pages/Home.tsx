@@ -1,4 +1,4 @@
-import DisplayIcon from "../Components/DisplayLogo";
+import DisplayIcon from "../components/DisplayLogo";
 
 const Home = () => {
   return (
