@@ -25,6 +25,7 @@ export class gameSessionManager{
 
     public playRound(player1Choice: string, player2Choice:string): Player | null{
         if(gameSessionManager.rules[player1Choice] == player2Choice){
+
             return this.player1;
         }
         else if(player1Choice == player2Choice){
@@ -36,9 +37,7 @@ export class gameSessionManager{
             return this.player2;
         }
         
-
     }
-
 
 
 

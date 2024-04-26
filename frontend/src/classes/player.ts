@@ -11,6 +11,7 @@ export class Player {
   private winstreakHigh: number;
   private numSpectators: number;
   private isBot: boolean;
+  public ingamePoints: number;
 
   constructor(name: string, id: number, isBot: boolean) {
     this.name = name;
@@ -22,6 +23,7 @@ export class Player {
     this.winstreakHigh = 0;
     this.numSpectators = 0;
     this.isBot = isBot;
+    this.ingamePoints = 0;
   }
 
   //getters
@@ -94,5 +96,9 @@ export class Player {
   //get the view infomation, which is returned as [playerID: number, spectating: boolean] so the spectating flag is true if they are currently spectating
   public getViewInfo(): [number, boolean] {
     return [this.currentView, this.id != this.currentView];
+  }
+
+  public incrementIngamePoints(){
+    this.ingamePoints += 1;
   }
 }
