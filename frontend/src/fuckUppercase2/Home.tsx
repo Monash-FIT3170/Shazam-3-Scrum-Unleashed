@@ -1,4 +1,4 @@
-import DisplayLogo from "../components/DisplayLogo";
+import DisplayLogo from "../fuckUppercase/DisplayLogo";
 
 const Home = () => {
   return (
