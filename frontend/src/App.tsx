@@ -1,5 +1,5 @@
 import "./App.css";
-import JoinRoom from "./fuckUppercase2/JoinRoom";
+import JoinRoom from "./pages/JoinRoom";
 
 function App() {
   return (
