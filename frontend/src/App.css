@@ -5,6 +5,14 @@
   text-align: center;
 }
 
+body {
+  background-color: #22026c;
+}
+
+::placeholder {
+  margin-left: 10px;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
