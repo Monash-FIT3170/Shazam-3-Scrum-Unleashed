@@ -1,4 +1,4 @@
-import DisplayLogo from "../Components/DisplayLogo";
+import DisplayLogo from "../components/DisplayLogo";
 
 const JoinRoom = () => {
   return (
