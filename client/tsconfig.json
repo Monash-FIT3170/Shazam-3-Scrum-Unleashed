@@ -20,8 +20,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src",
-    "../backend/model/classes"
-  ],
+  "include": ["src", "../backend/model/classes"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
