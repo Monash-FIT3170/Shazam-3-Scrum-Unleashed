@@ -1,16 +1,17 @@
 //Very basic player class, can be expanded if needed
 //Author: Team Buddy (4), Aaron Abbott 32520441
+import { PlayerAttributes } from "../types/types";
 
-export default class Player {
-  private name: string;
-  private id: number;
-  private currentView: number;
+export default class Player implements PlayerAttributes {
+  public name: string;
+  public id: number;
+  public currentView: number;
   //private abilities: Ability[];
   //the winstreak is how many DUELS a player has won in a row. not the matches.
-  private winstreak: number;
-  private winstreakHigh: number;
-  private numSpectators: number;
-  private isBot: boolean;
+  public winstreak: number;
+  public winstreakHigh: number;
+  public numSpectators: number;
+  public isBot: boolean;
   public ingamePoints: number;
 
   constructor(name: string, id: number, isBot: boolean) {
@@ -98,7 +99,7 @@ export default class Player {
     return [this.currentView, this.id != this.currentView];
   }
 
-  public incrementIngamePoints(){
+  public incrementIngamePoints() {
     this.ingamePoints += 1;
   }
 }
