@@ -2,9 +2,21 @@ import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
+import { gameSessionManager } from "./classes/gameSessionManager.ts";
+import  Player  from "./classes/player.ts";
 
 function App() {
   const [count, setCount] = useState(0);
+  const player1 = new Player("1", 1, false);
+  const player2 = new Player("2", 2, false);
+
+  const gameSession = new gameSessionManager(player1 ,player2 )
+
+  gameSession.playRound("rock","paper")
+  gameSession.playRound("paper","scissors");
+
+  console.log(player1);
+  console.log(player2);
 
   return (
     <>

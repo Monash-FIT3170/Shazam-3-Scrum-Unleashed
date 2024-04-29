@@ -1,7 +1,7 @@
 //Very basic player class, can be expanded if needed
 //Author: Team Buddy (4), Aaron Abbott 32520441
 
-export class Player {
+export default class Player {
   private name: string;
   private id: number;
   private currentView: number;

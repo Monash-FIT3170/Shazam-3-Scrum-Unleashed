@@ -1,4 +1,4 @@
-import { Player } from "./player";
+import Player from "./player";
 
 export class gameSessionManager{
     private player1: Player;
@@ -25,7 +25,7 @@ export class gameSessionManager{
 
     public playRound(player1Choice: string, player2Choice:string): Player | null{
         if(gameSessionManager.rules[player1Choice] == player2Choice){
-            this.player1.incrementIngamePoints;
+            this.player1.incrementIngamePoints();
             return this.player1;
         }
         else if(player1Choice == player2Choice){
@@ -34,7 +34,7 @@ export class gameSessionManager{
 
         }
         else{
-            this.player2.incrementIngamePoints;
+            this.player2.incrementIngamePoints();
             return this.player2;
         }
         
@@ -43,3 +43,5 @@ export class gameSessionManager{
     
 
 }
+
+console.log("hehe");
