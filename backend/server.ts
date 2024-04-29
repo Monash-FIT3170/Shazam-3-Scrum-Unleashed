@@ -1,8 +1,10 @@
+// @ts-ignore
 import express from "express";
-
+// @ts-ignore
+import cors from "cors";
 import * as http from "http";
 import {Server} from "socket.io";
-import cors from "cors";
+
 
 import {JOIN_GAME, JoinGameData, START_GAME, StartGameData} from "./events";
 
@@ -14,7 +16,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5174",
+    origin: "http://localhost:5173",
     methods: ["GET", "POST"],
   }
 })
@@ -28,7 +30,7 @@ io.on("connection", (socket) => {
   })
 
   socket.on(JOIN_GAME, (data : JoinGameData) => {
-    // start the game
+    // join the game
     console.log(`Player : ${data.playerName} is trying to join Game : ${data.gameCode}`)
 
   })

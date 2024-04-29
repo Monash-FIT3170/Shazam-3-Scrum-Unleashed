@@ -1,4 +1,4 @@
-import DisplayLogo from "../Components/DisplayLogo";
+import DisplayLogo from "../components/DisplayLogo";
 import {useState} from 'react'
 import {JOIN_GAME} from "../../../backend/events.ts";
 import {socket} from "../App.tsx";
