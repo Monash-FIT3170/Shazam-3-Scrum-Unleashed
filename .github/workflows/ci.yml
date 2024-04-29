@@ -17,10 +17,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd frontend
+          cd client
           npm install
 
       - name: Linting
         run: |
-          cd frontend
+          cd client
           npm run lint
