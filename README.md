@@ -18,12 +18,18 @@ Team Members:
     - Fathy Abdelshahid (fabd0009@student.monash.edu)
     - Rory Tobin-Underwood (rtob0002@student.monash.edu)
 
+# Repo Structure
+- [client](client) : contains all the front end components required for the web client.
+- [server](server)  : contains all the backend (networking, storage and game logic) for the server.
+- [types](types) : contains interfaces and types which both the client and server will use, generally for communicate with each other.
+
 # Prepare for development
 
 1. Ensure you have the node v20 LTS installed on your machine. You can download it from the following link: https://nodejs.org/en/
-2. Move into the frontend directory of the project by typing the command `cd frontend`.
-3. Install depenencies by running `npm install` in the root directory of the project.
-4. Preview the project in the browser by running `npm run dev` in the root directory of the project.
+2. Move into the [client](client) directory of the project by typing the command `cd client`.
+3. Open another terminal and then move into the [server](server) directory `cd server`.
+4. Install dependencies in both [client](client) and [server](server) by running `npm install` in both terminals.
+5. Run both the [client](client) and [server](server) by running `npm run dev` in both terminals.
 
 # Recommended steps (not strictly required)
 
