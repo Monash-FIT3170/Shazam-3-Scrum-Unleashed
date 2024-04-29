@@ -25,7 +25,7 @@ export class gameSessionManager{
 
     public playRound(player1Choice: string, player2Choice:string): Player | null{
         if(gameSessionManager.rules[player1Choice] == player2Choice){
-
+            this.player1.incrementIngamePoints;
             return this.player1;
         }
         else if(player1Choice == player2Choice){
@@ -34,12 +34,12 @@ export class gameSessionManager{
 
         }
         else{
+            this.player2.incrementIngamePoints;
             return this.player2;
         }
         
     }
 
-
-
+    
 
 }
