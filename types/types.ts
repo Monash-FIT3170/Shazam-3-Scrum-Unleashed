@@ -10,3 +10,18 @@ export interface PlayerAttributes{
     isBot: boolean;
     ingamePoints: number;
 }
+
+/**
+ * This may need to be move, currently here for the events.ts
+ */
+export enum DuelResult {
+    Draw = 0,
+    Player1Wins = 1,
+    Player2Wins = 2
+}
+
+export enum Action {
+    Rock = "ROCK",
+    Paper = "PAPER",
+    Scissors = "SCISSORS"
+}

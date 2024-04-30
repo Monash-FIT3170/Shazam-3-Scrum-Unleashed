@@ -1,5 +1,9 @@
 import "./App.css";
 import JoinRoom from "./pages/JoinRoom";
+import { io, Socket } from "socket.io-client";
+import { Events } from "../../types/socket/events.ts";
+
+export const socket: Socket<Events> = io("http://localhost:3010");
 
 function App() {
   return (
