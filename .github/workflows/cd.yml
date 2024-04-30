@@ -38,12 +38,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd frontend
+          cd client
           npm i
   
       - name: Build
         run: |
-          cd frontend
+          cd client
           npm run build
 
       - name: Setup Pages
@@ -52,7 +52,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload dist folder
-          path: './frontend/dist'
+          path: './client/dist'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
