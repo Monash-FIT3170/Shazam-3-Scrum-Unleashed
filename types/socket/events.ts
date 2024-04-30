@@ -14,31 +14,31 @@ export interface Events extends HostToServerEvents, PlayerToServerEvents, Server
 }
 
 interface HostToServerEvents {
-    create_game: (/*TODO*/) => void,
-    start_game: (gameCode: string) => void,
-    kick_player: (gameCode: string, playerName: Player) => void,
+    CREATE_GAME: (/*TODO*/) => void,
+    START_GAME: (gameCode: string) => void,
+    KICK_PLAYER: (gameCode: string, playerName: Player) => void,
 
 }
 
 interface PlayerToServerEvents {
-    join_game: (gameCode: string, playerName: string) => void,
-    leave_game: (gameCode: string, player: Player) => void,
-    choose_action: (gameCode: string, playerName: string,
+    JOIN_GAME: (gameCode: string, playerName: string) => void,
+    LEAVE_GAME: (gameCode: string, player: Player) => void,
+    CHOOSE_ACTION: (gameCode: string, playerName: string,
                     roomCode: number, action: Action) => void,
 }
 
 interface ServerToHostEvents {
-    game_created: (gameCode: string, qrCode: any) => void,
-    player_has_joined: (player: Player) => void,
-    player_has_left: (player: Player) => void,
-    game_started: (/*TODO*/ tournamentBracket: any) => void,
-    round_results: (/*TODO*/ tournamentBracket: any) => void,
-    tournament_results: (/*TODO*/ tournamentBracket: any) => void
+    GAME_CREATED: (gameCode: string, qrCode: any) => void,
+    PLAYER_HAS_JOINED: (player: Player) => void,
+    PLAYER_HAS_LEFT: (player: Player) => void,
+    GAME_START: (/*TODO*/ tournamentBracket: any) => void,
+    ROUND_RESULTS: (/*TODO*/ tournamentBracket: any) => void,
+    TOURNAMENT_RESULTS: (/*TODO*/ tournamentBracket: any) => void
 }
 
 interface ServerToPlayerEvents {
-    joined_game: (success: boolean, player: Player) => void,
-    join_this_room: (/*TODO*/) => void,
-    duel_results: (result: DuelResult, player1Action: Action, player2Action: Action) => void,
-    match_results: (winner: Player, loser: Player) => void
+    JOINED_GAME: (success: boolean, player: Player) => void,
+    JOIN_THIS_ROOM: (/*TODO*/) => void,
+    DUEL_RESULTS: (result: DuelResult, player1Action: Action, player2Action: Action) => void,
+    MATCH_RESULTS: (winner: Player, loser: Player) => void
 }

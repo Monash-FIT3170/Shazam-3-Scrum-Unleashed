@@ -4,12 +4,11 @@ import { useState } from "react";
 import { socket } from "../App.tsx";
 
 const JoinRoom = () => {
-  // messages
   const [gameCode, setTournamentCode] = useState("");
   const [playerName, setPlayerName] = useState("");
 
   const joinGame = () => {
-    socket.emit("join_game", gameCode, playerName);
+    socket.emit("JOIN_GAME", gameCode, playerName);
   };
 
   return (

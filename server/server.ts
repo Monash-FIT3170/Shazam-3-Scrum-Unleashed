@@ -1,6 +1,4 @@
-// @ts-ignore
 import express from "express";
-// @ts-ignore
 import cors from "cors";
 import * as http from "http";
 import {Server} from "socket.io";
@@ -24,11 +22,11 @@ const io = new Server<Events>(server, {
 io.on("connection", (socket) => {
     console.log(`User Connected: ${socket.id}`)
 
-    socket.on("start_game", (gameCode) => {
+    socket.on("START_GAME", (gameCode) => {
         // start the game
     })
 
-    socket.on("join_game", (gameCode, playerName) => {
+    socket.on("JOIN_GAME", (gameCode, playerName) => {
         // join the game
         console.log(`Player : ${playerName} is trying to join Game : ${gameCode}`)
 
