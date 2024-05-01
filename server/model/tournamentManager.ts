@@ -2,7 +2,7 @@
 //tournament class which takes in an array of Player objects, and then constructs the first level of the tournament bracket.
 //has functions to help run the tournament, such as constructing the next level of the tournament after people win their matches. can also return specific brackets to display
 
-import Player  from "./player";
+import Player  from "./actors/player";
 
 export class TournamentManager {
   private tournamentBrackets: Array<Array<Player>>;

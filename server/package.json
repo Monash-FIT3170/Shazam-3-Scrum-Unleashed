@@ -4,11 +4,12 @@
   "main": "server.ts",
   "type": "module",
   "scripts": {
-    "dev": "npx tsx server.ts"
+    "dev": "nodemon --exec npx tsx server.ts"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2",
+    "nodemon": "^3.1.0",
     "socket.io": "^4.7.5",
     "tsx": "^4.7.3"
   },

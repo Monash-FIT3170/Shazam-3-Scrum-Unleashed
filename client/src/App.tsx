@@ -9,8 +9,9 @@ import {
   BASE_PATH,
   HOST_GAME_PATH,
   HOME_PATH,
-  JOIN_GAME_PATH,
-} from "./pages/PagePaths.ts";
+  JOIN_GAME_PATH
+} from "./pages/pagePaths.ts";
+
 
 export const socket: Socket<Events> = io("http://localhost:3010");
 

@@ -4,7 +4,7 @@
  * Please add any new events, data or fix any formatting
  */
 
-import Player from "../../server/model/player";
+import Player from "../../server/model/actors/player";
 import {Action, DuelResult} from "../types";
 
 /**
@@ -14,7 +14,7 @@ export interface Events extends HostToServerEvents, PlayerToServerEvents, Server
 }
 
 interface HostToServerEvents {
-    CREATE_GAME: (hostName:string) => void,
+    CREATE_GAME: (hostName: string) => void,
     START_GAME: (gameCode: string) => void,
     KICK_PLAYER: (gameCode: string, playerName: Player) => void,
 
@@ -37,7 +37,8 @@ interface ServerToHostEvents {
 }
 
 interface ServerToPlayerEvents {
-    JOINED_GAME: (success: boolean, player: Player) => void,
+    INVALID_GAME_CODE: () => void,
+    JOINED_GAME: (player: Player) => void,
     JOIN_THIS_ROOM: (/*TODO*/) => void,
     DUEL_RESULTS: (result: DuelResult, player1Action: Action, player2Action: Action) => void,
     MATCH_RESULTS: (winner: Player, loser: Player) => void

@@ -1,4 +1,4 @@
-import Player from "./player";
+import Player from "./actors/player";
 
 export class gameSessionManager{
     private player1: Player;
@@ -45,5 +45,3 @@ export class gameSessionManager{
     
 
 }
-
-console.log("hehe");
