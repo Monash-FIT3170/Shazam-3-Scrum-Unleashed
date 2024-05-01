@@ -22,8 +22,9 @@ const io = new Server<Events>(server, {
 io.on("connection", (socket) => {
     console.log(`User Connected: ${socket.id}`)
 
-    socket.on("START_GAME", (gameCode) => {
-        // start the game
+    socket.on("CREATE_GAME", (hostName) => {
+        // create the game
+        console.log(`Player : ${hostName} is trying to create a game`)
     })
 
     socket.on("JOIN_GAME", (gameCode, playerName) => {

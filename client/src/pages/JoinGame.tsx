@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import { socket } from "../App.tsx";
 
-const JoinRoom = () => {
+const JoinGame = () => {
   const [gameCode, setTournamentCode] = useState("");
   const [playerName, setPlayerName] = useState("");
 
@@ -37,7 +37,7 @@ const JoinRoom = () => {
           <input
             type="text"
             placeholder="NAME"
-            className="bg-primary-dark rounded-xl w-1/3 h-10 mt-4 border-2 border-white pl-2"
+            className="bg-primary-dark text-white rounded-xl w-1/3 h-10 mt-4 border-2 border-white pl-2"
             onChange={(event) => {
               setPlayerName(event.target.value);
             }}
@@ -57,4 +57,4 @@ const JoinRoom = () => {
   );
 };
 
-export default JoinRoom;
+export default JoinGame;

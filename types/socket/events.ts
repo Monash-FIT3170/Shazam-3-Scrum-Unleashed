@@ -14,7 +14,7 @@ export interface Events extends HostToServerEvents, PlayerToServerEvents, Server
 }
 
 interface HostToServerEvents {
-    CREATE_GAME: (/*TODO*/) => void,
+    CREATE_GAME: (/*TODO*/ hostName:string) => void,
     START_GAME: (gameCode: string) => void,
     KICK_PLAYER: (gameCode: string, playerName: Player) => void,
 
