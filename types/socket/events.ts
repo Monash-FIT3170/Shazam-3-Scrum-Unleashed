@@ -14,7 +14,7 @@ export interface Events extends HostToServerEvents, PlayerToServerEvents, Server
 }
 
 interface HostToServerEvents {
-    CREATE_GAME: (/*TODO*/ hostName:string) => void,
+    CREATE_GAME: (hostName:string) => void,
     START_GAME: (gameCode: string) => void,
     KICK_PLAYER: (gameCode: string, playerName: Player) => void,
 
@@ -31,9 +31,9 @@ interface ServerToHostEvents {
     GAME_CREATED: (gameCode: string, qrCode: any) => void,
     PLAYER_HAS_JOINED: (player: Player) => void,
     PLAYER_HAS_LEFT: (player: Player) => void,
-    GAME_START: (/*TODO*/ tournamentBracket: any) => void,
-    ROUND_RESULTS: (/*TODO*/ tournamentBracket: any) => void,
-    TOURNAMENT_RESULTS: (/*TODO*/ tournamentBracket: any) => void
+    GAME_START: (/*TODO*/) => void,
+    ROUND_RESULTS: (/*TODO*/) => void,
+    TOURNAMENT_RESULTS: (/*TODO*/) => void
 }
 
 interface ServerToPlayerEvents {
