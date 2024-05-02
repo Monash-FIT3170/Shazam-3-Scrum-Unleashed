@@ -4,8 +4,7 @@
  * Please add any new events, data or fix any formatting
  */
 
-import Player from "../../server/model/actors/player";
-import {Action, DuelResult} from "../types";
+import {Action, DuelResult, PlayerAttributes} from "../types";
 
 /**
  * Add any new Event Categories to this
@@ -16,21 +15,21 @@ export interface Events extends HostToServerEvents, PlayerToServerEvents, Server
 interface HostToServerEvents {
     CREATE_GAME: (hostName: string) => void,
     START_GAME: (gameCode: string) => void,
-    KICK_PLAYER: (gameCode: string, playerName: Player) => void,
+    KICK_PLAYER: (gameCode: string, playerName: PlayerAttributes) => void,
 
 }
 
 interface PlayerToServerEvents {
     JOIN_GAME: (gameCode: string, playerName: string) => void,
-    LEAVE_GAME: (gameCode: string, player: Player) => void,
+    LEAVE_GAME: (gameCode: string, player: PlayerAttributes) => void,
     CHOOSE_ACTION: (gameCode: string, playerName: string,
                     roomCode: number, action: Action) => void,
 }
 
 interface ServerToHostEvents {
     GAME_CREATED: (gameCode: string, qrCode: any) => void,
-    PLAYER_HAS_JOINED: (player: Player) => void,
-    PLAYER_HAS_LEFT: (player: Player) => void,
+    PLAYER_HAS_JOINED: (player: PlayerAttributes) => void,
+    PLAYER_HAS_LEFT: (player: PlayerAttributes) => void,
     GAME_START: (/*TODO*/) => void,
     ROUND_RESULTS: (/*TODO*/) => void,
     TOURNAMENT_RESULTS: (/*TODO*/) => void
@@ -38,8 +37,8 @@ interface ServerToHostEvents {
 
 interface ServerToPlayerEvents {
     INVALID_GAME_CODE: () => void,
-    JOINED_GAME: (player: Player) => void,
+    JOINED_GAME: (player: PlayerAttributes, gameCode: string) => void,
     JOIN_THIS_ROOM: (/*TODO*/) => void,
     DUEL_RESULTS: (result: DuelResult, player1Action: Action, player2Action: Action) => void,
-    MATCH_RESULTS: (winner: Player, loser: Player) => void
+    MATCH_RESULTS: (winner: PlayerAttributes, loser: PlayerAttributes) => void
 }

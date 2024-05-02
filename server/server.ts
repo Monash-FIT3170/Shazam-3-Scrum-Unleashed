@@ -23,14 +23,17 @@ const io = new Server<Events>(server, {
 })
 
 const gamesMap: Map<string, Game> = new Map<string, Game>();
+const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, delay))
+
 
 io.on("connection", (socket) => {
     console.log(`User Connected: ${socket.id}`)
 
-    socket.on("CREATE_GAME", (hostName) => {
+    socket.on("CREATE_GAME", async (hostName) => {
 
+        await sleep(500);
         // debugging purposes
-        console.log(`Player : ${hostName} is creating a game`)
+        console.log(`Host : ${hostName} is creating a game`)
 
         // create the host and game
         const host: Host = new Host(socket.id, hostName);
@@ -44,8 +47,7 @@ io.on("connection", (socket) => {
         socket.join(hostRoomName(gameCode));
 
         // send GAME_CREATED event to host, to notify them
-        io.to(game.HostSocketID).emit("GAME_CREATED", gameCode, {/*TODO QR CODE*/})
-
+        io.to(game.HostSocketId).emit("GAME_CREATED", gameCode, {/*TODO QR CODE*/})
     })
 
     socket.on("JOIN_GAME", (gameCode, playerName) => {
@@ -55,13 +57,13 @@ io.on("connection", (socket) => {
             console.log(`Player : ${playerName} has joined Game : ${gameCode}`)
 
             // create the player
-            const player = new Player(playerName, 0, false);
+            const player = new Player(playerName, socket.id, 0, false);
 
             // add socket to a PLAYER ROOM for the Game
             socket.join(playerRoomName(gameCode));
 
             // send JOINED_GAME event to player, to notify them
-            io.to(socket.id).emit("JOINED_GAME", player);
+            io.to(socket.id).emit("JOINED_GAME", player, gameCode);
 
             // send PLAYER_HAS_JOINED event to host, to notify them
             io.to(hostRoomName(gameCode)).emit("PLAYER_HAS_JOINED", player)

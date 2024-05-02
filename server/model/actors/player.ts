@@ -1,9 +1,9 @@
 //Very basic player class, can be expanded if needed
 //Author: Team Buddy (4), Aaron Abbott 32520441
 import { PlayerAttributes } from "../../../types/types";
+import Actor from "./actor";
 
-export default class Player implements PlayerAttributes {
-  public name: string;
+export default class Player extends Actor implements PlayerAttributes {
   public id: number;
   public currentView: number;
   //private abilities: Ability[];
@@ -14,8 +14,8 @@ export default class Player implements PlayerAttributes {
   public isBot: boolean;
   public ingamePoints: number;
 
-  constructor(name: string, id: number, isBot: boolean) {
-    this.name = name;
+  constructor(name: string, socketId:string, id: number, isBot: boolean) {
+    super(name, socketId);
     this.id = id;
     //by default the player is viewing their own view
     this.currentView = id;
@@ -28,9 +28,6 @@ export default class Player implements PlayerAttributes {
   }
 
   //getters
-  public getName(): string {
-    return this.name;
-  }
   public getId(): number {
     return this.id;
   }

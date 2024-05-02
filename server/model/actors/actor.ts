@@ -1,15 +1,15 @@
 export default abstract class Actor {
 
-    private _socketID: string;
+    private _socketId: string;
     private _name: string;
 
-    constructor(socketID: string, name: string) {
-        this._socketID = socketID;
+    constructor(socketId: string, name: string) {
+        this._socketId = socketId;
         this._name = name;
     }
 
-    get socketID(): string {
-        return this._socketID;
+    get socketId(): string {
+        return this._socketId;
     }
 
     get name(): string {

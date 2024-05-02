@@ -13,7 +13,7 @@ export default class Game {
     }
 
 
-    get HostSocketID(): string {
-        return this.host.socketID;
+    get HostSocketId(): string {
+        return this.host.socketId;
     }
 }

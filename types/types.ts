@@ -1,5 +1,6 @@
 export interface PlayerAttributes{
     name: string;
+    socketId: string;
     id: number;
     currentView: number;
     //private abilities: Ability[];
