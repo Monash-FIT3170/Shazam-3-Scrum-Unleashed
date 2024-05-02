@@ -25,7 +25,7 @@ Team Members:
 
 # Prepare for development
 
-1. Ensure you have the node v20 LTS installed on your machine. You can download it from the following link: https://nodejs.org/en/
+1. Ensure you have the latest version of node v22 installed on your machine. You can download it from the following link: https://nodejs.org/en/
 2. Move into the [client](client) directory of the project by typing the command `cd client`.
 3. Open another terminal and then move into the [server](server) directory `cd server`.
 4. Install dependencies in both [client](client) and [server](server) by running `npm install` in both terminals.
