@@ -1,11 +1,10 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import tailwindcss from "tailwindcss";
-import { BASE_PATH } from "./src/pages/pagePaths";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: BASE_PATH,
+  base: "/Shazam-3-Scrum-Unleashed/",
   plugins: [react()],
   css: {
     postcss: {

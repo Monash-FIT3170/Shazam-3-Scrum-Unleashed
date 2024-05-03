@@ -1,4 +1,4 @@
-import { ReactRotuterRequest } from "../types/reactRouter";
+import { ReactRotuterRequest } from "../types";
 
 export interface NewGameLoaderProps {
   request: ReactRotuterRequest;
