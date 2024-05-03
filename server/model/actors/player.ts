@@ -1,6 +1,6 @@
 //Very basic player class, can be expanded if needed
 //Author: Team Buddy (4), Aaron Abbott 32520441
-import { PlayerAttributes } from "../../../shared/types/types";
+import { PlayerAttributes } from "../../../types/types";
 import Actor from "./actor";
 
 export default class Player extends Actor implements PlayerAttributes {

@@ -3,16 +3,16 @@ import cors from "cors";
 import * as http from "http";
 import {Server} from "socket.io";
 
-import {Events} from "../shared/types/socket/events";
+import {Events} from "../types/socket/events";
 import Game from "./model/game";
 import {hostRoomName, playerRoomName} from "./socket/roomNames";
 import Player from "./model/actors/player";
-import { CREATE_GAME } from "../shared/constants/api";
 import Host from "./model/actors/host";
 
 const app = express();
 
 app.use(cors());
+app.use(express.json());
 
 const server = http.createServer(app);
 
@@ -29,11 +29,6 @@ const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, de
 
 io.on("connection", (socket) => {
     console.log(`User Connected: ${socket.id}`)
-
-    socket.on("CREATE_GAME", async (hostName) => {
-
-
-    })
 
     socket.on("JOIN_GAME", (gameCode, playerName) => {
 
@@ -62,30 +57,28 @@ io.on("connection", (socket) => {
 
 
     })
+
+    app.post('/create-game', async (req, res) => {
+        const hostName = req.body.hostName;
+    
+        await sleep(500);
+        // debugging purposes
+        console.log(`Host : ${hostName} is creating a game`)
+    
+        // create the host and game
+        const host: Host = new Host(String(Math.floor(Math.random() * 1e10)), hostName);
+        const game: Game = new Game(host);
+    
+        
+        // generated gameRoomCode (defaulted atm)
+        const gameCode: string = "000000"
+        gamesMap.set(gameCode, game);
+
+        socket.join(hostRoomName(gameCode));
+    
+        res.send({gameCode: "000000", qrCode: "000000"})
+    }) 
 })
-
-app.post(CREATE_GAME, (req, res) => {
-
-    // await sleep(500);
-    // // debugging purposes
-    // console.log(`Host : ${hostName} is creating a game`)
-
-    // // create the host and game
-    // const host: Host = new Host(socket.id, hostName);
-    // const game: Game = new Game(host);
-
-    // // generated gameRoomCode (defaulted atm)
-    // const gameCode: string = "000000"
-    // gamesMap.set(gameCode, game);
-
-    // // add socket to a HOST ROOM for the Game (could just use the host socket.id)
-    // socket.join(hostRoomName(gameCode));
-
-    // // send GAME_CREATED event to host, to notify them
-    // io.to(game.HostSocketId).emit("GAME_CREATED", gameCode, {/*TODO QR CODE*/})
-
-    res.send("Game Created")
-}) 
 
 
 server.listen(3010, () => {
