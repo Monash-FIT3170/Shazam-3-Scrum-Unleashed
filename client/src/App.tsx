@@ -7,7 +7,7 @@ import {
   RouterProvider
 } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
-import { Events } from "../../types/socket/events.ts";
+import { Events } from "../../shared/types/socket/events.ts";
 import Home from "./pages/Home.tsx";
 import HostGame from "./pages/HostGame.tsx";
 import {

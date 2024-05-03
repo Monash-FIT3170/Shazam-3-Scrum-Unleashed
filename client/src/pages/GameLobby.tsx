@@ -2,7 +2,7 @@ import DisplayLogo from "../components/DisplayLogo";
 
 import {socket} from "../App.tsx";
 import {useLoaderData} from "react-router-dom";
-import {Events} from "../../../types/socket/events.ts";
+import {Events} from "../../../shared/types/socket/events.ts";
 import {EventParams} from "@socket.io/component-emitter";
 
 
