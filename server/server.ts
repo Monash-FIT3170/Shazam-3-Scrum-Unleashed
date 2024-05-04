@@ -66,31 +66,9 @@ io.on("connection", (socket) => {
     const gameCode = "000000";
     gamesMap.set(gameCode, game);
 
-    // socket.join(hostRoomName(gameCode));
-
-    io.to(host.socketId).emit("GAME_CREATED", gameCode, "000000");
+    // send GAME_CREATED event to host
+    io.to(host.socketId).emit("GAME_CREATED", gameCode);
   });
-
-  // app.post('/create-game', async (req, res) => {
-  //     const hostName = req.body.hostName;
-  //
-  //     await sleep(500);
-  //     // debugging purposes
-  //     console.log(`Host : ${hostName} is creating a game`)
-  //
-  //     // create the host and game
-  //     const host: Host = new Host(String(Math.floor(Math.random() * 1e10)), hostName);
-  //     const game: Game = new Game(host);
-  //
-  //
-  //     // generated gameRoomCode (defaulted atm)
-  //     const gameCode: string = "000000"
-  //     gamesMap.set(gameCode, game);
-  //
-  //     socket.join(hostRoomName(gameCode));
-  //
-  //     res.send({gameCode: "000000", qrCode: "000000"})
-  // })
 
   socket.on("JOIN_GAME", (gameCode, playerName) => {
     // join the game

@@ -1,9 +1,7 @@
 import DisplayLogo from "../components/DisplayLogo";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { socket } from "../App.tsx";
-import PlayerScreen from "./PlayerScreen.tsx";
-import { PlayerAttributes } from "../../../types/types.ts";
 
 const JoinGame = () => {
   const [gameCode, setTournamentCode] = useState("");
@@ -12,15 +10,6 @@ const JoinGame = () => {
   const joinGame = () => {
     socket.emit("JOIN_GAME", gameCode, playerName);
   };
-
-  const [gameCodeCreated, setGameCode] = useState("");
-  const [player, setPlayer] = useState<PlayerAttributes>();
-  useEffect(() => {
-    socket.on("JOINED_GAME", (player, gameCode) => {
-      setPlayer(player);
-      setGameCode(gameCode);
-    });
-  }, [socket]);
 
   return (
     <div>

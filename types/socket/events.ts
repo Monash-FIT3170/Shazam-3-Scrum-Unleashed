@@ -27,7 +27,7 @@ interface PlayerToServerEvents {
 }
 
 interface ServerToHostEvents {
-    GAME_CREATED: (gameCode: string, qrCode: any) => void,
+    GAME_CREATED: (gameCode: string) => void,
     PLAYER_HAS_JOINED: (player: PlayerAttributes) => void,
     PLAYER_HAS_LEFT: (player: PlayerAttributes) => void,
     GAME_START: (/*TODO*/) => void,

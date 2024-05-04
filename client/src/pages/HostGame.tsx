@@ -16,19 +16,15 @@ const HostGame = () => {
   };
 
   const [gameCode, setGameCode] = useState("");
-  const [qrCode, setQrCode] = useState("");
-  socket.on("GAME_CREATED", (gameCode, qrCode) => {
-    // joined the room etc
+  socket.on("GAME_CREATED", (gameCode) => {
     setGameCode(gameCode);
-    setQrCode(qrCode);
   });
 
   useEffect(() => {
     if (loading) {
-      console.log("fafa");
-      navigate(`../${GAME_LOBBY_PATH}?gameCode=${gameCode}&qrCode=${qrCode}`);
+      navigate(`../${GAME_LOBBY_PATH}?gameCode=${gameCode}`);
     }
-  }, [gameCode, qrCode]);
+  }, [gameCode]);
 
   return (
     <div>
@@ -51,18 +47,13 @@ const HostGame = () => {
       </div>
 
       <div className="w-screen h-12 mt-8">
-        {loading ? (
-          <button className="text-white bg-primary text-2xl font-bold w-1/3 rounded-xl h-full">
-            Loading...
-          </button>
-        ) : (
-          <button
-            className="text-white bg-primary text-2xl font-bold w-1/3 rounded-xl h-full"
-            onClick={createGame}
-          >
-            Create Game
-          </button>
-        )}
+        <button
+          className="text-white bg-primary text-2xl font-bold w-1/3 rounded-xl h-full"
+          onClick={createGame}
+          disabled={loading}
+        >
+          {loading ? "Create Game" : "Loading..."}
+        </button>
       </div>
     </div>
   );

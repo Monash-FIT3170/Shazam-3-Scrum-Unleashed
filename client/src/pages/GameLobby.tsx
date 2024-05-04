@@ -29,7 +29,6 @@ const GameLobby = () => {
         <DisplayLogo />
       </div>
       <h1 className="text-white font-bold mt-6 uppercase">
-        {" "}
         Game Code : {gameData.gameCode}
       </h1>
     </div>
