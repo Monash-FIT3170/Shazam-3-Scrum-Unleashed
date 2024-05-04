@@ -22,9 +22,7 @@ const JoinGame = () => {
     });
   }, [socket]);
 
-  return player != undefined ? (
-    PlayerScreen(gameCodeCreated, player)
-  ) : (
+  return (
     <div>
       <div>
         <DisplayLogo />

@@ -1,13 +1,34 @@
 import DisplayLogo from "../components/DisplayLogo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { Link, useNavigation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { GAME_LOBBY_PATH } from "./pagePaths.ts";
+import { socket } from "../App.tsx";
 
 const HostGame = () => {
+  const navigate = useNavigate();
   const [hostName, setHostName] = useState("");
 
-  const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
+  const createGame = () => {
+    socket.emit("CREATE_GAME", hostName);
+    setLoading(true);
+  };
+
+  const [gameCode, setGameCode] = useState("");
+  const [qrCode, setQrCode] = useState("");
+  socket.on("GAME_CREATED", (gameCode, qrCode) => {
+    // joined the room etc
+    setGameCode(gameCode);
+    setQrCode(qrCode);
+  });
+
+  useEffect(() => {
+    if (loading) {
+      console.log("fafa");
+      navigate(`../${GAME_LOBBY_PATH}?gameCode=${gameCode}&qrCode=${qrCode}`);
+    }
+  }, [gameCode, qrCode]);
 
   return (
     <div>
@@ -30,16 +51,17 @@ const HostGame = () => {
       </div>
 
       <div className="w-screen h-12 mt-8">
-        {navigation.state === "loading" ? (
+        {loading ? (
           <button className="text-white bg-primary text-2xl font-bold w-1/3 rounded-xl h-full">
             Loading...
           </button>
         ) : (
-          <Link to={`../${GAME_LOBBY_PATH}?name=${hostName}`}>
-            <button className="text-white bg-primary text-2xl font-bold w-1/3 rounded-xl h-full">
-              Create Game
-            </button>
-          </Link>
+          <button
+            className="text-white bg-primary text-2xl font-bold w-1/3 rounded-xl h-full"
+            onClick={createGame}
+          >
+            Create Game
+          </button>
         )}
       </div>
     </div>

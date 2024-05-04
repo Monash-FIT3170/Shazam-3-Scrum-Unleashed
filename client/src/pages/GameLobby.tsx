@@ -4,8 +4,7 @@ import { useLoaderData } from "react-router-dom";
 
 const GameLobby = () => {
   const gameData = useLoaderData() as { gameCode: string; qrCode: string };
-  console.log(typeof gameData);
-  console.log(typeof gameData.gameCode);
+
   // const [mapState, setMapState] = useState(new Map<string, PlayerAttributes>());
   //
   // const updateMap = (key: string, value: PlayerAttributes) => {
