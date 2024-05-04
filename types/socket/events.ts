@@ -37,7 +37,8 @@ interface ServerToHostEvents {
 
 interface ServerToPlayerEvents {
     INVALID_GAME_CODE: () => void,
-    JOINED_GAME: (player: PlayerAttributes, gameCode: string) => void,
+    PLAYER_NAME_TAKEN: () => void,
+    JOINED_GAME: () => void,
     JOIN_THIS_ROOM: (/*TODO*/) => void,
     DUEL_RESULTS: (result: DuelResult, player1Action: Action, player2Action: Action) => void,
     MATCH_RESULTS: (winner: PlayerAttributes, loser: PlayerAttributes) => void

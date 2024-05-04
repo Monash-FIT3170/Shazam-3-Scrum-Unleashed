@@ -1,15 +1,42 @@
 import DisplayLogo from "../components/DisplayLogo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { socket } from "../App.tsx";
+import { useNavigate } from "react-router-dom";
+import { PLAYER_SCREEN } from "./pagePaths.ts";
 
 const JoinGame = () => {
+  const navigate = useNavigate();
+
   const [gameCode, setTournamentCode] = useState("");
   const [playerName, setPlayerName] = useState("");
 
+  const [loading, setLoading] = useState(false);
   const joinGame = () => {
+    console.log("trying to join");
     socket.emit("JOIN_GAME", gameCode, playerName);
   };
+  const [successfulJoin, setSuccessfulJoin] = useState(false);
+  socket.on("JOINED_GAME", () => {
+    setLoading(false);
+    setSuccessfulJoin(true);
+  });
+
+  socket.on("INVALID_GAME_CODE", () => {
+    setLoading(false);
+    setSuccessfulJoin(false);
+  });
+
+  socket.on("PLAYER_NAME_TAKEN", () => {
+    setLoading(false);
+    setSuccessfulJoin(false);
+  });
+
+  useEffect(() => {
+    if (successfulJoin) {
+      navigate(`../${PLAYER_SCREEN}?playerName=${playerName}`);
+    }
+  }, [successfulJoin]);
 
   return (
     <div>
@@ -49,8 +76,9 @@ const JoinGame = () => {
         <button
           className="text-white bg-primary text-2xl font-bold w-1/3 rounded-xl h-full"
           onClick={joinGame}
+          disabled={loading}
         >
-          JOIN ROOM
+          {loading ? "Loadings..." : "Join Room"}
         </button>
       </div>
     </div>

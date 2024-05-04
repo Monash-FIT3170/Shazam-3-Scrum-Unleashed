@@ -5,9 +5,9 @@ import { Server } from "socket.io";
 
 import { Events } from "../types/socket/events";
 import Game from "./model/game";
-import { hostRoomName, playerRoomName } from "./socket/roomNames";
 import Player from "./model/actors/player";
 import Host from "./model/actors/host";
+import { playerRoomName } from "./socket/roomNames";
 
 const app = express();
 
@@ -29,22 +29,9 @@ io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
 
   socket.on("JOIN_GAME", async (gameCode, playerName) => {
-    if (gamesMap.has(gameCode)) {
-      // debugging purposes
-      console.log(`Player : ${playerName} has joined Game : ${gameCode}`);
+    const game: Game | undefined = gamesMap.get(gameCode);
 
-      // create the player
-      const player = new Player(playerName, socket.id, 0, false);
-
-      // add socket to a PLAYER ROOM for the Game
-      await socket.join(playerRoomName(gameCode));
-
-      // send JOINED_GAME event to player, to notify them
-      io.to(socket.id).emit("JOINED_GAME", player, gameCode);
-
-      // send PLAYER_HAS_JOINED event to host, to notify them
-      io.to(hostRoomName(gameCode)).emit("PLAYER_HAS_JOINED", player);
-    } else {
+    if (game == undefined) {
       // debugging purposes
       console.log(
         `Player : ${playerName} was unable to join Game : ${gameCode}`,
@@ -52,7 +39,47 @@ io.on("connection", (socket) => {
 
       // tell the player no game with that code
       io.to(socket.id).emit("INVALID_GAME_CODE");
+      return;
     }
+
+    if (!game.canSocketJoin(socket.id)) {
+      // debugging purposes
+      console.log(
+        `Player : ${socket.id} has already connected to Game : ${gameCode}`,
+      );
+
+      // Not sure if we need to send an event back
+      return;
+    }
+
+    if (!game.isPlayerNameFree(playerName)) {
+      // debugging purposes
+      console.log(`Player : ${playerName} is already taken`);
+
+      // tell the player name is taken
+      io.to(socket.id).emit("PLAYER_NAME_TAKEN");
+      return;
+    }
+
+    // Player can Join the Game
+
+    // debugging purposes
+    console.log(`Player : ${playerName} has joined Game : ${gameCode}`);
+
+    // create the player
+    const player = new Player(socket.id, playerName, 0, false);
+
+    // add player to game
+    game.addPlayer(player);
+
+    // add socket to a PLAYER ROOM of the Game
+    await socket.join(playerRoomName(gameCode));
+
+    // send JOINED_GAME event to player, to notify them
+    io.to(socket.id).emit("JOINED_GAME");
+
+    // send PLAYER_HAS_JOINED event to host, to notify them
+    io.to(game.HostSocketId).emit("PLAYER_HAS_JOINED", player);
   });
 
   socket.on("CREATE_GAME", (hostName) => {
@@ -66,13 +93,8 @@ io.on("connection", (socket) => {
     const gameCode = "000000";
     gamesMap.set(gameCode, game);
 
-    // send GAME_CREATED event to host
+    // Send GAME_CREATED event
     io.to(host.socketId).emit("GAME_CREATED", gameCode);
-  });
-
-  socket.on("JOIN_GAME", (gameCode, playerName) => {
-    // join the game
-    console.log(`Player : ${playerName} is trying to join Game : ${gameCode}`);
   });
 });
 
