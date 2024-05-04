@@ -22,14 +22,6 @@ import { newGameLoader } from "./loaders";
 
 export const socket: Socket<Events> = io("http://localhost:3010");
 
-function App() {
-  return (
-    <div>
-      <RouterProvider router={router} />
-    </div>
-  );
-}
-
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path={BASE_PATH}>
@@ -41,8 +33,16 @@ const router = createBrowserRouter(
         element={<GameLobby />}
         loader={newGameLoader}
       />
-    </Route>,
-  ),
+    </Route>
+  )
 );
+
+function App() {
+  return (
+    <div>
+      <RouterProvider router={router} />
+    </div>
+  );
+}
 
 export default App;

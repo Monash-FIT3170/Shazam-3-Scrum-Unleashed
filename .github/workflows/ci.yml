@@ -15,12 +15,22 @@ jobs:
         with:
           node-version: "20.x"
 
-      - name: Install dependencies
+      - name: Install dependencies (client)
         run: |
           cd client
           npm install
 
-      - name: Linting
+      - name: Linting (client)
         run: |
           cd client
+          npm run lint
+
+      - name: Install dependencies (server)
+        run: |
+          cd server
+          npm install
+
+      - name: Linting (server)
+        run: |
+          cd server
           npm run lint

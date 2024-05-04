@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import * as http from "http";
-import {Server} from "socket.io";
+import { Server } from "socket.io";
 
 import {Events} from "../types/socket/events";
 import Game from "./model/game";
@@ -28,7 +28,7 @@ const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, de
 
 
 io.on("connection", (socket) => {
-    console.log(`User Connected: ${socket.id}`)
+  console.log(`User Connected: ${socket.id}`);
 
     socket.on("JOIN_GAME", (gameCode, playerName) => {
 
@@ -96,7 +96,12 @@ io.on("connection", (socket) => {
     // })
 })
 
+  socket.on("JOIN_GAME", (gameCode, playerName) => {
+    // join the game
+    console.log(`Player : ${playerName} is trying to join Game : ${gameCode}`);
+  });
+});
 
 server.listen(3010, () => {
-    console.log("SERVER IS RUNNING");
-})
+  console.log("SERVER IS RUNNING");
+});

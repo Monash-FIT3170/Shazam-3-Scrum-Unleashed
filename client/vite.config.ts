@@ -4,7 +4,7 @@ import tailwindcss from "tailwindcss";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/Shazam-3-Scrum-Unleashed/",
+  base: "/shazam-3-scrum-unleashed/",
   plugins: [react()],
   css: {
     postcss: {

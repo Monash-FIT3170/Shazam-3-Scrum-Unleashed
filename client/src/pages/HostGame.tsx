@@ -67,4 +67,5 @@ const HostGame = () => {
     </div>
   );
 };
+
 export default HostGame;
