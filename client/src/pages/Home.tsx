@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import DisplayLogo from "../components/DisplayLogo";
-import { HOST_GAME_PATH, JOIN_GAME_PATH } from "./PagePaths.ts";
+import { HOST_GAME_PATH, JOIN_GAME_PATH } from "./test.ts";
 
 const Home = () => {
   return (
