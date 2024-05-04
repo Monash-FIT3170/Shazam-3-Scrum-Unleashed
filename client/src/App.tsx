@@ -16,9 +16,11 @@ import {
   HOME_PATH,
   JOIN_GAME_PATH,
   GAME_LOBBY_PATH,
+  PLAYER_SCREEN,
 } from "./pages/pagePaths.ts";
 import GameLobby from "./pages/GameLobby.tsx";
-import { newGameLoader } from "./loaders";
+import { joinedGameLoader, newGameLoader } from "./loaders";
+import PlayerScreen from "./pages/PlayerScreen.tsx";
 
 export const socket: Socket<Events> = io("http://localhost:3010");
 
@@ -32,6 +34,11 @@ const router = createBrowserRouter(
         path={GAME_LOBBY_PATH}
         element={<GameLobby />}
         loader={newGameLoader}
+      />
+      <Route
+        path={PLAYER_SCREEN}
+        element={<PlayerScreen />}
+        loader={joinedGameLoader}
       />
     </Route>,
   ),

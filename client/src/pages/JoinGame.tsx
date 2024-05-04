@@ -1,15 +1,45 @@
 import DisplayLogo from "../components/DisplayLogo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { socket } from "../App.tsx";
+import { useNavigate } from "react-router-dom";
+import { PLAYER_SCREEN } from "./pagePaths.ts";
+
+type JoinState = "NoCurrentRequest" | "Waiting" | "Joining";
 
 const JoinGame = () => {
+  const navigate = useNavigate();
+
   const [gameCode, setTournamentCode] = useState("");
   const [playerName, setPlayerName] = useState("");
+  const [joinState, setJoinState] = useState<JoinState>("NoCurrentRequest");
 
   const joinGame = () => {
+    setJoinState("Waiting");
     socket.emit("JOIN_GAME", gameCode, playerName);
   };
+
+  socket.on("JOINED_GAME", (joinErrorCode) => {
+    switch (joinErrorCode) {
+      case "SUCCESS":
+        setJoinState("Joining");
+        break;
+      case "NAME_TAKEN":
+        // TODO Indication that Name is Taken
+        setJoinState("NoCurrentRequest");
+        break;
+      case "INVALID_GAME_CODE":
+        // TODO Indication that Game Code was invalid
+        setJoinState("NoCurrentRequest");
+        break;
+    }
+  });
+
+  useEffect(() => {
+    if (joinState === "Joining") {
+      navigate(`../${PLAYER_SCREEN}?playerName=${playerName}`);
+    }
+  }, [joinState]);
 
   return (
     <div>
@@ -49,8 +79,9 @@ const JoinGame = () => {
         <button
           className="text-white bg-primary text-2xl font-bold w-1/3 rounded-xl h-full"
           onClick={joinGame}
+          disabled={joinState !== "NoCurrentRequest"}
         >
-          JOIN ROOM
+          {joinState !== "NoCurrentRequest" ? "Loading..." : "Join Room"}
         </button>
       </div>
     </div>

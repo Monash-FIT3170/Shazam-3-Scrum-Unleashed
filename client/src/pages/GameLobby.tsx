@@ -1,27 +1,30 @@
 import DisplayLogo from "../components/DisplayLogo";
 
 import { useLoaderData } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { PlayerAttributes } from "../../../types/types.ts";
+import { socket } from "../App.tsx";
 
 const GameLobby = () => {
   const gameData = useLoaderData() as { gameCode: string; qrCode: string };
 
-  // const [mapState, setMapState] = useState(new Map<string, PlayerAttributes>());
-  //
-  // const updateMap = (key: string, value: PlayerAttributes) => {
-  //     setMapState(map => new Map(map.set(key, value)));
-  // }
-  // useEffect(() => {
-  //     socket.on("PLAYER_HAS_JOINED", (player) => {
-  //
-  //         console.log("game trying to be created")
-  //
-  //         if (mapState.has(player.socketId)) {
-  //             // shouldnt happen, but will have to add stuff to prevent it from happening
-  //         } else {
-  //             updateMap(player.socketId, player);
-  //         }
-  //     })
-  // }, [socket]);
+  const [players, setPlayers] = useState(new Array<PlayerAttributes>());
+
+  const updateList = (player: PlayerAttributes) => {
+    setPlayers((previousPlayers) => [...previousPlayers, player]);
+  };
+
+  useEffect(() => {
+    socket.on("PLAYER_HAS_JOINED", (player) => {
+      console.log(player);
+      updateList(player);
+      console.log(`Player ${player.name} has joined`);
+    });
+
+    return () => {
+      socket.off("PLAYER_HAS_JOINED");
+    };
+  }, []);
 
   return (
     <div>
@@ -30,6 +33,11 @@ const GameLobby = () => {
       </div>
       <h1 className="text-white font-bold mt-6 uppercase">
         Game Code : {gameData.gameCode}
+        <ul>
+          {players.map((player) => (
+            <li key={player.id}>{player.name}</li>
+          ))}
+        </ul>
       </h1>
     </div>
   );

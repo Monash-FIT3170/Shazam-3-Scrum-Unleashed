@@ -52,7 +52,7 @@ const HostGame = () => {
           onClick={createGame}
           disabled={loading}
         >
-          {loading ? "Create Game" : "Loading..."}
+          {loading ? "Loading..." : "Create Game"}
         </button>
       </div>
     </div>
