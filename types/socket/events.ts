@@ -5,6 +5,7 @@
  */
 
 import {Action, DuelResult, PlayerAttributes} from "../types";
+import {JoinErrorCode} from "./eventArguments"
 
 /**
  * Add any new Event Categories to this
@@ -36,9 +37,7 @@ interface ServerToHostEvents {
 }
 
 interface ServerToPlayerEvents {
-    INVALID_GAME_CODE: () => void,
-    PLAYER_NAME_TAKEN: () => void,
-    JOINED_GAME: () => void,
+    JOINED_GAME: (joinErrorCode: JoinErrorCode) => void,
     JOIN_THIS_ROOM: (/*TODO*/) => void,
     DUEL_RESULTS: (result: DuelResult, player1Action: Action, player2Action: Action) => void,
     MATCH_RESULTS: (winner: PlayerAttributes, loser: PlayerAttributes) => void

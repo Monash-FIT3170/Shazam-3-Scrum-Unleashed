@@ -38,7 +38,7 @@ io.on("connection", (socket) => {
       );
 
       // tell the player no game with that code
-      io.to(socket.id).emit("INVALID_GAME_CODE");
+      io.to(socket.id).emit("JOINED_GAME", "INVALID_GAME_CODE");
       return;
     }
 
@@ -57,7 +57,7 @@ io.on("connection", (socket) => {
       console.log(`Player : ${playerName} is already taken`);
 
       // tell the player name is taken
-      io.to(socket.id).emit("PLAYER_NAME_TAKEN");
+      io.to(socket.id).emit("JOINED_GAME", "NAME_TAKEN");
       return;
     }
 
@@ -76,7 +76,7 @@ io.on("connection", (socket) => {
     await socket.join(playerRoomName(gameCode));
 
     // send JOINED_GAME event to player, to notify them
-    io.to(socket.id).emit("JOINED_GAME");
+    io.to(socket.id).emit("JOINED_GAME", "SUCCESS");
 
     // send PLAYER_HAS_JOINED event to host, to notify them
     io.to(game.HostSocketId).emit("PLAYER_HAS_JOINED", player);

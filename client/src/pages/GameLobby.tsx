@@ -8,10 +8,10 @@ import { socket } from "../App.tsx";
 const GameLobby = () => {
   const gameData = useLoaderData() as { gameCode: string; qrCode: string };
 
-  const [players, setPlayerList] = useState(new Array<PlayerAttributes>());
+  const [players, setPlayers] = useState(new Array<PlayerAttributes>());
 
   const updateList = (player: PlayerAttributes) => {
-    setPlayerList((f) => [...f, player]);
+    setPlayers((previousPlayers) => [...previousPlayers, player]);
   };
 
   useEffect(() => {
