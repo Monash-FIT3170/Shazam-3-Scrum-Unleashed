@@ -2,7 +2,7 @@
 //tournament class which takes in an array of Player objects, and then constructs the first level of the tournament bracket.
 //has functions to help run the tournament, such as constructing the next level of the tournament after people win their matches. can also return specific brackets to display
 
-import Player from "./player";
+import Player from "./actors/player";
 
 export class TournamentManager {
   private tournamentBrackets: Player[][];
@@ -39,7 +39,7 @@ export class TournamentManager {
     for (let i = 0; i < players.length; i++) {
       round1.push(players[i]);
       if (i < numBots) {
-        round1.push(new Player(`🤖 Bot #" + ${String(i)}`, nextID, true));
+        round1.push(new Player(`🤖 Bot #" + ${String(i)}`, "", nextID, true));
         nextID++;
       }
     }

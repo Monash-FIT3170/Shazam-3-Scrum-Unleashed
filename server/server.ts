@@ -4,10 +4,15 @@ import * as http from "http";
 import { Server } from "socket.io";
 
 import { Events } from "../types/socket/events";
+import Game from "./model/game";
+import { hostRoomName, playerRoomName } from "./socket/roomNames";
+import Player from "./model/actors/player";
+import Host from "./model/actors/host";
 
 const app = express();
 
 app.use(cors());
+app.use(express.json());
 
 const server = http.createServer(app);
 
@@ -18,12 +23,51 @@ const io = new Server<Events>(server, {
   },
 });
 
+const gamesMap = new Map<string, Game>();
+
 io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
 
+  socket.on("JOIN_GAME", async (gameCode, playerName) => {
+    if (gamesMap.has(gameCode)) {
+      // debugging purposes
+      console.log(`Player : ${playerName} has joined Game : ${gameCode}`);
+
+      // create the player
+      const player = new Player(playerName, socket.id, 0, false);
+
+      // add socket to a PLAYER ROOM for the Game
+      await socket.join(playerRoomName(gameCode));
+
+      // send JOINED_GAME event to player, to notify them
+      io.to(socket.id).emit("JOINED_GAME", player, gameCode);
+
+      // send PLAYER_HAS_JOINED event to host, to notify them
+      io.to(hostRoomName(gameCode)).emit("PLAYER_HAS_JOINED", player);
+    } else {
+      // debugging purposes
+      console.log(
+        `Player : ${playerName} was unable to join Game : ${gameCode}`,
+      );
+
+      // tell the player no game with that code
+      io.to(socket.id).emit("INVALID_GAME_CODE");
+    }
+  });
+
   socket.on("CREATE_GAME", (hostName) => {
-    // create the game
-    console.log(`Player : ${hostName} is trying to create a game`);
+    console.log(`Host : ${hostName} is creating a game`);
+
+    // create the host and game
+    const host: Host = new Host(socket.id, hostName);
+    const game: Game = new Game(host);
+
+    // generated gameRoomCode (defaulted atm)
+    const gameCode = "000000";
+    gamesMap.set(gameCode, game);
+
+    // send GAME_CREATED event to host
+    io.to(host.socketId).emit("GAME_CREATED", gameCode);
   });
 
   socket.on("JOIN_GAME", (gameCode, playerName) => {
