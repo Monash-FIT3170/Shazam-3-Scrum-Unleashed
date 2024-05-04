@@ -36,5 +36,5 @@ export class gameSessionManager {
       this.player2.incrementIngamePoints();
       return this.player2;
     }
-}
+  }
 }

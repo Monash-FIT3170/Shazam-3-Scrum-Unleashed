@@ -14,7 +14,7 @@ export default class Player extends Actor implements PlayerAttributes {
   public isBot: boolean;
   public ingamePoints: number;
 
-  constructor(name: string, socketId:string, id: number, isBot: boolean) {
+  constructor(name: string, socketId: string, id: number, isBot: boolean) {
     super(name, socketId);
     this.id = id;
     //by default the player is viewing their own view
