@@ -33,8 +33,8 @@ const router = createBrowserRouter(
         element={<GameLobby />}
         loader={newGameLoader}
       />
-    </Route>
-  )
+    </Route>,
+  ),
 );
 
 function App() {
