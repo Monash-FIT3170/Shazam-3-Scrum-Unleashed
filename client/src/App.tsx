@@ -19,7 +19,7 @@ import {
   PLAYER_SCREEN,
 } from "./pages/pagePaths.ts";
 import GameLobby from "./pages/GameLobby.tsx";
-import { joinedGameLoader, newGameLoader } from "./loaders";
+import { joinedGameLoader, joinGameLoader, newGameLoader } from "./loaders";
 import PlayerScreen from "./pages/PlayerScreen.tsx";
 
 export const socket: Socket<Events> = io("http://localhost:3010");
@@ -28,7 +28,11 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path={BASE_PATH}>
       <Route path={HOME_PATH} element={<Home />} />
-      <Route path={JOIN_GAME_PATH} element={<JoinGame />} />
+      <Route
+        path={JOIN_GAME_PATH}
+        element={<JoinGame />}
+        loader={joinGameLoader}
+      />
       <Route path={HOST_GAME_PATH} element={<HostGame />} />
       <Route
         path={GAME_LOBBY_PATH}

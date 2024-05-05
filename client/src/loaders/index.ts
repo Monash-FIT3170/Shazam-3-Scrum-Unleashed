@@ -1,10 +1,10 @@
 import { ReactRotuterRequest } from "../types";
 
-export interface NewGameLoaderProps {
+export interface LoaderProps {
   request: ReactRotuterRequest;
 }
 
-export const newGameLoader = async ({ request }: NewGameLoaderProps) => {
+export const newGameLoader = async ({ request }: LoaderProps) => {
   const url = new URL(request.url);
 
   const gameCode = url.searchParams.get("gameCode");
@@ -12,7 +12,18 @@ export const newGameLoader = async ({ request }: NewGameLoaderProps) => {
   return { gameCode };
 };
 
-export const joinedGameLoader = async ({ request }: NewGameLoaderProps) => {
+export const joinGameLoader = async ({ request }: LoaderProps) => {
+  const url = new URL(request.url);
+
+  // TODO - Verify game code is of valid format
+  const gameCode = url.searchParams.get("gameCode");
+  if (!gameCode) {
+    return "";
+  }
+  return gameCode;
+};
+
+export const joinedGameLoader = async ({ request }: LoaderProps) => {
   const url = new URL(request.url);
 
   const playerName = url.searchParams.get("playerName");
