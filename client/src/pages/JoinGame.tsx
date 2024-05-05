@@ -2,19 +2,25 @@ import DisplayLogo from "../components/DisplayLogo";
 import { useEffect, useState } from "react";
 
 import { socket } from "../App.tsx";
-import { useNavigate } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { PLAYER_SCREEN } from "./pagePaths.ts";
 
 type JoinState = "NoCurrentRequest" | "Waiting" | "Joining";
 
 const JoinGame = () => {
+  const urlGameCode = useLoaderData() as string;
   const navigate = useNavigate();
 
-  const [gameCode, setTournamentCode] = useState("");
+  const [gameCode, setGameCode] = useState(urlGameCode);
   const [playerName, setPlayerName] = useState("");
   const [joinState, setJoinState] = useState<JoinState>("NoCurrentRequest");
 
   const joinGame = () => {
+    if (gameCode.length === 0) {
+      console.error("No game code was provided. TODO - Handle this error");
+      return;
+    }
+
     setJoinState("Waiting");
     socket.emit("JOIN_GAME", gameCode, playerName);
   };
@@ -55,8 +61,9 @@ const JoinGame = () => {
             type="text"
             placeholder="6 DIGIT ROOM CODE"
             className="bg-primary-dark text-white rounded-xl w-1/3 h-10 mt-4 border-2 border-white pl-2"
+            value={gameCode}
             onChange={(event) => {
-              setTournamentCode(event.target.value);
+              setGameCode(event.target.value);
             }}
           ></input>
         </div>
