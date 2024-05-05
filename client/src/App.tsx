@@ -28,7 +28,11 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path={BASE_PATH}>
       <Route path={HOME_PATH} element={<Home />} />
-      <Route path={JOIN_GAME_PATH} element={<JoinGame />} loader={joinGameLoader} />
+      <Route
+        path={JOIN_GAME_PATH}
+        element={<JoinGame />}
+        loader={joinGameLoader}
+      />
       <Route path={HOST_GAME_PATH} element={<HostGame />} />
       <Route
         path={GAME_LOBBY_PATH}
