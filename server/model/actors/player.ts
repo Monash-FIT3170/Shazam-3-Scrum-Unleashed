@@ -12,7 +12,8 @@ export default class Player extends Actor implements PlayerAttributes {
   public winstreakHigh: number;
   public numSpectators: number;
   public isBot: boolean;
-  public ingamePoints: number;
+  public inGamePoints: number;
+  public choice: string;
 
   constructor(socketId: string, name: string, id: number, isBot: boolean) {
     super(socketId, name);
@@ -24,7 +25,8 @@ export default class Player extends Actor implements PlayerAttributes {
     this.winstreakHigh = 0;
     this.numSpectators = 0;
     this.isBot = isBot;
-    this.ingamePoints = 0;
+    this.inGamePoints = 0;
+    this.choice = '';
   }
 
   //getters
@@ -43,6 +45,12 @@ export default class Player extends Actor implements PlayerAttributes {
   public getCurrentView(): number {
     return this.currentView;
   }
+  public getChoice(): string {
+    return this.choice;
+  }
+  public getInGamePoints(): number {
+    return this.inGamePoints;
+  }
 
   //setters
 
@@ -58,6 +66,9 @@ export default class Player extends Actor implements PlayerAttributes {
   public setCurrentView(currentView: number) {
     this.currentView = currentView;
   }
+  public setChoice(choice: string) {
+    this.choice = choice;
+  }
 
   //additional methods
   public incrementWinstreak() {
@@ -66,8 +77,13 @@ export default class Player extends Actor implements PlayerAttributes {
       this.winstreakHigh = this.winstreak;
     }
   }
+
   public resetWinstreak() {
     this.winstreak = 0;
+  }
+
+  public resetIngamePoints() {
+    this.inGamePoints = 0;
   }
 
   public incrementNumSpectators(newSpec: number) {
@@ -96,7 +112,7 @@ export default class Player extends Actor implements PlayerAttributes {
     return [this.currentView, this.id != this.currentView];
   }
 
-  public incrementIngamePoints() {
-    this.ingamePoints += 1;
+  public incrementInGamePoints() {
+    this.inGamePoints += 1;
   }
 }

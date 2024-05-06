@@ -1,8 +1,8 @@
 import Player from "./actors/player";
 
 export class gameSessionManager {
-  private player1: Player;
-  private player2: Player;
+  public player1: Player;
+  public player2: Player;
   private static rules: Record<string, string> = {
     rock: "scissors",
     paper: "rock",
@@ -27,13 +27,13 @@ export class gameSessionManager {
     player2Choice: string,
   ): Player | null {
     if (gameSessionManager.rules[player1Choice] == player2Choice) {
-      this.player1.incrementIngamePoints();
+      this.player1.incrementInGamePoints();
       return this.player1;
     } else if (player1Choice == player2Choice) {
       console.log("its a tie");
       return null;
     } else {
-      this.player2.incrementIngamePoints();
+      this.player2.incrementInGamePoints();
       return this.player2;
     }
   }

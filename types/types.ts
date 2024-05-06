@@ -9,7 +9,7 @@ export interface PlayerAttributes{
     winstreakHigh: number;
     numSpectators: number;
     isBot: boolean;
-    ingamePoints: number;
+    inGamePoints: number;
 }
 
 /**
