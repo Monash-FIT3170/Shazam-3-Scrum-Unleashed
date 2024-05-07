@@ -13,6 +13,7 @@ const GameLobby = () => {
   const updateList = (player: PlayerAttributes) => {
     setPlayers((previousPlayers) => [...previousPlayers, player]);
   };
+  
 
   useEffect(() => {
     socket.on("PLAYER_HAS_JOINED", (player) => {
