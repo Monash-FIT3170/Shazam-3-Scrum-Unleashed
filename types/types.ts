@@ -9,7 +9,7 @@ export interface PlayerAttributes{
     winstreakHigh: number;
     numSpectators: number;
     isBot: boolean;
-    ingamePoints: number;
+    inGamePoints: number;
 }
 
 /**
@@ -21,8 +21,5 @@ export enum DuelResult {
     Player2Wins = 2
 }
 
-export enum Action {
-    Rock = "ROCK",
-    Paper = "PAPER",
-    Scissors = "SCISSORS"
-}
+export type Action = "ROCK" | "PAPER" | "SCISSORS" | "NONE";
+
