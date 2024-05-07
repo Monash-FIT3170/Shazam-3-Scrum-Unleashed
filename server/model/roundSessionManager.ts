@@ -3,15 +3,15 @@
 //to player1 and player2 as to who is the winner and loser and updates the number of spectactors, etc.
 
 import Player from "./actors/player";
-import { gameSessionManager } from "./gameSessionManager";
+import { GameSessionManager } from "./gameSessionManager";
 
 //This manages the round for 2 players who play up to 5 game
-export class roundSessionManager {
-  public game: gameSessionManager;
+export class RoundSessionManager {
+  public game: GameSessionManager;
   public player1: Player;
   public player2: Player;
 
-  constructor(game: gameSessionManager, player1: Player, player2: Player) {
+  constructor(game: GameSessionManager, player1: Player, player2: Player) {
     this.game = game;
     this.player1 = player1;
     this.player2 = player2;

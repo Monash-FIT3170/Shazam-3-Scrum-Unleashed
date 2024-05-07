@@ -26,7 +26,7 @@ export default class Player extends Actor implements PlayerAttributes {
     this.numSpectators = 0;
     this.isBot = isBot;
     this.inGamePoints = 0;
-    this.actionChoice = Action.None;
+    this.actionChoice = "NONE";
   }
 
   //getters
