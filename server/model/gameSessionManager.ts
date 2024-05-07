@@ -1,12 +1,14 @@
 import Player from "./actors/player";
+import { Action } from "../../types/types";
 
-export class gameSessionManager {
+export class GameSessionManager {
   public player1: Player;
   public player2: Player;
-  private static rules: Record<string, string> = {
-    rock: "scissors",
-    paper: "rock",
-    scissors: "paper",
+  private static rules: Record<Action, Action> = {
+    ROCK: "SCISSORS",
+    PAPER: "ROCK",
+    SCISSORS: "PAPER",
+    NONE: "NONE",
   };
 
   constructor(player1: Player, player2: Player) {
@@ -23,10 +25,10 @@ export class gameSessionManager {
   }
 
   public playRound(
-    player1Choice: string,
-    player2Choice: string,
+    player1Choice: Action,
+    player2Choice: Action,
   ): Player | null {
-    if (gameSessionManager.rules[player1Choice] == player2Choice) {
+    if (GameSessionManager.rules[player1Choice] == player2Choice) {
       this.player1.incrementInGamePoints();
       return this.player1;
     } else if (player1Choice == player2Choice) {

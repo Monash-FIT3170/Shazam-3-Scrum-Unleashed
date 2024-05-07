@@ -21,8 +21,5 @@ export enum DuelResult {
     Player2Wins = 2
 }
 
-export enum Action {
-    Rock = "ROCK",
-    Paper = "PAPER",
-    Scissors = "SCISSORS"
-}
+export type Action = "ROCK" | "PAPER" | "SCISSORS" | "NONE";
+
