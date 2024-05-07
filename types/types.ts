@@ -24,5 +24,6 @@ export enum DuelResult {
 export enum Action {
     Rock = "ROCK",
     Paper = "PAPER",
-    Scissors = "SCISSORS"
+    Scissors = "SCISSORS",
+    None = "NONE",
 }

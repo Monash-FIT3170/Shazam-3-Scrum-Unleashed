@@ -1,6 +1,6 @@
 //Very basic player class, can be expanded if needed
 //Author: Team Buddy (4), Aaron Abbott 32520441
-import { PlayerAttributes } from "../../../types/types";
+import { Action, PlayerAttributes } from "../../../types/types";
 import Actor from "./actor";
 
 export default class Player extends Actor implements PlayerAttributes {
@@ -13,7 +13,7 @@ export default class Player extends Actor implements PlayerAttributes {
   public numSpectators: number;
   public isBot: boolean;
   public inGamePoints: number;
-  public choice: string;
+  public actionChoice: Action;
 
   constructor(socketId: string, name: string, id: number, isBot: boolean) {
     super(socketId, name);
@@ -26,7 +26,7 @@ export default class Player extends Actor implements PlayerAttributes {
     this.numSpectators = 0;
     this.isBot = isBot;
     this.inGamePoints = 0;
-    this.choice = "";
+    this.actionChoice = Action.None;
   }
 
   //getters
@@ -45,8 +45,8 @@ export default class Player extends Actor implements PlayerAttributes {
   public getCurrentView(): number {
     return this.currentView;
   }
-  public getChoice(): string {
-    return this.choice;
+  public getChoice(): Action {
+    return this.actionChoice;
   }
   public getInGamePoints(): number {
     return this.inGamePoints;
@@ -66,8 +66,8 @@ export default class Player extends Actor implements PlayerAttributes {
   public setCurrentView(currentView: number) {
     this.currentView = currentView;
   }
-  public setChoice(choice: string) {
-    this.choice = choice;
+  public setChoice(choice: Action) {
+    this.actionChoice = choice;
   }
 
   //additional methods
