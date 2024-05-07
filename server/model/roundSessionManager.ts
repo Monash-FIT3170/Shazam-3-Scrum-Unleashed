@@ -15,6 +15,7 @@ export class roundSessionManager {
     this.player2 = player2;
   }
 
+  //Setters
   public setPlayer1(player1: Player) {
     this.player1 = player1
   }
@@ -23,48 +24,71 @@ export class roundSessionManager {
     this.player2 = player2
   }
 
+  //This simulates the duels
   public runRound() {
-    for (let index = 0; index < 5; index++) {
+    for (let index = 0; index < 3; index++) {
       this.game.playRound(this.player1.getChoice(), this.player2.getChoice());
     }
   };
 
-  private checkPlayer1Win() {
+  //Checks if player1 wins
+  private checkPlayer1Win(): Player | null {
     if (this.player1.getInGamePoints() > this.player2.getInGamePoints()) {
       this.player1.incrementNumSpectators(this.player2.getNumSpectators() + 1); //The +1 is the loser of this round
       this.player2.lostMatch(this.player1.getId()); 
       this.player1.resetIngamePoints(); //Resets win streak for next duel
       this.player2.resetIngamePoints();
+      return this.player1;
     }
+    return null;
   }
 
-  private checkPlayer2Win() {
+  //Checks if player2 wins
+  private checkPlayer2Win(): Player | null {
     if (this.player1.getInGamePoints() < this.player2.getInGamePoints()) {
-      this.player2.incrementNumSpectators(this.player1.getNumSpectators() + 1);
+      this.player2.incrementNumSpectators(this.player1.getNumSpectators() + 1); //The +1 is the loser of this round
       this.player1.lostMatch(this.player1.getId());
       this.player1.resetIngamePoints(); //Rests the win streak for next duel
       this.player2.resetIngamePoints(); 
+      return this.player2;
     }
+    return null;
   }
 
-  private checkDraw() {
+  //Checks if there is a draw
+  private checkDraw(): Player | null {
     if (this.player1.getInGamePoints() === this.player2.getInGamePoints()) {
       let endAlert = false;
-      while (endAlert === false) {
+      while (endAlert === false) { //Runs until one of the players wins using singular duels
         this.game.playRound(this.player1.getChoice(), this.player2.getChoice());
           if (this.player1.getInGamePoints() !== this.player2.getInGamePoints()) {
             endAlert = true;
           }
       } 
+      let winner = null;  //Returns if player1 wins or player2 wins
+      winner = this.checkPlayer1Win();
+
+      if (winner === null) {
+        winner = this.checkPlayer2Win();
+      }
+      return winner;
     }
-    this.checkPlayer1Win();
-    this.checkPlayer2Win();
+    return null;  //Returns if no draw occurs
   }
 
   public run() {
-    this.runRound();
-    this.checkDraw();
-    this.checkPlayer1Win();
-    this.checkPlayer2Win();
+    this.runRound(); //Runs the duels
+
+    let winner = null;
+
+    winner = this.checkDraw();
+    if (winner === null) { 
+      winner = this.checkPlayer1Win(); //If players1 wins, player1 is returned
+      if (winner === null) {
+        winner = this.checkPlayer2Win(); //if player2 wins, player2 is returned
+      }
+    }
+
+    return winner;
   }
 }
