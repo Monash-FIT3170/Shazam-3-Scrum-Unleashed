@@ -1,12 +1,16 @@
 import DisplayLogo from "../components/DisplayLogo";
+import WinnerPlayer from "../components/WinnerPlayer";
+
 
 const PlayerScreen = () => {
   return (
-    <div>
+    <div style={{ overflow: "hidden", paddingTop: "50px" }}>
       <div>
         <DisplayLogo />
       </div>
-      {/*<h1 className="text-white font-bold mt-6 uppercase"> Game Code : {gameCode}</h1>*/}
+      <div style={{ marginTop: "20px" }}>
+        <WinnerPlayer />
+      </div>
     </div>
   );
 };
