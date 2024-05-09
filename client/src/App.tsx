@@ -53,7 +53,8 @@ function App() {
   return (
     <div>
       <DuelMatchEnd 
-        playerName1="PATRICK" playerName2="SPONGEBOB"/>
+        player1Name="PATRICK" player1Win={true} player1Type="paper" player1Score={1}
+        player2Name="SPONGEBOB" player2Win={false}  player2Type="scissors" player2Score={1} matchResult="tie"/>
     </div>
   );
 }
