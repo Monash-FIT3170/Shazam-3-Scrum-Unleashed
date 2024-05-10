@@ -1,13 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { type ReactionProperties } from "../../types";
 
-interface ReactionIconProps {
-  x: number;
-  y: number;
-  value: string;
-}
-
-export function Reaction({ x, y, value }: ReactionIconProps) {
+export function Reaction({ x, y, value }: ReactionProperties) {
   const REACTION_LIFETIME_MS = 1000;
   const [reactionSize] = useState(Math.random() + 2);
   const [isRemoved, setIsRemoved] = useState(false);

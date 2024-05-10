@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import ReactionOverlay from "../components/ReactionsOverlay/ReactionsOverlay";
 import SemiCircle3dots from "../components/semiCircle3dots";
+import { ReactionProperties } from "../types";
+
 const GameRoundScreen = () => {
-  const [reactions, setReactions] = useState<
-    { x: number; y: number; value: string }[]
-  >([]);
+  const [reactions, setReactions] = useState<ReactionProperties[]>([]);
 
   const availableEmojis = ["🎉", "💀", "😂", "❤️", "🐐"];
   const reactionPlaceholders = [...Array(100)].map(() => {

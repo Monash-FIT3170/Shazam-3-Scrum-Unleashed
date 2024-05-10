@@ -1,7 +1,8 @@
 import Reaction from "./Reaction.tsx";
+import { type ReactionProperties } from "../../types";
 
 interface ReactionOverlayProps {
-  reactions: { x: number; y: number; value: string }[];
+  reactions: ReactionProperties[];
 }
 
 function ReactionOverlay({ reactions }: ReactionOverlayProps) {
