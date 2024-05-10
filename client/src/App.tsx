@@ -23,6 +23,7 @@ import PlayerScreen from "./pages/PlayerScreen.tsx";
 // import GameRoundScreen from "./pages/gameRoundScreen.tsx";
 import Home from "./pages/Home.tsx";
 // import MatchWinScreen from "./pages/MatchWinScreen.tsx";
+// import MatchLossScreen from "./pages/MatchLossScreen.tsx";
 
 export const socket: Socket<Events> = io("http://localhost:3010");
 
