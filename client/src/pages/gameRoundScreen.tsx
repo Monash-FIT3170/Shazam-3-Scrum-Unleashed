@@ -6,7 +6,7 @@ const GameRoundScreen = () => {
     { x: number; y: number; value: string }[]
   >([]);
 
-  const availableEmojis = ["🎉", "💀", "😂", "❤️"];
+  const availableEmojis = ["🎉", "💀", "😂", "❤️", "🐐"];
   const reactionPlaceholders = [...Array(100)].map(() => {
     return {
       x: Math.random() * 100,
