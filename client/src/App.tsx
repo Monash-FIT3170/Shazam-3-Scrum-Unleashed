@@ -21,7 +21,7 @@ import "./App.css";
 // import { joinedGameLoader, joinGameLoader, newGameLoader } from "./loaders";
 // import PlayerScreen from "./pages/PlayerScreen.tsx";
 // import GameRoundScreen from "./pages/gameRoundScreen.tsx";
-// import DuelMatchEnd from "./pages/DuelMatchEndMobile.tsx";
+import DuelMatchEnd from "./pages/Duel.tsx";
 
 // export const socket: Socket<Events> = io("http://localhost:3010");
 
@@ -49,24 +49,23 @@ import "./App.css";
 //   ),
 // );
 
-// function App() {
-//   return (
-//     <div>
-//       <DuelMatchEnd 
-//         player1Name="PATRICK" player1Win={true} player1Type="paper" player1Score={1}
-//         player2Name="SPONGEBOB" player2Win={false}  player2Type="scissors" player2Score={1} matchResult="tie"/>
-//     </div>
-//   );
-// }
-
 function App() {
   return (
     <div>
-      <div>{window.innerHeight}</div>
-      <div>{window.innerWidth}</div>
+      <DuelMatchEnd 
+        player1Name="PATRICK" player1Win={true} player1Type="paper" player1Score={1}
+        player2Name="SPONGEBOB" player2Win={false}  player2Type="scissors" player2Score={1} matchResult="tie"/>
     </div>
-    
-  )
+  );
 }
+
+// function App() {
+//   return(
+//     <div>
+//       <div>{window.innerHeight}</div>
+//       <div>{window.innerWidth}</div>
+//     </div>
+//   )
+// }
 
 export default App;

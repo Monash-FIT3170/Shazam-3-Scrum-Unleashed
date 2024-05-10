@@ -1,7 +1,7 @@
-import PlayerName from "../components/PlayerNameMobile1";
-import PlayerMove from "../components/PlayerMoveMobile";
-import PlayerScore from "../components/PlayerScoreMobile";
-import shazamLogo from "../assets/Duel/SHAZAM.svg";
+import PlayerName from "../components/DuelName.tsx";
+import PlayerMove from "../components/DuelMove.tsx";
+import PlayerScore from "../components/DuelScore.tsx";
+import PlayerLoad from "../components/DuelLoad.tsx";
 
 interface Props {
   player1Name: string;
@@ -28,19 +28,13 @@ interface PhaseProps {
 
 function UpdatePhase({phase, player1Win, player1Type, player2Type, player2Win, player1Score, player2Score, matchResult}: PhaseProps) {
   if (phase === 0) {
-    return <div style={{position: "fixed", bottom: 150, left: 80, height: 500, width:250}} className="flex flex-col justify-center content-end">
-      <p className="text-8xl text-white font-bold font-sans">ROCK</p>
-    </div>
+    return <PlayerLoad phase={phase}/>
   }
   else if (phase === 1) {
-    return <div style={{position: "fixed", bottom: 150, left: 80, height: 500, width:250}} className="flex flex-col justify-center content-end">
-      <p className="text-8xl text-white font-bold font-sans">PAPER</p>
-    </div>
+    return <PlayerLoad phase={phase}/>
   }
   else if (phase === 2) {
-    return <div style={{position: "fixed", bottom: 150, left: 80, height: 500, width:250}} className="flex flex-col justify-center content-end">
-      <img className="object-cover" src={shazamLogo}/>
-    </div>
+    return <PlayerLoad phase={phase}/>
   }
   else if (phase === 3) {
     return <div></div>
@@ -66,7 +60,7 @@ const duelMatchEndScreen = ({player1Name, player1Win, player1Type, player1Score,
       <div>
         <PlayerName name={player1Name} playerNum={1}/>
       </div>
-        <UpdatePhase phase={4} player1Win={player1Win} player1Type={player1Type} player2Type={player2Type} 
+        <UpdatePhase phase={2} player1Win={player1Win} player1Type={player1Type} player2Type={player2Type} 
           player1Score={player1Score} player2Win={player2Win} player2Score={player2Score} matchResult={matchResult}/>
       <div>
         <PlayerName name={player2Name} playerNum={2}/>
