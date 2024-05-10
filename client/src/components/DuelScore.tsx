@@ -20,7 +20,7 @@ function ResultFormat({player1Score, player2Score, matchPhrase}: ScoreProps) {
     </div>
   }
   else {
-    return <div style={{position: "fixed", bottom: 200, left: 800, height: 500, width:250}} className="flex flex-col justify-center content-end">
+    return <div style={{position: "fixed", bottom: 165, left: 575, height: 500, width:700}} className="flex flex-col justify-center content-end">
       <p className="text-8xl text-white font-bold font-sans">{matchPhrase}</p>
       <div className="flex justify-center">
         <p className="text-6xl text-white font-bold font-sans">{player2Score} - <span className="text-green-600">{player1Score}</span></p>

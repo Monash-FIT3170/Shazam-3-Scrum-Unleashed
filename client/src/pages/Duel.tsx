@@ -27,19 +27,7 @@ interface PhaseProps {
 }
 
 function UpdatePhase({phase, player1Win, player1Type, player2Type, player2Win, player1Score, player2Score, matchResult}: PhaseProps) {
-  if (phase === 0) {
-    return <PlayerLoad phase={phase}/>
-  }
-  else if (phase === 1) {
-    return <PlayerLoad phase={phase}/>
-  }
-  else if (phase === 2) {
-    return <PlayerLoad phase={phase}/>
-  }
-  else if (phase === 3) {
-    return <div></div>
-  }
-  else if (phase === 4) {
+  if (phase === 4) {
     return <div>
       <div>
         <PlayerMove type={player1Type} win={player1Win}/>
@@ -52,19 +40,17 @@ function UpdatePhase({phase, player1Win, player1Type, player2Type, player2Win, p
       </div>
     </div>
   }
+  else {
+    return <PlayerLoad phase={phase}/>
+  }
 };
 
 const duelMatchEndScreen = ({player1Name, player1Win, player1Type, player1Score, player2Name, player2Win, player2Type, player2Score, matchResult}: Props) => {
   return (
     <div>
-      <div>
-        <PlayerName name={player1Name} playerNum={1}/>
-      </div>
-        <UpdatePhase phase={2} player1Win={player1Win} player1Type={player1Type} player2Type={player2Type} 
-          player1Score={player1Score} player2Win={player2Win} player2Score={player2Score} matchResult={matchResult}/>
-      <div>
-        <PlayerName name={player2Name} playerNum={2}/>
-      </div>
+      <UpdatePhase phase={4} player1Win={player1Win} player1Type={player1Type} player2Type={player2Type} 
+        player1Score={player1Score} player2Win={player2Win} player2Score={player2Score} matchResult={matchResult}/>
+      <PlayerName name1={player1Name} name2={player2Name}/>
     </div>
   );
 };

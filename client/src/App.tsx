@@ -54,18 +54,9 @@ function App() {
     <div>
       <DuelMatchEnd 
         player1Name="PATRICK" player1Win={true} player1Type="paper" player1Score={1}
-        player2Name="SPONGEBOB" player2Win={false}  player2Type="scissors" player2Score={1} matchResult="tie"/>
+        player2Name="SPONGEBOB" player2Win={false}  player2Type="scissors" player2Score={1} matchResult="lose"/>
     </div>
   );
 }
-
-// function App() {
-//   return(
-//     <div>
-//       <div>{window.innerHeight}</div>
-//       <div>{window.innerWidth}</div>
-//     </div>
-//   )
-// }
 
 export default App;
