@@ -1,12 +1,12 @@
-import {  useState } from "react";
-import RockOption from '../assets/ChooseMove/RockOption.svg';
+import { useState } from "react";
+import RockOption from "../assets/ChooseMove/RockOption.svg";
 import PaperOption from "../assets/ChooseMove/PaperOption.svg";
 import ScissorsOption from "../assets/ChooseMove/ScissorOption.svg";
 
 type MoveType = "rock" | "paper" | "scissors";
 
 const ChoosePlayerMove = () => {
-   const [, setSelectedMove] = useState<MoveType | null>(null);
+  const [, setSelectedMove] = useState<MoveType | null>(null);
 
   const handleMoveSelection = (move: MoveType) => {
     setSelectedMove(move);
