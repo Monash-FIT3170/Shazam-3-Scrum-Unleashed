@@ -1,9 +1,10 @@
-import DisplayLogo from "../components/DisplayLogo";
+
 import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { GAME_LOBBY_PATH } from "./pagePaths.ts";
 import { socket } from "../App.tsx";
+import DisplayLogo from "../components/DisplayLogo.tsx";
 
 const HostGame = () => {
   const navigate = useNavigate();
@@ -27,35 +28,44 @@ const HostGame = () => {
   }, [gameCode]);
 
   return (
-    <div>
-      <div>
-        <DisplayLogo />
-      </div>
+      <div className="w-full">
 
-      <div>
-        <h1 className="text-white font-bold mt-6 uppercase"> name</h1>
-        <div className="w-screen">
-          <input
-            type="text"
-            placeholder="HOST NAME"
-            className="bg-primary-dark text-white rounded-xl w-1/3 h-10 mt-4 border-2 border-white pl-2"
-            onChange={(event) => {
-              setHostName(event.target.value);
-            }}
-          ></input>
+        <div className="w-full">
+
+          <div className="absolute top-5 left-5 w-32 md:w-48 lg:w-64">
+            <DisplayLogo/>
+          </div>
+
+          <div className="">
+            Game Mode
+          </div>
+        </div>
+
+
+        <div>
+          <h1 className="text-white font-bold mt-6"> name</h1>
+          <div className="w-screen">
+            <input
+                type="text"
+                placeholder="HOST NAME"
+                className="bg-primary-dark text-white rounded-xl w-1/3 h-10 mt-4 border-2 border-white pl-2"
+                onChange={(event) => {
+                  setHostName(event.target.value);
+                }}
+            ></input>
+          </div>
+        </div>
+
+        <div className="w-screen h-12 mt-8">
+          <button
+              className="text-white bg-primary text-2xl font-bold w-1/3 rounded-xl h-full"
+              onClick={createGame}
+              disabled={loading}
+          >
+            {loading ? "Loading..." : "Create Game"}
+          </button>
         </div>
       </div>
-
-      <div className="w-screen h-12 mt-8">
-        <button
-          className="text-white bg-primary text-2xl font-bold w-1/3 rounded-xl h-full"
-          onClick={createGame}
-          disabled={loading}
-        >
-          {loading ? "Loading..." : "Create Game"}
-        </button>
-      </div>
-    </div>
   );
 };
 
