@@ -2,7 +2,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { type ReactionProperties } from "../../types";
 
-export function Reaction({ x, y, value, kill }: ReactionProperties & { kill: () => void }) {
+export function Reaction({
+  x,
+  y,
+  value,
+  kill,
+}: ReactionProperties & { kill: () => void }) {
   const REACTION_LIFETIME_MS = 1000;
   const [reactionSize] = useState(Math.random() + 2);
   const [isRemoved, setIsRemoved] = useState(false);
@@ -10,7 +15,7 @@ export function Reaction({ x, y, value, kill }: ReactionProperties & { kill: () 
   useEffect(() => {
     const handler = setTimeout(() => {
       setIsRemoved(true);
-      setTimeout(kill, REACTION_LIFETIME_MS)
+      setTimeout(kill, REACTION_LIFETIME_MS);
     }, REACTION_LIFETIME_MS);
     return () => clearTimeout(handler);
   }, []);
