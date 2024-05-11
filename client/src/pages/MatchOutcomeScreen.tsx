@@ -21,12 +21,12 @@ const MatchOutcomeScreen = ({
 }: MatchOutcomeScreenProps) => {
   return (
     <div>
-      <PlayerAndSpectatorsInfo 
-        playerScore = {playerScore} 
-        opponentScore = {opponentScore}
-        playerName = {playerName}
-        opponentName = {opponentName}
-        spectatorCount = {spectatorCount}
+      <PlayerAndSpectatorsInfo
+        playerScore={playerScore}
+        opponentScore={opponentScore}
+        playerName={playerName}
+        opponentName={opponentName}
+        spectatorCount={spectatorCount}
       />
 
       <div
