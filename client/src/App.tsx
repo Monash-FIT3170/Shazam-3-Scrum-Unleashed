@@ -20,9 +20,7 @@ import {
 import GameLobby from "./pages/GameLobby.tsx";
 import { joinedGameLoader, joinGameLoader, newGameLoader } from "./loaders";
 import PlayerScreen from "./pages/PlayerScreen.tsx";
-// import GameRoundScreen from "./pages/gameRoundScreen.tsx";
 import Home from "./pages/Home.tsx";
-// import WaitingForOpponent from "./pages/WaitingForOpponent.tsx";
 
 export const socket: Socket<Events> = io("http://localhost:3010");
 
