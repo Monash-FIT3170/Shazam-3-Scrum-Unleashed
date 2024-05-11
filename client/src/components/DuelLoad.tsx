@@ -1,3 +1,6 @@
+//This is responsible for loading the buildup of a Duel
+//By Anand Vannalath
+
 import shazamLogo from "../assets/Duel/SHAZAM.svg"
 import closed from "../assets/Duel/Hand.svg";
 import explosion from "../assets/Duel/Explosion.svg";
@@ -6,7 +9,7 @@ interface LoadProps {
   phase: number;
 }
 
-const DuelLoad = ({phase}: LoadProps) => {
+const duelLoad = ({phase}: LoadProps) => {
   if (window.innerHeight <= 800 && window.innerWidth <= 500) {
     if (phase === 0) {
       return <div style={{position: "fixed", bottom: 150, left: 80, height: 500, width:250}} className="flex flex-col justify-center content-end">
@@ -65,4 +68,4 @@ const DuelLoad = ({phase}: LoadProps) => {
     }
   }
 
-export default DuelLoad;
+export default duelLoad;

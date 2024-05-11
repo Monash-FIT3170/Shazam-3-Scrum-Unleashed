@@ -1,11 +1,13 @@
+//This displays the name of the players in a Duel
+
 import star from "../assets/Duel/Star 2.svg"
 
-interface PlayerNameProps {
+interface DuelNameProps {
   name1: string;
   name2: string;
 }
 
-const PlayerName = ({name1, name2}: PlayerNameProps) => {
+const DuelName = ({name1, name2}: DuelNameProps) => {
   if (window.innerHeight <= 800 && window.innerWidth <=500) {
     return <div>
       <div className="fixed top-1 right-3 text-2xl text-white font-bold font-sans">
@@ -40,4 +42,4 @@ const PlayerName = ({name1, name2}: PlayerNameProps) => {
   }
 }
 
-export default PlayerName;
+export default DuelName;

@@ -1,3 +1,5 @@
+//This displays the scores after each Duel
+
 interface ScoreProps {
   player1Score: number;
   player2Score: number;
@@ -30,7 +32,7 @@ function ResultFormat({player1Score, player2Score, matchPhrase}: ScoreProps) {
   
 }
 
-const result = ({player1Score, player2Score, matchResult}: PlayerScoreProps) => {
+const duelScore = ({player1Score, player2Score, matchResult}: PlayerScoreProps) => {
   return (
     <div>
       {matchResult === "win" && (
@@ -46,4 +48,4 @@ const result = ({player1Score, player2Score, matchResult}: PlayerScoreProps) => 
   ) 
 }
 
-export default result;
+export default duelScore;

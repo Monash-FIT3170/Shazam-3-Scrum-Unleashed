@@ -1,3 +1,6 @@
+//This is responsible for displaying the moves of the Players
+//By Anand Vannalath
+
 import paperWin from "../assets/Duel/Paper.svg";
 import paperLose from "../assets/Duel/Paper-Outline.svg"
 import rockWin from "../assets/Duel/Rock.svg"
@@ -5,12 +8,12 @@ import rockLose from "../assets/Duel/Rock-Outline.svg"
 import scissorsWin from "../assets/Duel/Scissors.svg"
 import scissorsLose from "../assets/Duel/Scissors-Outline.svg"
 
-interface PlayerMoveProps {
+interface MoveProps {
   type: string;
   win: boolean;
 }
 
-const PlayerMove = ({type, win}: PlayerMoveProps) => {
+const duelMove = ({type, win}: MoveProps) => {
   if (window.innerHeight <= 800 && window.innerWidth <= 500) {
     if (win === true) {
       if (type === "paper") {
@@ -85,4 +88,4 @@ const PlayerMove = ({type, win}: PlayerMoveProps) => {
   }
 }
 
-export default PlayerMove;
+export default duelMove;
