@@ -3,43 +3,31 @@
 
 import DuelName from "../components/DuelName.tsx";
 import DuelMove from "../components/DuelMove.tsx";
-import DuelScore from "../components/DuelScore.tsx";
 import DuelLoad from "../components/DuelLoad.tsx";
 
 interface Props {
   player1Name: string;
-  player1Win: boolean;
-  player1Type: string;
-  player1Score: number;
   player2Name: string;
-  player2Win: boolean;
-  player2Type: string;
-  player2Score: number;
-  matchResult: string;
+  phase: number;
+  move: string;
+  score1: number;
+  score2: number;
+  result: string;
 }
 
 interface PhaseProps {
   phase: number;
-  player1Win: boolean;
-  player1Type: string;
-  player1Score: number;
-  player2Win: boolean;
-  player2Type: string;
-  player2Score: number;
-  matchResult: string;
+  move: string;
+  score1: number;
+  score2: number;
+  result: string;
 }
 
-function UpdatePhase({phase, player1Win, player1Type, player2Type, player2Win, player1Score, player2Score, matchResult}: PhaseProps) {
+function UpdatePhase({phase, move, score1, score2, result}: PhaseProps) {
   if (phase === 4) {
     return <div>
       <div>
-        <DuelMove type={player1Type} win={player1Win}/>
-      </div>
-      <div>
-        <DuelMove type={player2Type} win={player2Win}/>
-      </div>
-      <div>
-        <DuelScore player1Score={player1Score} player2Score={player2Score} matchResult={matchResult}/>
+        <DuelMove score1={score1} score2={score2} move={move} result={result}/>
       </div>
     </div>
   }
@@ -48,11 +36,10 @@ function UpdatePhase({phase, player1Win, player1Type, player2Type, player2Win, p
   }
 };
 
-const duel = ({player1Name, player1Win, player1Type, player1Score, player2Name, player2Win, player2Type, player2Score, matchResult}: Props) => {
+const duel = ({player1Name, player2Name, phase, move, score1, score2, result}: Props) => {
   return (
     <div>
-      <UpdatePhase phase={4} player1Win={player1Win} player1Type={player1Type} player2Type={player2Type} 
-        player1Score={player1Score} player2Win={player2Win} player2Score={player2Score} matchResult={matchResult}/>
+      <UpdatePhase phase={phase} move={move} score1={score1} score2={score2} result={result}/>
       <DuelName name1={player1Name} name2={player2Name}/>
     </div>
   );

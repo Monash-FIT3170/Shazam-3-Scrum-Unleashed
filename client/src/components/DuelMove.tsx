@@ -9,82 +9,253 @@ import scissorsWin from "../assets/Duel/Scissors.svg"
 import scissorsLose from "../assets/Duel/Scissors-Outline.svg"
 
 interface MoveProps {
-  type: string;
-  win: boolean;
+  score1: number;
+  score2: number;
+  move: string;
+  result: string;
 }
 
-const duelMove = ({type, win}: MoveProps) => {
-  if (window.innerHeight <= 800 && window.innerWidth <= 500) {
-    if (win === true) {
-      if (type === "paper") {
-        return <div style={{position: "fixed", bottom: -250, left: 90, height: 500, width:200}} className="flex justify-center content-end">
-        <img className="object-cover" src={paperWin}/>
-      </div>
-      }
-      else if (type === "scissors") {
-        return <div style={{position: "fixed", bottom: -250, left: 90, height: 500, width:200}} className="flex justify-center content-end">
-        <img className="object-cover" src={scissorsWin}/>
-      </div>
-      }
+const duelMove = ({score1, score2, move, result}: MoveProps) => {
+  if (window.innerHeight <= 800 && window.innerWidth <= 500) { //Mobile screen
+    if (result === "win") { //Player wins
+      if (move === "paper") {
+        return <div className="flex h-screen w-screen">
+          <img style={{position: "fixed", height: 600, bottom: -300}} className="flex w-full content-center object-fit" src={paperWin}/>
+          <img style={{position: "fixed", height: 600, top: -300}} className="flex w-full rotate-180 content-center object-fit" src={rockLose}/>
+          <div className="h-screen w-screen flex flex-col items-center justify-center">
+            <p className="text-7xl text-white font-bold font-sans">YOU WIN</p>
+            <p className="text-7xl text-white font-bold font-sans">{score1} - <span className="text-green-600">{score2}</span></p>
+          </div>
+          </div>}
+      else if (move === "scissors") {
+        return <div className="flex h-screen w-screen">
+          <img style={{position: "fixed", height: 600, bottom: -300}} className="flex w-full align-top content-center object-fit" src={scissorsWin}/>
+          <img style={{position: "fixed", height: 600, top: -300}} className="flex w-full rotate-180 content-center object-fit" src={paperLose}/>
+          <div className="h-screen w-screen flex flex-col items-center justify-center">
+            <p className="text-7xl text-white font-bold font-sans">YOU WIN</p>
+            <p className="text-7xl text-white font-bold font-sans">{score1} - <span className="text-green-600">{score2}</span></p>
+          </div>
+        </div>}
       else {
-        return <div style={{position: "fixed", bottom: -250, left: 90, height: 500, width:200}} className="flex justify-center content-end">
-        <img className="object-cover" src={rockWin}/>
-      </div>
+        return <div className="flex h-screen w-screen">
+          <img style={{position: "fixed", height: 600, bottom: -300}} className="flex w-full align-top content-center object-fit" src={rockWin}/>
+          <img style={{position: "fixed", height: 600, top: -300}} className="flex w-full rotate-180 content-center object-fit" src={scissorsLose}/>
+          <div className="h-screen w-screen flex flex-col items-center justify-center">
+            <p className="text-7xl text-white font-bold font-sans">YOU WIN</p>
+            <p className="text-7xl text-white font-bold font-sans">{score1} - <span className="text-green-600">{score2}</span></p>
+          </div>
+        </div>
       }
+    }
+    else if (result === "lose"){ //Player Loses
+      if (move === "paper") {
+        return <div className="flex h-screen w-screen">
+          <img style={{position: "fixed", height: 600, bottom: -300}} className="flex w-full align-top content-center object-fit" src={paperLose}/>
+          <img style={{position: "fixed", height: 600, top: -300}} className="flex w-full rotate-180 content-center object-fit" src={scissorsWin}/>
+          <div className="h-screen w-screen flex flex-col items-center justify-center">
+            <p className="text-7xl text-white font-bold font-sans">YOU LOSE</p>
+            <p className="text-7xl text-white font-bold font-sans">{score1} - <span className="text-green-600">{score2}</span></p>
+          </div>
+        </div>}
+      else if (move === "scissors") {
+        return <div className="flex h-screen w-screen">
+        <img style={{position: "fixed", height: 600, bottom: -300}} className="flex w-full align-top content-center object-fit" src={scissorsLose}/>
+        <img style={{position: "fixed", height: 600, top: -300}} className="flex w-full rotate-180 content-center object-fit" src={rockWin}/>
+        <div className="h-screen w-screen flex flex-col items-center justify-center">
+          <p className="text-7xl text-white font-bold font-sans">YOU LOSE</p>
+          <p className="text-7xl text-white font-bold font-sans">{score1} - <span className="text-green-600">{score2}</span></p>
+        </div>
+      </div>}
+      else {
+        return <div className="flex h-screen w-screen">
+        <img style={{position: "fixed", height: 600, bottom: -300}} className="flex w-full align-top content-center object-fit" src={rockLose}/>
+        <img style={{position: "fixed", height: 600, top: -300}} className="flex w-full rotate-180 content-center object-fit" src={paperWin}/>
+        <div className="h-screen w-screen flex flex-col items-center justify-center">
+          <p className="text-7xl text-white font-bold font-sans">YOU LOSE</p>
+          <p className="text-7xl text-white font-bold font-sans">{score1} - <span className="text-green-600">{score2}</span></p>
+        </div>
+      </div>}
     }
     else {
-      if (type === "paper") {
-        return <div style={{position: "fixed", top: -250, left: 90, height: 500, width:200}} className="flex justify-center  content-end">
-        <img className="object-cover rotate-180" src={paperLose}/>
-      </div>
-      }
-      else if (type === "scissors") {
-        return <div style={{position: "fixed", top: -250, left: 90, height: 500, width:200}} className="flex justify-center  content-end">
-        <img className="object-cover rotate-180" src={scissorsLose}/>
-      </div>
-      }
+      if (move === "paper") {
+        return <div className="flex h-screen w-screen">
+          <img style={{position: "fixed", height: 600, bottom: -300}} className="flex w-full align-top content-center object-fit" src={paperWin}/>
+          <img style={{position: "fixed", height: 600, top: -300}} className="flex w-full rotate-180 content-center object-fit" src={paperWin}/>
+          <div className="h-screen w-screen flex flex-col items-center justify-center">
+            <p className="text-7xl text-white font-bold font-sans">YOU TIE</p>
+            <p className="text-7xl text-white font-bold font-sans">{score1} - <span className="text-green-600">{score2}</span></p>
+          </div>
+        </div>}
+      else if (move === "scissors") {
+        return <div className="flex h-screen w-screen">
+        <img style={{position: "fixed", height: 600, bottom: -300}} className="flex w-full align-top content-center object-fit" src={scissorsWin}/>
+        <img style={{position: "fixed", height: 600, top: -300}} className="flex w-full rotate-180 content-center object-fit" src={scissorsWin}/>
+        <div className="h-screen w-screen flex flex-col items-center justify-center">
+          <p className="text-7xl text-white font-bold font-sans">YOU TIE</p>
+          <p className="text-7xl text-white font-bold font-sans">{score1} - <span className="text-green-600">{score2}</span></p>
+        </div>
+      </div>}
       else {
-        return <div style={{position: "fixed", top: -250, left: 90, height: 500, width:200}} className="flex justify-center  content-end">
-        <img className="object-cover rotate-180" src={rockLose}/>
-      </div>
-      }
-    }
+        return <div className="flex h-screen w-screen">
+        <img style={{position: "fixed", height: 600, bottom: -300}} className="flex w-full align-top content-center object-fit" src={rockWin}/>
+        <img style={{position: "fixed", height: 600, top: -300}} className="flex w-full rotate-180 content-center object-fit" src={rockWin}/>
+        <div className="h-screen w-screen flex flex-col items-center justify-center">
+          <p className="text-7xl text-white font-bold font-sans">YOU TIE</p>
+          <p className="text-7xl text-white font-bold font-sans">{score1} - <span className="text-green-600">{score2}</span></p>
+        </div>
+      </div>}
+    } //Player ties
   }
-  else {
-    if (win === true) {
-      if (type === "paper") {
-        return <div style={{position: "fixed", bottom: -450, left: 650, height: 800, width:500}} className="flex justify-center content-end">
-        <img className="object-cover" src={paperWin}/>
+  else { //Laptop or larger screen
+    if (result === "win") {
+      if (move === "paper") {
+        return <div>
+          <div className="flex justify-center items-center">
+            <img style={{position: "fixed", height: 800, width: 300, bottom: -450}} className="flex object-fit" src={paperWin}/>
+          </div>
+          <div className="flex justify-center items-center">
+            <img style={{position: "fixed", height: 800, width: 300, top: -450}} className="flex rotate-180 content-center object-fit" src={rockLose}/>
+          </div>
+          <div style={{position: "fixed", bottom: 165, left: 575, height: 500, width:700}} className="flex flex-col justify-center content-end ml-8">
+            <p className="text-8xl text-white font-bold font-sans">YOU WIN</p>
+            <div className="flex justify-center">
+              <p className="text-6xl text-white font-bold font-sans">{score2} - <span className="text-green-600">{score1}</span></p>
+            </div>
+          </div>
+        </div>
+      }
+      else if (move === "scissors") {
+        return <div>
+        <div className="flex justify-center items-center">
+          <img style={{position: "fixed", height: 800, width: 300, bottom: -450}} className="flex object-fit" src={scissorsWin}/>
+        </div>
+        <div className="flex justify-center items-center">
+          <img style={{position: "fixed", height: 800, width: 300, top: -450}} className="flex rotate-180 content-center object-fit" src={paperLose}/>
+        </div>
+        <div style={{position: "fixed", bottom: 165, left: 575, height: 500, width:700}} className="flex flex-col justify-center content-end ml-8">
+          <p className="text-8xl text-white font-bold font-sans">YOU WIN</p>
+          <div className="flex justify-center">
+            <p className="text-6xl text-white font-bold font-sans">{score2} - <span className="text-green-600">{score1}</span></p>
+          </div>
+        </div>
+        </div>
+      }
+      else {
+        return <div>
+        <div className="flex justify-center items-center">
+          <img style={{position: "fixed", height: 800, width: 300, bottom: -450}} className="flex object-fit" src={rockWin}/>
+        </div>
+        <div className="flex justify-center items-center">
+          <img style={{position: "fixed", height: 800, width: 300, top: -450}} className="flex rotate-180 content-center object-fit" src={scissorsLose}/>
+        </div>
+        <div style={{position: "fixed", bottom: 165, left: 575, height: 500, width:700}} className="flex flex-col justify-center content-end ml-8">
+          <p className="text-8xl text-white font-bold font-sans">YOU WIN</p>
+          <div className="flex justify-center">
+            <p className="text-6xl text-white font-bold font-sans">{score2} - <span className="text-green-600">{score1}</span></p>
+          </div>
+        </div>
       </div>
       }
-      else if (type === "scissors") {
-        return <div style={{position: "fixed", bottom: -450, left: 650, height: 800, width:500}} className="flex justify-center content-end">
-        <img className="object-cover" src={scissorsWin}/>
+    }
+    else if (result === "lose") {
+      if (move === "paper") {
+        return <div>
+        <div className="flex justify-center items-center">
+          <img style={{position: "fixed", height: 800, width: 300, bottom: -450}} className="flex object-fit" src={paperLose}/>
+        </div>
+        <div className="flex justify-center items-center">
+          <img style={{position: "fixed", height: 800, width: 300, top: -450}} className="flex rotate-180 content-center object-fit" src={rockWin}/>
+        </div>
+        <div style={{position: "fixed", bottom: 165, left: 575, height: 500, width:700}} className="flex flex-col justify-center content-end ml-8">
+          <p className="text-8xl text-white font-bold font-sans">YOU LOSE</p>
+          <div className="flex justify-center">
+            <p className="text-6xl text-white font-bold font-sans">{score2} - <span className="text-green-600">{score1}</span></p>
+          </div>
+        </div>
+      </div>
+      }
+      else if (move === "scissors") {
+        return <div>
+          <div className="flex justify-center items-center">
+            <img style={{position: "fixed", height: 800, width: 300, bottom: -450}} className="flex object-fit" src={scissorsLose}/>
+          </div>
+          <div className="flex justify-center items-center">
+            <img style={{position: "fixed", height: 800, width: 300, top: -450}} className="flex rotate-180 content-center object-fit" src={rockWin}/>
+          </div>
+          <div style={{position: "fixed", bottom: 165, left: 575, height: 500, width:700}} className="flex flex-col justify-center content-end ml-8">
+            <p className="text-8xl text-white font-bold font-sans">YOU LOSE</p>
+            <div className="flex justify-center">
+              <p className="text-6xl text-white font-bold font-sans">{score2} - <span className="text-green-600">{score1}</span></p>
+            </div>
+          </div>
       </div>
       }
       else {
-        return <div style={{position: "fixed", bottom: -450, left: 650, height: 800, width:500}} className="flex justify-center content-end">
-        <img className="object-cover" src={rockWin}/>
+        return <div>
+        <div className="flex justify-center items-center">
+          <img style={{position: "fixed", height: 800, width: 300, bottom: -450}} className="flex object-fit" src={rockLose}/>
+        </div>
+        <div className="flex justify-center items-center">
+          <img style={{position: "fixed", height: 800, width: 300, top: -450}} className="flex rotate-180 content-center object-fit" src={scissorsWin}/>
+        </div>
+        <div style={{position: "fixed", bottom: 165, left: 575, height: 500, width:700}} className="flex flex-col justify-center content-end ml-8">
+            <p className="text-8xl text-white font-bold font-sans">YOU LOSE</p>
+            <div className="flex justify-center">
+              <p className="text-6xl text-white font-bold font-sans">{score2} - <span className="text-green-600">{score1}</span></p>
+            </div>
+          </div>
       </div>
       }
     }
     else {
-      if (type === "paper") {
-        return <div style={{position: "fixed", top: -450, left: 650, height: 800, width:500}} className="flex justify-center  content-end">
-        <img className="object-cover rotate-180" src={paperLose}/>
+    if (move === "paper") {
+      return <div>
+        <div className="flex justify-center items-center">
+          <img style={{position: "fixed", height: 800, width: 300, bottom: -450}} className="flex object-fit" src={paperWin}/>
+        </div>
+        <div className="flex justify-center items-center">
+          <img style={{position: "fixed", height: 800, width: 300, top: -450}} className="flex rotate-180 content-center object-fit" src={paperWin}/>
+        </div>
+        <div style={{position: "fixed", bottom: 165, left: 575, height: 500, width:700}} className="flex flex-col justify-center content-end ml-8">
+          <p className="text-8xl text-white font-bold font-sans">YOU TIE</p>
+          <div className="flex justify-center">
+            <p className="text-6xl text-white font-bold font-sans">{score2} - <span className="text-green-600">{score1}</span></p>
+          </div>
+        </div>
       </div>
-      }
-      else if (type === "scissors") {
-        return <div style={{position: "fixed", top: -450, left: 650, height: 800, width:500}} className="flex justify-center  content-end">
-        <img className="object-cover rotate-180" src={scissorsLose}/>
-      </div>
-      }
-      else {
-        return <div style={{position: "fixed", top: -450, left: 650, height: 800, width:500}} className="flex justify-center  content-end">
-        <img className="object-cover rotate-180" src={rockLose}/>
-      </div>
-      }
     }
+    else if (move === "scissors") {
+      return <div>
+      <div className="flex justify-center items-center">
+        <img style={{position: "fixed", height: 800, width: 300, bottom: -450}} className="flex object-fit" src={scissorsWin}/>
+      </div>
+      <div className="flex justify-center items-center">
+        <img style={{position: "fixed", height: 800, width: 300, top: -450}} className="flex rotate-180 content-center object-fit" src={scissorsWin}/>
+      </div>
+      <div style={{position: "fixed", bottom: 165, left: 575, height: 500, width:700}} className="flex flex-col justify-center content-end ml-8">
+        <p className="text-8xl text-white font-bold font-sans">YOU TIE</p>
+        <div className="flex justify-center">
+          <p className="text-6xl text-white font-bold font-sans">{score2} - <span className="text-green-600">{score1}</span></p>
+        </div>
+      </div>
+      </div>
+    }
+    else {
+      return <div>
+      <div className="flex justify-center items-center">
+        <img style={{position: "fixed", height: 800, width: 300, bottom: -450}} className="flex object-fit" src={rockWin}/>
+      </div>
+      <div className="flex justify-center items-center">
+        <img style={{position: "fixed", height: 800, width: 300, top: -450}} className="flex rotate-180 content-center object-fit" src={rockWin}/>
+      </div>
+      <div style={{position: "fixed", bottom: 165, left: 575, height: 500, width:700}} className="flex flex-col justify-center content-end ml-8">
+        <p className="text-8xl text-white font-bold font-sans">YOU TIE</p>
+        <div className="flex justify-center">
+          <p className="text-6xl text-white font-bold font-sans">{score2} - <span className="text-green-600">{score1}</span></p>
+        </div>
+      </div>
+    </div>
+    }} //Player ties
   }
 }
 
