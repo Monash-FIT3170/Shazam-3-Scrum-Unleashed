@@ -3,6 +3,7 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  text-transform: uppercase;
 }
 
 body {
@@ -49,13 +50,17 @@ body {
   color: #888;
 }
 
-/* player card used on tournament screen */
+/* CSS used for the tournament screen */
+.player-bar {
+  background-color: #1B074A;
+  color: white;
+  height: 45px;
+  padding: 10px 0px;
+}
 .player-list {
   height: 90%;
   background-color: #00246B;
   color: white;
-  font: bold;
-  text-transform: uppercase;
 }
 .player-card-0 {
   background-color: #22026c;
@@ -92,7 +97,7 @@ body {
 }
 .player-card-3 {
   background-color: #22026c;
-  border: 1px solid #FFC700;
+  border: 3px solid #FFC700;
   border-radius: 10px;
   width: 125px;
   height: 60px;
