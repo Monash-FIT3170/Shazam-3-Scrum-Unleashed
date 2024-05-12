@@ -12,8 +12,8 @@ type MatchOutcomeScreenProps = {
 };
 
 const MatchOutcomeScreen = ({
-  playerScore,
-  opponentScore,
+  playerScore = 3,
+  opponentScore = 2,
   playerName,
   opponentName,
   spectatorCount,
