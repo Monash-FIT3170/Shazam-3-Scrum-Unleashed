@@ -1,8 +1,6 @@
 import plainTrophy from "../assets/PlainTrophy.svg";
 import cross from "../assets/Cross.svg";
-import PlayerName from "../components/PlayerNameMobile";
-import SpectatorCount from "../components/SpectatorCount";
-import StarsInfo from "../components/StarsInfo";
+import PlayerAndSpectatorsInfo from "../components/PlayerAndSpectatorsInfo";
 
 type MatchOutcomeScreenProps = {
   playerScore: number;
@@ -16,23 +14,20 @@ type MatchOutcomeScreenProps = {
 const MatchOutcomeScreen = ({
   playerScore = 3,
   opponentScore = 2,
-  playerName = "SPONGEBOB",
-  opponentName = "PATRICK",
-  spectatorCount = 32,
+  playerName,
+  opponentName,
+  spectatorCount,
   isWin = true,
 }: MatchOutcomeScreenProps) => {
   return (
     <div>
-      <div className="block md:hidden">
-        <PlayerName name={opponentName} isOpponent={true} />
-      </div>
-      <div className="hidden md:block">
-        <StarsInfo
-          playerName={opponentName}
-          score={opponentScore}
-          isOpponent={true}
-        />
-      </div>
+      <PlayerAndSpectatorsInfo
+        playerScore={playerScore}
+        opponentScore={opponentScore}
+        playerName={playerName}
+        opponentName={opponentName}
+        spectatorCount={spectatorCount}
+      />
 
       <div
         className={
@@ -72,20 +67,6 @@ const MatchOutcomeScreen = ({
       </div>
       <div className="text-white font-bold text-2xl md:text-3xl fixed top-[77%] mx-auto max-w-max inset-x-0">
         <p>WAITING FOR THE NEXT ROUND...</p>
-      </div>
-
-      <div className="block md:hidden">
-        <PlayerName name={playerName} isOpponent={false} />
-      </div>
-      <div className="hidden md:block">
-        <StarsInfo
-          playerName={playerName}
-          score={playerScore}
-          isOpponent={false}
-        />
-      </div>
-      <div className="hidden md:block">
-        <SpectatorCount count={spectatorCount} />
       </div>
     </div>
   );
