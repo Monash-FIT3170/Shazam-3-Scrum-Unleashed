@@ -14,8 +14,8 @@ type MatchOutcomeScreenProps = {
 const MatchOutcomeScreen = ({
   playerScore = 3,
   opponentScore = 2,
-  playerName,
-  opponentName,
+  playerName = "SPONGEBOB",
+  opponentName = "PATRICK",
   spectatorCount,
   isWin = true,
 }: MatchOutcomeScreenProps) => {
@@ -32,7 +32,7 @@ const MatchOutcomeScreen = ({
       <div
         className={
           "fixed mx-auto max-w-max inset-x-0 scale-[0.85] sm:scale-[0.85] md:scale-[0.875] lg:scale-[0.90]" +
-          ` top-[${isWin ? "5" : "10"}%]`
+          ` ${isWin ? "top-[5%]" : "top-[10%]"}`
         }
       >
         <img
