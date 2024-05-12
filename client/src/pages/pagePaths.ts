@@ -4,3 +4,4 @@ export const JOIN_GAME_PATH: string = "join-game";
 export const HOST_GAME_PATH: string = "host-game";
 export const GAME_LOBBY_PATH: string = "game-lobby";
 export const PLAYER_SCREEN: string = "player-screen";
+export const TOURNAMENT_SCREEN: string = "tournament-screen";
