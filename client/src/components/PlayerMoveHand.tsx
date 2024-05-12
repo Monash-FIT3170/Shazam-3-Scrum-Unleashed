@@ -8,11 +8,13 @@ import filledScissors from "../assets/Scissors.svg";
 import outlinedPaper from "../assets/Paper-Outline.svg";
 import outlinedRock from "../assets/Rock-Outline.svg";
 import outlinedScissors from "../assets/Scissors-Outline.svg";
+import { Action } from "../../../types/types";
+import { HandImgType } from "../types";
 
 type PlayerMoveHandProps = {
-  playerMove: string; // eg. rock, paper or scissors
+  playerMove: Action; // eg. ROCK, PAPER or SCISSORS
   isOpponent: boolean;
-  handType: string; // eg. filled, outlined or semiTransparent
+  handType: HandImgType; // eg. FILLED, OUTLINED or SEMI_TRANSPARENT
 };
 
 function PlayerMoveHand({
@@ -42,35 +44,35 @@ function PlayerMoveHand({
       >
         <img
           src={
-            handType === "filled" && playerMove === "rock"
+            handType === "FILLED" && playerMove === "ROCK"
               ? filledRock
-              : handType === "filled" && playerMove === "paper"
+              : handType === "FILLED" && playerMove === "PAPER"
                 ? filledPaper
-                : handType === "filled" && playerMove === "scissors"
+                : handType === "FILLED" && playerMove === "SCISSORS"
                   ? filledScissors
-                  : handType === "outlined" && playerMove === "rock"
+                  : handType === "OUTLINED" && playerMove === "ROCK"
                     ? outlinedRock
-                    : handType === "outlined" && playerMove === "paper"
+                    : handType === "OUTLINED" && playerMove === "PAPER"
                       ? outlinedPaper
-                      : handType === "outlined" && playerMove === "scissors"
+                      : handType === "OUTLINED" && playerMove === "SCISSORS"
                         ? outlinedScissors
-                        : handType === "semiTransparent" &&
-                            playerMove === "rock"
+                        : handType === "SEMI_TRANSPARENT" &&
+                            playerMove === "ROCK"
                           ? semiTransparentRock
-                          : handType === "semiTransparent" &&
-                              playerMove === "paper"
+                          : handType === "SEMI_TRANSPARENT" &&
+                              playerMove === "PAPER"
                             ? semiTransparentPaper
-                            : handType === "semiTransparent" &&
-                                playerMove === "scissors"
+                            : handType === "SEMI_TRANSPARENT" &&
+                                playerMove === "SCISSORS"
                               ? semiTransparentScissors
                               : ""
           }
           alt={
-            playerMove === "rock"
+            playerMove === "ROCK"
               ? "Rock"
-              : playerMove === "paper"
+              : playerMove === "PAPER"
                 ? "Paper"
-                : playerMove === "scissors"
+                : playerMove === "SCISSORS"
                   ? "Scissors"
                   : ""
           }

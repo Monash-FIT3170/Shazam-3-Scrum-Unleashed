@@ -20,15 +20,14 @@ import {
 import GameLobby from "./pages/GameLobby.tsx";
 import { joinedGameLoader, joinGameLoader, newGameLoader } from "./loaders";
 import PlayerScreen from "./pages/PlayerScreen.tsx";
-// import Home from "./pages/Home.tsx";
-import WaitingForOpponent from "./pages/WaitingForOpponent.tsx";
+import Home from "./pages/Home.tsx";
 
 export const socket: Socket<Events> = io("http://localhost:3010");
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path={BASE_PATH}>
-      <Route path={HOME_PATH} element={<WaitingForOpponent />} />
+      <Route path={HOME_PATH} element={<Home />} />
       <Route
         path={JOIN_GAME_PATH}
         element={<JoinGame />}
