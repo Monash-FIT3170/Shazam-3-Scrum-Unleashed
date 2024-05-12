@@ -23,26 +23,37 @@ interface PhaseProps {
   result: string;
 }
 
-function UpdatePhase({phase, move, score1, score2, result}: PhaseProps) {
+function UpdatePhase({ phase, move, score1, score2, result }: PhaseProps) {
   if (phase === 4) {
-    return <div>
-      <div>
-        <DuelMove score1={score1} score2={score2} move={move} result={result}/>
-      </div>
-    </div>
+    return (
+      <DuelMove score1={score1} score2={score2} move={move} result={result} />
+    );
+  } else {
+    return <DuelLoad phase={phase} />;
   }
-  else {
-    return <DuelLoad phase={phase}/>
-  }
-};
+}
 
-const duel = ({player1Name, player2Name, phase, move, score1, score2, result}: Props) => {
+const Duel = ({
+  player1Name,
+  player2Name,
+  phase,
+  move,
+  score1,
+  score2,
+  result,
+}: Props) => {
   return (
     <div>
-      <UpdatePhase phase={phase} move={move} score1={score1} score2={score2} result={result}/>
-      <DuelName name1={player1Name} name2={player2Name}/>
+      <UpdatePhase
+        phase={phase}
+        move={move}
+        score1={score1}
+        score2={score2}
+        result={result}
+      />
+      <DuelName name1={player1Name} name2={player2Name} />
     </div>
   );
 };
 
-export default duel;
+export default Duel;
