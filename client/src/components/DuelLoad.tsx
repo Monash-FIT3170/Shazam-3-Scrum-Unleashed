@@ -57,29 +57,29 @@ const duelLoad = ({phase}: LoadProps) => {
     }
     else if (phase === 2) {
       return <div>
-        <div className="flex w-full align-top content-center">
-          <img style={{position: "absolute", height: 600, width: 300}} className="rotate-180 object-cover" src={closed}/>
-        </div>
-        <div className="flex w-screen align-bottom content-center">
-          <img style={{position: "absolute", height: 600, width: 300}} className="object-cover" src={closed}/>
-        </div>
         <div className="h-screen flex items-center justify-center">
-          <img className="object-cover" src={shazamLogo}/>
+          <img style={{position: "fixed"}} className="object-cover" src={shazamLogo}/>
+        </div>
+        <div className="flex justify-center items-center">
+            <img style={{position: "fixed", height: 800, width: 300, bottom: -450}} className="flex object-fit" src={closed}/>
+          </div>
+        <div className="flex justify-center items-center">
+          <img style={{position: "fixed", height: 800, width: 300, top: -450}} className="flex rotate-180 content-center object-fit" src={closed}/>
         </div>
         </div>
       }
       else if (phase === 3){
         return <div>
-            <div className="flex align-top items-center justify-center z-0">
-              <img style={{position: "fixed", height: 800, width:300}} className="w-full rotate-180 object-fit" src= {closed}/>
-            </div>
-            <div className="flex align-bottom items-center justify-center z-0">
-              <img style={{position: "fixed", height: 800, width: 300}} className="w-full object-fit" src={closed}/>
-            </div>
-            <div className="h-screen flex items-center justify-center">
-              <img style={{height: 600}} className="object-fit" src={explosion}/>
-            </div>
+          <div className="flex justify-center items-center z-0">
+            <img style={{position: "fixed", height: 800, width: 300, bottom: -100}} className="flex object-fit" src={closed}/>
           </div>
+          <div className="flex justify-center items-center z-0">
+            <img style={{position: "fixed", height: 800, width: 300, top: -100}} className="flex rotate-180 content-center object-fit" src={closed}/>
+          </div>
+          <div className="h-screen flex items-center justify-center z-10">
+            <img style={{position: "fixed", height: 600}} className="object-fit" src={explosion}/>
+          </div>
+        </div>
       }
     }
   }
