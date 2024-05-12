@@ -1,6 +1,7 @@
 import LoadingEffect from "../components/LoadingEffect";
 import PlayerAndSpectatorsInfo from "../components/PlayerAndSpectatorsInfo";
 import PlayerMoveHand from "../components/PlayerMoveHand";
+import { Action } from "../../../types/types";
 
 type WaitingForOpponentProps = {
   playerScore: number;
@@ -8,7 +9,7 @@ type WaitingForOpponentProps = {
   playerName: string;
   opponentName: string;
   spectatorCount: number;
-  playerMove: string;
+  playerMove: Action;
 };
 
 const WaitingForOpponent = ({
@@ -17,7 +18,7 @@ const WaitingForOpponent = ({
   playerName,
   opponentName,
   spectatorCount,
-  playerMove = "rock",
+  playerMove = "ROCK",
 }: WaitingForOpponentProps) => {
   return (
     <div>
@@ -38,7 +39,7 @@ const WaitingForOpponent = ({
       <PlayerMoveHand
         playerMove={playerMove}
         isOpponent={false}
-        handType="semiTransparent"
+        handType="SEMI_TRANSPARENT"
       />
     </div>
   );
