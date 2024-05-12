@@ -5,6 +5,7 @@ import Actor from "./actor";
 
 export default class Player extends Actor implements PlayerAttributes {
   public id: number;
+  public name: string;
   public currentView: number;
   //private abilities: Ability[];
   //the winstreak is how many DUELS a player has won in a row. not the matches.
@@ -16,7 +17,8 @@ export default class Player extends Actor implements PlayerAttributes {
   public actionChoice: Action;
 
   constructor(socketId: string, name: string, id: number, isBot: boolean) {
-    super(socketId, name);
+    super(socketId);
+    this.name = name;
     this.id = id;
     //by default the player is viewing their own view
     this.currentView = id;
