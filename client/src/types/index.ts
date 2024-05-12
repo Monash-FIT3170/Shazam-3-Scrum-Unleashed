@@ -7,5 +7,4 @@ export interface ReactRotuterRequest {
 // using this type allows the usage of props inside components
 export type AppProps = {
   player: Player;
-  count: number;
 }

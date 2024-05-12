@@ -4,8 +4,10 @@ import Player from "../../../server/model/actors/player"
 
 const TournamentScreen = () => {
   // get the current player list
-  // placeholder player
+  // placeholder players
   const player = new Player("1", "mmmmmmmm", 1, false);
+  const player2 = new Player("1", "wwwwwwww", 2, false);
+  const players = [player, player2];
 
   return (
     <div>
@@ -16,7 +18,10 @@ const TournamentScreen = () => {
         Tournament
       </h1>
       <div className="player-list">
-        <PlayerCard count={1} player={player}/>
+        {/* creating a playercard component for each player */}
+        {players.map((player) => (
+          <PlayerCard key={player.getId()} player={player} />
+        ))}
       </div>
     </div>
   )
