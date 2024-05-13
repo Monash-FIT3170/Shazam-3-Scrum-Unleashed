@@ -4,7 +4,9 @@ export default abstract class Actor {
   constructor(socketId: string) {
     this.socketId = socketId;
   }
-  
+
   // getters
-  public getSocketID(): string { return this.socketId; }
+  public getSocketID(): string {
+    return this.socketId;
+  }
 }

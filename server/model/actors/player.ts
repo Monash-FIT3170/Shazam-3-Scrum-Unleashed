@@ -32,7 +32,7 @@ export default class Player extends Actor implements PlayerAttributes {
   }
 
   //getters
-  public getName(): string{
+  public getName(): string {
     return this.name;
   }
 
