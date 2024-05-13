@@ -54,4 +54,48 @@ export class TournamentManager {
     }
     return players;
   }
+
+  public createNextBracket(): void {
+    // creating the next bracket in the tournament
+    let nextBracket = [];
+    if (this.tournamentBrackets[-1].length != 1) { // if there is no winner yet
+      for (let i = 0; i < this.tournamentBrackets[-1].length; i++){
+        if (this.tournamentBrackets[-1][i].getWinstreak() != 0) {
+          nextBracket.push(this.tournamentBrackets[-1][i])
+        }
+      }
+    }
+    // adding new bracket into tournamentBrackets
+    this.tournamentBrackets.push(nextBracket)    
+  }
+  
+  // method used to assist in the drawing of all rounds
+  // each subarray contains players who were eliminated / are currently in that round
+  // empty subarrays represent the inner rounds that have not been reached yet
+  public getAllBracketsResults(): Player[][] {
+    // preparing vars required
+    let resBrackets = [];
+    const playerList = this.tournamentBrackets[0]
+    const numPlayers = playerList.length;
+    // loop vars
+    let roundPlayers = numPlayers;
+    let roundIterator = 0;
+    // executing loop to create round brackets
+    while (roundPlayers != 0) {
+      // creating array for all players who lost on that round / are in current round
+      let roundBracket = [];
+      // looking through all players to push the required players
+      for (let i = 0; i < numPlayers; i++) {
+        if (playerList[i].getMatchesWon() == roundIterator) {
+          roundBracket.push(playerList[i])
+        }
+      }
+      // push to result bracket
+      resBrackets.push([]);
+      // increment roundPlayers and roundIterator
+      roundPlayers = Math.floor(roundPlayers / 2);
+      roundIterator ++
+    }
+    return resBrackets;
+  }
 }
