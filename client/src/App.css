@@ -4,6 +4,7 @@
   margin: 0 auto;
 
   text-align: center;
+  text-transform: uppercase;
 }
 
 body {
@@ -48,4 +49,61 @@ body {
 
 .read-the-docs {
   color: #888;
+}
+
+/* CSS used for the tournament screen */
+.player-bar {
+  background-color: #1b074a;
+  color: white;
+  height: 45px;
+  padding: 10px 0px;
+}
+.player-list {
+  height: 90%;
+  background-color: #00246b;
+  color: white;
+}
+.player-card-0 {
+  background-color: #22026c;
+  border: 3px solid #65dbbb;
+  border-radius: 10px;
+  width: 125px;
+  height: 60px;
+  padding: 15px 0px;
+  margin: 10px;
+  text-align: center;
+  display: inline-block;
+}
+.player-card-1 {
+  background-color: #22026c;
+  border: 3px solid #ff5959;
+  border-radius: 10px;
+  width: 125px;
+  height: 60px;
+  padding: 15px 0px;
+  margin: 10px;
+  text-align: center;
+  display: inline-block;
+}
+.player-card-2 {
+  background-color: #22026c;
+  border: 3px solid #e943e9;
+  border-radius: 10px;
+  width: 125px;
+  height: 60px;
+  padding: 15px 0px;
+  margin: 10px;
+  text-align: center;
+  display: inline-block;
+}
+.player-card-3 {
+  background-color: #22026c;
+  border: 3px solid #ffc700;
+  border-radius: 10px;
+  width: 125px;
+  height: 60px;
+  padding: 15px 0px;
+  margin: 10px;
+  text-align: center;
+  display: inline-block;
 }
