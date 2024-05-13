@@ -39,7 +39,7 @@ const WaitingForOpponent = ({
       <PlayerMoveHand
         playerMove={playerMove}
         isOpponent={false}
-        handType="SEMI_TRANSPARENT"
+        handType="SEMITRANSPARENT"
       />
     </div>
   );

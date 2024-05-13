@@ -8,4 +8,4 @@ export interface ReactionProperties {
   value: string;
 }
 
-export type HandImgType = "FILLED" | "OUTLINED" | "SEMI_TRANSPARENT";
+export type HandImgType = "FILLED" | "OUTLINED" | "SEMITRANSPARENT";
