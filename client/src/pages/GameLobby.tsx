@@ -1,4 +1,4 @@
-import DisplayLogo from "../components/DisplayLogo";
+import DisplayLogo from "../components/DisplayLogo.tsx";
 
 import { useLoaderData } from "react-router-dom";
 import { useEffect, useState } from "react";
