@@ -1,7 +1,11 @@
 
-import { AppProps } from "../types";
+import Player from "../../../server/model/actors/player";
 
-const PlayerCard = (props: AppProps) => {
+interface PlayerCardProps {
+    player: Player
+}
+
+const PlayerCard = (props: PlayerCardProps) => {
     const cardNum = props.player.getId() % 4;
     // card name of varying borders
     const cardName = "player-card-" + cardNum;
