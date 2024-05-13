@@ -1,21 +1,21 @@
 import DisplayLogo from "../components/DisplayLogo";
-import WinnerPlayer from "../components/WinnerPlayer";
-//import EndTournament from "../components/EndTournament";
-
-// For testing purposes I've added both componenets to Player Screen.
-// Components will be conditionally rendered based on the game state.
+//import WaitingToStart from "../components/WaitingToStart";
+import ChoosePlayerMove from "../components/ChoosePlayerMove";
+import CountDownTimer from "../components/CountDownTimer";
 
 const PlayerScreen = () => {
   return (
-    <div className="overflow-hidden pt-12">
-      <div>
+    <div className="overflow-hidden">
+      <div className="pt-12">
         <DisplayLogo />
-      </div>
-      {/* <div className="mt-5">
-        <EndTournament player={"PLAYER X"}/> 
-      </div> */}
-      <div className="mt-5">
-        <WinnerPlayer />
+        {/* <div className="flex flex-col items-center justify-center mt-16"> */}
+        {/* <div className="mt-20">
+            <WaitingToStart />
+          </div> */}
+        <div className="mt-20">
+          <CountDownTimer />
+          <ChoosePlayerMove />
+        </div>
       </div>
     </div>
   );
