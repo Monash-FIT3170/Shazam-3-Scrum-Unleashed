@@ -25,7 +25,7 @@ function PlayerMoveHand({
     <div>
       <div
         className={
-          "mx-auto max-w-max inset-x-0 scale-75 md:scale-95 absolute duration-[500ms] ease-out transition-all" +
+          "mx-auto max-w-max inset-x-0 scale-75 md:scale-95 fixed duration-[500ms] ease-out transition-all" +
           ` ${
             isOpponent
               ? ` rotate-180 -top-[345px] md:-top-[355px] ${loaded ? "" : "-translate-y-full"}`
