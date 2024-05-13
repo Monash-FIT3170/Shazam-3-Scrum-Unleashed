@@ -53,19 +53,19 @@ body {
 
 /* CSS used for the tournament screen */
 .player-bar {
-  background-color: #1B074A;
+  background-color: #1b074a;
   color: white;
   height: 45px;
   padding: 10px 0px;
 }
 .player-list {
   height: 90%;
-  background-color: #00246B;
+  background-color: #00246b;
   color: white;
 }
 .player-card-0 {
   background-color: #22026c;
-  border: 3px solid #65DBBB;
+  border: 3px solid #65dbbb;
   border-radius: 10px;
   width: 125px;
   height: 60px;
@@ -76,7 +76,7 @@ body {
 }
 .player-card-1 {
   background-color: #22026c;
-  border: 3px solid #FF5959;
+  border: 3px solid #ff5959;
   border-radius: 10px;
   width: 125px;
   height: 60px;
@@ -87,7 +87,7 @@ body {
 }
 .player-card-2 {
   background-color: #22026c;
-  border: 3px solid #E943E9;
+  border: 3px solid #e943e9;
   border-radius: 10px;
   width: 125px;
   height: 60px;
@@ -98,7 +98,7 @@ body {
 }
 .player-card-3 {
   background-color: #22026c;
-  border: 3px solid #FFC700;
+  border: 3px solid #ffc700;
   border-radius: 10px;
   width: 125px;
   height: 60px;

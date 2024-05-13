@@ -32,6 +32,10 @@ export default class Player extends Actor implements PlayerAttributes {
   }
 
   //getters
+  public getName(): string{
+    return this.name;
+  }
+
   public getId(): number {
     return this.id;
   }

@@ -47,10 +47,7 @@ const router = createBrowserRouter(
         loader={joinedGameLoader}
       />
       {/* creating a route for the tournament screen */}
-      <Route
-        path={TOURNAMENT_SCREEN}
-        element={<TournamentScreen />}
-        />
+      <Route path={TOURNAMENT_SCREEN} element={<TournamentScreen />} />
     </Route>,
   ),
 );

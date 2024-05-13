@@ -7,5 +7,4 @@ export default abstract class Actor {
   
   // getters
   public getSocketID(): string { return this.socketId; }
-  public getName(): string { return this.name; }
 }
