@@ -1,7 +1,7 @@
-import { ReactRotuterRequest } from "../types";
+import { ReactRouterRequest } from "../types";
 
 export interface LoaderProps {
-  request: ReactRotuterRequest;
+  request: ReactRouterRequest;
 }
 
 export const newGameLoader = async ({ request }: LoaderProps) => {

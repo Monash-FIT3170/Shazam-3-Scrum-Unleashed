@@ -14,7 +14,7 @@ export interface Events extends HostToServerEvents, PlayerToServerEvents, Server
 }
 
 interface HostToServerEvents {
-    CREATE_GAME: (hostName: string) => void,
+    CREATE_GAME: (duelPerMatch:number, duelTime:number, matchTime:number) => void,
     START_GAME: (gameCode: string) => void,
     KICK_PLAYER: (gameCode: string, playerName: PlayerAttributes) => void,
 
