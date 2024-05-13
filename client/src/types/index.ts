@@ -1,3 +1,3 @@
-export interface ReactRotuterRequest {
+export interface ReactRouterRequest {
   url: string;
 }
