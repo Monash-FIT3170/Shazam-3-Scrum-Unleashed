@@ -1,4 +1,4 @@
-import DisplayLogo from "../components/DisplayLogo";
+import DisplayLogo from "../components/DisplayLogo.tsx";
 import { useEffect, useState } from "react";
 
 import { socket } from "../App.tsx";
