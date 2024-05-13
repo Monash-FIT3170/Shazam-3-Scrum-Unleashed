@@ -1,13 +1,4 @@
 import { useEffect, useState } from "react";
-import semiTransparentPaper from "../assets/SemiTransparentPaper.svg";
-import semiTransparentRock from "../assets/SemiTransparentRock.svg";
-import semiTransparentScissors from "../assets/SemiTransparentScissors.svg";
-import filledPaper from "../assets/Paper.svg";
-import filledRock from "../assets/Rock.svg";
-import filledScissors from "../assets/Scissors.svg";
-import outlinedPaper from "../assets/Paper-Outline.svg";
-import outlinedRock from "../assets/Rock-Outline.svg";
-import outlinedScissors from "../assets/Scissors-Outline.svg";
 import { Action } from "../../../types/types";
 import { HandImgType } from "../types";
 
@@ -43,39 +34,8 @@ function PlayerMoveHand({
         }
       >
         <img
-          src={
-            handType === "FILLED" && playerMove === "ROCK"
-              ? filledRock
-              : handType === "FILLED" && playerMove === "PAPER"
-                ? filledPaper
-                : handType === "FILLED" && playerMove === "SCISSORS"
-                  ? filledScissors
-                  : handType === "OUTLINED" && playerMove === "ROCK"
-                    ? outlinedRock
-                    : handType === "OUTLINED" && playerMove === "PAPER"
-                      ? outlinedPaper
-                      : handType === "OUTLINED" && playerMove === "SCISSORS"
-                        ? outlinedScissors
-                        : handType === "SEMI_TRANSPARENT" &&
-                            playerMove === "ROCK"
-                          ? semiTransparentRock
-                          : handType === "SEMI_TRANSPARENT" &&
-                              playerMove === "PAPER"
-                            ? semiTransparentPaper
-                            : handType === "SEMI_TRANSPARENT" &&
-                                playerMove === "SCISSORS"
-                              ? semiTransparentScissors
-                              : ""
-          }
-          alt={
-            playerMove === "ROCK"
-              ? "Rock"
-              : playerMove === "PAPER"
-                ? "Paper"
-                : playerMove === "SCISSORS"
-                  ? "Scissors"
-                  : ""
-          }
+          src={`/shazam-3-scrum-unleashed/src/assets/${handType.toLowerCase()}-${playerMove.toLowerCase()}.svg`}
+          alt={playerMove.toLowerCase()}
         />
       </div>
     </div>
