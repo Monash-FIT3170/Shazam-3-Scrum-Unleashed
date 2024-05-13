@@ -1,10 +1,12 @@
-import Player from "../../../server/model/actors/player";
 
 export interface ReactRotuterRequest {
   url: string;
 }
 
-// using this type allows the usage of props inside components
-export type AppProps = {
-  player: Player;
+export interface ReactionProperties {
+  x: number;
+  y: number;
+  value: string;
 }
+
+export type HandImgType = "FILLED" | "OUTLINED" | "SEMI_TRANSPARENT";

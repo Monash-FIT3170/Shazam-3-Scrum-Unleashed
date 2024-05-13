@@ -8,11 +8,10 @@ import {
 } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 import { Events } from "../../types/socket/events.ts";
-import Home from "./pages/Home.tsx";
-import HostGame from "./pages/HostGame.tsx";
+import CreateGame from "./pages/CreateGame.tsx";
 import {
   BASE_PATH,
-  HOST_GAME_PATH,
+  CREATE_GAME_PATH,
   HOME_PATH,
   JOIN_GAME_PATH,
   GAME_LOBBY_PATH,
@@ -23,6 +22,7 @@ import GameLobby from "./pages/GameLobby.tsx";
 import { joinedGameLoader, joinGameLoader, newGameLoader } from "./loaders";
 import PlayerScreen from "./pages/PlayerScreen.tsx";
 import TournamentScreen from "./pages/TournamentScreen.tsx";
+import Home from "./pages/Home.tsx";
 
 export const socket: Socket<Events> = io("http://localhost:3010");
 
@@ -35,7 +35,7 @@ const router = createBrowserRouter(
         element={<JoinGame />}
         loader={joinGameLoader}
       />
-      <Route path={HOST_GAME_PATH} element={<HostGame />} />
+      <Route path={CREATE_GAME_PATH} element={<CreateGame />} />
       <Route
         path={GAME_LOBBY_PATH}
         element={<GameLobby />}
@@ -57,7 +57,7 @@ const router = createBrowserRouter(
 
 function App() {
   return (
-    <div>
+    <div className="w-full">
       <RouterProvider router={router} />
     </div>
   );

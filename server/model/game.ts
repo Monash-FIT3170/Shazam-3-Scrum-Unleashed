@@ -4,9 +4,20 @@ import Host from "./actors/host";
 export default class Game {
   private host: Host;
   private players: Player[];
+  private duelsPerMatch: number;
+  private duelTime: number;
+  private matchTime: number;
 
-  constructor(host: Host) {
+  constructor(
+    host: Host,
+    duelsPerMatch: number,
+    duelTime: number,
+    matchTime: number,
+  ) {
     this.host = host;
+    this.duelsPerMatch = duelsPerMatch;
+    this.duelTime = duelTime;
+    this.matchTime = matchTime;
     this.players = new Array<Player>();
   }
 

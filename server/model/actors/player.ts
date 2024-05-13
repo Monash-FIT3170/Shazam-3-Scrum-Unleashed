@@ -1,10 +1,11 @@
 //Very basic player class, can be expanded if needed
 //Author: Team Buddy (4), Aaron Abbott 32520441
-import { PlayerAttributes } from "../../../types/types";
+import { Action, PlayerAttributes } from "../../../types/types";
 import Actor from "./actor";
 
 export default class Player extends Actor implements PlayerAttributes {
   public id: number;
+  public name: string;
   public currentView: number;
   //private abilities: Ability[];
   //the winstreak is how many DUELS a player has won in a row. not the matches.
@@ -12,10 +13,12 @@ export default class Player extends Actor implements PlayerAttributes {
   public winstreakHigh: number;
   public numSpectators: number;
   public isBot: boolean;
-  public ingamePoints: number;
+  public inGamePoints: number;
+  public actionChoice: Action;
 
   constructor(socketId: string, name: string, id: number, isBot: boolean) {
-    super(socketId, name);
+    super(socketId);
+    this.name = name;
     this.id = id;
     //by default the player is viewing their own view
     this.currentView = id;
@@ -24,7 +27,8 @@ export default class Player extends Actor implements PlayerAttributes {
     this.winstreakHigh = 0;
     this.numSpectators = 0;
     this.isBot = isBot;
-    this.ingamePoints = 0;
+    this.inGamePoints = 0;
+    this.actionChoice = "NONE";
   }
 
   //getters
@@ -43,6 +47,12 @@ export default class Player extends Actor implements PlayerAttributes {
   public getCurrentView(): number {
     return this.currentView;
   }
+  public getChoice(): Action {
+    return this.actionChoice;
+  }
+  public getInGamePoints(): number {
+    return this.inGamePoints;
+  }
 
   //setters
 
@@ -58,6 +68,9 @@ export default class Player extends Actor implements PlayerAttributes {
   public setCurrentView(currentView: number) {
     this.currentView = currentView;
   }
+  public setChoice(choice: Action) {
+    this.actionChoice = choice;
+  }
 
   //additional methods
   public incrementWinstreak() {
@@ -66,8 +79,13 @@ export default class Player extends Actor implements PlayerAttributes {
       this.winstreakHigh = this.winstreak;
     }
   }
+
   public resetWinstreak() {
     this.winstreak = 0;
+  }
+
+  public resetIngamePoints() {
+    this.inGamePoints = 0;
   }
 
   public incrementNumSpectators(newSpec: number) {
@@ -96,7 +114,7 @@ export default class Player extends Actor implements PlayerAttributes {
     return [this.currentView, this.id != this.currentView];
   }
 
-  public incrementIngamePoints() {
-    this.ingamePoints += 1;
+  public incrementInGamePoints() {
+    this.inGamePoints += 1;
   }
 }
