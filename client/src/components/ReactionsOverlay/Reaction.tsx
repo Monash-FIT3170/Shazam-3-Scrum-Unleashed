@@ -25,9 +25,9 @@ export function Reaction({
       {!isRemoved && (
         <motion.span
           exit={{ opacity: 0 }}
-          className="absolute opacity-85"
+          className="absolute opacity-85 select-none -translate-x-1/2 -translate-y-1/2"
           style={{
-            bottom: `${y}%`,
+            top: `${y}%`,
             left: `${x}%`,
             fontSize: `${reactionSize}rem`,
           }}
