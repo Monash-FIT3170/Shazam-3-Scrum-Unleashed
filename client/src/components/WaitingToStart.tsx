@@ -8,13 +8,17 @@ const WaitingToStart = () => {
 
       {/* Text in the bottom left */}
       <div className="fixed bottom-10 md:left-20 left-5">
-        <p className="text-white md:text-lg text-sm font-bold mb-2">YOUR NICKNAME:</p>
+        <p className="text-white md:text-lg text-sm font-bold mb-2">
+          YOUR NICKNAME:
+        </p>
         <p className="text-white md:text-3xl font-bold">{"Johnny"}</p>
       </div>
 
       {/* Text in the bottom right */}
       <div className="fixed bottom-10 md:right-20 right-5">
-        <p className="text-white md:text-lg text-sm font-bold mb-2">TOURNAMENT CODE:</p>
+        <p className="text-white md:text-lg text-sm font-bold mb-2">
+          TOURNAMENT CODE:
+        </p>
         <p className="text-white md:text-3xl font-bold">{"000000"}</p>
       </div>
     </div>
