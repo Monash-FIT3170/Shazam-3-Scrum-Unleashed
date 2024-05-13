@@ -15,6 +15,7 @@ export default class Player extends Actor implements PlayerAttributes {
   public isBot: boolean;
   public inGamePoints: number;
   public actionChoice: Action;
+  public matchesWon: number;
 
   constructor(socketId: string, name: string, id: number, isBot: boolean) {
     super(socketId);
@@ -29,6 +30,7 @@ export default class Player extends Actor implements PlayerAttributes {
     this.isBot = isBot;
     this.inGamePoints = 0;
     this.actionChoice = "NONE";
+    this.matchesWon = 0;
   }
 
   //getters
@@ -57,6 +59,9 @@ export default class Player extends Actor implements PlayerAttributes {
   public getInGamePoints(): number {
     return this.inGamePoints;
   }
+  public getMatchesWon(): number {
+    return this.matchesWon;
+  }
 
   //setters
 
@@ -75,10 +80,14 @@ export default class Player extends Actor implements PlayerAttributes {
   public setChoice(choice: Action) {
     this.actionChoice = choice;
   }
+  public setMatchesWon(numWins: number) {
+    this.matchesWon = numWins;
+  }
 
   //additional methods
   public incrementWinstreak() {
     this.winstreak++;
+    this.matchesWon ++;
     if (this.winstreak > this.winstreakHigh) {
       this.winstreakHigh = this.winstreak;
     }
