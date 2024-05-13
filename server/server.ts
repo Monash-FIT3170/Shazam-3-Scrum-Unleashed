@@ -82,12 +82,12 @@ io.on("connection", (socket) => {
     io.to(game.HostSocketId).emit("PLAYER_HAS_JOINED", player);
   });
 
-  socket.on("CREATE_GAME", (hostName) => {
-    console.log(`Host : ${hostName} is creating a game`);
+  socket.on("CREATE_GAME", (duelsPerMatch, duelTime, matchTime) => {
+    console.log(`Host : ${socket.id} is creating a game`);
 
     // create the host and game
-    const host: Host = new Host(socket.id, hostName);
-    const game: Game = new Game(host);
+    const host: Host = new Host(socket.id);
+    const game: Game = new Game(host, duelsPerMatch, duelTime, matchTime);
 
     // generated gameRoomCode (defaulted atm)
     const gameCode = "000000";
