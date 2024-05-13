@@ -87,7 +87,7 @@ export default class Player extends Actor implements PlayerAttributes {
   //additional methods
   public incrementWinstreak() {
     this.winstreak++;
-    this.matchesWon ++;
+    this.matchesWon++;
     if (this.winstreak > this.winstreakHigh) {
       this.winstreakHigh = this.winstreak;
     }
