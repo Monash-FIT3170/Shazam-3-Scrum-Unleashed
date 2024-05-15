@@ -1,4 +1,4 @@
-import PlayerName from "./PlayerNameMobile";
+import PlayerName from "./PlayerName";
 import StarsInfo from "./StarsInfo";
 import SpectatorCount from "./SpectatorCount";
 
@@ -11,11 +11,11 @@ type PlayerAndSpectatorsInfoProps = {
 };
 
 const PlayerAndSpectatorsInfo = ({
-  playerScore = 3,
-  opponentScore = 2,
-  playerName = "SPONGEBOB",
-  opponentName = "PATRICK",
-  spectatorCount = 32,
+  playerScore,
+  opponentScore,
+  playerName,
+  opponentName,
+  spectatorCount,
 }: PlayerAndSpectatorsInfoProps) => {
   return (
     <div>

@@ -1,6 +1,6 @@
 import LoadingEffect from "../components/LoadingEffect";
 import PlayerAndSpectatorsInfo from "../components/PlayerAndSpectatorsInfo";
-import PlayerMoveHand from "../components/PlayerMoveHand";
+import PlayerMoveHand from "../components/PlayerMove";
 import { Action } from "../../../types/types";
 
 type WaitingForOpponentProps = {
@@ -18,7 +18,7 @@ const WaitingForOpponent = ({
   playerName,
   opponentName,
   spectatorCount,
-  playerMove = "ROCK",
+  playerMove,
 }: WaitingForOpponentProps) => {
   return (
     <div>

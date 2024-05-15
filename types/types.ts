@@ -22,4 +22,3 @@ export enum DuelResult {
 }
 
 export type Action = "ROCK" | "PAPER" | "SCISSORS" | "NONE";
-
