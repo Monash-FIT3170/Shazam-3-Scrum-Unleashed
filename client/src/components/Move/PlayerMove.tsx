@@ -8,8 +8,8 @@ import filledScissors from "../assets/Scissors.svg";
 import outlinedPaper from "../assets/Paper-Outline.svg";
 import outlinedRock from "../assets/Rock-Outline.svg";
 import outlinedScissors from "../assets/Scissors-Outline.svg";
-import { Action } from "../../../types/types";
-import { HandImgType } from "../types";
+import { Action } from "../../../../types/types";
+import { HandImgType } from "../../types";
 
 type PlayerMoveHandProps = {
   playerMove: Action; // eg. ROCK, PAPER or SCISSORS

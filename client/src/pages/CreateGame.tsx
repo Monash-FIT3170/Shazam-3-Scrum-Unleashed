@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GAME_LOBBY_PATH } from "./pagePaths.ts";
 import { socket } from "../App.tsx";
-import DisplayLogo from "../components/DisplayLogo.tsx";
+import DisplayLogo from "../components/Other/DisplayLogo.tsx";
 
 const defaultDuelsPerMatch: number = 5;
 const defaultDuelTime: number = 15;

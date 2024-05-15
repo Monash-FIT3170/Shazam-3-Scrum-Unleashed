@@ -1,5 +1,5 @@
 import React from "react";
-import { Action } from "../../../types/types";
+import { Action } from "../../../../types/types";
 
 interface MoveSelectionProps {
   img: string;

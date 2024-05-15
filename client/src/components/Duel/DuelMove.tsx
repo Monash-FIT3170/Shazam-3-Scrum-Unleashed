@@ -1,9 +1,9 @@
 //This is responsible for displaying the moves of the Players
 //By Anand Vannalath
 
-import PlayerMoveHand from "./PlayerMove";
-import { Action } from "../../../types/types";
-import { Result, HandImgType } from "../types";
+import PlayerMoveHand from "../Move/PlayerMove";
+import { Action } from "../../../../types/types";
+import { Result, HandImgType } from "../../types";
 import DuelScore from "./DuelScore";
 
 interface MoveProps {

@@ -1,4 +1,4 @@
-import DisplayLogo from "../components/DisplayLogo.tsx";
+import DisplayLogo from "../components/Other/DisplayLogo.tsx";
 import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";

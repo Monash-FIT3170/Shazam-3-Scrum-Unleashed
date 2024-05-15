@@ -1,7 +1,7 @@
-import DisplayLogo from "../components/DisplayLogo";
+import DisplayLogo from "../components/Other/DisplayLogo";
 //import WaitingToStart from "../components/WaitingToStart";
-import ChoosePlayerMove from "../components/ChoosePlayerMove";
-import CountDownTimer from "../components/CountDownTimer";
+import ChoosePlayerMove from "../components/Move/ChoosePlayerMove";
+import CountDownTimer from "../components/Other/CountDownTimer";
 
 const PlayerScreen = () => {
   return (

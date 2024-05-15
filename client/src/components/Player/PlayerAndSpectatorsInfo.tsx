@@ -1,6 +1,6 @@
 import PlayerName from "./PlayerName";
 import StarsInfo from "./StarsInfo";
-import SpectatorCount from "./SpectatorCount";
+import SpectatorCount from "../Spectator/SpectatorCount";
 
 type PlayerAndSpectatorsInfoProps = {
   playerScore: number;

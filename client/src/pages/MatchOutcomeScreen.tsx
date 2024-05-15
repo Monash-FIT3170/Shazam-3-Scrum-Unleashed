@@ -1,6 +1,6 @@
 import plainTrophy from "../assets/PlainTrophy.svg";
 import cross from "../assets/Cross.svg";
-import PlayerAndSpectatorsInfo from "../components/PlayerAndSpectatorsInfo";
+import PlayerAndSpectatorsInfo from "../components/Player/PlayerAndSpectatorsInfo";
 
 type MatchOutcomeScreenProps = {
   playerScore: number;

@@ -2,7 +2,7 @@ import { useState } from "react";
 import RockOption from "../assets/ChooseMove/RockOption.svg";
 import PaperOption from "../assets/ChooseMove/PaperOption.svg";
 import ScissorsOption from "../assets/ChooseMove/ScissorOption.svg";
-import { Action } from "../../../types/types";
+import { Action } from "../../../../types/types";
 import MoveSelection from "./MoveSelection";
 
 const ChoosePlayerMove = () => {

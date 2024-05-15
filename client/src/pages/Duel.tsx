@@ -1,9 +1,9 @@
 //This is responsible for loading the Duel and showing the result of the Duel
 //By Anand Vannalath
 
-import DuelMove from "../components/DuelMove.tsx";
-import DuelLoad from "../components/DuelLoad.tsx";
-import PlayerAndSpectatorsInfo from "../components/PlayerAndSpectatorsInfo.tsx";
+import DuelMove from "../components/Duel/DuelMove.tsx";
+import DuelLoad from "../components/Duel/DuelLoad.tsx";
+import PlayerAndSpectatorsInfo from "../components/Player/PlayerAndSpectatorsInfo.tsx";
 import { Result } from "../types/index.ts";
 import { Action } from "../../../types/types";
 

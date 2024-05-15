@@ -1,6 +1,6 @@
-import LoadingEffect from "../components/LoadingEffect";
-import PlayerAndSpectatorsInfo from "../components/PlayerAndSpectatorsInfo";
-import PlayerMoveHand from "../components/PlayerMove";
+import LoadingEffect from "../components/Other/LoadingEffect";
+import PlayerAndSpectatorsInfo from "../components/Player/PlayerAndSpectatorsInfo";
+import PlayerMoveHand from "../components/Move/PlayerMove";
 import { Action } from "../../../types/types";
 
 type WaitingForOpponentProps = {

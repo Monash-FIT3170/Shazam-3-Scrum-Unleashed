@@ -1,4 +1,4 @@
-import { Result } from "../types";
+import { Result } from "../../types";
 
 interface Props {
   score1: number;
