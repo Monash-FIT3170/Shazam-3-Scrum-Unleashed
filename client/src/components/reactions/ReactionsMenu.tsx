@@ -21,7 +21,7 @@ const ReactionMenu = () => {
   ));
 
   return (
-    <div className="scale-75 origin-bottom-right md:scale-100 absolute flex flex-col gap-2 justify-center items-center md:right-10 md:bottom-10 right-4 bottom-4 rounded-full bg-spectator-bg reaction-menu">
+    <div className=" outline outline-8 outline-white origin-bottom-right md:scale-100 scale-75 absolute flex flex-col gap-2 justify-center items-center md:right-10 md:bottom-10 right-4 bottom-4 rounded-full bg-spectator-bg reaction-menu">
       {isMenuOpen && SelectableReactions}
 
       {
@@ -29,7 +29,7 @@ const ReactionMenu = () => {
         !isMenuOpen && (
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="hover:bg-black/50 w-20 h-20 flex rounded-full reaction-menu-item"
+            className="hover:bg-black/50 w-20 h-20 flex rounded-full reaction-menu-item justify-center items-center"
           >
             <img src={selectedReaction.svg} alt={selectedReaction.alt} />
           </button>
