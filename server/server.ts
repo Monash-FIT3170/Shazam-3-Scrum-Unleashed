@@ -2,13 +2,12 @@ import express from "express";
 import cors from "cors";
 import * as http from "http";
 import { Server } from "socket.io";
-
 import { Events } from "../types/socket/events";
 import Game from "./model/game";
 import Player from "./model/actors/player";
 import Host from "./model/actors/host";
 import { playerRoomName } from "./socket/roomNames";
-import { TournamentManager } from "model/tournamentManager";
+import { handleRoomAllocation } from "./socketRoomManager";
 
 
 const app = express();
@@ -23,7 +22,7 @@ const io = new Server<Events>(server, {
     origin: "http://localhost:5173",
     methods: ["GET", "POST"],
   },
-});
+}); export default io;
 
 const gamesMap = new Map<string, Game>();
 
@@ -99,51 +98,12 @@ io.on("connection", (socket) => {
     io.to(host.socketId).emit("GAME_CREATED", gameCode);
   });
 
-
   socket.on("ALLOCATE_PLAYERS", async (gameCode) => {
-    const game: Game | undefined = gamesMap.get(gameCode);
-    if (game == undefined) {
-      // Handle case where game doesn't exist
-      return;
-    }
-
-    const numPlayers = game.getPlayers().length;
-     const numRooms = Math.ceil(numPlayers / 2); // Each room will have 2 players
-
-     // Divide players into groups for each room
-     // Sample for now. Interaction will be faciltated with tournamentManager. 
-     const playerGroups: Player[][] = [];
-     for (let i = 0; i < numRooms; i++) {
-       const startIndex = i * 2;
-       const endIndex = Math.min(startIndex + 2, numPlayers);
-       const group = game.getPlayers().slice(startIndex, endIndex);
-       playerGroups.push(group);
-     }
-     for (let i = 0; i < playerGroups.length; i++) {
-       const roomName = generateUniqueRoomName();
-       const group = playerGroups[i];
-
-       // Allocate players to their respective room
-       for (const player of group) {
-          const socket = io.sockets.sockets.get(player.socketId);
-          if (socket) {
-            socket.join(roomName); // Join the socket to the room
-            // Emit "CHOOSE_PLAYER_MOVE" event to each room
-            io.to(roomName).emit("CHOOSE_PLAYER_MOVE");
-          }
-       }
-     }
-
-
-
+    await handleRoomAllocation(gameCode, gamesMap);
   });
 
 });
-// Temporary function to generate a unique room name
-function generateUniqueRoomName(): string {
-  // Generate a random alphanumeric room name
-  return Math.random().toString(36).substring(2, 8);
-}
+
 
 
 server.listen(3010, () => {
