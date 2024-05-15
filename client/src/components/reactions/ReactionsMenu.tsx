@@ -1,9 +1,6 @@
 import ReactionMenuItem from "./ReactionMenuItem";
-import { ReactionList, Reaction as Reaction } from "./Reaction"
+import { ReactionList} from "./Reaction"
 import { useState } from "react";
-
-
-
 
 const ReactionMenu = () => {
 

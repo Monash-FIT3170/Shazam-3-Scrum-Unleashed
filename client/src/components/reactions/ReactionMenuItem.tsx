@@ -1,4 +1,3 @@
-import { ReactionType } from "../../../../types/types";
 import { Reaction } from "./Reaction";
 import React from "react";
 
