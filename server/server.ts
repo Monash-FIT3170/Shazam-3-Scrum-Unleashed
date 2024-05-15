@@ -111,6 +111,7 @@ io.on("connection", (socket) => {
      const numRooms = Math.ceil(numPlayers / 2); // Each room will have 2 players
 
      // Divide players into groups for each room
+     // Sample for now. Interaction will be faciltated with tournamentManager. 
      const playerGroups: Player[][] = [];
      for (let i = 0; i < numRooms; i++) {
        const startIndex = i * 2;
@@ -118,15 +119,20 @@ io.on("connection", (socket) => {
        const group = game.getPlayers().slice(startIndex, endIndex);
        playerGroups.push(group);
      }
-      for (const group of playerGroups) {
-        // Generate a unique room name
+     for (let i = 0; i < playerGroups.length; i++) {
+       const roomName = generateUniqueRoomName();
+       const group = playerGroups[i];
 
-        console.log("Group: ", group);
-        io.emit("CHOOSE_PLAYER_MOVE");
-
-        // Join players to the room
-    
-      }
+       // Allocate players to their respective room
+       for (const player of group) {
+          const socket = io.sockets.sockets.get(player.socketId);
+          if (socket) {
+            socket.join(roomName); // Join the socket to the room
+            // Emit "CHOOSE_PLAYER_MOVE" event to each room
+            io.to(roomName).emit("CHOOSE_PLAYER_MOVE");
+          }
+       }
+     }
 
 
 
