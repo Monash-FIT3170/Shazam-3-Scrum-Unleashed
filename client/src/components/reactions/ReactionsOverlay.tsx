@@ -7,10 +7,10 @@ function ReactionOverlay() {
   const [reactions, setReactions] = useState<
     Record<string, { isAlive: boolean; x: number; y: number; value: string }>
   >({});
+  const [selectedReaction, setSelectedReaction] = useState(ReactionList[0]);
 
   const reactionsRef = useRef(reactions);
 
-  const availableEmojis = ReactionList.map((reaction) => reaction.svg);
   useEffect(() => {
     // Clean up object when reactions have passed their lifetime
     const handle = setInterval(() => {
@@ -35,8 +35,7 @@ function ReactionOverlay() {
         const reaction = {
           x: (e.clientX / window.innerWidth) * 100,
           y: (e.clientY / window.innerHeight) * 100,
-          value:
-            availableEmojis[Math.floor(Math.random() * availableEmojis.length)],
+          value: selectedReaction.svg,
         };
         reactionsRef.current = {
           ...reactionsRef.current,
@@ -49,7 +48,10 @@ function ReactionOverlay() {
         setReactions(reactionsRef.current);
       }}
     >
-      <ReactionMenu />
+      <ReactionMenu
+        setSelectedReaction={setSelectedReaction}
+        selectedReaction={selectedReaction}
+      />
       {Object.entries(reactions).map(([key, { x, y, value }]) => (
         <DisplayReaction
           x={x}
