@@ -48,8 +48,8 @@ const JoinGame = () => {
   }, [joinState]);
 
   return (
-    <div>
-      <div>
+    <div className="flex flex-col items-center justify-center h-screen overflow-hidden">
+      <div className=" items-center size-60 w-full">
         <DisplayLogo />
       </div>
       <div>
