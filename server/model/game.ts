@@ -51,4 +51,8 @@ export default class Game {
     }
     return true;
   }
+
+  public getPlayers(){
+    return this.players;
+  }
 }

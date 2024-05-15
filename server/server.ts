@@ -8,6 +8,8 @@ import Game from "./model/game";
 import Player from "./model/actors/player";
 import Host from "./model/actors/host";
 import { playerRoomName } from "./socket/roomNames";
+import { TournamentManager } from "model/tournamentManager";
+
 
 const app = express();
 
@@ -96,7 +98,47 @@ io.on("connection", (socket) => {
     // Send GAME_CREATED event
     io.to(host.socketId).emit("GAME_CREATED", gameCode);
   });
+
+
+  socket.on("ALLOCATE_PLAYERS", async (gameCode) => {
+    const game: Game | undefined = gamesMap.get(gameCode);
+    if (game == undefined) {
+      // Handle case where game doesn't exist
+      return;
+    }
+
+    const numPlayers = game.getPlayers().length;
+     const numRooms = Math.ceil(numPlayers / 2); // Each room will have 2 players
+
+     // Divide players into groups for each room
+     const playerGroups: Player[][] = [];
+     for (let i = 0; i < numRooms; i++) {
+       const startIndex = i * 2;
+       const endIndex = Math.min(startIndex + 2, numPlayers);
+       const group = game.getPlayers().slice(startIndex, endIndex);
+       playerGroups.push(group);
+     }
+      for (const group of playerGroups) {
+        // Generate a unique room name
+
+        console.log("Group: ", group);
+        io.emit("CHOOSE_PLAYER_MOVE");
+
+        // Join players to the room
+    
+      }
+
+
+
+  });
+
 });
+// Temporary function to generate a unique room name
+function generateUniqueRoomName(): string {
+  // Generate a random alphanumeric room name
+  return Math.random().toString(36).substring(2, 8);
+}
+
 
 server.listen(3010, () => {
   console.log("SERVER IS RUNNING");
