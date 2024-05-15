@@ -107,20 +107,3 @@ body {
   text-align: center;
   display: inline-block;
 }
-
-.reaction-menu-item {
-  padding: 0px;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-  background: #1a88ab;
-}
-
-.reaction-menu {
-  padding: 0px;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-  background: #1a88ab;
-  outline: 4px solid #ffffff;
-}
