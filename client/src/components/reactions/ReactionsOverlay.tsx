@@ -1,5 +1,7 @@
-import Reaction from "./Reaction.tsx";
+import DisplayReaction from "./DisplayReaction.tsx";
 import { useEffect, useRef, useState } from "react";
+import ReactionMenu from "./ReactionsMenu.tsx";
+import { ReactionList } from "./index.ts";
 
 function ReactionOverlay() {
   const [reactions, setReactions] = useState<
@@ -8,9 +10,7 @@ function ReactionOverlay() {
 
   const reactionsRef = useRef(reactions);
 
-  // Test reaction overlay
-  const availableEmojis = ["🎉", "💀", "😂", "❤️", "🐐"];
-
+  const availableEmojis = ReactionList.map((reaction) => reaction.svg);
   useEffect(() => {
     // Clean up object when reactions have passed their lifetime
     const handle = setInterval(() => {
@@ -32,7 +32,6 @@ function ReactionOverlay() {
     <div
       className="w-screen h-screen top-0 left-0 fixed z-50"
       onClick={(e) => {
-        console.log(e.clientX, e.clientY);
         const reaction = {
           x: (e.clientX / window.innerWidth) * 100,
           y: (e.clientY / window.innerHeight) * 100,
@@ -50,8 +49,9 @@ function ReactionOverlay() {
         setReactions(reactionsRef.current);
       }}
     >
+      <ReactionMenu />
       {Object.entries(reactions).map(([key, { x, y, value }]) => (
-        <Reaction
+        <DisplayReaction
           x={x}
           y={y}
           value={value}

@@ -2,14 +2,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { type ReactionProperties } from "../../types";
 
-export function Reaction({
+export function DisplayReaction({
   x,
   y,
   value,
   kill,
 }: ReactionProperties & { kill: () => void }) {
   const REACTION_LIFETIME_MS = 1000;
-  const [reactionSize] = useState(Math.random() + 2);
+  const [reactionSize] = useState((Math.random() + 1) * 40);
   const [isRemoved, setIsRemoved] = useState(false);
 
   useEffect(() => {
@@ -29,14 +29,14 @@ export function Reaction({
           style={{
             top: `${y}%`,
             left: `${x}%`,
-            fontSize: `${reactionSize}rem`,
+            width: `${reactionSize}px`,
           }}
         >
-          {value}
+          <img src={value} alt="Reaction" />
         </motion.span>
       )}
     </AnimatePresence>
   );
 }
 
-export default Reaction;
+export default DisplayReaction;
