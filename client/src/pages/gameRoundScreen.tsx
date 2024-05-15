@@ -1,4 +1,4 @@
-import ReactionOverlay from "../components/ReactionsOverlay/ReactionsOverlay";
+import ReactionOverlay from "../components/reactions/ReactionsOverlay";
 import SemiCircle3dots from "../components/semiCircle3dots";
 
 const GameRoundScreen = () => {

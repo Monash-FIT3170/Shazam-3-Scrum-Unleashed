@@ -1,5 +1,7 @@
-import Reaction from "./Reaction.tsx";
+import DisplayReaction from "./DisplayReaction.tsx";
 import { useEffect, useRef, useState } from "react";
+import ReactionMenu from "./ReactionsMenu.tsx";
+import { ReactionList } from "./Reaction.tsx";
 
 function ReactionOverlay() {
   const [reactions, setReactions] = useState<
@@ -9,7 +11,8 @@ function ReactionOverlay() {
   const reactionsRef = useRef(reactions);
 
   // Test reaction overlay
-  const availableEmojis = ["🎉", "💀", "😂", "❤️", "🐐"];
+  // ReactionList.map((reaction) => reaction.svg);
+  const availableEmojis = ReactionList.map((reaction) => reaction.svg);
   const reactionPlaceholders = [...Array(100)].map(() => {
     return {
       x: Math.random() * 100,
@@ -57,9 +60,10 @@ function ReactionOverlay() {
   }, []);
 
   return (
+    <div>      <ReactionMenu></ReactionMenu>
     <div className="w-screen h-screen top-0 left-0 fixed z-50 pointer-events-none">
       {Object.entries(reactions).map(([key, { x, y, value }]) => (
-        <Reaction
+        <DisplayReaction
           x={x}
           y={y}
           value={value}
@@ -67,6 +71,7 @@ function ReactionOverlay() {
           kill={() => (reactionsRef.current[key].isAlive = false)}
         />
       ))}
+    </div>
     </div>
   );
 }
