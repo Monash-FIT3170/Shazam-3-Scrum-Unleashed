@@ -1,21 +1,17 @@
-// gameManager.ts
+// Description: This file contains the logic to handle allocation of players
+// into rooms and recursive reduction of rooms until a winner is determined.
+
 import  io  from "./server";
-import Game from "./model/game"; 
 import Player from "./model/actors/player"; 
 
 // Function to handle allocation of players and recursive reduction of rooms
 export const handleRoomAllocation = async (
-  gameCode: string,
-  gamesMap: Map<string, Game>
+  players: Player[],
 ) => {
-  const game: Game | undefined = gamesMap.get(gameCode);
-  if (!game) {
-    return;
-  }
 
-  // tournamentManager.ts needs to handle this logic 
+  const winners: Player[] = [];
 
-  const numPlayers = game.getPlayers().length;
+  const numPlayers = players.length;
   const numRooms = Math.ceil(numPlayers / 2); // Each room will have 2 players
 
   // Divide players into groups for each room
@@ -23,11 +19,12 @@ export const handleRoomAllocation = async (
   for (let i = 0; i < numRooms; i++) {
     const startIndex = i * 2;
     const endIndex = Math.min(startIndex + 2, numPlayers);
-    const group = game.getPlayers().slice(startIndex, endIndex);
+    const group = players.slice(startIndex, endIndex);
     playerGroups.push(group);
   }
 
   // Iterate through each group of players
+
   for (const group of playerGroups) {
     const roomName = generateUniqueRoomName();
 
@@ -44,14 +41,15 @@ export const handleRoomAllocation = async (
   }
 
   // Wait for results from each room
-  await waitForResults(playerGroups); // Pass the socket.io instance to the function
+  await waitForResults(playerGroups, winners);
 
   // If more than one room remains, recursively handle allocation
   if (playerGroups.length > 1) {
-    await handleRoomAllocation(gameCode, gamesMap);
+    await handleRoomAllocation(winners);
   } else {
-    // Game ends when only one room remains
-    console.log("Game ended. Final winner:", playerGroups[0][0].name);
+    // Implement logic to determine the winner
+    console.log("Game ended");
+    return;
   }
 };
 
@@ -60,8 +58,16 @@ function generateUniqueRoomName(): string {
   return Math.random().toString(36).substring(2, 8);
 }
 
-const waitForResults = async (playerGroups: Player[][]) => {
-  // Sample code to wait for results
-  await new Promise((resolve) => setTimeout(resolve, 5000)); // Simulating wait for results
+
+const waitForResults = async (playerGroups: Player[][], winners: Player[]) => {
+  // Simulate waiting for results
+  await new Promise((resolve) => setTimeout(resolve, 11000));
+
+  // Get the first player in each group as the winner
+  for (const group of playerGroups) {
+    const winner = group[0];
+    winners.push(winner);
+    console.log(`Winner: ${winner.name}`);
+  }
   console.log("Results received. Determining winners...");
 };

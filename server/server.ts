@@ -99,7 +99,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("ALLOCATE_PLAYERS", async (gameCode) => {
-    await handleRoomAllocation(gameCode, gamesMap);
+    const game: Game | undefined = gamesMap.get(gameCode);
+    if (!game) {
+      return;
+    }
+    const players = game.getPlayers();
+
+    await handleRoomAllocation(players);
   });
 
 });
