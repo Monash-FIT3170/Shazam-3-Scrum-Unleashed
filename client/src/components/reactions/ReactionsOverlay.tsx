@@ -61,8 +61,7 @@ function ReactionOverlay() {
 
   return (
     <div>
-      {" "}
-      <ReactionMenu></ReactionMenu>
+      <ReactionMenu />
       <div className="w-screen h-screen top-0 left-0 fixed z-50 pointer-events-none">
         {Object.entries(reactions).map(([key, { x, y, value }]) => (
           <DisplayReaction

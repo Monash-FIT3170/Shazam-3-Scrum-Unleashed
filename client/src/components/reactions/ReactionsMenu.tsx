@@ -31,11 +31,7 @@ const ReactionMenu = () => {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="hover:bg-black/50 w-20 h-20 flex rounded-full reaction-menu-item"
           >
-            <img
-              src={selectedReaction.svg}
-              alt={selectedReaction.alt}
-              className=""
-            />
+            <img src={selectedReaction.svg} alt={selectedReaction.alt} />
           </button>
         )
       }

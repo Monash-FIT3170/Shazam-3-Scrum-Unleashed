@@ -17,7 +17,7 @@ const ReactionMenuItem: React.FC<ReactionSelectionProps> = ({
       onClick={() => onClick(reaction)}
       className={`hover:bg-black/50 w-20 h-20 flex rounded-full reaction-menu-item ${isSelected ? "outline outline-4 outline-white bg-black/50" : ""}`}
     >
-      <img src={reaction.svg} alt={reaction.alt} className="" />
+      <img src={reaction.svg} alt={reaction.alt} />
     </button>
   );
 };
