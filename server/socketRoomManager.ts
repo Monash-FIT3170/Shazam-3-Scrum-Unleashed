@@ -15,6 +15,7 @@ export const handleRoomAllocation = async (
   const numRooms = Math.ceil(numPlayers / 2); // Each room will have 2 players
 
   // Divide players into groups for each room
+  // tournamentManager should be responsible for this logic 
   const playerGroups: Player[][] = [];
   for (let i = 0; i < numRooms; i++) {
     const startIndex = i * 2;
@@ -24,8 +25,8 @@ export const handleRoomAllocation = async (
   }
 
   // Iterate through each group of players
-
   for (const group of playerGroups) {
+    // Generate a unique room name
     const roomName = generateUniqueRoomName();
 
     // Allocate players to their respective room
@@ -49,6 +50,12 @@ export const handleRoomAllocation = async (
   } else {
     // Implement logic to determine the winner
     console.log("Game ended");
+    const winningPlayer = winners[0]; // Assuming there is only one winner
+    const winningSocket = io.sockets.sockets.get(winningPlayer.socketId);
+    if (winningSocket) {
+      // Emit a socket message to the winning player
+      winningSocket.emit("GAME_WINNER", { winner: winningPlayer });
+    }
     return;
   }
 };
@@ -67,7 +74,8 @@ const waitForResults = async (playerGroups: Player[][], winners: Player[]) => {
   for (const group of playerGroups) {
     const winner = group[0];
     winners.push(winner);
+    console.log("Results received. Determining winners...");
     console.log(`Winner: ${winner.name}`);
   }
-  console.log("Results received. Determining winners...");
+
 };

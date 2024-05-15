@@ -47,4 +47,5 @@ interface ServerToPlayerEvents {
   ) => void;
   MATCH_RESULTS: (winner: PlayerAttributes, loser: PlayerAttributes) => void;
   CHOOSE_PLAYER_MOVE: (/*TODO*/) => void;
+  GAME_WINNER: (winner: any) => void; // Sample for testing
 }
