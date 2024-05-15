@@ -2,7 +2,7 @@ import { CREATE_GAME_PATH, JOIN_GAME_PATH } from "./pagePaths.ts";
 import ButtonComponent from "../components/buttons/ButtonComponent.tsx";
 import BorderedButtonComponent from "../components/buttons/BorderedButtonComponent.tsx";
 import DisplayLogo from "../components/DisplayLogo.tsx";
-import ReactionOverlay from "../components/ReactionsOverlay/ReactionsOverlay.tsx";
+import ReactionOverlay from "../components/reactions/ReactionsOverlay.tsx";
 
 const Home = () => {
   return (
