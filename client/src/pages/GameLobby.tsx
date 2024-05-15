@@ -6,7 +6,7 @@ import { PlayerAttributes } from "../../../types/types.ts";
 import { socket } from "../App.tsx";
 
 const GameLobby = () => {
-  const gameData = useLoaderData() as { gameCode: string, qrCode :Blob };
+  const gameData = useLoaderData() as { gameCode: string; qrCode: Blob };
 
   const img = URL.createObjectURL(gameData.qrCode);
 
@@ -29,21 +29,20 @@ const GameLobby = () => {
   }, []);
 
   return (
+    <div>
       <div>
-        <div>
-          <DisplayLogo/>
-        </div>
-        <h1 className="text-white font-bold mt-6 uppercase">
-          Game Code : {gameData.gameCode}
-          <ul>
-            {players.map((player) => (
-                <li key={player.id}>{player.name}</li>
-            ))}
-          </ul>
-
-        </h1>
-        <img src={img} alt="QR Code"/>
+        <DisplayLogo />
       </div>
+      <h1 className="text-white font-bold mt-6 uppercase">
+        Game Code : {gameData.gameCode}
+        <ul>
+          {players.map((player) => (
+            <li key={player.id}>{player.name}</li>
+          ))}
+        </ul>
+      </h1>
+      <img src={img} alt="QR Code" />
+    </div>
   );
 };
 
