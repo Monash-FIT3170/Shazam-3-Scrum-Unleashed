@@ -6,9 +6,7 @@ import { PlayerAttributes } from "../../../types/types.ts";
 import { socket } from "../App.tsx";
 
 const GameLobby = () => {
-  const gameData = useLoaderData() as { gameCode: string; qrCode: Blob };
-
-  const img = URL.createObjectURL(gameData.qrCode);
+  const gameData = useLoaderData() as { gameCode: string; qrCode: string };
 
   const [players, setPlayers] = useState(new Array<PlayerAttributes>());
 
@@ -41,7 +39,7 @@ const GameLobby = () => {
           ))}
         </ul>
       </h1>
-      <img src={img} alt="QR Code" />
+      <img src={gameData.qrCode} alt="QR Code" />
     </div>
   );
 };

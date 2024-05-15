@@ -1,5 +1,6 @@
 import { ReactRouterRequest } from "../types";
 import { GAME_LOBBY_PATH, JOIN_GAME_PATH } from "../pages/pagePaths.ts";
+import QRCode from "qrcode";
 
 export interface LoaderProps {
   request: ReactRouterRequest;
@@ -10,13 +11,15 @@ export const newGameLoader = async ({ request }: LoaderProps) => {
 
   const gameCode = url.searchParams.get("gameCode");
 
-  // GET request for QR Code (from https://goqr.me/api/doc/)
-  const qrCode: Blob = await fetch(
-    // &color=XXXXXX or &bgcolor=22026c to change the color of the qr code
-    `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${url.href.replace(GAME_LOBBY_PATH, JOIN_GAME_PATH)}`,
-  ).then((res) => {
-    return res.blob();
-  });
+  let qrCode: string = "";
+
+  QRCode.toDataURL(
+    url.href.replace(GAME_LOBBY_PATH, JOIN_GAME_PATH),
+    async (error, data) => {
+      if (error) return console.log("error occurred");
+      qrCode = data;
+    },
+  );
 
   return { gameCode, qrCode };
 };
