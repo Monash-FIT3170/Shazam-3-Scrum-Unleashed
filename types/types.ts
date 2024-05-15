@@ -23,3 +23,4 @@ export enum DuelResult {
 
 export type Action = "ROCK" | "PAPER" | "SCISSORS" | "NONE";
 
+export type ReactionType = "HEART" | "LAUGHING" | "SKULL" | "PARTY_POPPER" | "GOAT";
