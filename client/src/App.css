@@ -112,15 +112,15 @@ body {
   padding: 0px;
   justify-content: center;
   align-items: center;
-box-sizing: border-box;
-background: #1A88AB;
+  box-sizing: border-box;
+  background: #1a88ab;
 }
 
 .reaction-menu {
   padding: 0px;
   justify-content: center;
   align-items: center;
-box-sizing: border-box;
-background: #1A88AB;
-outline: 4px solid #FFFFFF;
+  box-sizing: border-box;
+  background: #1a88ab;
+  outline: 4px solid #ffffff;
 }

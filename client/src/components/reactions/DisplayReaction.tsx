@@ -9,7 +9,7 @@ export function DisplayReaction({
   kill,
 }: ReactionProperties & { kill: () => void }) {
   const REACTION_LIFETIME_MS = 1000;
-  const [reactionSize] = useState((Math.random() + 1)*40);
+  const [reactionSize] = useState((Math.random() + 1) * 40);
   const [isRemoved, setIsRemoved] = useState(false);
 
   useEffect(() => {

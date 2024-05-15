@@ -1,7 +1,7 @@
 import DisplayReaction from "./DisplayReaction.tsx";
 import { useEffect, useRef, useState } from "react";
 import ReactionMenu from "./ReactionsMenu.tsx";
-import { ReactionList } from "./Reaction.tsx";
+import { ReactionList } from "./index.ts";
 
 function ReactionOverlay() {
   const [reactions, setReactions] = useState<
@@ -60,18 +60,20 @@ function ReactionOverlay() {
   }, []);
 
   return (
-    <div>      <ReactionMenu></ReactionMenu>
-    <div className="w-screen h-screen top-0 left-0 fixed z-50 pointer-events-none">
-      {Object.entries(reactions).map(([key, { x, y, value }]) => (
-        <DisplayReaction
-          x={x}
-          y={y}
-          value={value}
-          key={key}
-          kill={() => (reactionsRef.current[key].isAlive = false)}
-        />
-      ))}
-    </div>
+    <div>
+      {" "}
+      <ReactionMenu></ReactionMenu>
+      <div className="w-screen h-screen top-0 left-0 fixed z-50 pointer-events-none">
+        {Object.entries(reactions).map(([key, { x, y, value }]) => (
+          <DisplayReaction
+            x={x}
+            y={y}
+            value={value}
+            key={key}
+            kill={() => (reactionsRef.current[key].isAlive = false)}
+          />
+        ))}
+      </div>
     </div>
   );
 }
