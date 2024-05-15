@@ -9,7 +9,7 @@ const Home = () => {
     <div>
       <ReactionOverlay />
       <div className="h-64 md:h-80 lg:h-96 mt-20 ">
-        <DisplayLogo />
+        <ReactionOverlay />
       </div>
       <div className="mt-20">
         <ButtonComponent
