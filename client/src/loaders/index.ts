@@ -12,7 +12,7 @@ export const newGameLoader = async ({ request }: LoaderProps) => {
 
   // GET request for QR Code (from https://goqr.me/api/doc/)
   const qrCode: Blob = await fetch(
-    `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${url.href.replace(GAME_LOBBY_PATH, JOIN_GAME_PATH)}`,
+    `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${url.href.replace(GAME_LOBBY_PATH, JOIN_GAME_PATH)}&bgcolor=22026c`,
   ).then((res) => {
     return res.blob();
   });
