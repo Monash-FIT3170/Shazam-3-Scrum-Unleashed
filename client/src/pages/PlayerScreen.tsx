@@ -7,12 +7,12 @@ import CountDownTimer from "../components/CountDownTimer";
 import WinnerPlayer from "../components/WinnerPlayer";
 
 const PlayerScreen = () => {
-  const [shouldRenderComponents, setShouldRenderComponents] = useState(false);
+  const [renderMoveComponent, setRenderMoveComponent] = useState(false);
   const [isWinner, setIsWinner] = useState(false);
 
   useEffect(() => {
     socket.on("CHOOSE_PLAYER_MOVE", () => {
-      setShouldRenderComponents(true);
+      setRenderMoveComponent(true);
 
       socket.on("GAME_WINNER", () => {
         setIsWinner(true); // Set isWinner to true when GAME_WINNER event is received
@@ -33,12 +33,12 @@ const PlayerScreen = () => {
           <DisplayLogo />
         </div>
         <div className="flex flex-col items-center justify-center mt-10">
-          {!isWinner && !shouldRenderComponents && (
+          {!isWinner && !renderMoveComponent && (
             <div className="mt-20">
               <WaitingToStart />
             </div>
           )}
-          {!isWinner && shouldRenderComponents && (
+          {!isWinner && renderMoveComponent && (
             <div className="mt-20">
               <CountDownTimer />
               <ChoosePlayerMove />
