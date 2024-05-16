@@ -1,5 +1,6 @@
 import Player from "./actors/player";
 import Host from "./actors/host";
+import { handleRoomAllocation } from "../socketRoomManager";
 
 export default class Game {
   private host: Host;
@@ -50,6 +51,10 @@ export default class Game {
       }
     }
     return true;
+  }
+
+  public async allocateRooms(gameCode: string) {
+    await handleRoomAllocation(this.players, gameCode);
   }
 
   public getPlayers() {

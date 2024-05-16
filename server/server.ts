@@ -103,9 +103,7 @@ io.on("connection", (socket) => {
     if (!game) {
       return;
     }
-    const players = game.getPlayers();
-
-    await handleRoomAllocation(players);
+    await game.allocateRooms(gameCode);
   });
 });
 
