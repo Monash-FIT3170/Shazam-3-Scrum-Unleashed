@@ -1,23 +1,20 @@
 // Description: This file contains the logic to handle allocation of players
 // into rooms and recursive reduction of rooms until a winner is determined.
 
-// Contains sample logic. Needs to be refactored and integrated with the duel logic. 
+// Contains sample logic. Needs to be refactored and integrated with the duel logic.
 
-import  io  from "./server";
-import Player from "./model/actors/player"; 
+import io from "./server";
+import Player from "./model/actors/player";
 
 // Function to handle allocation of players and recursive reduction of rooms
-export const handleRoomAllocation = async (
-  players: Player[],
-) => {
-
+export const handleRoomAllocation = async (players: Player[]) => {
   const winners: Player[] = [];
 
   const numPlayers = players.length;
   const numRooms = Math.ceil(numPlayers / 2); // Each room will have 2 players
 
   // Divide players into groups for each room
-  // tournamentManager should be responsible for this logic 
+  // tournamentManager should be responsible for this logic
   const playerGroups: Player[][] = [];
   for (let i = 0; i < numRooms; i++) {
     const startIndex = i * 2;
@@ -35,7 +32,7 @@ export const handleRoomAllocation = async (
     for (const player of group) {
       const socket = io.sockets.sockets.get(player.socketId);
       if (socket) {
-        socket.join(roomName); // Join the socket to the room
+        await socket.join(roomName); // Join the socket to the room
       }
     }
 
@@ -62,11 +59,10 @@ export const handleRoomAllocation = async (
   }
 };
 
-  // Generate a random alphanumeric room name
+// Generate a random alphanumeric room name
 function generateUniqueRoomName(): string {
   return Math.random().toString(36).substring(2, 8);
 }
-
 
 const waitForResults = async (playerGroups: Player[][], winners: Player[]) => {
   // Simulate waiting for results
@@ -79,5 +75,4 @@ const waitForResults = async (playerGroups: Player[][], winners: Player[]) => {
     winners.push(winner);
     console.log(`Winner: ${winner.name}`);
   }
-
 };

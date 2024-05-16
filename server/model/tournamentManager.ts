@@ -5,7 +5,6 @@
 import Player from "./actors/player";
 
 export class TournamentManager {
-
   private tournamentBrackets: Player[][];
 
   constructor(players: Player[]) {
@@ -55,6 +54,4 @@ export class TournamentManager {
     }
     return players;
   }
-
-
 }

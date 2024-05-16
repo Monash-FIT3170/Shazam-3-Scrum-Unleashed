@@ -52,7 +52,7 @@ export default class Game {
     return true;
   }
 
-  public getPlayers(){
+  public getPlayers() {
     return this.players;
   }
 }

@@ -1,7 +1,6 @@
 import { useLocation } from "react-router-dom";
 
 const WaitingToStart = () => {
-
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const playerName = searchParams.get("playerName");

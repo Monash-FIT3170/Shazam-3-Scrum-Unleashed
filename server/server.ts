@@ -9,7 +9,6 @@ import Host from "./model/actors/host";
 import { playerRoomName } from "./socket/roomNames";
 import { handleRoomAllocation } from "./socketRoomManager";
 
-
 const app = express();
 
 app.use(cors());
@@ -22,7 +21,8 @@ const io = new Server<Events>(server, {
     origin: "http://localhost:5173",
     methods: ["GET", "POST"],
   },
-}); export default io;
+});
+export default io;
 
 const gamesMap = new Map<string, Game>();
 
@@ -107,10 +107,7 @@ io.on("connection", (socket) => {
 
     await handleRoomAllocation(players);
   });
-
 });
-
-
 
 server.listen(3010, () => {
   console.log("SERVER IS RUNNING");
