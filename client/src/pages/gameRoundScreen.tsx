@@ -1,10 +1,10 @@
-import ReactionOverlay from "../components/ReactionsOverlay/ReactionsOverlay";
+// import ReactionOverlay from "../components/reactions/ReactionsOverlay";
 import SemiCircle3dots from "../components/semiCircle3dots";
 
 const GameRoundScreen = () => {
   return (
     <>
-      <ReactionOverlay />
+      {/* <ReactionOverlay /> */}
       <div className="flex justify-center items-start">
         <div>
           <SemiCircle3dots variant="text" text="make your move" angle="180" />

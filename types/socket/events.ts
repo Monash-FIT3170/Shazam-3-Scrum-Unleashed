@@ -17,6 +17,7 @@ interface HostToServerEvents {
     CREATE_GAME: (duelPerMatch:number, duelTime:number, matchTime:number) => void,
     START_GAME: (gameCode: string) => void,
     KICK_PLAYER: (gameCode: string, playerName: PlayerAttributes) => void,
+    ALLOCATE_PLAYERS: (gameCode: string) => void,
 
 }
 
@@ -37,8 +38,14 @@ interface ServerToHostEvents {
 }
 
 interface ServerToPlayerEvents {
-    JOINED_GAME: (joinErrorCode: JoinErrorCode) => void,
-    JOIN_THIS_ROOM: (/*TODO*/) => void,
-    DUEL_RESULTS: (result: DuelResult, player1Action: Action, player2Action: Action) => void,
-    MATCH_RESULTS: (winner: PlayerAttributes, loser: PlayerAttributes) => void
+  JOINED_GAME: (joinErrorCode: JoinErrorCode) => void;
+  JOIN_THIS_ROOM: (/*TODO*/) => void;
+  DUEL_RESULTS: (
+    result: DuelResult,
+    player1Action: Action,
+    player2Action: Action
+  ) => void;
+  MATCH_RESULTS: (winner: PlayerAttributes, loser: PlayerAttributes) => void;
+  CHOOSE_PLAYER_MOVE: (/*TODO*/) => void;
+  GAME_WINNER: (winner: any) => void; // Sample for testing
 }
