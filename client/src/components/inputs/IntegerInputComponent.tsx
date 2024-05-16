@@ -9,7 +9,7 @@ const IntegerInputComponent = ({
   placeholder,
   callback,
 }: IntegerInputComponentProps) => {
-  const [value, setValue] = useState(placeholder);
+  const [value, setValue] = useState<number|string>(placeholder);
   const [hasError, setHasError] = useState(false);
   return (
     <input
@@ -19,7 +19,7 @@ const IntegerInputComponent = ({
       onChange={(event) => {
         if (!/^\d+$/.test(event.target.value)) {
           setHasError(true);
-          setValue(parseInt(event.target.value));
+          setValue(event.target.value);
         } else {
           setHasError(false);
           setValue(parseInt(event.target.value));
