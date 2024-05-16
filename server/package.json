@@ -9,10 +9,12 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@types/qrcode": "^1.5.5",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "nodemon": "^3.1.0",
     "prettier": "^3.2.5",
+    "qrcode": "^1.5.3",
     "socket.io": "^4.7.5",
     "tsx": "^4.7.3"
   },
