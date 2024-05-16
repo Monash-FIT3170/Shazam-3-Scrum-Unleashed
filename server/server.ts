@@ -109,7 +109,7 @@ io.on("connection", (socket) => {
       console.log(`Game : ${gameCode} does not exist`);
       return;
     } else if (players != undefined) {
-      io.to(game?.HostSocketId).emit("GAME_START", players);
+      io.to(game.HostSocketId).emit("GAME_START", players);
     } else {
       console.log(`Game : ${gameCode} has no player list`);
     }
