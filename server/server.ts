@@ -1,13 +1,14 @@
 import express from "express";
 import cors from "cors";
 import * as http from "http";
-import { Server } from "socket.io";
+import {Server} from "socket.io";
 import { Events } from "../types/socket/events";
 import Game from "./model/game";
 import Player from "./model/actors/player";
 import Host from "./model/actors/host";
 import { playerRoomName } from "./socket/roomNames";
 import QRCode from "qrcode";
+import InMemorySessionStore from "./socket/sessionStore";
 
 const app = express();
 
@@ -21,13 +22,42 @@ const io = new Server<Events>(server, {
     origin: "http://localhost:5173",
     methods: ["GET", "POST"],
   },
+  cookie:{
+    name: "io",
+    path: "/",
+    httpOnly: true,
+    sameSite: "lax"}
 });
 export default io;
 
 const gamesMap = new Map<string, Game>();
 
+const sessionStorage = new InMemorySessionStore();
+
+io.use((socket) => {
+  console.log(sessionStorage)
+  const sessionID :string = socket.handshake.auth["sessionID"];
+  console.log(sessionID)
+  if (sessionID) {
+    // find existing session
+    const session = sessionStorage.findSession(sessionID);
+    if (session) {
+      socket.sessionID = sessionID;
+      socket.userID = session.userID;
+    }
+  }
+
+  // create new session
+  socket.sessionID = Math.random()*1000; // TODO actually generate
+  socket.userID =  Math.random()*1000;
+});
+
 io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
+
+  sessionStorage.saveSession(socket.sessionID, socket.userID);
+
+  socket.emit("SESSION_INFO", socket.sessionID, socket.userID);
 
   socket.on("JOIN_GAME", async (gameCode, playerName) => {
     const game: Game | undefined = gamesMap.get(gameCode);

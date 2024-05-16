@@ -10,7 +10,11 @@ import {JoinErrorCode} from "./eventArguments"
 /**
  * Add any new Event Categories to this
  */
-export interface Events extends HostToServerEvents, PlayerToServerEvents, ServerToHostEvents, ServerToPlayerEvents {
+export interface Events extends HostToClientEvents, HostToServerEvents, PlayerToServerEvents, ServerToHostEvents, ServerToPlayerEvents {
+}
+
+interface HostToClientEvents {
+    SESSION_INFO: (sessionID:string, userID:string) => void,
 }
 
 interface HostToServerEvents {
