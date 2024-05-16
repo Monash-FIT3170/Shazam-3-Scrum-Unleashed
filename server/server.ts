@@ -1,13 +1,14 @@
 import express from "express";
 import cors from "cors";
 import * as http from "http";
-import { Server, Socket } from "socket.io";
+import { Server } from "socket.io";
 
 import { Events } from "../types/socket/events";
 import Game from "./model/game";
 import Player from "./model/actors/player";
 import Host from "./model/actors/host";
 import { playerRoomName } from "./socket/roomNames";
+import QRCode from "qrcode";
 
 const app = express();
 
@@ -22,6 +23,7 @@ const io = new Server<Events>(server, {
     methods: ["GET", "POST"],
   },
 });
+export default io;
 
 const gamesMap = new Map<string, Game>();
 
@@ -97,6 +99,7 @@ io.on("connection", (socket) => {
     io.to(host.socketId).emit("GAME_CREATED", gameCode);
   });
 
+  
   socket.on("START_GAME", (gameCode) => {
     console.log(`Game Started: ${gameCode}`);
   
@@ -112,6 +115,33 @@ io.on("connection", (socket) => {
       console.log(`Game : ${gameCode} has no player list`);
     }
   });
+
+  socket.on("ALLOCATE_PLAYERS", async (gameCode) => {
+    const game: Game | undefined = gamesMap.get(gameCode);
+    if (!game) {
+      return;
+    }
+    await game.allocateRooms(gameCode);
+  });
+});
+
+app.get("/qr-code/:url", (req, res, next) => {
+  // TS fucking cancer
+  void (async () => {
+    const url = req.params.url;
+    let qrCode;
+    try {
+      // Note: If QR code is difficult to scan from distance. We can increase redundancy.
+      qrCode = await QRCode.toDataURL(url);
+    } catch (error) {
+      next(error);
+      res.status(500).send("Error generatring QR Code");
+      return;
+    }
+    res.status(200).send({
+      qrCode,
+    });
+  })();
 });
 
 server.listen(3010, () => {
