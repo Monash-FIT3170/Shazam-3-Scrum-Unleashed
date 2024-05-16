@@ -19,7 +19,12 @@ import {
   TOURNAMENT_SCREEN,
 } from "./pages/pagePaths.ts";
 import GameLobby from "./pages/GameLobby.tsx";
-import { joinedGameLoader, joinGameLoader, newGameLoader, tournamentScreenLoader } from "./loaders";
+import {
+  joinedGameLoader,
+  joinGameLoader,
+  newGameLoader,
+  tournamentScreenLoader,
+} from "./loaders";
 import PlayerScreen from "./pages/PlayerScreen.tsx";
 import TournamentScreen from "./pages/TournamentScreen.tsx";
 import Home from "./pages/Home.tsx";
@@ -48,10 +53,10 @@ const router = createBrowserRouter(
         loader={joinedGameLoader}
       />
       {/* creating a route for the tournament screen */}
-      <Route 
-        path={TOURNAMENT_SCREEN} 
-        element={<TournamentScreen />} 
-        loader={tournamentScreenLoader} 
+      <Route
+        path={TOURNAMENT_SCREEN}
+        element={<TournamentScreen />}
+        loader={tournamentScreenLoader}
       />
     </Route>,
   ),

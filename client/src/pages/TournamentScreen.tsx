@@ -6,10 +6,10 @@ import { useState } from "react";
 
 const TournamentScreen = () => {
   // create a list of players for further use
-  const [players, setPlayers] = useState(new Array<Player>);
+  const [players, setPlayers] = useState(new Array<Player>());
 
   // get the list of players emitted from the server
-  socket.on ("GAME_START", (players) => {  
+  socket.on("GAME_START", (players) => {
     console.log(players);
     console.log("Game Started");
     // map the player attributes to the player class

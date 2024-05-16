@@ -19,11 +19,10 @@ async function fetchQrCode(
   setQrCode(qrCode.qrCode);
 }
 
-
 const GameLobby = () => {
   const navigate = useNavigate();
   const gameData = useLoaderData() as { gameCode: string };
-  // changed from player attributes to player so the component for player cards can be used 
+  // changed from player attributes to player so the component for player cards can be used
   const [players, setPlayers] = useState(new Array<Player>());
   const [qrCode, setQrCode] = useState("");
 
@@ -47,7 +46,12 @@ const GameLobby = () => {
   useEffect(() => {
     socket.on("PLAYER_HAS_JOINED", (player) => {
       console.log(player);
-      const newPlayer = new Player(player.socketId, player.name, player.id, player.isBot);
+      const newPlayer = new Player(
+        player.socketId,
+        player.name,
+        player.id,
+        player.isBot,
+      );
       updateList(newPlayer);
       console.log(`Player ${player.name} has joined`);
     });
@@ -59,7 +63,7 @@ const GameLobby = () => {
 
   const startGame = () => {
     socket.emit("START_GAME", gameData.gameCode);
-    navigate(`../${TOURNAMENT_SCREEN}?gameCode=${gameData.gameCode}`)
+    navigate(`../${TOURNAMENT_SCREEN}?gameCode=${gameData.gameCode}`);
   };
 
   return (
@@ -67,12 +71,17 @@ const GameLobby = () => {
       <div>
         <DisplayLogo />
       </div>
-      <h1 className="text-white text-2xl font-bold mt-6 uppercase">Game Code : {gameData.gameCode}</h1>
+      <h1 className="text-white text-2xl font-bold mt-6 uppercase">
+        Game Code : {gameData.gameCode}
+      </h1>
       <br></br>
       {/* creating a button which starts the game */}
-      <button className="hover:bg-blue-700 text-white bg-primary text-2xl font-bold py-3 px-4 rounded-xl h-full uppercase"
-          onClick={startGame}
-        >Start Game</button>
+      <button
+        className="hover:bg-blue-700 text-white bg-primary text-2xl font-bold py-3 px-4 rounded-xl h-full uppercase"
+        onClick={startGame}
+      >
+        Start Game
+      </button>
       <br></br>
       <br></br>
       <div className="player-bar">
@@ -86,10 +95,10 @@ const GameLobby = () => {
         ))}
       </div>
       <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-          onClick={handleAllocatePlayers}
-        >
-          Allocate Players
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+        onClick={handleAllocatePlayers}
+      >
+        Allocate Players
       </button>
       {qrCode === "" ? (
         <span>loading...</span>

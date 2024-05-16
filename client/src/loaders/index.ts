@@ -36,4 +36,4 @@ export const tournamentScreenLoader = async ({ request }: LoaderProps) => {
   const gameCode = url.searchParams.get("gameCode");
 
   return gameCode;
-}
+};

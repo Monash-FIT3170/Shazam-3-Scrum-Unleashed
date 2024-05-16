@@ -99,10 +99,9 @@ io.on("connection", (socket) => {
     io.to(host.socketId).emit("GAME_CREATED", gameCode);
   });
 
-  
   socket.on("START_GAME", (gameCode) => {
     console.log(`Game Started: ${gameCode}`);
-  
+
     const game: Game | undefined = gamesMap.get(gameCode);
     const players = game?.getPlayers();
 
