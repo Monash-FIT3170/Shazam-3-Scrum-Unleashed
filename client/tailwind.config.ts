@@ -16,7 +16,7 @@ export default {
         "green-bg": "#E943E9",
         red: "#E943E9",
         "saturated-red": "#E943E9",
-        "bright-red":"#FF0000",
+        "bright-red": "#FF0000",
       },
     },
   },

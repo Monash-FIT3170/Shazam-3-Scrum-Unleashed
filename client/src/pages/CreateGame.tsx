@@ -52,7 +52,10 @@ const CreateGame = () => {
               Duels per match
             </span>
             <div className="flex justify-center gap-2 text-transparent font-bold">
-              <IntegerInputComponent placeholder={duelPerMatch} callback={setDuelsPerMatch}/>
+              <IntegerInputComponent
+                placeholder={duelPerMatch}
+                callback={setDuelsPerMatch}
+              />
               <span>SECS</span>
             </div>
           </div>
@@ -60,7 +63,10 @@ const CreateGame = () => {
           <div className="flex justify-between items-center w-full">
             <span className="text-white text-2xl uppercase">Duels Timer</span>
             <div className="flex justify-center items-center gap-2 text-white font-bold">
-              <IntegerInputComponent placeholder={duelTime} callback={setDuelTime}/>
+              <IntegerInputComponent
+                placeholder={duelTime}
+                callback={setDuelTime}
+              />
               <span>SECS</span>
             </div>
           </div>
@@ -68,7 +74,10 @@ const CreateGame = () => {
           <div className="flex justify-between items-center w-full">
             <span className="text-white text-2xl uppercase">Round timer</span>
             <div className="flex justify-center items-center gap-2 text-white font-bold">
-              <IntegerInputComponent placeholder={defaultMatchTime} callback={setMatchTime}/>
+              <IntegerInputComponent
+                placeholder={defaultMatchTime}
+                callback={setMatchTime}
+              />
               <span>SECS</span>
             </div>
           </div>
