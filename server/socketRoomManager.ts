@@ -7,7 +7,10 @@ import io from "./server";
 import Player from "./model/actors/player";
 
 // Function to handle allocation of players and recursive reduction of rooms
-export const handleRoomAllocation = async (players: Player[], gameCode: string) => {
+export const handleRoomAllocation = async (
+  players: Player[],
+  gameCode: string,
+) => {
   const winners: Player[] = [];
 
   const numPlayers = players.length;
@@ -26,7 +29,7 @@ export const handleRoomAllocation = async (players: Player[], gameCode: string) 
   // Iterate through each group of players
   for (const group of playerGroups) {
     // Generate a unique room name
-    
+
     const roomName = generateUniqueRoomName(gameCode);
     console.log(`Allocating players to room: ${roomName}`);
 
@@ -47,7 +50,7 @@ export const handleRoomAllocation = async (players: Player[], gameCode: string) 
 
   // If more than one room remains, recursively handle allocation
   if (playerGroups.length > 1) {
-    await handleRoomAllocation(winners,gameCode);
+    await handleRoomAllocation(winners, gameCode);
   } else {
     // Implement logic to determine the winner
     console.log("Game ended");
@@ -61,12 +64,12 @@ export const handleRoomAllocation = async (players: Player[], gameCode: string) 
   }
 };
 
-var roomNumber = 0;
+let roomNumber = 0;
 // Generate a random alphanumeric room name
 function generateUniqueRoomName(gameCode: string): string {
-  const roomName =  `GAME_${gameCode}_ROOM_${roomNumber++}`;
+  roomNumber++;
+  const roomName = `GAME_${gameCode}_ROOM_${roomNumber.toString()}`;
   return roomName;
-
 }
 
 const waitForResults = async (playerGroups: Player[][], winners: Player[]) => {

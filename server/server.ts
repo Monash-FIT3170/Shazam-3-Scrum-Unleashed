@@ -7,7 +7,6 @@ import Game from "./model/game";
 import Player from "./model/actors/player";
 import Host from "./model/actors/host";
 import { playerRoomName } from "./socket/roomNames";
-import { handleRoomAllocation } from "./socketRoomManager";
 
 const app = express();
 
