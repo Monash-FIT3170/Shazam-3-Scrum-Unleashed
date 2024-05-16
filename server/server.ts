@@ -8,6 +8,7 @@ import Game from "./model/game";
 import Player from "./model/actors/player";
 import Host from "./model/actors/host";
 import { playerRoomName } from "./socket/roomNames";
+import QRCode from "qrcode";
 
 const app = express();
 
@@ -96,6 +97,25 @@ io.on("connection", (socket) => {
     // Send GAME_CREATED event
     io.to(host.socketId).emit("GAME_CREATED", gameCode);
   });
+});
+
+app.get("/qr-code/:url", (req, res, next) => {
+  // TS fucking cancer
+  void (async () => {
+    const url = req.params.url;
+    let qrCode;
+    try {
+      // Note: If QR code is difficult to scan from distance. We can increase redundancy.
+      qrCode = await QRCode.toDataURL(url);
+    } catch (error) {
+      next(error);
+      res.status(500).send("Error generatring QR Code");
+      return;
+    }
+    res.status(200).send({
+      qrCode,
+    });
+  })();
 });
 
 server.listen(3010, () => {

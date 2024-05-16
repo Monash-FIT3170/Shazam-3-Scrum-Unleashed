@@ -24,6 +24,7 @@ import PlayerScreen from "./pages/PlayerScreen.tsx";
 import TournamentScreen from "./pages/TournamentScreen.tsx";
 import Home from "./pages/Home.tsx";
 
+// TODO: We need to make this an environment variable
 export const socket: Socket<Events> = io("http://localhost:3010");
 
 const router = createBrowserRouter(
