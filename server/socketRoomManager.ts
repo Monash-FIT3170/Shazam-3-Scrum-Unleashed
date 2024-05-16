@@ -26,11 +26,11 @@ export const handleRoomAllocation = async (
     playerGroups.push(group);
   }
 
+  let roomNumber = 0;
   // Iterate through each group of players
   for (const group of playerGroups) {
     // Generate a unique room name
-
-    const roomName = generateUniqueRoomName(gameCode);
+    const roomName = generateUniqueRoomName(gameCode, roomNumber);
     console.log(`Allocating players to room: ${roomName}`);
 
     // Allocate players to their respective room
@@ -43,6 +43,7 @@ export const handleRoomAllocation = async (
 
     // Emit "CHOOSE_PLAYER_MOVE" event to each room
     io.to(roomName).emit("CHOOSE_PLAYER_MOVE");
+    roomNumber++;
   }
 
   // Wait for results from each room
@@ -64,12 +65,9 @@ export const handleRoomAllocation = async (
   }
 };
 
-let roomNumber = 0;
 // Generate a random alphanumeric room name
-function generateUniqueRoomName(gameCode: string): string {
-  roomNumber++;
-  const roomName = `GAME_${gameCode}_ROOM_${roomNumber.toString()}`;
-  return roomName;
+function generateUniqueRoomName(gameCode: string, roomNumber: number): string {
+  return `GAME_${gameCode}&ROOM_${roomNumber.toString()}`;
 }
 
 const waitForResults = async (playerGroups: Player[][], winners: Player[]) => {
