@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import * as http from "http";
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 
 import { Events } from "../types/socket/events";
 import Game from "./model/game";
@@ -95,6 +95,22 @@ io.on("connection", (socket) => {
 
     // Send GAME_CREATED event
     io.to(host.socketId).emit("GAME_CREATED", gameCode);
+  });
+
+  socket.on("START_GAME", (gameCode) => {
+    console.log(`Game Started: ${gameCode}`);
+  
+    const game: Game | undefined = gamesMap.get(gameCode);
+    const players = game?.getPlayers();
+
+    if (game == undefined) {
+      console.log(`Game : ${gameCode} does not exist`);
+      return;
+    } else if (players != undefined) {
+      io.to(game?.HostSocketId).emit("GAME_START", players);
+    } else {
+      console.log(`Game : ${gameCode} has no player list`);
+    }
   });
 });
 

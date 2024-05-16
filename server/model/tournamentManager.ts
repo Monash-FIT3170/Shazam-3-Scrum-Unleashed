@@ -39,7 +39,7 @@ export class TournamentManager {
     for (let i = 0; i < players.length; i++) {
       round1.push(players[i]);
       if (i < numBots) {
-        round1.push(new Player(`🤖 Bot #" + ${String(i)}`, "", nextID, true));
+        round1.push(new Player("", `🤖Bot#${String(i)}`, nextID, true));
         nextID++;
       }
     }

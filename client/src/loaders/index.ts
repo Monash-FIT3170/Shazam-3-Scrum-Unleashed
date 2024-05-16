@@ -30,3 +30,11 @@ export const joinedGameLoader = async ({ request }: LoaderProps) => {
 
   return { playerName };
 };
+
+export const tournamentScreenLoader = async ({ request }: LoaderProps) => {
+  const url = new URL(request.url);
+
+  const gameCode = url.searchParams.get("gameCode");
+
+  return gameCode;
+}

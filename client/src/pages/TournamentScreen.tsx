@@ -1,23 +1,24 @@
 import DisplayLogo from "../components/DisplayLogo";
 import PlayerCard from "../components/PlayerCard";
 import Player from "../../../server/model/actors/player";
+import { socket } from "../App";
+import { useState } from "react";
 
 const TournamentScreen = () => {
-  // get the current player list
-  // placeholder players
-  const player = new Player("1", "mmmmmmmm", 1, false);
-  const player2 = new Player("1", "wwwwwwww", 2, false);
-  const players = [
-    player,
-    player2,
-    new Player("1", "wwwwwwww", 2, false),
-    new Player("1", "wwwwwwww", 3, false),
-    new Player("1", "wwwwwwww", 4, false),
-    new Player("1", "wwwwwwww", 5, false),
-    new Player("1", "wwwwwwww", 6, false),
-    new Player("1", "wwwwwwww", 7, false),
-    new Player("1", "wwwwwwww", 8, false),
-  ];
+  // create a list of players for further use
+  const [players, setPlayers] = useState(new Array<Player>);
+
+  // get the list of players emitted from the server
+  socket.on ("GAME_START", (players) => {  
+    console.log(players);
+    console.log("Game Started");
+    // map the player attributes to the player class
+    const newPlayers = players.map((player) => {
+      return new Player(player.socketId, player.name, player.id, player.isBot);
+    });
+    // change the player list to the new player list
+    setPlayers(newPlayers);
+  });
 
   return (
     <div>
