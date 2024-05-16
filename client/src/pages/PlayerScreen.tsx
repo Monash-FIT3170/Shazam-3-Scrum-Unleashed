@@ -36,7 +36,7 @@ const PlayerScreen = () => {
         <div className="flex flex-col items-center justify-center mt-10">
           {!isWinner && !shouldRenderComponents && (
             <div className="mt-20">
-              <WaitingToStart />
+              <WaitingToStart/>
             </div>
           )}
           {!isWinner && shouldRenderComponents && (

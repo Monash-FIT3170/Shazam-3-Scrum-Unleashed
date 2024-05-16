@@ -1,6 +1,8 @@
 // Description: This file contains the logic to handle allocation of players
 // into rooms and recursive reduction of rooms until a winner is determined.
 
+// Contains sample logic. Needs to be refactored and integrated with the duel logic. 
+
 import  io  from "./server";
 import Player from "./model/actors/player"; 
 
@@ -70,11 +72,11 @@ const waitForResults = async (playerGroups: Player[][], winners: Player[]) => {
   // Simulate waiting for results
   await new Promise((resolve) => setTimeout(resolve, 11000));
 
-  // Get the first player in each group as the winner
+  // Simulate determining winners
+  console.log("Results received. Determining winners...");
   for (const group of playerGroups) {
     const winner = group[0];
     winners.push(winner);
-    console.log("Results received. Determining winners...");
     console.log(`Winner: ${winner.name}`);
   }
 
