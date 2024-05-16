@@ -13,6 +13,10 @@ const GameLobby = () => {
   const updateList = (player: PlayerAttributes) => {
     setPlayers((previousPlayers) => [...previousPlayers, player]);
   };
+  const handleAllocatePlayers = () => {
+    // Call the ALLOCATE_PLAYERS socket event
+    socket.emit("ALLOCATE_PLAYERS", gameData.gameCode);
+  };
 
   useEffect(() => {
     socket.on("PLAYER_HAS_JOINED", (player) => {
@@ -38,6 +42,12 @@ const GameLobby = () => {
             <li key={player.id}>{player.name}</li>
           ))}
         </ul>
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+          onClick={handleAllocatePlayers}
+        >
+          Allocate Players
+        </button>
       </h1>
     </div>
   );

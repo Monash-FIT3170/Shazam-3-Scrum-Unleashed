@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import * as http from "http";
 import { Server } from "socket.io";
-
 import { Events } from "../types/socket/events";
 import Game from "./model/game";
 import Player from "./model/actors/player";
@@ -22,6 +21,7 @@ const io = new Server<Events>(server, {
     methods: ["GET", "POST"],
   },
 });
+export default io;
 
 const gamesMap = new Map<string, Game>();
 
@@ -95,6 +95,14 @@ io.on("connection", (socket) => {
 
     // Send GAME_CREATED event
     io.to(host.socketId).emit("GAME_CREATED", gameCode);
+  });
+
+  socket.on("ALLOCATE_PLAYERS", async (gameCode) => {
+    const game: Game | undefined = gamesMap.get(gameCode);
+    if (!game) {
+      return;
+    }
+    await game.allocateRooms(gameCode);
   });
 });
 
