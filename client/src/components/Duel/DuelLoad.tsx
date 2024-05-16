@@ -1,9 +1,9 @@
 //This is responsible for loading the buildup of a Duel
 //By Anand Vannalath
 
-import shazamLogo from "../assets/Duel/SHAZAM.svg";
-import closed from "../assets/Duel/Hand.svg";
-import explosion from "../assets/Duel/Explosion.svg";
+import shazamLogo from "../../assets/Duel/SHAZAM.svg";
+import closed from "../../assets/Duel/Hand.svg";
+import explosion from "../../assets/Duel/Explosion.svg";
 
 interface LoadProps {
   phase: number;

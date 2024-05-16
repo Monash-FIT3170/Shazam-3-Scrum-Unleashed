@@ -1,27 +1,18 @@
 import { useEffect, useState } from "react";
-import semiTransparentPaper from "../assets/SemiTransparentPaper.svg";
-import semiTransparentRock from "../assets/SemiTransparentRock.svg";
-import semiTransparentScissors from "../assets/SemiTransparentScissors.svg";
-import filledPaper from "../assets/Paper.svg";
-import filledRock from "../assets/Rock.svg";
-import filledScissors from "../assets/Scissors.svg";
-import outlinedPaper from "../assets/Paper-Outline.svg";
-import outlinedRock from "../assets/Rock-Outline.svg";
-import outlinedScissors from "../assets/Scissors-Outline.svg";
 import { Action } from "../../../../types/types";
 import { HandImgType } from "../../types";
 
-type PlayerMoveHandProps = {
+type PlayerMoveProps = {
   playerMove: Action; // eg. ROCK, PAPER or SCISSORS
   isOpponent: boolean;
   handType: HandImgType; // eg. FILLED, OUTLINED or SEMI_TRANSPARENT
 };
 
-function PlayerMoveHand({
+function PlayerMove({
   playerMove,
   isOpponent,
   handType,
-}: PlayerMoveHandProps) {
+}: PlayerMoveProps) {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -34,7 +25,7 @@ function PlayerMoveHand({
     <div>
       <div
         className={
-          "mx-auto max-w-max inset-x-0 scale-75 md:scale-95 absolute duration-[500ms] ease-out transition-all" +
+          "mx-auto max-w-max inset-x-0 scale-75 md:scale-95 fixed duration-[500ms] ease-out transition-all" +
           ` ${
             isOpponent
               ? ` rotate-180 -top-[345px] md:-top-[355px] ${loaded ? "" : "-translate-y-full"}`
@@ -43,43 +34,12 @@ function PlayerMoveHand({
         }
       >
         <img
-          src={
-            handType === "FILLED" && playerMove === "ROCK"
-              ? filledRock
-              : handType === "FILLED" && playerMove === "PAPER"
-                ? filledPaper
-                : handType === "FILLED" && playerMove === "SCISSORS"
-                  ? filledScissors
-                  : handType === "OUTLINED" && playerMove === "ROCK"
-                    ? outlinedRock
-                    : handType === "OUTLINED" && playerMove === "PAPER"
-                      ? outlinedPaper
-                      : handType === "OUTLINED" && playerMove === "SCISSORS"
-                        ? outlinedScissors
-                        : handType === "SEMI_TRANSPARENT" &&
-                            playerMove === "ROCK"
-                          ? semiTransparentRock
-                          : handType === "SEMI_TRANSPARENT" &&
-                              playerMove === "PAPER"
-                            ? semiTransparentPaper
-                            : handType === "SEMI_TRANSPARENT" &&
-                                playerMove === "SCISSORS"
-                              ? semiTransparentScissors
-                              : ""
-          }
-          alt={
-            playerMove === "ROCK"
-              ? "Rock"
-              : playerMove === "PAPER"
-                ? "Paper"
-                : playerMove === "SCISSORS"
-                  ? "Scissors"
-                  : ""
-          }
+          src={`/shazam-3-scrum-unleashed/src/assets/${handType.toLowerCase()}-${playerMove.toLowerCase()}.svg`}
+          alt={playerMove.toLowerCase()}
         />
       </div>
     </div>
   );
 }
 
-export default PlayerMoveHand;
+export default PlayerMove;

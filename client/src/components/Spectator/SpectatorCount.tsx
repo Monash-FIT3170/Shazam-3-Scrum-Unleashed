@@ -1,4 +1,4 @@
-import eyeIcon from "../assets/EyeIcon.svg";
+import eyeIcon from "../../assets/EyeIcon.svg";
 
 type SpectatorCountProps = {
   count: number;

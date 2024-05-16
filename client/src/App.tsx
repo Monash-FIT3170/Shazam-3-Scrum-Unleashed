@@ -53,7 +53,7 @@ function App() {
   return (
     <div>
       <Duel 
-        playerName="SKIBIDI" opponentName="SIGMA" score1={2} score2={2} result="TIE" move="PAPER" spectatorCount={32} phase={4}/>
+        playerName="SKIBIDI" opponentName="SIGMA" score1={2} score2={2} result="LOSE" move="SCISSORS" spectatorCount={32} phase={4}/>
     </div>
   );
 }
