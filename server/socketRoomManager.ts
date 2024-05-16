@@ -43,6 +43,7 @@ export const handleRoomAllocation = async (
 
     // Emit "CHOOSE_PLAYER_MOVE" event to each room
     io.to(roomName).emit("CHOOSE_PLAYER_MOVE");
+
     roomNumber++;
   }
 

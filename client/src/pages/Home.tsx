@@ -2,6 +2,7 @@ import { CREATE_GAME_PATH, JOIN_GAME_PATH } from "./pagePaths.ts";
 import ButtonComponent from "../components/buttons/ButtonComponent.tsx";
 import BorderedButtonComponent from "../components/buttons/BorderedButtonComponent.tsx";
 import DisplayLogo from "../components/DisplayLogo.tsx";
+import TournamentScreen from "./TournamentScreen.tsx";
 
 const Home = () => {
   return (
@@ -18,6 +19,7 @@ const Home = () => {
           linkPath={CREATE_GAME_PATH}
           text={"CREATE GAME"}
         ></BorderedButtonComponent>
+          <TournamentScreen></TournamentScreen>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { GAME_LOBBY_PATH } from "./pagePaths.ts";
 import { socket } from "../App.tsx";
 import DisplayLogo from "../components/DisplayLogo.tsx";
+import IntegerInputComponent from "../components/inputs/IntegerInputComponent.tsx";
 
 const defaultDuelsPerMatch: number = 5;
 const defaultDuelTime: number = 15;
@@ -51,13 +52,7 @@ const CreateGame = () => {
               Duels per match
             </span>
             <div className="flex justify-center gap-2 text-transparent font-bold">
-              <input
-                className="py-2 px-5 bg-[#14171D] text-white border-2 border-white rounded-xl w-1/2"
-                value={duelPerMatch}
-                onChange={(event) => {
-                  setDuelsPerMatch(parseInt(event.target.value));
-                }}
-              />
+              <IntegerInputComponent placeholder={duelPerMatch} callback={setDuelsPerMatch}/>
               <span>SECS</span>
             </div>
           </div>
@@ -65,13 +60,7 @@ const CreateGame = () => {
           <div className="flex justify-between items-center w-full">
             <span className="text-white text-2xl uppercase">Duels Timer</span>
             <div className="flex justify-center items-center gap-2 text-white font-bold">
-              <input
-                className="py-2 px-5 bg-[#14171D] text-white border-2 border-white rounded-xl w-1/2"
-                value={duelTime}
-                onChange={(event) => {
-                  setDuelTime(parseInt(event.target.value));
-                }}
-              />
+              <IntegerInputComponent placeholder={duelTime} callback={setDuelTime}/>
               <span>SECS</span>
             </div>
           </div>
@@ -79,13 +68,7 @@ const CreateGame = () => {
           <div className="flex justify-between items-center w-full">
             <span className="text-white text-2xl uppercase">Round timer</span>
             <div className="flex justify-center items-center gap-2 text-white font-bold">
-              <input
-                className="py-2 px-5 bg-[#14171D] text-white border-2 border-white rounded-xl w-1/2"
-                value={matchTime}
-                onChange={(event) => {
-                  setMatchTime(parseInt(event.target.value));
-                }}
-              />
+              <IntegerInputComponent placeholder={defaultMatchTime} callback={setMatchTime}/>
               <span>SECS</span>
             </div>
           </div>
