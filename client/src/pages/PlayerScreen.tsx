@@ -14,9 +14,9 @@ const PlayerScreen = () => {
   const [isWinner, setIsWinner] = useState(false);
   const [displayResults, setDisplayResults] = useState(false);
 
-    const location = useLocation();
-    const searchParams = new URLSearchParams(location.search);
-    const playerName = searchParams.get("playerName");
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const playerName = searchParams.get("playerName");
 
   useEffect(() => {
     socket.on("CHOOSE_PLAYER_MOVE", () => {
