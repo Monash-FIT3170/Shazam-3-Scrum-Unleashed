@@ -3,13 +3,14 @@
 
 // Contains sample logic. Needs to be refactored and integrated with the duel logic.
 
-import io from "./server";
+import { Server } from "socket.io";
 import Player from "./model/actors/player";
 
 // Function to handle allocation of players and recursive reduction of rooms
 export const handleRoomAllocation = async (
   players: Player[],
   gameCode: string,
+  io: Server,
 ) => {
   const winners: Player[] = [];
 
@@ -51,7 +52,7 @@ export const handleRoomAllocation = async (
 
   // If more than one room remains, recursively handle allocation
   if (playerGroups.length > 1) {
-    await handleRoomAllocation(winners, gameCode);
+    await handleRoomAllocation(winners, gameCode, io);
   } else {
     // Implement logic to determine the winner
     console.log("Game ended");
