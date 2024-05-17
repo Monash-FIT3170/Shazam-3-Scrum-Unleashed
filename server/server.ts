@@ -8,6 +8,14 @@ import Player from "./model/actors/player";
 import Host from "./model/actors/host";
 import { playerRoomName } from "./socket/roomNames";
 import QRCode from "qrcode";
+import InMemorySessionStore from "./socket/sessionStore";
+
+declare module "socket.io" {
+  interface Socket {
+    sessionID: string;
+    userID: string;
+  }
+}
 
 const app = express();
 
@@ -26,8 +34,41 @@ export default io;
 
 const gamesMap = new Map<string, Game>();
 
-io.on("connection", (socket) => {
-  console.log(`User Connected: ${socket.id}`);
+const sessionStorage = new InMemorySessionStore();
+
+io.use((socket, next) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const sessionID: string = socket.handshake.auth["sessionID"];
+  if (sessionID) {
+    // find existing session
+    const userID = sessionStorage.findSession(sessionID);
+    if (userID) {
+      socket.sessionID = sessionID;
+      socket.userID = userID;
+      next();
+      return;
+    }
+  }
+  // create new session
+  socket.sessionID = (Math.random() * 1000).toString(); // TODO actually generate
+  socket.userID = (Math.random() * 1000).toString();
+  next();
+});
+
+io.on("connection", async (socket) => {
+  console.log(
+    `User Connected: ${socket.id}, sessionID: ${socket.sessionID}, userID: ${socket.userID}`,
+  );
+
+  // Save the socket sessionID and userID
+  sessionStorage.saveSession(socket.sessionID, socket.userID);
+
+  // Get the socket to join the userID room. This will be used to send messages, rather then the socketID,
+  // as it will remain constant and thus will not need to be changes
+  await socket.join(socket.userID);
+
+  // Sends SESSION_INFO to socket (lets them know their sessionID and userID)
+  io.to(socket.userID).emit("SESSION_INFO", socket.sessionID, socket.userID);
 
   socket.on("JOIN_GAME", async (gameCode, playerName) => {
     const game: Game | undefined = gamesMap.get(gameCode);
