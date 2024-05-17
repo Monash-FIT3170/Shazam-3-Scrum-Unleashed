@@ -8,7 +8,6 @@ import WinnerPlayer from "../components/WinnerPlayer";
 import LoadingEffect from "../components/LoadingEffect";
 import { useLocation } from "react-router-dom";
 
-
 const PlayerScreen = () => {
   const [renderMoveComponent, setRenderMoveComponent] = useState(false);
   const [isWinner, setIsWinner] = useState(false);
@@ -22,17 +21,16 @@ const PlayerScreen = () => {
     socket.on("CHOOSE_PLAYER_MOVE", () => {
       setRenderMoveComponent(true);
 
-    socket.on("GAME_WINNER", () => {
+      socket.on("GAME_WINNER", () => {
         setIsWinner(true); // Set isWinner to true when GAME_WINNER event is received
-
       });
 
-    socket.on("RE_RENDER_MOVE_COMPONENT", () => {
-      setDisplayResults(false);
-      setRenderMoveComponent(true);
-    });
-    
-    socket.on("PLAYER_MOVES_MADE", () => {
+      socket.on("RE_RENDER_MOVE_COMPONENT", () => {
+        setDisplayResults(false);
+        setRenderMoveComponent(true);
+      });
+
+      socket.on("PLAYER_MOVES_MADE", () => {
         setDisplayResults(true);
       });
     });
@@ -40,12 +38,11 @@ const PlayerScreen = () => {
     socket.on("DRAW", () => {
       setRenderMoveComponent(false);
       setDisplayResults(true);
-    
+
       setTimeout(() => {
         setRenderMoveComponent(true);
         setDisplayResults(false);
       }, 5000); // Wait for 5 seconds before hiding results
-
     });
 
     return () => {
@@ -53,16 +50,16 @@ const PlayerScreen = () => {
       socket.off("CHOOSE_PLAYER_MOVE");
       socket.off("GAME_WINNER");
       socket.off("RE_RENDER_MOVE_COMPONENT");
-      socket.off("PLAYER_MOVES_MADE")
+      socket.off("PLAYER_MOVES_MADE");
       socket.off("DRAW");
-      
     };
   }, []);
 
   return (
     <div className="overflow-hidden h-screen relative">
       <div className="pt-12">
-        {((!isWinner && !renderMoveComponent && !displayResults) || isWinner) && (
+        {((!isWinner && !renderMoveComponent && !displayResults) ||
+          isWinner) && (
           <div className=" items-center size-60 w-full">
             <DisplayLogo />
           </div>

@@ -8,36 +8,33 @@ import { socket } from "../App";
 
 interface ChoosePlayerMoveProps {
   playerName: string | null;
-
 }
 
-const ChoosePlayerMove = ({playerName}: ChoosePlayerMoveProps) => {
+const ChoosePlayerMove = ({ playerName }: ChoosePlayerMoveProps) => {
   const [selectedMove, setSelectedMove] = useState<Action | null>(null);
-   useEffect(() => {
-     // Handle DRAW event to reset move selection
-     const handleDraw = () => {
+  useEffect(() => {
+    // Handle DRAW event to reset move selection
+    const handleDraw = () => {
       console.log("DRAW event received. Resetting selected move.");
-       setSelectedMove(null);
-     };
+      setSelectedMove(null);
+    };
 
-     socket.on("DRAW", handleDraw);
+    socket.on("DRAW", handleDraw);
 
-     // Cleanup listener on component unmount
-     return () => {
-       socket.off("DRAW", handleDraw);
-     };
-   }, []);
-
+    // Cleanup listener on component unmount
+    return () => {
+      socket.off("DRAW", handleDraw);
+    };
+  }, []);
 
   const handleMoveSelection = (move: Action) => {
     if (!selectedMove) {
       setSelectedMove(move);
       console.log(`Selected move: ${move}. Emitting CHOOSE_ACTION.`);
-      if (playerName !== null){
-        socket.emit("CHOOSE_ACTION",move); 
+      if (playerName !== null) {
+        socket.emit("CHOOSE_ACTION", move);
       }
     }
-   
   };
 
   return (

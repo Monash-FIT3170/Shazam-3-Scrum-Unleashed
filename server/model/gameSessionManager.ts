@@ -43,7 +43,7 @@ export class GameSessionManager {
     if (GameSessionManager.rules[player1Choice] == player2Choice) {
       this.player1.incrementInGamePoints();
       return this.player1;
-    } else if (player1Choice == player2Choice) {;
+    } else if (player1Choice == player2Choice) {
       return "DRAW";
     } else {
       this.player2.incrementInGamePoints();

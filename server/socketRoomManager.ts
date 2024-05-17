@@ -8,9 +8,11 @@ import Player from "./model/actors/player";
 import { Action } from "../types/types";
 import { GameSessionManager } from "model/gameSessionManager";
 
-
 // Function to handle allocation of players and recursive reduction of rooms
-export const handleRoomAllocation = async (players: Player[], gameCode: string) => {
+export const handleRoomAllocation = async (
+  players: Player[],
+  gameCode: string,
+) => {
   const winners: Player[] = [];
 
   const numPlayers = players.length;
@@ -77,7 +79,6 @@ function generateUniqueRoomName(gameCode: string, roomNumber: number): string {
   return `GAME_${gameCode}&ROOM_${roomNumber.toString()}`;
 }
 
-
 const waitForResults = async (playerGroups: Player[][], winners: Player[]) => {
   return new Promise<void>((resolve) => {
     const drawGroups: Player[][] = [];
@@ -118,12 +119,11 @@ const waitForResults = async (playerGroups: Player[][], winners: Player[]) => {
               // If all groups have reported their results, resolve the promise
               if (processedGroups === playerGroups.length) {
                 io.emit("PLAYER_MOVES_MADE");
-                  if (drawGroups.length > 0) {
-                    handleDraw(drawGroups, winners).then(() => resolve());
-                  } else {
-                    resolve();
-                  }
-             
+                if (drawGroups.length > 0) {
+                  handleDraw(drawGroups, winners).then(() => resolve());
+                } else {
+                  resolve();
+                }
               }
             }
           });
@@ -143,8 +143,6 @@ const waitForResults = async (playerGroups: Player[][], winners: Player[]) => {
   });
 };
 
-
-
 async function handleDraw(drawGroups: Player[][], winners: Player[]) {
   drawGroups.forEach((group) => {
     group.forEach((player) => {
@@ -157,13 +155,3 @@ async function handleDraw(drawGroups: Player[][], winners: Player[]) {
 
   await waitForResults(drawGroups, winners);
 }
-
-
-
-
-
-
-
-
-
-

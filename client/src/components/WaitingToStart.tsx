@@ -1,12 +1,8 @@
-
-
 interface WaitingToStartProps {
   playerName: string | null;
-
 }
 
-const WaitingToStart = ({playerName}: WaitingToStartProps) => {
-
+const WaitingToStart = ({ playerName }: WaitingToStartProps) => {
   return (
     <div className="flex flex-col items-center justify-center">
       {/* Large text in the center */}
