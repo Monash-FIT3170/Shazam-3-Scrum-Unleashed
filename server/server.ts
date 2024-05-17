@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import * as http from "http";
-import {Server} from "socket.io";
+import { Server } from "socket.io";
 import { Events } from "../types/socket/events";
 import Game from "./model/game";
 import Player from "./model/actors/player";
@@ -10,13 +10,11 @@ import { playerRoomName } from "./socket/roomNames";
 import QRCode from "qrcode";
 import InMemorySessionStore from "./socket/sessionStore";
 
-declare module 'socket.io' {
-
+declare module "socket.io" {
   interface Socket {
     sessionID: string;
-    userID:string;
+    userID: string;
   }
-
 }
 
 const app = express();
@@ -30,7 +28,7 @@ const io = new Server<Events>(server, {
   cors: {
     origin: "http://localhost:5173",
     methods: ["GET", "POST"],
-  }
+  },
 });
 export default io;
 
@@ -39,7 +37,8 @@ const gamesMap = new Map<string, Game>();
 const sessionStorage = new InMemorySessionStore();
 
 io.use((socket, next) => {
-  const sessionID:string = socket.handshake.auth["sessionID"];
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const sessionID: string = socket.handshake.auth["sessionID"];
   if (sessionID) {
     // find existing session
     const userID = sessionStorage.findSession(sessionID);
@@ -51,13 +50,15 @@ io.use((socket, next) => {
     }
   }
   // create new session
-  socket.sessionID = (Math.random()*1000).toString(); // TODO actually generate
-  socket.userID =  (Math.random()*1000).toString();
-  next()
+  socket.sessionID = (Math.random() * 1000).toString(); // TODO actually generate
+  socket.userID = (Math.random() * 1000).toString();
+  next();
 });
 
 io.on("connection", async (socket) => {
-  console.log(`User Connected: ${socket.id}, sessionID: ${socket.sessionID}, userID: ${socket.userID}`);
+  console.log(
+    `User Connected: ${socket.id}, sessionID: ${socket.sessionID}, userID: ${socket.userID}`,
+  );
 
   // Save the socket sessionID and userID
   sessionStorage.saveSession(socket.sessionID, socket.userID);
