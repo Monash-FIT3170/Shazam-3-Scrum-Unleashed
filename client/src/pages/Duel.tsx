@@ -18,19 +18,43 @@ interface Props {
   phase: number;
 }
 
-const duel = ({playerName, opponentName, score1, score2, result, move, spectatorCount, phase}: Props) => {
+const Duel = ({
+  playerName,
+  opponentName,
+  score1,
+  score2,
+  result,
+  move,
+  spectatorCount,
+  phase,
+}: Props) => {
   if (phase === 4) {
     return (
       <div>
-        <DuelMove score1={score1} score2={score2} move={move} result={result}/>
-        <PlayerAndSpectatorsInfo playerScore={score1} opponentScore={score2} playerName={playerName} opponentName={opponentName} spectatorCount={spectatorCount}/>
-      </div>)}
-  else {
+        <DuelMove score1={score1} score2={score2} move={move} result={result} />
+        <PlayerAndSpectatorsInfo
+          playerScore={score1}
+          opponentScore={score2}
+          playerName={playerName}
+          opponentName={opponentName}
+          spectatorCount={spectatorCount}
+        />
+      </div>
+    );
+  } else {
     return (
       <div>
-        <DuelLoad phase={phase}/>
-        <PlayerAndSpectatorsInfo playerScore={score1} opponentScore={score2} playerName={playerName} opponentName={opponentName} spectatorCount={spectatorCount}/>
-      </div>)}
+        <DuelLoad phase={phase} />
+        <PlayerAndSpectatorsInfo
+          playerScore={score1}
+          opponentScore={score2}
+          playerName={playerName}
+          opponentName={opponentName}
+          spectatorCount={spectatorCount}
+        />
+      </div>
+    );
+  }
 };
 
-export default duel;
+export default Duel;

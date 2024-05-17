@@ -146,7 +146,7 @@ const DuelLoad = ({ phase }: LoadProps) => {
           </div>
           <div className="h-screen flex items-center justify-center z-10">
             <img
-              style={{ position: "fixed", height: 600}}
+              style={{ position: "fixed", height: 600 }}
               className="object-fit"
               src={explosion}
             />

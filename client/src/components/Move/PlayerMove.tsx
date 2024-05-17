@@ -8,11 +8,7 @@ type PlayerMoveProps = {
   handType: HandImgType; // eg. FILLED, OUTLINED or SEMI_TRANSPARENT
 };
 
-function PlayerMove({
-  playerMove,
-  isOpponent,
-  handType,
-}: PlayerMoveProps) {
+function PlayerMove({ playerMove, isOpponent, handType }: PlayerMoveProps) {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
