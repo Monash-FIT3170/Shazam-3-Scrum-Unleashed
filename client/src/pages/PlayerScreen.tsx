@@ -24,6 +24,7 @@ const PlayerScreen = () => {
 
     socket.on("GAME_WINNER", () => {
         setIsWinner(true); // Set isWinner to true when GAME_WINNER event is received
+
       });
 
     socket.on("RE_RENDER_MOVE_COMPONENT", () => {
@@ -37,8 +38,14 @@ const PlayerScreen = () => {
     });
 
     socket.on("DRAW", () => {
-      setRenderMoveComponent(true);
-      setDisplayResults(false);
+      setRenderMoveComponent(false);
+      setDisplayResults(true);
+    
+      setTimeout(() => {
+        setRenderMoveComponent(true);
+        setDisplayResults(false);
+      }, 5000); // Wait for 5 seconds before hiding results
+
     });
 
     return () => {

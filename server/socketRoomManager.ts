@@ -10,10 +10,7 @@ import { GameSessionManager } from "model/gameSessionManager";
 
 
 // Function to handle allocation of players and recursive reduction of rooms
-export const handleRoomAllocation = async (
-  players: Player[],
-  gameCode: string,
-) => {
+export const handleRoomAllocation = async (players: Player[], gameCode: string) => {
   const winners: Player[] = [];
 
   const numPlayers = players.length;
@@ -51,6 +48,7 @@ export const handleRoomAllocation = async (
 
   // Wait for results from each room
   await waitForResults(playerGroups, winners);
+  // Correctly return winners here:
 
   winners.forEach((winner) => {
     const winnerSocket = io.sockets.sockets.get(winner.socketId);
@@ -59,9 +57,8 @@ export const handleRoomAllocation = async (
     }
   });
 
-
   // If more than one room remains, recursively handle allocation
-  if (playerGroups.length > 1) {
+  if (winners.length > 1) {
     await handleRoomAllocation(winners, gameCode);
   } else {
     // Implement logic to determine the winner
@@ -72,7 +69,6 @@ export const handleRoomAllocation = async (
       // Emit a socket message to the winning player
       winningSocket.emit("GAME_WINNER", { winner: winningPlayer });
     }
-    return;
   }
 };
 
@@ -80,12 +76,12 @@ export const handleRoomAllocation = async (
 function generateUniqueRoomName(gameCode: string, roomNumber: number): string {
   return `GAME_${gameCode}&ROOM_${roomNumber.toString()}`;
 }
-const drawGroups: Player[][] = [];
-const waitForResults = async (
-  playerGroups: Player[][],
-  winners: Player[]
-) => {
+
+
+const waitForResults = async (playerGroups: Player[][], winners: Player[]) => {
   return new Promise<void>((resolve) => {
+    const drawGroups: Player[][] = [];
+    let processedGroups = 0;
 
     playerGroups.forEach((group) => {
       if (group.length === 2) {
@@ -98,14 +94,13 @@ const waitForResults = async (
 
         group.forEach((player) => {
           const socket = io.sockets.sockets.get(player.socketId);
-          
+
           socket?.once("CHOOSE_ACTION", (move: Action) => {
             playerMoves[player.socketId] = move;
             moveCount++;
 
             // Check if both players in the group have made their moves
             if (moveCount === group.length) {
-    
               const player1Move = playerMoves[player1.socketId];
               const player2Move = playerMoves[player2.socketId];
 
@@ -113,22 +108,22 @@ const waitForResults = async (
 
               if (winner == "DRAW") {
                 drawGroups.push(group);
-              } 
-              else {
+              } else {
+                console.log(`Winner of the round: ${winner}`);
                 winners.push(winner);
               }
-            
+
+              processedGroups++;
+
               // If all groups have reported their results, resolve the promise
-              if (
-                winners.length  === playerGroups.length
-              ) {
+              if (processedGroups === playerGroups.length) {
                 io.emit("PLAYER_MOVES_MADE");
-                setTimeout(() => {
-                  resolve();
-                }, 2000);
-              }
-              if (drawGroups.length > 0) {
-                handleDraw(drawGroups, winners);
+                  if (drawGroups.length > 0) {
+                    handleDraw(drawGroups, winners).then(() => resolve());
+                  } else {
+                    resolve();
+                  }
+             
               }
             }
           });
@@ -138,8 +133,9 @@ const waitForResults = async (
         const winner = group[0];
         winners.push(winner);
 
+        processedGroups++;
         // If all groups have reported their results, resolve the promise
-        if (winners.length + drawGroups.length === playerGroups.length * 2) {
+        if (processedGroups === playerGroups.length) {
           resolve();
         }
       }
@@ -147,9 +143,19 @@ const waitForResults = async (
   });
 };
 
-async function handleDraw(drawGroups: Player[][],winners: Player[]) {
-    io.emit("DRAW");
-    await waitForResults(drawGroups, winners);
+
+
+async function handleDraw(drawGroups: Player[][], winners: Player[]) {
+  drawGroups.forEach((group) => {
+    group.forEach((player) => {
+      const socket = io.sockets.sockets.get(player.socketId);
+      if (socket) {
+        socket.emit("DRAW");
+      }
+    });
+  });
+
+  await waitForResults(drawGroups, winners);
 }
 
 
