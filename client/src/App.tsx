@@ -29,8 +29,17 @@ import PlayerScreen from "./pages/PlayerScreen.tsx";
 import TournamentScreen from "./pages/TournamentScreen.tsx";
 import Home from "./pages/Home.tsx";
 
+declare module "socket.io-client" {
+  interface Socket {
+    sessionID: string;
+    userID: string;
+  }
+}
+
 // TODO: We need to make this an environment variable
-export const socket: Socket<Events> = io("http://localhost:3010");
+export const socket: Socket<Events> = io("http://localhost:3010", {
+  autoConnect: false,
+});
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -63,6 +72,21 @@ const router = createBrowserRouter(
 );
 
 function App() {
+  const cookieStrings = document.cookie.split("=");
+
+  if (cookieStrings[0] === "sessionID") {
+    console.log(cookieStrings[1]);
+    socket.auth = { sessionID: cookieStrings[1] };
+  }
+  socket.connect();
+  socket.on("SESSION_INFO", (sessionID, userID) => {
+    // attach the session ID to the next reconnection attempts
+    socket.auth = { sessionID };
+    // save the ID of the user
+    socket.userID = userID;
+    document.cookie = `sessionID=${sessionID};`;
+  });
+
   return (
     <div className="w-full">
       <RouterProvider router={router} />
