@@ -1,23 +1,20 @@
 import DisplayLogo from "../components/DisplayLogo";
 import PlayerCard from "../components/PlayerCard";
-import Player from "../../../server/model/actors/player";
+// import Player from "../../../server/model/actors/player";
 import { socket } from "../App";
 import { useState } from "react";
+import { PlayerAttributes } from "../../../types/types";
 
 const TournamentScreen = () => {
   // create a list of players for further use
-  const [players, setPlayers] = useState(new Array<Player>());
+  const [players, setPlayers] = useState(new Array<PlayerAttributes>());
 
   // get the list of players emitted from the server
   socket.on("GAME_START", (players) => {
     console.log(players);
     console.log("Game Started");
-    // map the player attributes to the player class
-    const newPlayers = players.map((player) => {
-      return new Player(player.socketId, player.name, player.id, player.isBot);
-    });
     // change the player list to the new player list
-    setPlayers(newPlayers);
+    setPlayers(players);
   });
 
   return (
@@ -33,7 +30,7 @@ const TournamentScreen = () => {
       <div className="player-list">
         {/* creating a playercard component for each player */}
         {players.map((player) => (
-          <PlayerCard key={player.getId()} player={player} />
+          <PlayerCard key={player.id} player={player} />
         ))}
       </div>
     </div>

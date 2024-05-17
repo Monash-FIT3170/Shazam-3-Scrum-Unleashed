@@ -4,7 +4,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { socket } from "../App.tsx";
 import PlayerCard from "../components/PlayerCard.tsx";
-import Player from "../../../server/model/actors/player.ts";
+import { PlayerAttributes } from "../../../types/types.ts";
 import { TOURNAMENT_SCREEN, BASE_PATH, JOIN_GAME_PATH } from "./pagePaths.ts";
 
 async function fetchQrCode(
@@ -23,7 +23,7 @@ const GameLobby = () => {
   const navigate = useNavigate();
   const gameData = useLoaderData() as { gameCode: string };
   // changed from player attributes to player so the component for player cards can be used
-  const [players, setPlayers] = useState(new Array<Player>());
+  const [players, setPlayers] = useState(new Array<PlayerAttributes>());
   const [qrCode, setQrCode] = useState("");
 
   useEffect(
@@ -35,7 +35,7 @@ const GameLobby = () => {
     [],
   );
 
-  const updateList = (player: Player) => {
+  const updateList = (player: PlayerAttributes) => {
     setPlayers((previousPlayers) => [...previousPlayers, player]);
   };
   const handleAllocatePlayers = () => {
@@ -46,13 +46,7 @@ const GameLobby = () => {
   useEffect(() => {
     socket.on("PLAYER_HAS_JOINED", (player) => {
       console.log(player);
-      const newPlayer = new Player(
-        player.socketId,
-        player.name,
-        player.id,
-        player.isBot,
-      );
-      updateList(newPlayer);
+      updateList(player);
       console.log(`Player ${player.name} has joined`);
     });
 
@@ -91,7 +85,7 @@ const GameLobby = () => {
       <div className="player-list">
         {/* creating a playercard component for each player */}
         {players.map((player) => (
-          <PlayerCard key={player.getId()} player={player} />
+          <PlayerCard key={player.id} player={player} />
         ))}
       </div>
       <button
