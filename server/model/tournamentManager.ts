@@ -65,8 +65,8 @@ export class TournamentManager {
           nextBracket.push(currPlayer);
         }
       }
-    // adding new bracket into tournamentBrackets
-    this.tournamentBrackets.push(nextBracket);
+      // adding new bracket into tournamentBrackets
+      this.tournamentBrackets.push(nextBracket);
     }
   }
 
