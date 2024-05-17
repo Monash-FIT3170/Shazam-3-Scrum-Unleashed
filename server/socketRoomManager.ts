@@ -60,8 +60,6 @@ export const handleRoomAllocation = async (
   });
 
 
-
-
   // If more than one room remains, recursively handle allocation
   if (playerGroups.length > 1) {
     await handleRoomAllocation(winners, gameCode);
@@ -82,12 +80,13 @@ export const handleRoomAllocation = async (
 function generateUniqueRoomName(gameCode: string, roomNumber: number): string {
   return `GAME_${gameCode}&ROOM_${roomNumber.toString()}`;
 }
-
+const drawGroups: Player[][] = [];
 const waitForResults = async (
   playerGroups: Player[][],
   winners: Player[]
 ) => {
   return new Promise<void>((resolve) => {
+
     playerGroups.forEach((group) => {
       if (group.length === 2) {
         const player1 = group[0];
@@ -112,19 +111,24 @@ const waitForResults = async (
 
               const winner = sessionManager.playRound(player1Move, player2Move);
 
-            
-
-              if (winner) {
+              if (winner == "DRAW") {
+                drawGroups.push(group);
+              } 
+              else {
                 winners.push(winner);
               }
-
+            
               // If all groups have reported their results, resolve the promise
-              if (winners.length === playerGroups.length) {
+              if (
+                winners.length  === playerGroups.length
+              ) {
                 io.emit("PLAYER_MOVES_MADE");
                 setTimeout(() => {
                   resolve();
                 }, 2000);
-          
+              }
+              if (drawGroups.length > 0) {
+                handleDraw(drawGroups, winners);
               }
             }
           });
@@ -135,13 +139,18 @@ const waitForResults = async (
         winners.push(winner);
 
         // If all groups have reported their results, resolve the promise
-        if (winners.length === playerGroups.length) {
+        if (winners.length + drawGroups.length === playerGroups.length * 2) {
           resolve();
         }
       }
     });
   });
 };
+
+async function handleDraw(drawGroups: Player[][],winners: Player[]) {
+    io.emit("DRAW");
+    await waitForResults(drawGroups, winners);
+}
 
 
 

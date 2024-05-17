@@ -36,12 +36,19 @@ const PlayerScreen = () => {
       });
     });
 
+    socket.on("DRAW", () => {
+      setRenderMoveComponent(true);
+      setDisplayResults(false);
+    });
+
     return () => {
       // Clean up socket event listener
       socket.off("CHOOSE_PLAYER_MOVE");
       socket.off("GAME_WINNER");
       socket.off("RE_RENDER_MOVE_COMPONENT");
       socket.off("PLAYER_MOVES_MADE")
+      socket.off("DRAW");
+      
     };
   }, []);
 

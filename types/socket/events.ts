@@ -49,4 +49,5 @@ interface ServerToPlayerEvents {
   GAME_WINNER: (winner: any) => void; // Sample for testing
   PLAYER_MOVES_MADE: (/*TODO*/) => void;
   RE_RENDER_MOVE_COMPONENT: (/*TODO*/) => void;
+  DRAW: (/*TODO*/) => void;
 }
