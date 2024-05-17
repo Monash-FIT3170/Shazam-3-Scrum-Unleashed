@@ -4,12 +4,23 @@ import PaperOption from "../assets/ChooseMove/PaperOption.svg";
 import ScissorsOption from "../assets/ChooseMove/ScissorOption.svg";
 import { Action } from "../../../types/types";
 import MoveSelection from "./MoveSelection";
+import { socket } from "../App";
 
-const ChoosePlayerMove = () => {
-  const [, setSelectedMove] = useState<Action | null>(null);
+interface ChoosePlayerMoveProps {
+  playerName: string | null;
+
+}
+
+const ChoosePlayerMove = ({playerName}: ChoosePlayerMoveProps) => {
+  const [selectedMove, setSelectedMove] = useState<Action | null>(null);
 
   const handleMoveSelection = (move: Action) => {
-    setSelectedMove(move);
+    if (!selectedMove) {
+      setSelectedMove(move);
+      if (playerName !== null){
+        socket.emit("CHOOSE_ACTION",move); 
+      }
+    }
   };
 
   return (

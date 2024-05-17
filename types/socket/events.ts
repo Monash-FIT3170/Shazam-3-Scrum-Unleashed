@@ -24,8 +24,7 @@ interface HostToServerEvents {
 interface PlayerToServerEvents {
     JOIN_GAME: (gameCode: string, playerName: string) => void,
     LEAVE_GAME: (gameCode: string, player: PlayerAttributes) => void,
-    CHOOSE_ACTION: (gameCode: string, playerName: string,
-                    roomCode: number, action: Action) => void,
+    CHOOSE_ACTION: (action: Action) => void,
 }
 
 interface ServerToHostEvents {
