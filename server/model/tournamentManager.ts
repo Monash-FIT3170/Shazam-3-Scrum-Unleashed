@@ -65,9 +65,9 @@ export class TournamentManager {
           nextBracket.push(currPlayer);
         }
       }
-    }
     // adding new bracket into tournamentBrackets
     this.tournamentBrackets.push(nextBracket);
+    }
   }
 
   // method used to assist in the drawing of all rounds
