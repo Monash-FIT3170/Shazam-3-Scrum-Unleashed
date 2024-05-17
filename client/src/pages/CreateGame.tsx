@@ -8,13 +8,13 @@ import CreateGameInput from "../components/inputs/CreateGameInput.tsx";
 
 const defaultDuelsPerMatch: number = 5;
 const defaultDuelTime: number = 15;
-const defaultMatchTime: number = 120;
+const defaultRoundTime: number = 120;
 
 const CreateGame = () => {
   const navigate = useNavigate();
   const [duelPerMatch, setDuelsPerMatch] = useState(defaultDuelsPerMatch);
   const [duelTime, setDuelTime] = useState(defaultDuelTime);
-  const [matchTime, setMatchTime] = useState(defaultMatchTime);
+  const [roundTime, setRoundTime] = useState(defaultRoundTime);
   const [inputErrors, setInputError] = useState([false, false, false]);
 
   const changeInputError = (index: number) => (bool: boolean) => {
@@ -26,7 +26,7 @@ const CreateGame = () => {
 
   const [loading, setLoading] = useState(false);
   const createGame = () => {
-    socket.emit("CREATE_GAME", duelPerMatch, duelTime, matchTime);
+    socket.emit("CREATE_GAME", duelPerMatch, duelTime, roundTime);
   };
 
   const [gameCode, setGameCode] = useState("");
@@ -64,15 +64,15 @@ const CreateGame = () => {
           />
           <CreateGameInput
             inputText={"duel timer"}
-            placeholder={duelPerMatch}
+            placeholder={duelTime}
             callback={setDuelTime}
             transparentUnits={false}
             errorCallback={changeInputError(1)}
           />
           <CreateGameInput
             inputText={"round timer"}
-            placeholder={duelPerMatch}
-            callback={setMatchTime}
+            placeholder={roundTime}
+            callback={setRoundTime}
             transparentUnits={false}
             errorCallback={changeInputError(2)}
           />
