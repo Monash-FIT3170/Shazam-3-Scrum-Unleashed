@@ -1,34 +1,34 @@
 import Player from "./actors/player";
-import Host from "./actors/host";
 import { handleRoomAllocation } from "../socketRoomManager";
+import { Server } from "socket.io";
 
 export default class Game {
-  private host: Host;
+  private _hostID: string;
   private players: Player[];
   private duelsPerMatch: number;
   private duelTime: number;
   private matchTime: number;
 
   constructor(
-    host: Host,
+    hostID: string,
     duelsPerMatch: number,
     duelTime: number,
     matchTime: number,
   ) {
-    this.host = host;
+    this._hostID = hostID;
     this.duelsPerMatch = duelsPerMatch;
     this.duelTime = duelTime;
     this.matchTime = matchTime;
     this.players = new Array<Player>();
   }
 
-  get HostSocketId(): string {
-    return this.host.socketId;
+  get hostID(): string {
+    return this._hostID;
   }
 
   public addPlayer(player: Player) {
     if (
-      this.canSocketJoin(player.socketId) &&
+      this.canSocketJoin(player.userID) &&
       this.isPlayerNameFree(player.name)
     ) {
       this.players.push(player);
@@ -37,7 +37,7 @@ export default class Game {
 
   public canSocketJoin(socketId: string) {
     for (const p of this.players) {
-      if (p.socketId === socketId) {
+      if (p.userID === socketId) {
         return false;
       }
     }
@@ -53,8 +53,8 @@ export default class Game {
     return true;
   }
 
-  public async allocateRooms(gameCode: string) {
-    await handleRoomAllocation(this.players, gameCode);
+  public async allocateRooms(gameCode: string, io: Server) {
+    await handleRoomAllocation(this.players, gameCode, io);
   }
 
   public getPlayers() {

@@ -17,7 +17,7 @@ export function sessionMiddleware(
       return;
     }
   }
-  socket.sessionID = (Math.random() * 1000).toString(); // TODO actually generate
-  socket.userID = (Math.random() * 1000).toString();
+  socket.sessionID = crypto.randomUUID();
+  socket.userID = crypto.randomUUID();
   next();
 }

@@ -33,14 +33,12 @@ export class TournamentManager {
     );
     const numBots: number = nextPowerOf2 - players.length;
     //assuming player IDs are just from 0 to n-1
-    let nextID = players.length;
     //fill every 2nd spot with a bot
     const round1: Player[] = [];
     for (let i = 0; i < players.length; i++) {
       round1.push(players[i]);
       if (i < numBots) {
-        round1.push(new Player(`🤖 Bot #" + ${String(i)}`, "", nextID, true));
-        nextID++;
+        round1.push(new Player(`🤖 Bot #" + ${String(i)}`, "", true));
       }
     }
     this.tournamentBrackets.push(round1);

@@ -36,7 +36,9 @@ export const handleRoomAllocation = async (
 
     // Allocate players to their respective room
     for (const player of group) {
-      const socket = io.sockets.sockets.get(player.socketId);
+      const socket = io.sockets.sockets.get(player.userID);
+      // FIXME this isnt going to work anymore, userID wont allow us to search through the sockets to find the correct one
+      //   I didnt really like this anyway
       if (socket) {
         await socket.join(roomName); // Join the socket to the room
       }
@@ -57,7 +59,9 @@ export const handleRoomAllocation = async (
     // Implement logic to determine the winner
     console.log("Game ended");
     const winningPlayer = winners[0]; // Assuming there is only one winner
-    const winningSocket = io.sockets.sockets.get(winningPlayer.socketId);
+    const winningSocket = io.sockets.sockets.get(winningPlayer.userID);
+    // FIXME this isnt going to work anymore, userID wont allow us to search through the sockets to find the correct one
+    //   I didnt really like this anyway
     if (winningSocket) {
       // Emit a socket message to the winning player
       winningSocket.emit("GAME_WINNER", { winner: winningPlayer });

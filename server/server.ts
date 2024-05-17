@@ -34,7 +34,7 @@ io.use((socket, next) => {
 
 io.on("connection", async (socket) => {
   console.log(
-    `User Connected: ${socket.id}, sessionID: ${socket.sessionID}, userID: ${socket.userID}`,
+    `User Connected: ${socket.userID} with SessionID: ${socket.sessionID} on Socket: ${socket.id}`,
   );
 
   sessionStorage.saveSession(socket.sessionID, socket.userID);
@@ -45,12 +45,19 @@ io.on("connection", async (socket) => {
     joinGameSocket(gameCode, playerName, gamesMap, socket, io),
   );
 
-  socket.on("CREATE_GAME", (duelsPerMatch, duelTime, matchTime) => {
-    createGameSocket(socket, duelsPerMatch, duelTime, matchTime, gamesMap, io);
+  socket.on("CREATE_GAME", async (duelsPerMatch, duelTime, matchTime) => {
+    await createGameSocket(
+      socket,
+      duelsPerMatch,
+      duelTime,
+      matchTime,
+      gamesMap,
+      io,
+    );
   });
 
   socket.on("ALLOCATE_PLAYERS", (gameCode) =>
-    allocatePlayersSocket(gameCode, gamesMap),
+    allocatePlayersSocket(gameCode, gamesMap, io),
   );
 });
 

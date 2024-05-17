@@ -2,12 +2,12 @@ import Player from "../../../server/model/actors/player";
 
 interface PlayerCardProps {
   player: Player;
+  cardNum: number;
 }
 
 const PlayerCard = (props: PlayerCardProps) => {
-  const cardNum = props.player.getId() % 4;
   // card name of varying borders
-  const cardName = "player-card-" + cardNum;
+  const cardName = "player-card-" + props.cardNum;
   // checking if the player's name can fit onto the card
   const playerName =
     props.player.getName().length > 8

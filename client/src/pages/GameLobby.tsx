@@ -61,7 +61,7 @@ const GameLobby = () => {
         Game Code : {gameData.gameCode}
         <ul>
           {players.map((player) => (
-            <li key={player.id}>{player.name}</li>
+            <li key={player.userID}>{player.name}</li>
           ))}
         </ul>
         <button

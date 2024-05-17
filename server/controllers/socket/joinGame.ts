@@ -11,32 +11,34 @@ export async function joinGameSocket(
   io: Server,
 ) {
   const game = gamesMap.get(gameCode);
+
   if (game == undefined) {
     console.log(`Player : ${playerName} was unable to join Game : ${gameCode}`);
-    io.to(socket.id).emit("JOINED_GAME", "INVALID_GAME_CODE");
+    io.to(socket.userID).emit("JOINED_GAME", "INVALID_GAME_CODE");
     return;
   }
 
-  if (!game.canSocketJoin(socket.id)) {
+  if (!game.canSocketJoin(socket.userID)) {
     console.log(
-      `Player : ${socket.id} has already connected to Game : ${gameCode}`,
+      `Player : ${socket.userID} has already connected to Game : ${gameCode}`,
     );
+    // TODO may need to send an event (USER_ALREADY_JOINED or something)
     return;
   }
 
   if (!game.isPlayerNameFree(playerName)) {
     console.log(`Player : ${playerName} is already taken`);
-    io.to(socket.id).emit("JOINED_GAME", "NAME_TAKEN");
+    io.to(socket.userID).emit("JOINED_GAME", "NAME_TAKEN");
     return;
   }
 
   console.log(`Player : ${playerName} has joined Game : ${gameCode}`);
 
-  const player = new Player(socket.id, playerName, 0, false);
+  const player = new Player(socket.userID, playerName, false);
   game.addPlayer(player);
 
   await socket.join(playerRoomName(gameCode));
 
-  io.to(socket.id).emit("JOINED_GAME", "SUCCESS");
-  io.to(game.HostSocketId).emit("PLAYER_HAS_JOINED", player);
+  io.to(socket.userID).emit("JOINED_GAME", "SUCCESS");
+  io.to(game.hostID).emit("PLAYER_HAS_JOINED", player);
 }

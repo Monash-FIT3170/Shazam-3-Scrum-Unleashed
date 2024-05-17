@@ -1,12 +1,12 @@
 //Very basic player class, can be expanded if needed
 //Author: Team Buddy (4), Aaron Abbott 32520441
-import { Action, PlayerAttributes } from "../../../types/types";
-import Actor from "./actor";
 
-export default class Player extends Actor implements PlayerAttributes {
-  public id: number;
+import { Action, PlayerAttributes } from "../../../types/types";
+
+export default class Player implements PlayerAttributes {
+  public userID: string;
   public name: string;
-  public currentView: number;
+  public currentView: string;
   //private abilities: Ability[];
   //the winstreak is how many DUELS a player has won in a row. not the matches.
   public winstreak: number;
@@ -16,12 +16,12 @@ export default class Player extends Actor implements PlayerAttributes {
   public inGamePoints: number;
   public actionChoice: Action;
 
-  constructor(socketId: string, name: string, id: number, isBot: boolean) {
-    super(socketId);
+  constructor(userID: string, name: string, isBot: boolean) {
+    this.userID = userID;
     this.name = name;
-    this.id = id;
+
     //by default the player is viewing their own view
-    this.currentView = id;
+    this.currentView = this.userID;
     //this.abilities = [];
     this.winstreak = 0;
     this.winstreakHigh = 0;
@@ -36,8 +36,8 @@ export default class Player extends Actor implements PlayerAttributes {
     return this.name;
   }
 
-  public getId(): number {
-    return this.id;
+  public getId(): string {
+    return this.userID;
   }
   public getWinstreak(): number {
     return this.winstreak;
@@ -48,7 +48,7 @@ export default class Player extends Actor implements PlayerAttributes {
   public getIsBot(): boolean {
     return this.isBot;
   }
-  public getCurrentView(): number {
+  public getCurrentView(): string {
     return this.currentView;
   }
   public getChoice(): Action {
@@ -69,7 +69,7 @@ export default class Player extends Actor implements PlayerAttributes {
   public setIsBot(isBot: boolean) {
     this.isBot = isBot;
   }
-  public setCurrentView(currentView: number) {
+  public setCurrentView(currentView: string) {
     this.currentView = currentView;
   }
   public setChoice(choice: Action) {
@@ -107,15 +107,15 @@ export default class Player extends Actor implements PlayerAttributes {
     this.resetWinstreak();
   }
 
-  public lostMatch(winId: number) {
+  public lostMatch(winId: string) {
     this.resetWinstreak();
     //winID is the id of the winner
     this.setCurrentView(winId);
   }
 
   //get the view infomation, which is returned as [playerID: number, spectating: boolean] so the spectating flag is true if they are currently spectating
-  public getViewInfo(): [number, boolean] {
-    return [this.currentView, this.id != this.currentView];
+  public getViewInfo(): [string, boolean] {
+    return [this.currentView, this.userID != this.currentView];
   }
 
   public incrementInGamePoints() {
