@@ -47,4 +47,6 @@ interface ServerToPlayerEvents {
   MATCH_RESULTS: (winner: PlayerAttributes, loser: PlayerAttributes) => void;
   CHOOSE_PLAYER_MOVE: (/*TODO*/) => void;
   GAME_WINNER: (winner: any) => void; // Sample for testing
+  PLAYER_MOVES_MADE: (/*TODO*/) => void;
+  RE_RENDER_MOVE_COMPONENT: (/*TODO*/) => void;
 }

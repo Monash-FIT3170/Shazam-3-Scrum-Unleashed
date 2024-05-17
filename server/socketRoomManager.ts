@@ -52,6 +52,16 @@ export const handleRoomAllocation = async (
   // Wait for results from each room
   await waitForResults(playerGroups, winners);
 
+  winners.forEach((winner) => {
+    const winnerSocket = io.sockets.sockets.get(winner.socketId);
+    if (winnerSocket) {
+      winnerSocket.emit("RE_RENDER_MOVE_COMPONENT");
+    }
+  });
+
+
+
+
   // If more than one room remains, recursively handle allocation
   if (playerGroups.length > 1) {
     await handleRoomAllocation(winners, gameCode);
@@ -89,25 +99,32 @@ const waitForResults = async (
 
         group.forEach((player) => {
           const socket = io.sockets.sockets.get(player.socketId);
+          
           socket?.once("CHOOSE_ACTION", (move: Action) => {
             playerMoves[player.socketId] = move;
             moveCount++;
 
             // Check if both players in the group have made their moves
             if (moveCount === group.length) {
+    
               const player1Move = playerMoves[player1.socketId];
               const player2Move = playerMoves[player2.socketId];
 
               const winner = sessionManager.playRound(player1Move, player2Move);
 
+            
+
               if (winner) {
                 winners.push(winner);
-                console.log(`Winner: ${winner.name}`);
               }
 
               // If all groups have reported their results, resolve the promise
               if (winners.length === playerGroups.length) {
-                resolve();
+                io.emit("PLAYER_MOVES_MADE");
+                setTimeout(() => {
+                  resolve();
+                }, 2000);
+          
               }
             }
           });
@@ -116,7 +133,6 @@ const waitForResults = async (
         // If there's only one player in the group, they automatically win
         const winner = group[0];
         winners.push(winner);
-        console.log(`Winner: ${winner.name}`);
 
         // If all groups have reported their results, resolve the promise
         if (winners.length === playerGroups.length) {

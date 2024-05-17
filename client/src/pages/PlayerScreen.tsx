@@ -12,6 +12,7 @@ import { useLocation } from "react-router-dom";
 const PlayerScreen = () => {
   const [renderMoveComponent, setRenderMoveComponent] = useState(false);
   const [isWinner, setIsWinner] = useState(false);
+  const [displayResults, setDisplayResults] = useState(false);
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -21,8 +22,17 @@ const PlayerScreen = () => {
     socket.on("CHOOSE_PLAYER_MOVE", () => {
       setRenderMoveComponent(true);
 
-      socket.on("GAME_WINNER", () => {
+    socket.on("GAME_WINNER", () => {
         setIsWinner(true); // Set isWinner to true when GAME_WINNER event is received
+      });
+
+    socket.on("RE_RENDER_MOVE_COMPONENT", () => {
+      setDisplayResults(false);
+      setRenderMoveComponent(true);
+    });
+    
+    socket.on("PLAYER_MOVES_MADE", () => {
+        setDisplayResults(true);
       });
     });
 
@@ -30,13 +40,15 @@ const PlayerScreen = () => {
       // Clean up socket event listener
       socket.off("CHOOSE_PLAYER_MOVE");
       socket.off("GAME_WINNER");
+      socket.off("RE_RENDER_MOVE_COMPONENT");
+      socket.off("PLAYER_MOVES_MADE")
     };
   }, []);
 
   return (
     <div className="overflow-hidden h-screen relative">
       <div className="pt-12">
-        {(!isWinner && !renderMoveComponent || isWinner )&& (
+        {((!isWinner && !renderMoveComponent && !displayResults) || isWinner) && (
           <div className=" items-center size-60 w-full">
             <DisplayLogo />
           </div>
@@ -47,14 +59,15 @@ const PlayerScreen = () => {
               <WaitingToStart playerName={playerName} />
             </div>
           )}
-          {!isWinner && renderMoveComponent && (
+          {!isWinner && renderMoveComponent && !displayResults && (
             <div className="mt-20">
               <LoadingEffect isOpponent={true}></LoadingEffect>
               <CountDownTimer />
-              <ChoosePlayerMove playerName={playerName}/>
+              <ChoosePlayerMove playerName={playerName} />
             </div>
           )}
-          {isWinner && <WinnerPlayer />}
+          {isWinner && !displayResults && <WinnerPlayer />}
+          {displayResults && <LoadingEffect isOpponent={true}></LoadingEffect>}
         </div>
       </div>
     </div>

@@ -28,11 +28,22 @@ export class GameSessionManager {
     player1Choice: Action,
     player2Choice: Action,
   ): Player | null {
+    if (player1Choice === "NONE" && player2Choice !== "NONE") {
+      this.player2.incrementInGamePoints();
+      return this.player2;
+    }
+    if (player2Choice === "NONE" && player1Choice !== "NONE") {
+      this.player1.incrementInGamePoints();
+      return this.player1;
+    }
+    if (player1Choice === "NONE" && player2Choice === "NONE") {
+      this.player1.incrementInGamePoints();
+      return this.player1;
+    }
     if (GameSessionManager.rules[player1Choice] == player2Choice) {
       this.player1.incrementInGamePoints();
       return this.player1;
-    } else if (player1Choice == player2Choice) {
-      console.log("its a tie");
+    } else if (player1Choice == player2Choice) {;
       return null;
     } else {
       this.player2.incrementInGamePoints();
