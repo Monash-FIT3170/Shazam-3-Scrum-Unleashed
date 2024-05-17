@@ -38,7 +38,7 @@ interface ServerToHostEvents {
     PLAYER_HAS_JOINED: (player: PlayerAttributes) => void,
     PLAYER_HAS_LEFT: (player: PlayerAttributes) => void,
     GAME_START: (players: PlayerAttributes[]) => void,
-    ROUND_RESULTS: (/*TODO*/) => void,
+    ROUND_RESULTS: (winners: PlayerAttributes[]) => void,
     TOURNAMENT_RESULTS: (/*TODO*/) => void
 }
 

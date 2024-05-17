@@ -8,23 +8,11 @@ import Player from "./model/actors/player";
 
 // Function to handle allocation of players and recursive reduction of rooms
 export const handleRoomAllocation = async (
-  players: Player[],
+  // players: Player[],
+  playerGroups: Player[][],
   gameCode: string,
 ) => {
   const winners: Player[] = [];
-
-  const numPlayers = players.length;
-  const numRooms = Math.ceil(numPlayers / 2); // Each room will have 2 players
-
-  // Divide players into groups for each room
-  // tournamentManager should be responsible for this logic
-  const playerGroups: Player[][] = [];
-  for (let i = 0; i < numRooms; i++) {
-    const startIndex = i * 2;
-    const endIndex = Math.min(startIndex + 2, numPlayers);
-    const group = players.slice(startIndex, endIndex);
-    playerGroups.push(group);
-  }
 
   let roomNumber = 0;
   // Iterate through each group of players
@@ -35,9 +23,15 @@ export const handleRoomAllocation = async (
 
     // Allocate players to their respective room
     for (const player of group) {
-      const socket = io.sockets.sockets.get(player.socketId);
-      if (socket) {
-        await socket.join(roomName); // Join the socket to the room
+      // check if the player is a bot
+      if (!player.isBot) {
+        const socket = io.sockets.sockets.get(player.socketId);
+        if (socket) {
+          await socket.join(roomName); // Join the socket to the room
+        }
+      // do something related to the actual player winning
+      } else {
+
       }
     }
 
@@ -51,7 +45,8 @@ export const handleRoomAllocation = async (
 
   // If more than one room remains, recursively handle allocation
   if (playerGroups.length > 1) {
-    await handleRoomAllocation(winners, gameCode);
+    // communicate to host this round has concluded
+    io.to(gameCode).emit("ROUND_RESULTS", winners);
   } else {
     // Implement logic to determine the winner
     console.log("Game ended");

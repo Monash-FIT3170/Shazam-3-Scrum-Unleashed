@@ -19,7 +19,11 @@ export class TournamentManager {
   }
 
   public getBracket(round: number): Player[] {
-    return this.tournamentBrackets[round];
+    return this.tournamentBrackets[round-1];
+  }
+
+  public getCurrentBracket(): Player[] {
+    return this.tournamentBrackets[this.getRoundNumber()-1];
   }
 
   //misc methods
@@ -53,5 +57,21 @@ export class TournamentManager {
       [players[i], players[rand]] = [players[rand], players[i]];
     }
     return players;
+  }
+
+  public createPlayerGroups(): Player[][] {
+    const playerGroups: Player[][] = [];
+    const remainingPlayers = this.getCurrentBracket();
+    for (let i = 0; i < remainingPlayers.length; i++) {
+      const startIndex = i * 2;
+      const endIndex = Math.min(startIndex + 2, remainingPlayers.length);
+      const group = remainingPlayers.slice(startIndex, endIndex);
+      playerGroups.push(group);
+    }
+    return playerGroups;
+  }
+
+  public appendWinners(winners: Player[]) {
+    this.tournamentBrackets.push(winners);
   }
 }

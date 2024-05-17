@@ -110,7 +110,9 @@ io.on("connection", async (socket) => {
     console.log(`Player : ${playerName} has joined Game : ${gameCode}`);
 
     // create the player
-    const player = new Player(socket.id, playerName, 0, false);
+    // const player = new Player(socket.id, playerName, game.getPlayers.length, false);
+    // was using the one above but game.getPlayers.length was returning 0 every time
+    const player = new Player(socket.id, playerName, Math.floor(4*Math.random()), false);
 
     // add player to game
     game.addPlayer(player);
@@ -140,29 +142,38 @@ io.on("connection", async (socket) => {
     io.to(host.socketId).emit("GAME_CREATED", gameCode);
   });
 
-  socket.on("START_GAME", (gameCode) => {
-    console.log(`Game Started: ${gameCode}`);
+  socket.on("START_GAME", async (gameCode) => {
 
     const game: Game | undefined = gamesMap.get(gameCode);
-    const players = game?.getPlayers();
 
+    // checking for existing game
     if (game == undefined) {
       console.log(`Game : ${gameCode} does not exist`);
       return;
-    } else if (players != undefined) {
-      io.to(game.HostSocketId).emit("GAME_START", players);
+    // checking for valid player numbers
+    } else if (game.getPlayers() != undefined) {
+      console.log(game.getPlayers().length)
+      if (game.getPlayers().length >= 2) {
+        console.log(`Game Started: ${gameCode}`);
+        game.startTournament();
+        const players = game.getRemainingPlayers();
+        io.to(game.HostSocketId).emit("GAME_START", players);
+        await game.allocateRooms(gameCode);
+      } else {
+        console.log(`Game : ${gameCode} has less than 2 players`);
+      }
     } else {
       console.log(`Game : ${gameCode} has no player list`);
     }
   });
 
-  socket.on("ALLOCATE_PLAYERS", async (gameCode) => {
-    const game: Game | undefined = gamesMap.get(gameCode);
-    if (!game) {
-      return;
-    }
-    await game.allocateRooms(gameCode);
-  });
+  // socket.on("ALLOCATE_PLAYERS", async (gameCode) => {
+  //   const game: Game | undefined = gamesMap.get(gameCode);
+  //   if (!game) {
+  //     return;
+  //   }
+  //   await game.allocateRooms(gameCode);
+  // });
 });
 
 app.get("/qr-code/:url", (req, res, next) => {
@@ -187,3 +198,78 @@ app.get("/qr-code/:url", (req, res, next) => {
 server.listen(3010, () => {
   console.log("SERVER IS RUNNING");
 });
+
+
+export const handleRoomAllocation = async (
+  // players: Player[],
+  playerGroups: Player[][],
+  gameCode: string,
+) => {
+  const winners: Player[] = [];
+
+  let roomNumber = 0;
+  // Iterate through each group of players
+  for (const group of playerGroups) {
+    // Generate a unique room name
+    const roomName = generateUniqueRoomName(gameCode, roomNumber);
+    console.log(`Allocating players to room: ${roomName}`);
+
+    // Allocate players to their respective room
+    for (const player of group) {
+      // check if the player is a bot
+      if (!player.isBot) {
+        const socket = io.sockets.sockets.get(player.socketId);
+        if (socket) {
+          await socket.join(roomName); // Join the socket to the room
+        }
+      // do something related to the actual player winning
+      } else {
+
+      }
+    }
+
+    // Emit "CHOOSE_PLAYER_MOVE" event to each room
+    io.to(roomName).emit("CHOOSE_PLAYER_MOVE");
+    roomNumber++;
+  }
+
+  // Wait for results from each room
+  await waitForResults(playerGroups, winners);
+
+  // If more than one room remains, recursively handle allocation
+  if (playerGroups.length > 1) {
+    // communicate to host this round has concluded
+    const game: Game | undefined = gamesMap.get(gameCode);
+    game?.getTournamentManager().appendWinners(winners);
+    io.to(gameCode).emit("ROUND_RESULTS", winners);
+    await game?.allocateRooms(gameCode);
+  } else {
+    // Implement logic to determine the winner
+    console.log("Game ended");
+    const winningPlayer = winners[0]; // Assuming there is only one winner
+    const winningSocket = io.sockets.sockets.get(winningPlayer.socketId);
+    if (winningSocket) {
+      // Emit a socket message to the winning player
+      winningSocket.emit("GAME_WINNER", { winner: winningPlayer });
+    }
+    return;
+  }
+};
+
+// Generate a random alphanumeric room name
+function generateUniqueRoomName(gameCode: string, roomNumber: number): string {
+  return `GAME_${gameCode}&ROOM_${roomNumber.toString()}`;
+}
+
+const waitForResults = async (playerGroups: Player[][], winners: Player[]) => {
+  // Simulate waiting for results
+  await new Promise((resolve) => setTimeout(resolve, 11000));
+
+  // Simulate determining winners
+  console.log("Results received. Determining winners...");
+  for (const group of playerGroups) {
+    const winner = group[0];
+    winners.push(winner);
+    console.log(`Winner: ${winner.name}`);
+  }
+};

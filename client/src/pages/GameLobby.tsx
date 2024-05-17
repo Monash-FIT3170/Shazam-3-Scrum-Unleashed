@@ -38,10 +38,10 @@ const GameLobby = () => {
   const updateList = (player: PlayerAttributes) => {
     setPlayers((previousPlayers) => [...previousPlayers, player]);
   };
-  const handleAllocatePlayers = () => {
-    // Call the ALLOCATE_PLAYERS socket event
-    socket.emit("ALLOCATE_PLAYERS", gameData.gameCode);
-  };
+  // const handleAllocatePlayers = () => {
+  //   // Call the ALLOCATE_PLAYERS socket event
+  //   socket.emit("ALLOCATE_PLAYERS", gameData.gameCode);
+  // };
 
   useEffect(() => {
     socket.on("PLAYER_HAS_JOINED", (player) => {
@@ -56,8 +56,14 @@ const GameLobby = () => {
   }, []);
 
   const startGame = () => {
-    socket.emit("START_GAME", gameData.gameCode);
-    navigate(`../${TOURNAMENT_SCREEN}?gameCode=${gameData.gameCode}`);
+    // might want to put this check else where but works here currently
+    if (players.length > 1) {
+      socket.emit("START_GAME", gameData.gameCode);
+      navigate(`../${TOURNAMENT_SCREEN}?gameCode=${gameData.gameCode}`);
+    } else {
+      // need a better implementation for this
+      alert("Not enough players to start the game");
+    }
   };
 
   return (
@@ -88,12 +94,12 @@ const GameLobby = () => {
           <PlayerCard key={player.id} player={player} />
         ))}
       </div>
-      <button
+      {/* <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
         onClick={handleAllocatePlayers}
       >
         Allocate Players
-      </button>
+      </button> */}
       {qrCode === "" ? (
         <span>loading...</span>
       ) : (

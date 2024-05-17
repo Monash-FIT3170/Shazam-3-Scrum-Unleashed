@@ -1,6 +1,8 @@
 import Player from "./actors/player";
 import Host from "./actors/host";
-import { handleRoomAllocation } from "../socketRoomManager";
+// import { handleRoomAllocation } from "../socketRoomManager";
+import { TournamentManager } from "./tournamentManager";
+import { handleRoomAllocation } from "../server";
 
 export default class Game {
   private host: Host;
@@ -8,6 +10,7 @@ export default class Game {
   private duelsPerMatch: number;
   private duelTime: number;
   private matchTime: number;
+  private tournamentManager: TournamentManager;
 
   constructor(
     host: Host,
@@ -20,6 +23,7 @@ export default class Game {
     this.duelTime = duelTime;
     this.matchTime = matchTime;
     this.players = new Array<Player>();
+    this.tournamentManager = new TournamentManager(this.players);
   }
 
   get HostSocketId(): string {
@@ -54,10 +58,24 @@ export default class Game {
   }
 
   public async allocateRooms(gameCode: string) {
-    await handleRoomAllocation(this.players, gameCode);
+    await handleRoomAllocation(this.tournamentManager.createPlayerGroups(), gameCode);
+  }
+
+  public startTournament() {
+    this.tournamentManager = new TournamentManager(this.players);
+    console.log("Tournament started (Game.ts)");
+    console.log(this.tournamentManager.getCurrentBracket());
+  }
+
+  public getRemainingPlayers() {
+    return this.tournamentManager.getCurrentBracket();
   }
 
   public getPlayers() {
     return this.players;
+  }
+
+  public getTournamentManager() {
+    return this.tournamentManager;
   }
 }
