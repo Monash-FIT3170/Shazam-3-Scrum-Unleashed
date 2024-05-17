@@ -55,8 +55,8 @@ export class TournamentManager {
     return players;
   }
 
-  public createNextBracket(): void {
-    // creating the next bracket in the tournament
+  public createNextRound(): void {
+    // creating the next round in the tournament
     const nextBracket = [];
     if (this.tournamentBrackets[-1].length != 1) {
       // if there is no winner yet
@@ -65,17 +65,17 @@ export class TournamentManager {
           nextBracket.push(currPlayer);
         }
       }
-      // adding new bracket into tournamentBrackets
-      this.tournamentBrackets.push(nextBracket);
+    // adding new bracket into tournamentBrackets
+    this.tournamentBrackets.push(nextBracket);
     }
   }
 
   // method used to assist in the drawing of all rounds
   // each subarray contains players who were eliminated / are currently in that round
   // empty subarrays represent the inner rounds that have not been reached yet
-  public getAllBracketsResults(): Player[][] {
+  public getAllRoundsResults(): Player[][] {
     // preparing vars required
-    const resBrackets = [];
+    const resRounds = [];
     const playerList = this.tournamentBrackets[0];
     const numPlayers = playerList.length;
     // loop vars
@@ -84,19 +84,19 @@ export class TournamentManager {
     // executing loop to create round brackets
     while (roundPlayers != 0) {
       // creating array for all players who lost on that round / are in current round
-      const roundBracket = [];
+      const round = [];
       // looking through all players to push the required players
       for (let i = 0; i < numPlayers; i++) {
         if (playerList[i].getMatchesWon() == roundIterator) {
-          roundBracket.push(playerList[i]);
+          round.push(playerList[i]);
         }
       }
       // push to result bracket
-      resBrackets.push([]);
+      resRounds.push(round);
       // increment roundPlayers and roundIterator
       roundPlayers = Math.floor(roundPlayers / 2);
       roundIterator++;
     }
-    return resBrackets;
+    return resRounds;
   }
 }
