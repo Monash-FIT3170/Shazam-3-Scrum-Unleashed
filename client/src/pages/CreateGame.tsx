@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { GAME_LOBBY_PATH } from "./pagePaths.ts";
 import { socket } from "../App.tsx";
 import DisplayLogo from "../components/DisplayLogo.tsx";
-import IntegerInputComponent from "../components/inputs/IntegerInputComponent.tsx";
+import CreateGameInput from "../components/inputs/CreateGameInput.tsx";
 
 const defaultDuelsPerMatch: number = 5;
 const defaultDuelTime: number = 15;
@@ -15,6 +15,14 @@ const CreateGame = () => {
   const [duelPerMatch, setDuelsPerMatch] = useState(defaultDuelsPerMatch);
   const [duelTime, setDuelTime] = useState(defaultDuelTime);
   const [matchTime, setMatchTime] = useState(defaultMatchTime);
+  const [inputErrors, setInputError] = useState([false, false, false]);
+
+  const changeInputError = (index: number) => (bool: boolean) => {
+    const newInputErrors = inputErrors.map((val, i) =>
+      i === index ? bool : val,
+    );
+    setInputError(newInputErrors);
+  };
 
   const [loading, setLoading] = useState(false);
   const createGame = () => {
@@ -47,50 +55,41 @@ const CreateGame = () => {
 
       <div className="pt-5 flex justify-center">
         <div className="w-11/12 md:w-3/4 flex justify-center flex-col gap-3">
-          <div className="flex justify-between items-center w-full">
-            <span className="text-white text-2xl uppercase">
-              Duels per match
-            </span>
-            <div className="flex justify-center gap-2 text-transparent font-bold">
-              <IntegerInputComponent
-                placeholder={duelPerMatch}
-                callback={setDuelsPerMatch}
-              />
-              <span>SECS</span>
-            </div>
-          </div>
-
-          <div className="flex justify-between items-center w-full">
-            <span className="text-white text-2xl uppercase">Duels Timer</span>
-            <div className="flex justify-center items-center gap-2 text-white font-bold">
-              <IntegerInputComponent
-                placeholder={duelTime}
-                callback={setDuelTime}
-              />
-              <span>SECS</span>
-            </div>
-          </div>
-
-          <div className="flex justify-between items-center w-full">
-            <span className="text-white text-2xl uppercase">Round timer</span>
-            <div className="flex justify-center items-center gap-2 text-white font-bold">
-              <IntegerInputComponent
-                placeholder={defaultMatchTime}
-                callback={setMatchTime}
-              />
-              <span>SECS</span>
-            </div>
-          </div>
+          <CreateGameInput
+            inputText={"duels per match"}
+            placeholder={duelPerMatch}
+            callback={setDuelsPerMatch}
+            transparentUnits={true}
+            errorCallback={changeInputError(0)}
+          />
+          <CreateGameInput
+            inputText={"duel timer"}
+            placeholder={duelPerMatch}
+            callback={setDuelTime}
+            transparentUnits={false}
+            errorCallback={changeInputError(1)}
+          />
+          <CreateGameInput
+            inputText={"round timer"}
+            placeholder={duelPerMatch}
+            callback={setMatchTime}
+            transparentUnits={false}
+            errorCallback={changeInputError(2)}
+          />
         </div>
       </div>
 
       <div className="h-14 mt-16">
         <button
-          className="w-1/4 text-white bg-primary text-2xl font-bold px-7 rounded-xl h-full uppercase"
+          className={`w-1/4 text-white ${inputErrors.includes(true) ? "bg-bright-red" : "bg-primary"} text-2xl font-bold px-7 rounded-xl h-full uppercase`}
           onClick={createGame}
-          disabled={loading}
+          disabled={loading || inputErrors.includes(true)}
         >
-          {loading ? "Loading..." : "Create Game"}
+          {inputErrors.includes(true)
+            ? "Invalid inputs"
+            : loading
+              ? "Loading..."
+              : "Create Game"}
         </button>
       </div>
     </div>

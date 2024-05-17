@@ -3,11 +3,13 @@ import { useState } from "react";
 type IntegerInputComponentProps = {
   placeholder: number;
   callback: (value: number) => void;
+  errorCallback: (bool: boolean) => void;
 };
 
 const IntegerInputComponent = ({
   placeholder,
   callback,
+  errorCallback,
 }: IntegerInputComponentProps) => {
   const [value, setValue] = useState<number | string>(placeholder);
   const [hasError, setHasError] = useState(false);
@@ -21,13 +23,13 @@ const IntegerInputComponent = ({
       }`}
       value={value}
       onChange={(event) => {
-
-        if (event.target.value == ""){
+        if (event.target.value == "") {
           setHasError(true);
+          errorCallback(true);
           setValue("");
-        }
-        else if (/^[1-9][0-9]*$/.test(event.target.value)) {
+        } else if (/^[1-9][0-9]*$/.test(event.target.value)) {
           setHasError(false);
+          errorCallback(false);
           setValue(parseInt(event.target.value));
           callback(parseInt(event.target.value));
         }
