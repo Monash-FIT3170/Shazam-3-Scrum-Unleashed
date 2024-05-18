@@ -5,6 +5,8 @@
 
 import io from "./server";
 import Player from "./model/actors/player";
+import { Action } from "../types/types";
+import { GameSessionManager } from "model/gameSessionManager";
 
 // Function to handle allocation of players and recursive reduction of rooms
 export const handleRoomAllocation = async (
@@ -48,9 +50,17 @@ export const handleRoomAllocation = async (
 
   // Wait for results from each room
   await waitForResults(playerGroups, winners);
+  // Correctly return winners here:
+
+  winners.forEach((winner) => {
+    const winnerSocket = io.sockets.sockets.get(winner.socketId);
+    if (winnerSocket) {
+      winnerSocket.emit("RE_RENDER_MOVE_COMPONENT");
+    }
+  });
 
   // If more than one room remains, recursively handle allocation
-  if (playerGroups.length > 1) {
+  if (winners.length > 1) {
     await handleRoomAllocation(winners, gameCode);
   } else {
     // Implement logic to determine the winner
@@ -61,7 +71,6 @@ export const handleRoomAllocation = async (
       // Emit a socket message to the winning player
       winningSocket.emit("GAME_WINNER", { winner: winningPlayer });
     }
-    return;
   }
 };
 
@@ -71,14 +80,88 @@ function generateUniqueRoomName(gameCode: string, roomNumber: number): string {
 }
 
 const waitForResults = async (playerGroups: Player[][], winners: Player[]) => {
-  // Simulate waiting for results
-  await new Promise((resolve) => setTimeout(resolve, 11000));
+  return new Promise<void>((resolve) => {
+    const drawGroups: Player[][] = [];
+    let processedGroups = 0;
 
-  // Simulate determining winners
-  console.log("Results received. Determining winners...");
-  for (const group of playerGroups) {
-    const winner = group[0];
-    winners.push(winner);
-    console.log(`Winner: ${winner.name}`);
-  }
+    playerGroups.forEach((group) => {
+      if (group.length === 2) {
+        const player1 = group[0];
+        const player2 = group[1];
+        const sessionManager = new GameSessionManager(player1, player2);
+
+        const playerMoves: Record<string, Action> = {};
+        let moveCount = 0;
+
+        group.forEach((player) => {
+          const socket = io.sockets.sockets.get(player.socketId);
+
+          socket?.once("CHOOSE_ACTION", (move: Action) => {
+            playerMoves[player.socketId] = move;
+            moveCount++;
+
+            // Check if both players in the group have made their moves
+            if (moveCount === group.length) {
+              const player1Move = playerMoves[player1.socketId];
+              const player2Move = playerMoves[player2.socketId];
+
+              const winner = sessionManager.playRound(player1Move, player2Move);
+
+              if (winner == "DRAW") {
+                drawGroups.push(group);
+              } else {
+                winners.push(winner);
+              }
+
+              processedGroups++;
+
+              // If all groups have reported their results, resolve the promise
+              if (processedGroups === playerGroups.length) {
+                io.emit("PLAYER_MOVES_MADE");
+                if (drawGroups.length > 0) {
+                  handleDraw(drawGroups, winners)
+                    .then(() => {
+                      resolve();
+                    })
+                    .catch((err: unknown) => {
+                      console.error("Error handling draw groups:", err);
+                      resolve();
+                    });
+                } else {
+                  resolve();
+                }
+              }
+            }
+          });
+        });
+      } else {
+        // If there's only one player in the group, they automatically win
+        const winner = group[0];
+        winners.push(winner);
+
+        processedGroups++;
+        // If all groups have reported their results, resolve the promise
+        if (processedGroups === playerGroups.length) {
+          resolve();
+        }
+      }
+    });
+  });
 };
+
+async function handleDraw(
+  drawGroups: Player[][],
+  winners: Player[],
+): Promise<void> {
+  drawGroups.forEach((group) => {
+    group.forEach((player) => {
+      const socket = io.sockets.sockets.get(player.socketId);
+      if (socket) {
+        console.log(`Emitting DRAW to player: ${player.socketId}`);
+        socket.emit("DRAW");
+      }
+    });
+  });
+
+  await waitForResults(drawGroups, winners);
+}

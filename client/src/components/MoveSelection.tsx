@@ -14,7 +14,6 @@ const MoveSelection: React.FC<MoveSelectionProps> = ({
 }) => {
   const handleMoveSelection = (move: Action) => {
     onSelectMove(move);
-    console.log("Selected move:", move);
   };
 
   return (
