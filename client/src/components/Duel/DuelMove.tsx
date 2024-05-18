@@ -1,24 +1,25 @@
 import PlayerHand from "./PlayerHand";
-import { Action } from "../../../../types/types";
-import Player from "../../../../server/model/actors/player";
+import { Action, PlayerAttributes } from "../../../../types/types";
 import DuelOutcomeText from "./DuelOutcomeText";
 
 
 
 interface PlayerProps {
-  player1: Player,
-  player2: Player,
+  player1: PlayerAttributes;
+  player2: PlayerAttributes;
 }
 
 const DuelMove = ({ player1, player2 }: PlayerProps) => {
   //const playerChoice1: Action = player1.actionChoice;
   //const playerChoice2: Action = player2.actionChoice;
+  //const playerScore1 = player1.score;
+  // const playerScore2 = player2.score;
   const playerChoice1: Action = "ROCK";
   const playerChoice2: Action = "PAPER";
 
   // Example values for demonstration purposes
-  const isWon: boolean | null = false; 
-  const score1 = 3;
+  const isWon: boolean | null = false;
+  const score1 = 2;
   const score2 = 3;
 
   return (
