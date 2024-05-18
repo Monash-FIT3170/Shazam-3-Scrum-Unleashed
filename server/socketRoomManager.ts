@@ -29,9 +29,8 @@ export const handleRoomAllocation = async (
         if (socket) {
           await socket.join(roomName); // Join the socket to the room
         }
-      // do something related to the actual player winning
+        // do something related to the actual player winning
       } else {
-
       }
     }
 

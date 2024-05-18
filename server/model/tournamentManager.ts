@@ -19,11 +19,11 @@ export class TournamentManager {
   }
 
   public getBracket(round: number): Player[] {
-    return this.tournamentBrackets[round-1];
+    return this.tournamentBrackets[round - 1];
   }
 
   public getCurrentBracket(): Player[] {
-    return this.tournamentBrackets[this.getRoundNumber()-1];
+    return this.tournamentBrackets[this.getRoundNumber() - 1];
   }
 
   //misc methods

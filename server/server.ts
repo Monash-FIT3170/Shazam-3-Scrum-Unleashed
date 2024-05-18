@@ -112,7 +112,12 @@ io.on("connection", async (socket) => {
     // create the player
     // const player = new Player(socket.id, playerName, game.getPlayers.length, false);
     // was using the one above but game.getPlayers.length was returning 0 every time
-    const player = new Player(socket.id, playerName, Math.floor(4*Math.random()), false);
+    const player = new Player(
+      socket.id,
+      playerName,
+      Math.floor(4 * Math.random()),
+      false,
+    );
 
     // add player to game
     game.addPlayer(player);
@@ -143,16 +148,15 @@ io.on("connection", async (socket) => {
   });
 
   socket.on("START_GAME", async (gameCode) => {
-
     const game: Game | undefined = gamesMap.get(gameCode);
 
     // checking for existing game
     if (game == undefined) {
       console.log(`Game : ${gameCode} does not exist`);
       return;
-    // checking for valid player numbers
+      // checking for valid player numbers
     } else if (game.getPlayers() != undefined) {
-      console.log(game.getPlayers().length)
+      console.log(game.getPlayers().length);
       if (game.getPlayers().length >= 2) {
         console.log(`Game Started: ${gameCode}`);
         game.startTournament();
@@ -199,7 +203,6 @@ server.listen(3010, () => {
   console.log("SERVER IS RUNNING");
 });
 
-
 export const handleRoomAllocation = async (
   // players: Player[],
   playerGroups: Player[][],
@@ -222,9 +225,8 @@ export const handleRoomAllocation = async (
         if (socket) {
           await socket.join(roomName); // Join the socket to the room
         }
-      // do something related to the actual player winning
+        // do something related to the actual player winning
       } else {
-
       }
     }
 

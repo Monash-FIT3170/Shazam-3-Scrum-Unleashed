@@ -58,7 +58,10 @@ export default class Game {
   }
 
   public async allocateRooms(gameCode: string) {
-    await handleRoomAllocation(this.tournamentManager.createPlayerGroups(), gameCode);
+    await handleRoomAllocation(
+      this.tournamentManager.createPlayerGroups(),
+      gameCode,
+    );
   }
 
   public startTournament() {
