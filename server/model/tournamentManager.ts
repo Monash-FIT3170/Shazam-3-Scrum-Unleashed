@@ -74,4 +74,49 @@ export class TournamentManager {
   public appendWinners(winners: Player[]) {
     this.tournamentBrackets.push(winners);
   }
+
+  public createNextRound(): void {
+    // creating the next round in the tournament
+    const nextBracket = [];
+    if (this.tournamentBrackets[-1].length != 1) {
+      // if there is no winner yet
+      for (const currPlayer of this.tournamentBrackets[-1]) {
+        if (currPlayer.getWinstreak() != 0) {
+          nextBracket.push(currPlayer);
+        }
+      }
+      // adding new bracket into tournamentBrackets
+      this.tournamentBrackets.push(nextBracket);
+    }
+  }
+
+  // method used to assist in the drawing of all rounds
+  // each subarray contains players who were eliminated / are currently in that round
+  // empty subarrays represent the inner rounds that have not been reached yet
+  public getAllRoundsResults(): Player[][] {
+    // preparing vars required
+    const resRounds = [];
+    const playerList = this.tournamentBrackets[0];
+    const numPlayers = playerList.length;
+    // loop vars
+    let roundPlayers = numPlayers;
+    let roundIterator = 0;
+    // executing loop to create round brackets
+    while (roundPlayers != 0) {
+      // creating array for all players who lost on that round / are in current round
+      const round = [];
+      // looking through all players to push the required players
+      for (let i = 0; i < numPlayers; i++) {
+        if (playerList[i].getMatchesWon() == roundIterator) {
+          round.push(playerList[i]);
+        }
+      }
+      // push to result bracket
+      resRounds.push(round);
+      // increment roundPlayers and roundIterator
+      roundPlayers = Math.floor(roundPlayers / 2);
+      roundIterator++;
+    }
+    return resRounds;
+  }
 }

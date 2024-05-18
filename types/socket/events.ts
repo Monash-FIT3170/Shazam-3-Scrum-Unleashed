@@ -29,8 +29,7 @@ interface HostToServerEvents {
 interface PlayerToServerEvents {
     JOIN_GAME: (gameCode: string, playerName: string) => void,
     LEAVE_GAME: (gameCode: string, player: PlayerAttributes) => void,
-    CHOOSE_ACTION: (gameCode: string, playerName: string,
-                    roomCode: number, action: Action) => void,
+    CHOOSE_ACTION: (action: Action) => void,
 }
 
 interface ServerToHostEvents {
@@ -53,4 +52,7 @@ interface ServerToPlayerEvents {
   MATCH_RESULTS: (winner: PlayerAttributes, loser: PlayerAttributes) => void;
   CHOOSE_PLAYER_MOVE: (/*TODO*/) => void;
   GAME_WINNER: (winner: any) => void; // Sample for testing
+  PLAYER_MOVES_MADE: (/*TODO*/) => void;
+  RE_RENDER_MOVE_COMPONENT: (/*TODO*/) => void;
+  DRAW: (/*TODO*/) => void;
 }

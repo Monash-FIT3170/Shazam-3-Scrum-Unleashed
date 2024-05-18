@@ -155,7 +155,7 @@ io.on("connection", async (socket) => {
       console.log(`Game : ${gameCode} does not exist`);
       return;
       // checking for valid player numbers
-    } else if (game.getPlayers() != undefined) {
+    } else {
       console.log(game.getPlayers().length);
       if (game.getPlayers().length >= 2) {
         console.log(`Game Started: ${gameCode}`);
@@ -166,8 +166,6 @@ io.on("connection", async (socket) => {
       } else {
         console.log(`Game : ${gameCode} has less than 2 players`);
       }
-    } else {
-      console.log(`Game : ${gameCode} has no player list`);
     }
   });
 

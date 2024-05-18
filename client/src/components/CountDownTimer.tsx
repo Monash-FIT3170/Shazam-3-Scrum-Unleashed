@@ -28,7 +28,7 @@ const CountDownTimer = () => {
   return (
     <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-red-500 text-5xl font-bold flex items-center">
       <img src={Timer} alt="Timer" className="w-10 h-10 mr-4" />
-      {formattedTime}
+      <span className="text-red-500">{formattedTime}</span>
     </div>
   );
 };

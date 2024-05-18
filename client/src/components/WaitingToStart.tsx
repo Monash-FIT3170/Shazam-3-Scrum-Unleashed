@@ -1,9 +1,8 @@
-import { useLocation } from "react-router-dom";
+interface WaitingToStartProps {
+  playerName: string | null;
+}
 
-const WaitingToStart = () => {
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const playerName = searchParams.get("playerName");
+const WaitingToStart = ({ playerName }: WaitingToStartProps) => {
   return (
     <div className="flex flex-col items-center justify-center">
       {/* Large text in the center */}
