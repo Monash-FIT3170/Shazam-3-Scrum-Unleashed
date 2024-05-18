@@ -1,6 +1,7 @@
 import Player from "./actors/player";
 import { handleRoomAllocation } from "../socketRoomManager";
 import { Server } from "socket.io";
+import { Match } from "./match";
 
 export default class Tournament {
   public hostUID: string;
@@ -8,6 +9,7 @@ export default class Tournament {
   public duelsPerMatch: number;
   public duelTime: number;
   public matchTime: number;
+  public matches: Match[];
 
   constructor(
     hostID: string,
@@ -20,6 +22,7 @@ export default class Tournament {
     this.duelTime = duelTime;
     this.matchTime = matchTime;
     this.players = new Array<Player>();
+    this.matches = [];
   }
 
   public addPlayer(player: Player) {
@@ -42,7 +45,7 @@ export default class Tournament {
 
   public isPlayerNameFree(name: string): boolean {
     for (const p of this.players) {
-      if (p.name === name) {
+      if (p.name.toLocaleLowerCase() === name.toLocaleLowerCase()) {
         return false;
       }
     }

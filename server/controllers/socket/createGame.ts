@@ -7,7 +7,7 @@ export async function createTournamentSocket(
   duelTime: number,
   matchTime: number,
   tournamentMap: Map<string, Tournament>,
-  io: Server
+  io: Server,
 ) {
   console.log(`Host : ${socket.userID} is creating a game`);
 
@@ -15,7 +15,7 @@ export async function createTournamentSocket(
     socket.userID,
     duelsPerMatch,
     duelTime,
-    matchTime
+    matchTime,
   );
 
   let tournamentCode;

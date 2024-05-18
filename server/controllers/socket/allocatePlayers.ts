@@ -3,12 +3,12 @@ import { Server } from "socket.io";
 
 export async function allocatePlayersSocket(
   gameCode: string,
-  gamesMap: Map<string, Tournament>,
+  tournamentMap: Map<string, Tournament>,
   io: Server,
 ) {
-  const game: Tournament | undefined = gamesMap.get(gameCode);
-  if (!game) {
+  const tournament = tournamentMap.get(gameCode);
+  if (!tournament) {
     return;
   }
-  await game.allocateRooms(gameCode, io);
+  await tournament.allocateRooms(gameCode, io);
 }

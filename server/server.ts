@@ -8,13 +8,13 @@ import InMemorySessionStore from "./socket/sessionStore";
 
 import { qrCode } from "controllers/http";
 import {
-  allocatePlayersSocket,
   createTournamentSocket,
-  joinGameSocket,
+  joinTournamentSocket,
 } from "controllers/socket";
 import { sessionMiddleware } from "middleware";
+import { startTournamentSocket } from "controllers/socket/startGame";
 
-const gamesMap = new Map<string, Tournament>();
+const tournamentMap = new Map<string, Tournament>();
 const sessionStorage = new InMemorySessionStore();
 const app = express();
 
@@ -41,24 +41,28 @@ io.on("connection", async (socket) => {
   await socket.join(socket.userID);
   io.to(socket.userID).emit("SESSION_INFO", socket.sessionID, socket.userID);
 
-  socket.on("JOIN_GAME", (gameCode, playerName) =>
-    joinGameSocket(gameCode, playerName, gamesMap, socket, io),
-  );
-
   socket.on("CREATE_TOURNAMENT", async (duelsPerMatch, duelTime, matchTime) => {
     await createTournamentSocket(
       socket,
       duelsPerMatch,
       duelTime,
       matchTime,
-      gamesMap,
+      tournamentMap,
       io,
     );
   });
 
-  socket.on("ALLOCATE_PLAYERS", (gameCode) =>
-    allocatePlayersSocket(gameCode, gamesMap, io),
+  socket.on("JOIN_TOURNAMENT", (gameCode, playerName) => {
+    joinTournamentSocket(gameCode, playerName, tournamentMap, socket, io);
+  });
+
+  socket.on("START_TOURNAMENT", (gameCode) =>
+    startTournamentSocket(socket, gameCode, tournamentMap, io),
   );
+
+  // socket.on("ALLOCATE_PLAYERS", (gameCode) =>
+  //   allocatePlayersSocket(gameCode, tournamentMap, io)
+  // );
 });
 
 app.get("/qr-code/:url", qrCode);

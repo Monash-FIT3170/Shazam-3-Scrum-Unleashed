@@ -22,8 +22,6 @@ export class TournamentManager {
     return this.tournamentBrackets[round];
   }
 
-  //misc methods
-
   //method to fill the match with bots if the number of players is not a power of 2
   private fillWithBots(players: Player[]) {
     //this function to find the next power of 2 was taken off stack overflow: https://stackoverflow.com/a/466256

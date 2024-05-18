@@ -8,11 +8,11 @@ import { BASE_PATH, JOIN_GAME_PATH } from "./pagePaths.ts";
 
 async function fetchQrCode(
   returnUrl: string,
-  setQrCode: (qrCode: string) => void,
+  setQrCode: (qrCode: string) => void
 ) {
   const qrcode = await fetch(
     // TODO: Make this an environment variable
-    "http://localhost:3010/qr-code/" + encodeURIComponent(returnUrl),
+    "http://localhost:3010/qr-code/" + encodeURIComponent(returnUrl)
   );
   const qrCode = await qrcode.json();
   setQrCode(qrCode.qrCode);
@@ -22,22 +22,24 @@ const GameLobby = () => {
   const gameData = useLoaderData() as { gameCode: string };
   const [players, setPlayers] = useState(new Array<PlayerAttributes>());
   const [qrCode, setQrCode] = useState("");
+  // const navigate = useNavigate();
 
   useEffect(
     () =>
       void fetchQrCode(
         `${window.location.origin}/${BASE_PATH}/${JOIN_GAME_PATH}?gameCode=${gameData.gameCode}`,
-        setQrCode,
+        setQrCode
       ),
-    [],
+    []
   );
 
   const updateList = (player: PlayerAttributes) => {
     setPlayers((previousPlayers) => [...previousPlayers, player]);
   };
+
   const handleAllocatePlayers = () => {
     // Call the ALLOCATE_PLAYERS socket event
-    socket.emit("ALLOCATE_PLAYERS", gameData.gameCode);
+    socket.emit("START_TOURNAMENT", gameData.gameCode);
   };
 
   useEffect(() => {
@@ -47,8 +49,13 @@ const GameLobby = () => {
       console.log(`Player ${player.name} has joined`);
     });
 
+    socket.on("TOURNAMENT_STARTED", () => {
+      console.log("Tournament Started");
+    });
+
     return () => {
       socket.off("PLAYER_HAS_JOINED");
+      socket.off("TOURNAMENT_STARTED");
     };
   }, []);
 

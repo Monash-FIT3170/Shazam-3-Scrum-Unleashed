@@ -22,7 +22,7 @@ const JoinGame = () => {
     }
 
     setJoinState("Waiting");
-    socket.emit("JOIN_GAME", gameCode, playerName);
+    socket.emit("JOIN_TOURNAMENT", gameCode, playerName);
   };
 
   socket.on("JOINED_GAME", (joinErrorCode) => {
@@ -43,7 +43,7 @@ const JoinGame = () => {
 
   useEffect(() => {
     if (joinState === "Joining") {
-      navigate(`../${PLAYER_SCREEN}?playerName=${playerName}`);
+      navigate(`../${PLAYER_SCREEN}?playerName=${playerName}&gameCode=${gameCode}`);
     }
   }, [joinState]);
 
