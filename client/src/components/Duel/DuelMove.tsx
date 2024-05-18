@@ -1,6 +1,7 @@
 import PlayerHand from "./PlayerHand";
 import { Action } from "../../../../types/types";
 import Player from "../../../../server/model/actors/player";
+import DuelOutcomeText from "./DuelOutcomeText";
 
 
 
@@ -12,8 +13,13 @@ interface PlayerProps {
 const DuelMove = ({ player1, player2 }: PlayerProps) => {
   //const playerChoice1: Action = player1.actionChoice;
   //const playerChoice2: Action = player2.actionChoice;
-  const playerChoice1: Action = "ROCK"
-  const playerChoice2: Action = "PAPER"
+  const playerChoice1: Action = "ROCK";
+  const playerChoice2: Action = "PAPER";
+
+  // Example values for demonstration purposes
+  const isWon: boolean | null = false; 
+  const score1 = 3;
+  const score2 = 3;
 
   return (
     <div className="h-screen">
@@ -22,6 +28,9 @@ const DuelMove = ({ player1, player2 }: PlayerProps) => {
       </div>
       <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-4">
         <PlayerHand playerMove={playerChoice1} isWon={true} />
+      </div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <DuelOutcomeText isWon={isWon} score1={score1} score2={score2} />
       </div>
     </div>
   );
