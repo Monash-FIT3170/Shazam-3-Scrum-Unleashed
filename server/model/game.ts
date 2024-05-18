@@ -2,12 +2,12 @@ import Player from "./actors/player";
 import { handleRoomAllocation } from "../socketRoomManager";
 import { Server } from "socket.io";
 
-export default class Game {
-  private _hostID: string;
-  private players: Player[];
-  private duelsPerMatch: number;
-  private duelTime: number;
-  private matchTime: number;
+export default class Tournament {
+  public hostUID: string;
+  public players: Player[];
+  public duelsPerMatch: number;
+  public duelTime: number;
+  public matchTime: number;
 
   constructor(
     hostID: string,
@@ -15,15 +15,11 @@ export default class Game {
     duelTime: number,
     matchTime: number,
   ) {
-    this._hostID = hostID;
+    this.hostUID = hostID;
     this.duelsPerMatch = duelsPerMatch;
     this.duelTime = duelTime;
     this.matchTime = matchTime;
     this.players = new Array<Player>();
-  }
-
-  get hostID(): string {
-    return this._hostID;
   }
 
   public addPlayer(player: Player) {
@@ -55,9 +51,5 @@ export default class Game {
 
   public async allocateRooms(gameCode: string, io: Server) {
     await handleRoomAllocation(this.players, gameCode, io);
-  }
-
-  public getPlayers() {
-    return this.players;
   }
 }

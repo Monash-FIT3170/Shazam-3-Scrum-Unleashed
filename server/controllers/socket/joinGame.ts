@@ -1,12 +1,12 @@
 import Player from "model/actors/player";
-import Game from "model/game";
+import Tournament from "model/game";
 import { Server, Socket } from "socket.io";
 import { playerRoomName } from "socket/roomNames";
 
 export async function joinGameSocket(
   gameCode: string,
   playerName: string,
-  gamesMap: Map<string, Game>,
+  gamesMap: Map<string, Tournament>,
   socket: Socket,
   io: Server,
 ) {
@@ -40,5 +40,5 @@ export async function joinGameSocket(
   await socket.join(playerRoomName(gameCode));
 
   io.to(socket.userID).emit("JOINED_GAME", "SUCCESS");
-  io.to(game.hostID).emit("PLAYER_HAS_JOINED", player);
+  io.to(game.hostUID).emit("PLAYER_HAS_JOINED", player);
 }

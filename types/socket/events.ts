@@ -19,7 +19,7 @@ interface HostToClientEvents {
 }
 
 interface HostToServerEvents {
-    CREATE_GAME: (duelPerMatch:number, duelTime:number, matchTime:number) => void,
+    CREATE_TOURNAMENT: (duelPerMatch:number, duelTime:number, matchTime:number) => void,
     START_GAME: (gameCode: string) => void,
     KICK_PLAYER: (gameCode: string, playerName: PlayerAttributes) => void,
     ALLOCATE_PLAYERS: (gameCode: string) => void,
@@ -34,7 +34,7 @@ interface PlayerToServerEvents {
 }
 
 interface ServerToHostEvents {
-    GAME_CREATED: (gameCode: string) => void,
+    TOURNAMENT_CREATED: (gameCode: string) => void,
     PLAYER_HAS_JOINED: (player: PlayerAttributes) => void,
     PLAYER_HAS_LEFT: (player: PlayerAttributes) => void,
     GAME_START: (/*TODO*/) => void,

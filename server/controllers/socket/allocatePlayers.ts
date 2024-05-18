@@ -1,12 +1,12 @@
-import Game from "model/game";
+import Tournament from "model/game";
 import { Server } from "socket.io";
 
 export async function allocatePlayersSocket(
   gameCode: string,
-  gamesMap: Map<string, Game>,
+  gamesMap: Map<string, Tournament>,
   io: Server,
 ) {
-  const game: Game | undefined = gamesMap.get(gameCode);
+  const game: Tournament | undefined = gamesMap.get(gameCode);
   if (!game) {
     return;
   }

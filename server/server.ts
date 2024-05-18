@@ -3,18 +3,18 @@ import cors from "cors";
 import * as http from "http";
 import { Server } from "socket.io";
 import { Events } from "../types/socket/events";
-import Game from "./model/game";
+import Tournament from "./model/game";
 import InMemorySessionStore from "./socket/sessionStore";
 
 import { qrCode } from "controllers/http";
 import {
   allocatePlayersSocket,
-  createGameSocket,
+  createTournamentSocket,
   joinGameSocket,
 } from "controllers/socket";
 import { sessionMiddleware } from "middleware";
 
-const gamesMap = new Map<string, Game>();
+const gamesMap = new Map<string, Tournament>();
 const sessionStorage = new InMemorySessionStore();
 const app = express();
 
@@ -45,8 +45,8 @@ io.on("connection", async (socket) => {
     joinGameSocket(gameCode, playerName, gamesMap, socket, io),
   );
 
-  socket.on("CREATE_GAME", async (duelsPerMatch, duelTime, matchTime) => {
-    await createGameSocket(
+  socket.on("CREATE_TOURNAMENT", async (duelsPerMatch, duelTime, matchTime) => {
+    await createTournamentSocket(
       socket,
       duelsPerMatch,
       duelTime,

@@ -1,31 +1,31 @@
-import Game from "model/game";
+import Tournament from "model/game";
 import { Socket, Server } from "socket.io";
 
-export async function createGameSocket(
+export async function createTournamentSocket(
   socket: Socket,
   duelsPerMatch: number,
   duelTime: number,
   matchTime: number,
-  gamesMap: Map<string, Game>,
-  io: Server,
+  tournamentMap: Map<string, Tournament>,
+  io: Server
 ) {
   console.log(`Host : ${socket.userID} is creating a game`);
 
-  const game: Game = new Game(
+  const tournament: Tournament = new Tournament(
     socket.userID,
     duelsPerMatch,
     duelTime,
-    matchTime,
+    matchTime
   );
 
-  let gameCode;
+  let tournamentCode;
   do {
-    gameCode = Math.random().toString().substring(2, 8);
-  } while (gamesMap.has(gameCode));
+    tournamentCode = Math.random().toString().substring(2, 8);
+  } while (tournamentMap.has(tournamentCode));
 
-  gamesMap.set(gameCode, game);
+  tournamentMap.set(tournamentCode, tournament);
 
   await socket.join(socket.userID);
 
-  io.to(socket.userID).emit("GAME_CREATED", gameCode);
+  io.to(socket.userID).emit("TOURNAMENT_CREATED", tournamentCode);
 }

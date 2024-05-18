@@ -17,11 +17,12 @@ const CreateGame = () => {
 
   const [loading, setLoading] = useState(false);
   const createGame = () => {
-    socket.emit("CREATE_GAME", duelPerMatch, duelTime, matchTime);
+    socket.emit("CREATE_TOURNAMENT", duelPerMatch, duelTime, matchTime);
   };
 
   const [gameCode, setGameCode] = useState("");
-  socket.on("GAME_CREATED", (gameCode) => {
+  socket.on("TOURNAMENT_CREATED", (gameCode) => {
+    console.log("Game created")
     setGameCode(gameCode);
     setLoading(true);
   });
