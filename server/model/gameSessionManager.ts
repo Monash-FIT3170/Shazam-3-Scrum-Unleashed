@@ -27,7 +27,7 @@ export class GameSessionManager {
   public playRound(
     player1Choice: Action,
     player2Choice: Action,
-  ): Player | string {
+  ): Player | "DRAW" {
     if (player1Choice === "NONE" && player2Choice !== "NONE") {
       this.player2.incrementInGamePoints();
       return this.player2;

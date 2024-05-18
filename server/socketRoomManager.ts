@@ -90,7 +90,7 @@ const waitForResults = async (playerGroups: Player[][], winners: Player[]) => {
         const player2 = group[1];
         const sessionManager = new GameSessionManager(player1, player2);
 
-        const playerMoves: { [socketId: string]: Action } = {};
+        const playerMoves: Record<string, Action> = {};
         let moveCount = 0;
 
         group.forEach((player) => {
@@ -110,7 +110,6 @@ const waitForResults = async (playerGroups: Player[][], winners: Player[]) => {
               if (winner == "DRAW") {
                 drawGroups.push(group);
               } else {
-                console.log(`Winner of the round: ${winner}`);
                 winners.push(winner);
               }
 
@@ -120,7 +119,14 @@ const waitForResults = async (playerGroups: Player[][], winners: Player[]) => {
               if (processedGroups === playerGroups.length) {
                 io.emit("PLAYER_MOVES_MADE");
                 if (drawGroups.length > 0) {
-                  handleDraw(drawGroups, winners).then(() => resolve());
+                  handleDraw(drawGroups, winners)
+                    .then(() => {
+                      resolve();
+                    })
+                    .catch((err: unknown) => {
+                      console.error("Error handling draw groups:", err);
+                      resolve();
+                    });
                 } else {
                   resolve();
                 }
@@ -143,11 +149,15 @@ const waitForResults = async (playerGroups: Player[][], winners: Player[]) => {
   });
 };
 
-async function handleDraw(drawGroups: Player[][], winners: Player[]) {
+async function handleDraw(
+  drawGroups: Player[][],
+  winners: Player[],
+): Promise<void> {
   drawGroups.forEach((group) => {
     group.forEach((player) => {
       const socket = io.sockets.sockets.get(player.socketId);
       if (socket) {
+        console.log(`Emitting DRAW to player: ${player.socketId}`);
         socket.emit("DRAW");
       }
     });
