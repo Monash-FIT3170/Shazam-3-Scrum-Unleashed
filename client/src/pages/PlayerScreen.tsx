@@ -26,7 +26,7 @@ const PlayerScreen = () => {
   const [duelComplete, setDuelComplete] = useState(false);
   const [matchComplete, setMatchComplete] = useState(false);
   const [winnerUserID, setWinnerUserID] = useState<string | undefined>(
-    undefined
+    undefined,
   );
   const [tournamentWinner, setTournamentWinner] = useState<
     string | undefined
