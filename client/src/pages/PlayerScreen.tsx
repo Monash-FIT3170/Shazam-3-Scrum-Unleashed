@@ -7,6 +7,7 @@ import { useLoaderData } from "react-router-dom";
 import DuelOutcome from "../components/duel/DuelOutcome.tsx";
 import PlayerAndSpectatorsInfo from "../components/PlayerAndSpectatorsInfo.tsx";
 import MatchOutcomeScreen from "../components/MatchOutcomeScreen.tsx";
+import TournamentWin from "../components/TournamentWin.tsx";
 
 // import ChoosePlayerMove from "../components/ChoosePlayerMove";
 // import CountDownTimer from "../components/CountDownTimer";
@@ -27,6 +28,9 @@ const PlayerScreen = () => {
   const [winnerUserID, setWinnerUserID] = useState<string | undefined>(
     undefined,
   );
+  const [tournamentWinner, setTournamentWinner] = useState<
+    string | undefined
+  >();
 
   function setPlayers(players: PlayerAttributes[]) {
     for (const player of players) {
@@ -53,6 +57,10 @@ const PlayerScreen = () => {
         setMatchComplete(true);
         setWinnerUserID(winnerUserID);
       }
+    });
+
+    socket.on("TOURNAMENT_COMPLETE", (playerName) => {
+      setTournamentWinner(playerName);
     });
 
     return () => {
@@ -83,6 +91,8 @@ const PlayerScreen = () => {
     setTimeout(() => {
       setMatchComplete(false);
     }, 4000);
+  } else if (tournamentWinner !== undefined) {
+    content = <TournamentWin playerName={tournamentWinner} />;
   } else {
     content = <ChoosePlayerMove tournamentCode={tournamentCode} />;
   }
