@@ -65,7 +65,7 @@ export class Match {
   private getBotAction(bot: Player, player: Player) {
     const botMove = this.rulesMap.get(player.actionChoice);
     if (botMove === undefined) {
-      throw Error("Invalid move chosen by player");
+      console.error("Invalid move chosen by player");
       return;
     }
     bot.actionChoice = botMove;

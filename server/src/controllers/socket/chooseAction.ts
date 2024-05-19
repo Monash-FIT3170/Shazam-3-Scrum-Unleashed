@@ -14,7 +14,8 @@ export function chooseActionSocket(
   io: Server,
 ) {
   if (!tournament) {
-    throw Error("No tournament found");
+    console.error("No tournament found");
+    return;
   }
 
   const match = tournament.getMatch(playerUserID);
