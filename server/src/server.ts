@@ -14,6 +14,7 @@ import { chooseActionSocket } from "src/controllers/socket/chooseAction";
 
 import { tournamentMap, sessionStorage } from "src/store";
 import { Action } from "../../types/types";
+import { addReactionSocket } from "./controllers/socket/addReaction";
 
 const app = express();
 
@@ -74,6 +75,10 @@ io.on("connection", async (socket) => {
       );
     },
   );
+
+  socket.on("ADD_REACTION", (tournamentCode, reaction, spectatorID) => {
+    addReactionSocket(tournamentCode, reaction, spectatorID, io, tournamentMap);
+  });
 });
 
 app.get("/qr-code/:url", qrCode);
