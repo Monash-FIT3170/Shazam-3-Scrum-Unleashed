@@ -5,6 +5,7 @@ export interface PlayerAttributes {
   score: number;
   isBot: boolean;
   spectatingId: string | null;
+  spectatorCount: number;
 }
 
 export type Action = "ROCK" | "PAPER" | "SCISSORS" | null;

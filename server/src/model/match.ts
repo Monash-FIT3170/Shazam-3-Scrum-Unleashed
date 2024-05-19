@@ -54,7 +54,9 @@ export class Match {
         player2.score++;
       }
     }
+  }
 
+  public resetActions() {
     for (const player of this.players) {
       player.actionChoice = null;
     }

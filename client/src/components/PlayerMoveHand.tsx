@@ -19,7 +19,7 @@ function PlayerMoveHand({
     setLoaded(true);
 
     return () => setLoaded(false);
-  });
+  }, []);
 
   return (
     <div>
