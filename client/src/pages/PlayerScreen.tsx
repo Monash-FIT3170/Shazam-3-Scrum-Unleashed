@@ -99,8 +99,7 @@ const PlayerScreen = () => {
 
   if (tournamentWinner !== undefined) {
     content = <TournamentWin playerName={tournamentWinner} />;
-  }
-  else if (userPlayer === undefined || opponent === undefined) {
+  } else if (userPlayer === undefined || opponent === undefined) {
     content = (
       <WaitingToStart tournamentCode={tournamentCode} playerName={playerName} />
     );
