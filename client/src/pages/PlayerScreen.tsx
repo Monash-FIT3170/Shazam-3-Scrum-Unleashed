@@ -126,7 +126,7 @@ const PlayerScreen = () => {
 
   return (
     <>
-      {isSpectator && <ReactionOverlay />}
+      {<ReactionOverlay gameCode={tournamentCode} spectatingID={isSpectator ? userPlayer!.userID : null} />}
       <div className="overflow-hidden h-screen relative">
         <div className="pt-12">
           <div className="flex flex-col items-center justify-center mt-10">

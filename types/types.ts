@@ -17,3 +17,9 @@ export type ReactionType =
   | "SKULL"
   | "PARTY_POPPER"
   | "GOAT";
+
+export interface ReactionData {
+  reaction: ReactionType;
+  x: number;
+  y: number;
+}

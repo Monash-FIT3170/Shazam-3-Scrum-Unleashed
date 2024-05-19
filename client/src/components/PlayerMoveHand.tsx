@@ -16,7 +16,9 @@ function PlayerMoveHand({
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    setLoaded(true);
+    setTimeout(() => {
+      setLoaded(true);
+    }, 10);
 
     return () => setLoaded(false);
   }, []);
