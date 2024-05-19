@@ -41,16 +41,19 @@ export function chooseActionSocket(
       matchWinnerUserID,
     );
 
+    io.to(tournament.hostUID).emit("PLAYERS_UPDATE",tournament.players);
+
     match.resetActions();
 
     if (matchWinnerUserID !== undefined) {
       if (tournament.matches.every((e) => e.getMatchWinner() !== null)) {
         setTimeout(() => {
           if (tournament.matches.length === 1) {
-            io.to(match.matchRoomID).emit(
+            io.to(match.matchRoomID).to(tournament.hostUID).emit(
               "TOURNAMENT_COMPLETE",
               matchWinner?.name,
             );
+
             roundTerminator(tournament, io);
             tournamentMap.delete(tournament.hostUID);
             return;
