@@ -1,48 +1,43 @@
 import PlayerName from "./PlayerNameMobile";
 import StarsInfo from "./StarsInfo";
 import SpectatorCount from "./SpectatorCount";
+import { PlayerAttributes } from "../../../types/types.ts";
 
 type PlayerAndSpectatorsInfoProps = {
-  playerScore: number;
-  opponentScore: number;
-  playerName: string;
-  opponentName: string;
-  spectatorCount: number;
+  userPlayer: PlayerAttributes;
+  opponent: PlayerAttributes;
 };
 
 const PlayerAndSpectatorsInfo = ({
-  playerScore = 3,
-  opponentScore = 2,
-  playerName = "SPONGEBOB",
-  opponentName = "PATRICK",
-  spectatorCount = 32,
+  userPlayer,
+  opponent,
 }: PlayerAndSpectatorsInfoProps) => {
   return (
     <div>
       <div className="block md:hidden">
-        <PlayerName name={opponentName} isOpponent={true} />
+        <PlayerName name={opponent.name} isOpponent={true} />
       </div>
       <div className="hidden md:block">
         <StarsInfo
-          playerName={opponentName}
-          score={opponentScore}
+          playerName={opponent.name}
+          score={opponent.score}
           isOpponent={true}
         />
       </div>
 
       <div className="block md:hidden">
-        <PlayerName name={playerName} isOpponent={false} />
+        <PlayerName name={userPlayer.name} isOpponent={false} />
       </div>
       <div className="hidden md:block">
         <StarsInfo
-          playerName={playerName}
-          score={playerScore}
+          playerName={userPlayer.name}
+          score={userPlayer.score}
           isOpponent={false}
         />
       </div>
 
       <div className="hidden md:block">
-        <SpectatorCount count={spectatorCount} />
+        <SpectatorCount count={userPlayer.spectatorCount} />
       </div>
     </div>
   );

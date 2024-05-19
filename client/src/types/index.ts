@@ -9,3 +9,5 @@ export interface ReactionProperties {
 }
 
 export type HandImgType = "FILLED" | "OUTLINED" | "SEMITRANSPARENT";
+
+export type DuelResult = "WIN" | "LOSE" | "DRAW";

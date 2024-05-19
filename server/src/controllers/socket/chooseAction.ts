@@ -39,6 +39,8 @@ export function chooseActionSocket(
       matchWinnerUserID,
     );
 
+    match.resetActions();
+
     if (matchWinnerUserID !== undefined) {
       if (tournament.matches.every((e) => e.getMatchWinner() !== null)) {
         setTimeout(() => {
