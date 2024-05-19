@@ -1,10 +1,14 @@
-import { useLocation } from "react-router-dom";
 import DisplayLogo from "./DisplayLogo";
 
-const WaitingToStart = () => {
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const playerName = searchParams.get("playerName");
+type WaitingToStartProps = {
+  playerName: string;
+  tournamentCode: string;
+};
+
+const WaitingToStart = ({
+  playerName,
+  tournamentCode,
+}: WaitingToStartProps) => {
   return (
     <>
       <div className=" items-center size-60 w-full">
@@ -30,7 +34,7 @@ const WaitingToStart = () => {
           <p className="text-white md:text-lg text-sm font-bold mb-2">
             TOURNAMENT CODE:
           </p>
-          <p className="text-white md:text-3xl font-bold">{"000000"}</p>
+          <p className="text-white md:text-3xl font-bold">{tournamentCode}</p>
         </div>
       </div>
     </>

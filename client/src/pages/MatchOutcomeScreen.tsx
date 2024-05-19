@@ -1,6 +1,5 @@
 import plainTrophy from "../assets/PlainTrophy.svg";
 import cross from "../assets/Cross.svg";
-import PlayerAndSpectatorsInfo from "../components/PlayerAndSpectatorsInfo";
 
 type MatchOutcomeScreenProps = {
   playerScore: number;
@@ -14,21 +13,11 @@ type MatchOutcomeScreenProps = {
 const MatchOutcomeScreen = ({
   playerScore = 3,
   opponentScore = 2,
-  playerName = "SPONGEBOB",
   opponentName = "PATRICK",
-  spectatorCount,
   isWin = true,
 }: MatchOutcomeScreenProps) => {
   return (
     <div>
-      <PlayerAndSpectatorsInfo
-        playerScore={playerScore}
-        opponentScore={opponentScore}
-        playerName={playerName}
-        opponentName={opponentName}
-        spectatorCount={spectatorCount}
-      />
-
       <div
         className={
           "fixed mx-auto max-w-max inset-x-0 scale-[0.85] sm:scale-[0.85] md:scale-[0.875] lg:scale-[0.90]" +
