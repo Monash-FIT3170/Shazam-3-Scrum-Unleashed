@@ -9,7 +9,7 @@ type WaitingForOpponentProps = {
   playerName: string;
   opponentName: string;
   spectatorCount: number;
-  playerMove: Action;
+  playerMove: NonNullable<Action>;
 };
 
 const WaitingForOpponent = ({

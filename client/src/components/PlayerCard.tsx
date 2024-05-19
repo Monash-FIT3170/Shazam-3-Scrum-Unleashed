@@ -1,7 +1,7 @@
-import Player from "../../../server/model/player";
+import { PlayerAttributes } from "../../../types/types";
 
 interface PlayerCardProps {
-  player: Player;
+  player: PlayerAttributes;
   cardNum: number;
 }
 

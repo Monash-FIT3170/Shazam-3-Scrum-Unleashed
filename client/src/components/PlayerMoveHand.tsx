@@ -3,7 +3,7 @@ import { Action } from "../../../types/types";
 import { HandImgType } from "../types";
 
 type PlayerMoveHandProps = {
-  playerMove: Action; // eg. ROCK, PAPER or SCISSORS
+  playerMove: NonNullable<Action>;
   isOpponent: boolean;
   handType: HandImgType; // eg. FILLED, OUTLINED or SEMI_TRANSPARENT
 };
