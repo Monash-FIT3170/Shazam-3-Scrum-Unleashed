@@ -37,7 +37,7 @@ const CreateTournament = () => {
 
   useEffect(() => {
     if (loading) {
-      navigate(`../${GAME_LOBBY_PATH}?gameCode=${gameCode}`);
+      navigate(`../${GAME_LOBBY_PATH}?tournamentCode=${gameCode}`);
     }
   }, [gameCode]);
 

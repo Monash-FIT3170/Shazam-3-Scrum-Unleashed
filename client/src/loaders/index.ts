@@ -4,11 +4,11 @@ export interface LoaderProps {
   request: ReactRouterRequest;
 }
 
-export const newGameLoader = async ({ request }: LoaderProps) => {
+export const tournamentLobbyLoader = async ({ request }: LoaderProps) => {
   const url = new URL(request.url);
 
-  const gameCode = url.searchParams.get("gameCode");
-  return { gameCode };
+  const tournamentCode = url.searchParams.get("tournamentCode");
+  return { tournamentCode };
 };
 
 export const joinGameLoader = async ({ request }: LoaderProps) => {

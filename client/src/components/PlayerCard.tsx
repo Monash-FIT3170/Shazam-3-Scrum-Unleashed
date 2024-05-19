@@ -7,7 +7,7 @@ interface PlayerCardProps {
 
 const PlayerCard = (props: PlayerCardProps) => {
   // card name of varying borders
-  const cardName = "player-card-" + props.cardNum;
+  const cardName = "player-card-" + (props.cardNum % 4);
   // checking if the player's name can fit onto the card
   const playerName =
     props.player.name.length > 8
