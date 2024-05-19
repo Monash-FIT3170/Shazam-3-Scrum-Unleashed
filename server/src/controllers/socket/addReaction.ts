@@ -7,7 +7,7 @@ export function addReactionSocket(
   reaction: ReactionData,
   spectatorID: string,
   io: Server,
-  tournamentMap: Map<string, Tournament>
+  tournamentMap: Map<string, Tournament>,
 ) {
   const match = tournamentMap.get(tournamentCode)?.getMatch(spectatorID);
   if (!match) {

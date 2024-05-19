@@ -27,7 +27,7 @@ const PlayerScreen = () => {
   const [duelComplete, setDuelComplete] = useState(false);
   const [matchComplete, setMatchComplete] = useState(false);
   const [winnerUserID, setWinnerUserID] = useState<string | undefined>(
-    undefined
+    undefined,
   );
   const [tournamentWinner, setTournamentWinner] = useState<
     string | undefined
@@ -126,7 +126,12 @@ const PlayerScreen = () => {
 
   return (
     <>
-      {<ReactionOverlay gameCode={tournamentCode} spectatingID={isSpectator ? userPlayer!.userID : null} />}
+      {
+        <ReactionOverlay
+          gameCode={tournamentCode}
+          spectatingID={isSpectator ? userPlayer!.userID : null}
+        />
+      }
       <div className="overflow-hidden h-screen relative">
         <div className="pt-12">
           <div className="flex flex-col items-center justify-center mt-10">

@@ -31,7 +31,7 @@ function ReactionOverlay({
 
     socket.on("REACTION_ADDED", (reactionValue) => {
       const svg = ReactionList.find(
-        (r) => r.type === reactionValue.reaction
+        (r) => r.type === reactionValue.reaction,
       )?.svg;
 
       if (!svg) {
@@ -63,7 +63,10 @@ function ReactionOverlay({
 
   return (
     <div
-      className={"w-screen h-screen top-0 left-0 fixed z-50 " + (!spectatingID ? "pointer-events-none" : "")}
+      className={
+        "w-screen h-screen top-0 left-0 fixed z-50 " +
+        (!spectatingID ? "pointer-events-none" : "")
+      }
       onClick={(e) => {
         const reaction = {
           x: (e.clientX / window.innerWidth) * 100,
