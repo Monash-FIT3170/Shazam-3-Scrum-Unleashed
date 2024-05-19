@@ -19,7 +19,7 @@ const CreateTournament = () => {
 
   const changeInputError = (index: number) => (bool: boolean) => {
     const newInputErrors = inputErrors.map((val, i) =>
-        i === index ? bool : val,
+      i === index ? bool : val,
     );
     setInputError(newInputErrors);
   };
@@ -42,57 +42,57 @@ const CreateTournament = () => {
   }, [gameCode]);
 
   return (
-      <div>
-        <div className="w-full flex flex-row justify-start items-center py-10 px-10 gap-10">
-          <div className="w-32">
-            <DisplayLogo />
-          </div>
-        </div>
-
-        <div className="uppercase bg-[#1B074A] py-3 px-3 text-white text-3xl w-full">
-          Tournament setup
-        </div>
-
-        <div className="pt-5 flex justify-center">
-          <div className="w-11/12 md:w-3/4 flex justify-center flex-col gap-3">
-            <CreateTournamentInput
-                inputText={"duels to win"}
-                placeholder={duelsToWin}
-                callback={setDuelsToWin}
-                transparentUnits={true}
-                errorCallback={changeInputError(0)}
-            />
-            <CreateTournamentInput
-                inputText={"duel timer"}
-                placeholder={duelTime}
-                callback={setDuelTime}
-                transparentUnits={false}
-                errorCallback={changeInputError(1)}
-            />
-            <CreateTournamentInput
-                inputText={"round timer"}
-                placeholder={roundTime}
-                callback={setRoundTime}
-                transparentUnits={false}
-                errorCallback={changeInputError(2)}
-            />
-          </div>
-        </div>
-
-        <div className="h-14 mt-16">
-          <button
-              className={`w-1/4 text-white ${inputErrors.includes(true) ? "bg-bright-red" : "bg-primary"} text-2xl font-bold px-7 rounded-xl h-full uppercase`}
-              onClick={createGame}
-              disabled={loading || inputErrors.includes(true)}
-          >
-            {inputErrors.includes(true)
-                ? "Invalid inputs"
-                : loading
-                    ? "Loading..."
-                    : "Create Tournament"}
-          </button>
+    <div>
+      <div className="w-full flex flex-row justify-start items-center py-10 px-10 gap-10">
+        <div className="w-32">
+          <DisplayLogo />
         </div>
       </div>
+
+      <div className="uppercase bg-[#1B074A] py-3 px-3 text-white text-3xl w-full">
+        Tournament setup
+      </div>
+
+      <div className="pt-5 flex justify-center">
+        <div className="w-11/12 md:w-3/4 flex justify-center flex-col gap-3">
+          <CreateTournamentInput
+            inputText={"duels to win"}
+            placeholder={duelsToWin}
+            callback={setDuelsToWin}
+            transparentUnits={true}
+            errorCallback={changeInputError(0)}
+          />
+          <CreateTournamentInput
+            inputText={"duel timer"}
+            placeholder={duelTime}
+            callback={setDuelTime}
+            transparentUnits={false}
+            errorCallback={changeInputError(1)}
+          />
+          <CreateTournamentInput
+            inputText={"round timer"}
+            placeholder={roundTime}
+            callback={setRoundTime}
+            transparentUnits={false}
+            errorCallback={changeInputError(2)}
+          />
+        </div>
+      </div>
+
+      <div className="h-14 mt-16">
+        <button
+          className={`w-1/4 text-white ${inputErrors.includes(true) ? "bg-bright-red" : "bg-primary"} text-2xl font-bold px-7 rounded-xl h-full uppercase`}
+          onClick={createGame}
+          disabled={loading || inputErrors.includes(true)}
+        >
+          {inputErrors.includes(true)
+            ? "Invalid inputs"
+            : loading
+              ? "Loading..."
+              : "Create Tournament"}
+        </button>
+      </div>
+    </div>
   );
 };
 
