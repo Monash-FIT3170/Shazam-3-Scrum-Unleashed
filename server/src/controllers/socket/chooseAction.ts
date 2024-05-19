@@ -59,7 +59,7 @@ export function chooseActionSocket(
           }
           roundTerminator(tournament, io);
           roundInitialisor(tournament, io);
-        }, 5000);
+        }, 8000);
       }
     }
   }
