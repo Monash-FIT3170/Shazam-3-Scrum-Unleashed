@@ -8,6 +8,7 @@ export default class Player implements PlayerAttributes {
   public isBot: boolean;
   public spectatingId: string | null;
   public spectatorCount: number;
+  public spectatorIDs: string[];
 
   constructor(userID: string, name: string, isBot: boolean) {
     this.userID = userID;
@@ -17,5 +18,6 @@ export default class Player implements PlayerAttributes {
     this.actionChoice = null;
     this.spectatingId = null;
     this.spectatorCount = 0;
+    this.spectatorIDs = [];
   }
 }

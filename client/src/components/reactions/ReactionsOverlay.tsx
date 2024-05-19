@@ -37,6 +37,8 @@ function ReactionOverlay() {
           y: (e.clientY / window.innerHeight) * 100,
           value: selectedReaction.svg,
         };
+
+        
         reactionsRef.current = {
           ...reactionsRef.current,
           // replace this with unique id generated from backend

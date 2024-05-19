@@ -4,13 +4,45 @@ import Player from "src/model/player";
 import Tournament from "src/model/tournament";
 import { Server } from "socket.io";
 
-export function roundInitialisor(tournament: Tournament, io: Server) {
+export async function roundInitialisor(tournament: Tournament, io: Server) {
   const { matches, bots } = roundAllocator(tournament);
 
   tournament.players = [...tournament.players, ...bots];
   tournament.matches = matches;
-  io.to(tournament.hostUID).emit("ROUND_STARTED");
-  void roundStartEmitter(tournament, io);
+
+  for (const match of tournament.matches) {
+    for (const currentPlayer of match.players) {
+      for (const spectatorPlayer of tournament.players) {
+        if (spectatorPlayer.spectatingId === currentPlayer.userID) {
+          console.log("Spectator is ", spectatorPlayer.name);
+          console.log("Player is ", currentPlayer.name);
+
+          if (spectatorPlayer.isBot) {
+            continue;
+            //TODO - refactor
+          }
+
+          const socketSetID = io.sockets.adapter.rooms.get(
+            spectatorPlayer.userID,
+          );
+          if (socketSetID === undefined || socketSetID.size !== 1) {
+            throw new Error("We fucked up");
+          }
+
+          const playerSocketID = Array.from(socketSetID)[0];
+          const playerSocket = io.sockets.sockets.get(playerSocketID);
+          if (playerSocket === undefined) {
+            throw new Error("Could not find player socket");
+          }
+
+          await playerSocket.join(match.matchRoomID);
+        }
+      }
+    }
+
+    io.to(tournament.hostUID).emit("ROUND_STARTED");
+    void roundStartEmitter(tournament, io);
+  }
 }
 
 export function roundTerminator(tournament: Tournament, io: Server) {
@@ -28,13 +60,13 @@ export function roundTerminator(tournament: Tournament, io: Server) {
 function handleSpectators(tournament: Tournament, match: Match) {
   const spectators: Player[] = [];
 
-  for (const player of tournament.players) {
+  for (const spectator of tournament.players) {
     // if player in the tournament is spectating a player in the match.
     if (
-      player.spectatingId !== null &&
-      match.players.map((e) => e.userID).includes(player.spectatingId)
+      spectator.spectatingId !== null &&
+      match.players.map((e) => e.userID).includes(spectator.spectatingId)
     ) {
-      spectators.push(player);
+      spectators.push(spectator);
     }
   }
 
@@ -54,6 +86,14 @@ function handleSpectators(tournament: Tournament, match: Match) {
   for (const player of match.players) {
     if (player.userID !== matchWinner.userID) {
       player.spectatingId = matchWinner.userID;
+    }
+  }
+
+  for (const spectator of tournament.players) {
+    for (const matchPlayer of match.players) {
+      if (spectator.spectatingId === matchPlayer.userID) {
+        matchPlayer.spectatorIDs.push(spectator.userID);
+      }
     }
   }
 }
