@@ -19,6 +19,7 @@ export interface Events
 
 interface HostToClientEvents {
   SESSION_INFO: (sessionID: string, userID: string) => void;
+  TOURNAMENT_COMPLETE: (playerName: string) => void;
 }
 
 interface HostToServerEvents {
@@ -48,7 +49,6 @@ interface ServerToHostEvents {
   PLAYER_HAS_LEFT: (player: PlayerAttributes) => void;
   ROUND_STARTED: (/*TODO*/) => void;
   ROUND_RESULTS: (/*TODO*/) => void;
-  TOURNAMENT_RESULTS: (/*TODO*/) => void;
 }
 
 interface ServerToPlayerEvents {
