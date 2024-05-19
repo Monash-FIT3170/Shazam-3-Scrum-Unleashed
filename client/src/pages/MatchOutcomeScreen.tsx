@@ -18,7 +18,6 @@ const MatchOutcomeScreen = ({
 }: MatchOutcomeScreenProps) => {
   return (
     <div>
-
       <div
         className={
           "fixed mx-auto max-w-max inset-x-0 scale-[0.85] sm:scale-[0.85] md:scale-[0.875] lg:scale-[0.90]" +
