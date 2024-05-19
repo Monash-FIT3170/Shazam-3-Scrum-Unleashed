@@ -80,9 +80,7 @@ const TournamentLobby = () => {
             <div className="text-white text-xl uppercase ">
               Players: {players.length}
             </div>
-            {tournamentStarted ? (
-              ""
-            ) : (
+            {!tournamentStarted && (
               <button
                 className="hover:bg-blue-700 text-white bg-primary text-xl rounded-xl h-full uppercase w-1/4"
                 onClick={startTournament}
