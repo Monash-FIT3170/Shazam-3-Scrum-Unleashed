@@ -20,24 +20,9 @@ async function fetchQrCode(
   setQrCode(qrCode.qrCode);
 }
 
-function artificalPlayers(amount: number) {
-  const players: PlayerAttributes[] = [];
-  for (let i = 0; i < amount; i++) {
-    players.push({
-      actionChoice: null,
-      isBot: false,
-      name: `Art ${i}`,
-      score: 0,
-      spectatingId: "",
-      userID: i.toString(),
-    });
-  }
-  return players;
-}
-
 const TournamentLobby = () => {
   const { tournamentCode } = useLoaderData() as { tournamentCode: string };
-  const [players, setPlayers] = useState(artificalPlayers(128));
+  const [players, setPlayers] = useState<PlayerAttributes[]>([]);
   const [qrCode, setQrCode] = useState("");
   // const navigate = useNavigate();
 
