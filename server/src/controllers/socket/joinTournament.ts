@@ -40,5 +40,5 @@ export function joinTournamentSocket(
   console.log(`Player : ${playerName} has joined Game : ${tournamentCode}`);
 
   io.to(socket.userID).emit("JOINED_GAME", "SUCCESS");
-  io.to(tournament.hostUID).emit("PLAYER_HAS_JOINED", player);
+  io.to(tournament.hostUID).emit("PLAYERS_UPDATE", tournament.players);
 }

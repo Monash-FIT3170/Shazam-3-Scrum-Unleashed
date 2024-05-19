@@ -13,8 +13,8 @@ export function sessionMiddleware(
     if (userID) {
       socket.sessionID = sessionID;
       socket.userID = userID;
-      next();
-      return;
+      // next();
+      // return;
     }
   }
   socket.sessionID = crypto.randomUUID();
