@@ -11,7 +11,7 @@ export function chooseActionSocket(
   playerUserID: string,
   action: Action,
   tournament: Tournament | undefined,
-  io: Server
+  io: Server,
 ) {
   if (!tournament) {
     throw Error("No tournament found");
@@ -38,7 +38,7 @@ export function chooseActionSocket(
     io.to(match.matchRoomID).emit(
       "MATCH_INFO",
       match.players,
-      matchWinnerUserID
+      matchWinnerUserID,
     );
 
     match.resetActions();
@@ -49,7 +49,7 @@ export function chooseActionSocket(
           if (tournament.matches.length === 1) {
             io.to(match.matchRoomID).emit(
               "TOURNAMENT_COMPLETE",
-              matchWinner?.name
+              matchWinner?.name,
             );
             roundTerminator(tournament, io);
             tournamentMap.delete(tournament.hostUID);
