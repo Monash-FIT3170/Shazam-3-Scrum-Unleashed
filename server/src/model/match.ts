@@ -5,11 +5,13 @@ export class Match {
   public players: Player[];
   public matchRoomID: string;
   public duelsToWin: number;
+  public timeOutHandler: NodeJS.Timeout | null;
 
   constructor(players: Player[], matchRoomID: string, duelsToWin: number) {
     this.players = players;
     this.matchRoomID = matchRoomID;
     this.duelsToWin = duelsToWin;
+    this.timeOutHandler = null;
   }
 
   public isDuelComplete() {
@@ -65,9 +67,27 @@ export class Match {
   private getBotAction(bot: Player, player: Player) {
     const botMove = this.rulesMap.get(player.actionChoice);
     if (botMove === undefined) {
-      throw Error("Invalid move chosen by player");
+      console.error("Invalid move chosen by player");
       return;
     }
     bot.actionChoice = botMove;
+  }
+
+  public startTimeout(callback: (match: Match) => void) {
+    this.timeOutHandler = setTimeout(
+      () => {
+        if (!this.isDuelComplete()) {
+          for (const player of this.players) {
+            if (player.actionChoice === null) {
+              player.actionChoice = ["ROCK", "PAPER", "SCISSORS"][
+                Math.floor(Math.random() * 3)
+              ] as Action;
+            }
+          }
+        }
+        callback(this);
+      },
+      12000 + Math.random() * 100,
+    );
   }
 }

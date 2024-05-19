@@ -29,7 +29,7 @@ const ReactionMenu = ({
 
   return (
     <div
-      className=" outline outline-8 outline-white origin-bottom-right md:scale-100 scale-75 absolute flex flex-col gap-2 justify-center items-center md:right-10 md:bottom-10 right-4 bottom-4 rounded-full bg-spectator-bg reaction-menu"
+      className=" outline outline-8 outline-white origin-bottom-right md:scale-100 scale-75 absolute flex flex-col gap-2 justify-center items-center md:right-10 md:bottom-32 right-4 bottom-20 rounded-full bg-spectator-bg reaction-menu"
       onClick={(e) => e.stopPropagation()}
     >
       {isMenuOpen && SelectableReactions}
