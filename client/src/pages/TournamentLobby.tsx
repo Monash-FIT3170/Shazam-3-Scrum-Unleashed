@@ -25,6 +25,7 @@ const TournamentLobby = () => {
   const { tournamentCode } = useLoaderData() as { tournamentCode: string };
   const [players, setPlayers] = useState<PlayerAttributes[]>([]);
   const [qrCode, setQrCode] = useState("");
+  const [tournamentStarted, setTournamentStarted] = useState(false);
 
   useEffect(
     () =>
@@ -37,7 +38,10 @@ const TournamentLobby = () => {
 
 
   const startTournament = () => {
-    socket.emit("START_TOURNAMENT", tournamentCode);
+    if (tournamentStarted){
+      socket.emit("START_TOURNAMENT", tournamentCode);
+      setTournamentStarted(true);
+    }
   };
 
   useEffect(() => {
@@ -46,13 +50,8 @@ const TournamentLobby = () => {
       setPlayers(players);
     });
 
-    socket.on("ROUND_STARTED", () => {
-      console.log("Tournament Started");
-    });
-
     return () => {
       socket.off("PLAYERS_UPDATE");
-      socket.off("ROUND_STARTED");
     };
   }, []);
 
@@ -64,6 +63,7 @@ const TournamentLobby = () => {
         <div className="text-white text-xl uppercase ">
           Players: {players.length}
         </div>
+
 
         <button
           className="hover:bg-blue-700 text-white bg-primary text-xl rounded-xl h-full uppercase w-1/4"
