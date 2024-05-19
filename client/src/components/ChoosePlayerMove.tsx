@@ -4,12 +4,28 @@ import PaperOption from "../assets/ChooseMove/PaperOption.svg";
 import ScissorsOption from "../assets/ChooseMove/ScissorOption.svg";
 import { Action } from "../../../types/types";
 import MoveSelection from "./MoveSelection";
+import { socket } from "../App.tsx";
 
-const ChoosePlayerMove = () => {
-  const [, setSelectedMove] = useState<Action | null>(null);
+interface ChoosePlayerMoveProps {
+  tournamentCode: string;
+}
+
+const ChoosePlayerMove = ({ tournamentCode }: ChoosePlayerMoveProps) => {
+  const [selectedAction, setSelectedAction] = useState<Action | null>(null);
 
   const handleMoveSelection = (move: Action) => {
-    setSelectedMove(move);
+    if (!selectedAction) {
+      setSelectedAction(move);
+      console.log(
+        `Selected move: ${move}. Emitting CHOOSE_ACTION. ${tournamentCode}`,
+      );
+
+      socket.emit("CHOOSE_ACTION", tournamentCode, socket.userID, move);
+
+      // move to waiting for opponent screen (TODO)
+
+      setSelectedAction(null);
+    }
   };
 
   return (

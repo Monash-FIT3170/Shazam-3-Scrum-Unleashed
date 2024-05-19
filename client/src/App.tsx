@@ -19,7 +19,7 @@ import {
   TOURNAMENT_SCREEN,
 } from "./pages/pagePaths.ts";
 import GameLobby from "./pages/GameLobby.tsx";
-import { joinedGameLoader, joinGameLoader, newGameLoader } from "./loaders";
+import { joinGameLoader, newGameLoader, playerScreenLoader } from "./loaders";
 import PlayerScreen from "./pages/PlayerScreen.tsx";
 import TournamentScreen from "./pages/TournamentScreen.tsx";
 import Home from "./pages/Home.tsx";
@@ -54,7 +54,7 @@ const router = createBrowserRouter(
       <Route
         path={PLAYER_SCREEN}
         element={<PlayerScreen />}
-        loader={joinedGameLoader}
+        loader={playerScreenLoader}
       />
       {/* creating a route for the tournament screen */}
       <Route path={TOURNAMENT_SCREEN} element={<TournamentScreen />} />
@@ -66,16 +66,20 @@ function App() {
   const cookieStrings = document.cookie.split("=");
 
   if (cookieStrings[0] === "sessionID") {
-    console.log(cookieStrings[1]);
     socket.auth = { sessionID: cookieStrings[1] };
   }
   socket.connect();
+
   socket.on("SESSION_INFO", (sessionID, userID) => {
     // attach the session ID to the next reconnection attempts
     socket.auth = { sessionID };
     // save the ID of the user
     socket.userID = userID;
     document.cookie = `sessionID=${sessionID};`;
+  });
+
+  socket.on("disconnect", function () {
+    // Do stuff (probably some jQuery)
   });
 
   return (

@@ -22,10 +22,11 @@ export const joinGameLoader = async ({ request }: LoaderProps) => {
   return gameCode;
 };
 
-export const joinedGameLoader = async ({ request }: LoaderProps) => {
+export const playerScreenLoader = async ({ request }: LoaderProps) => {
   const url = new URL(request.url);
 
-  const playerName = url.searchParams.get("playerName");
+  const loadedPlayerName = url.searchParams.get("playerName");
+  const loadedTournamentCode = url.searchParams.get("tournamentCode");
 
-  return { playerName };
+  return { loadedTournamentCode, loadedPlayerName };
 };

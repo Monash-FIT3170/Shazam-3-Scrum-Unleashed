@@ -11,18 +11,18 @@ const JoinGame = () => {
   const urlGameCode = useLoaderData() as string;
   const navigate = useNavigate();
 
-  const [gameCode, setGameCode] = useState(urlGameCode);
+  const [tournamentCode, setTournamentCode] = useState(urlGameCode);
   const [playerName, setPlayerName] = useState("");
   const [joinState, setJoinState] = useState<JoinState>("NoCurrentRequest");
 
   const joinGame = () => {
-    if (gameCode.length === 0) {
+    if (tournamentCode.length === 0) {
       console.error("No game code was provided. TODO - Handle this error");
       return;
     }
 
     setJoinState("Waiting");
-    socket.emit("JOIN_GAME", gameCode, playerName);
+    socket.emit("JOIN_TOURNAMENT", tournamentCode, playerName);
   };
 
   socket.on("JOINED_GAME", (joinErrorCode) => {
@@ -43,7 +43,9 @@ const JoinGame = () => {
 
   useEffect(() => {
     if (joinState === "Joining") {
-      navigate(`../${PLAYER_SCREEN}?playerName=${playerName}`);
+      navigate(
+        `../${PLAYER_SCREEN}?playerName=${playerName}&tournamentCode=${tournamentCode}`,
+      );
     }
   }, [joinState]);
 
@@ -61,9 +63,9 @@ const JoinGame = () => {
             type="text"
             placeholder="6 DIGIT ROOM CODE"
             className="bg-primary-dark text-white rounded-xl w-1/3 h-10 mt-4 border-2 border-white pl-2"
-            value={gameCode}
+            value={tournamentCode}
             onChange={(event) => {
-              setGameCode(event.target.value);
+              setTournamentCode(event.target.value);
             }}
           ></input>
         </div>

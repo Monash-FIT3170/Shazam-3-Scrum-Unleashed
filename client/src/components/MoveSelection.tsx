@@ -12,14 +12,9 @@ const MoveSelection: React.FC<MoveSelectionProps> = ({
   selection,
   onSelectMove,
 }) => {
-  const handleMoveSelection = (move: Action) => {
-    onSelectMove(move);
-    console.log("Selected move:", move);
-  };
-
   return (
     <button
-      onClick={() => handleMoveSelection(selection)}
+      onClick={() => onSelectMove(selection)}
       className="w-1/5 focus:outline-none mr-5"
     >
       <img src={img} alt={img} className="w-full" />

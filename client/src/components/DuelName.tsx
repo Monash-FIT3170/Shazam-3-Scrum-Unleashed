@@ -1,21 +1,22 @@
 //This displays the name of the players in a Duel
 
 import star from "../assets/Duel/Star 2.svg";
+import { PlayerAttributes } from "../../../types/types.ts";
 
 interface DuelNameProps {
-  name1: string;
-  name2: string;
+  players: PlayerAttributes[];
 }
 
-const DuelName = ({ name1, name2 }: DuelNameProps) => {
+const DuelName = ({ players }: DuelNameProps) => {
   if (window.innerHeight <= 800 && window.innerWidth <= 500) {
+    // TODO
     return (
       <div>
         <div className="fixed top-1 right-3 text-2xl text-white font-bold font-sans">
-          {name1}
+          {players[0].name}
         </div>
         <div className="flex fixed bottom-1 left-3 text-2xl text-white font-bold font-sans">
-          {name2}
+          {players[1].name}
         </div>
       </div>
     );
@@ -23,7 +24,7 @@ const DuelName = ({ name1, name2 }: DuelNameProps) => {
     return (
       <div>
         <div className="fixed top-5 right-8 text-2xl text-white font-bold font-sans bg-orange-600 rounded-md px-7 py-3">
-          {name1}
+          {players[0].name}
           <div className="flex flex-row justify-between gap-x-4">
             <img style={{ height: 30 }} className="object-fit" src={star} />
             <img style={{ height: 30 }} className="object-fit" src={star} />
@@ -32,7 +33,7 @@ const DuelName = ({ name1, name2 }: DuelNameProps) => {
         </div>
         <div>
           <div className="fixed bottom-5 left-8 text-2xl text-white font-bold font-sans bg-lime-600 rounded-md px-7 py-3">
-            {name2}
+            {players[1].name}
             <div className="flex flex-row justify-between gap-x-4">
               <img style={{ height: 30 }} className="object-fit" src={star} />
               <img style={{ height: 30 }} className="object-fit" src={star} />

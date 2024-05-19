@@ -5,23 +5,24 @@ import { GAME_LOBBY_PATH } from "./pagePaths.ts";
 import { socket } from "../App.tsx";
 import DisplayLogo from "../components/DisplayLogo.tsx";
 
-const defaultDuelsPerMatch: number = 5;
+const defaultduelsToWin: number = 3;
 const defaultDuelTime: number = 15;
 const defaultMatchTime: number = 120;
 
 const CreateGame = () => {
   const navigate = useNavigate();
-  const [duelPerMatch, setDuelsPerMatch] = useState(defaultDuelsPerMatch);
+  const [duelPerMatch, setduelsToWin] = useState(defaultduelsToWin);
   const [duelTime, setDuelTime] = useState(defaultDuelTime);
   const [matchTime, setMatchTime] = useState(defaultMatchTime);
 
   const [loading, setLoading] = useState(false);
   const createGame = () => {
-    socket.emit("CREATE_GAME", duelPerMatch, duelTime, matchTime);
+    socket.emit("CREATE_TOURNAMENT", duelPerMatch, duelTime, matchTime);
   };
 
   const [gameCode, setGameCode] = useState("");
-  socket.on("GAME_CREATED", (gameCode) => {
+  socket.on("TOURNAMENT_CREATED", (gameCode) => {
+    console.log("Game created");
     setGameCode(gameCode);
     setLoading(true);
   });
@@ -55,7 +56,7 @@ const CreateGame = () => {
                 className="py-2 px-5 bg-[#14171D] text-white border-2 border-white rounded-xl w-1/2"
                 value={duelPerMatch}
                 onChange={(event) => {
-                  setDuelsPerMatch(parseInt(event.target.value));
+                  setduelsToWin(parseInt(event.target.value));
                 }}
               />
               <span>SECS</span>

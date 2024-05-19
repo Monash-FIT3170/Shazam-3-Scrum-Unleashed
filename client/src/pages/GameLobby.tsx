@@ -22,6 +22,7 @@ const GameLobby = () => {
   const gameData = useLoaderData() as { gameCode: string };
   const [players, setPlayers] = useState(new Array<PlayerAttributes>());
   const [qrCode, setQrCode] = useState("");
+  // const navigate = useNavigate();
 
   useEffect(
     () =>
@@ -35,9 +36,10 @@ const GameLobby = () => {
   const updateList = (player: PlayerAttributes) => {
     setPlayers((previousPlayers) => [...previousPlayers, player]);
   };
-  const handleAllocatePlayers = () => {
+
+  const startGame = () => {
     // Call the ALLOCATE_PLAYERS socket event
-    socket.emit("ALLOCATE_PLAYERS", gameData.gameCode);
+    socket.emit("START_TOURNAMENT", gameData.gameCode);
   };
 
   useEffect(() => {
@@ -47,8 +49,13 @@ const GameLobby = () => {
       console.log(`Player ${player.name} has joined`);
     });
 
+    socket.on("ROUND_STARTED", () => {
+      console.log("Tournament Started");
+    });
+
     return () => {
       socket.off("PLAYER_HAS_JOINED");
+      socket.off("ROUND_STARTED");
     };
   }, []);
 
@@ -61,14 +68,14 @@ const GameLobby = () => {
         Game Code : {gameData.gameCode}
         <ul>
           {players.map((player) => (
-            <li key={player.id}>{player.name}</li>
+            <li key={player.userID}>{player.name}</li>
           ))}
         </ul>
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-          onClick={handleAllocatePlayers}
+          onClick={startGame}
         >
-          Allocate Players
+          START GAME
         </button>
       </h1>
       {qrCode === "" ? (

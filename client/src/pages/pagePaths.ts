@@ -5,3 +5,4 @@ export const CREATE_GAME_PATH: string = "create-game";
 export const GAME_LOBBY_PATH: string = "game-lobby";
 export const PLAYER_SCREEN: string = "player-screen";
 export const TOURNAMENT_SCREEN: string = "tournament-screen";
+export const WAITING_FOR_HOST = "waiting-for-host";

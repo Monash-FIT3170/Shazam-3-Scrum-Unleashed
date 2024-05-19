@@ -4,53 +4,55 @@
  * Please add any new events, data or fix any formatting
  */
 
-import {Action, DuelResult, PlayerAttributes} from "../types";
-import {JoinErrorCode} from "./eventArguments"
-
+import { Action, PlayerAttributes } from "../types";
+import { JoinErrorCode } from "./eventArguments";
 
 /**
  * Add any new Event Categories to this
  */
-export interface Events extends HostToClientEvents, HostToServerEvents, PlayerToServerEvents, ServerToHostEvents, ServerToPlayerEvents {
-}
+export interface Events
+  extends HostToClientEvents,
+    HostToServerEvents,
+    PlayerToServerEvents,
+    ServerToHostEvents,
+    ServerToPlayerEvents {}
 
 interface HostToClientEvents {
-    SESSION_INFO: (sessionID:string, userID:string) => void,
+  SESSION_INFO: (sessionID: string, userID: string) => void;
 }
 
 interface HostToServerEvents {
-    CREATE_GAME: (duelPerMatch:number, duelTime:number, matchTime:number) => void,
-    START_GAME: (gameCode: string) => void,
-    KICK_PLAYER: (gameCode: string, playerName: PlayerAttributes) => void,
-    ALLOCATE_PLAYERS: (gameCode: string) => void,
-
+  CREATE_TOURNAMENT: (
+    duelPerMatch: number,
+    duelTime: number,
+    matchTime: number
+  ) => void;
+  START_TOURNAMENT: (gameCode: string) => void;
+  KICK_PLAYER: (gameCode: string, playerName: PlayerAttributes) => void;
+  // ALLOCATE_PLAYERS: (gameCode: string) => void,
 }
 
 interface PlayerToServerEvents {
-    JOIN_GAME: (gameCode: string, playerName: string) => void,
-    LEAVE_GAME: (gameCode: string, player: PlayerAttributes) => void,
-    CHOOSE_ACTION: (gameCode: string, playerName: string,
-                    roomCode: number, action: Action) => void,
+  JOIN_TOURNAMENT: (gameCode: string, playerName: string) => void;
+  LEAVE_GAME: (gameCode: string, player: PlayerAttributes) => void;
+  CHOOSE_ACTION: (
+    tournamentCode: string,
+    playerUserID: string,
+    action: Action
+  ) => void;
 }
 
 interface ServerToHostEvents {
-    GAME_CREATED: (gameCode: string) => void,
-    PLAYER_HAS_JOINED: (player: PlayerAttributes) => void,
-    PLAYER_HAS_LEFT: (player: PlayerAttributes) => void,
-    GAME_START: (/*TODO*/) => void,
-    ROUND_RESULTS: (/*TODO*/) => void,
-    TOURNAMENT_RESULTS: (/*TODO*/) => void
+  TOURNAMENT_CREATED: (gameCode: string) => void;
+  PLAYER_HAS_JOINED: (player: PlayerAttributes) => void;
+  PLAYER_HAS_LEFT: (player: PlayerAttributes) => void;
+  ROUND_STARTED: (/*TODO*/) => void;
+  ROUND_RESULTS: (/*TODO*/) => void;
+  TOURNAMENT_RESULTS: (/*TODO*/) => void;
 }
 
 interface ServerToPlayerEvents {
   JOINED_GAME: (joinErrorCode: JoinErrorCode) => void;
-  JOIN_THIS_ROOM: (/*TODO*/) => void;
-  DUEL_RESULTS: (
-    result: DuelResult,
-    player1Action: Action,
-    player2Action: Action
-  ) => void;
-  MATCH_RESULTS: (winner: PlayerAttributes, loser: PlayerAttributes) => void;
-  CHOOSE_PLAYER_MOVE: (/*TODO*/) => void;
-  GAME_WINNER: (winner: any) => void; // Sample for testing
+  MATCH_STARTED: (players: PlayerAttributes[]) => void;
+  MATCH_INFO: (players: PlayerAttributes[], winnerUserID: string | undefined) => void;
 }

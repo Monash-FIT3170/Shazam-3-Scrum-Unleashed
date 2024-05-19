@@ -1,18 +1,18 @@
-import Player from "../../../server/model/actors/player";
+import Player from "../../../server/model/player";
 
 interface PlayerCardProps {
   player: Player;
+  cardNum: number;
 }
 
 const PlayerCard = (props: PlayerCardProps) => {
-  const cardNum = props.player.getId() % 4;
   // card name of varying borders
-  const cardName = "player-card-" + cardNum;
+  const cardName = "player-card-" + props.cardNum;
   // checking if the player's name can fit onto the card
   const playerName =
-    props.player.getName().length > 8
-      ? props.player.getName().substring(0, 5) + "..."
-      : props.player.getName();
+    props.player.name.length > 8
+      ? props.player.name.substring(0, 5) + "..."
+      : props.player.name;
   return (
     <div className={cardName}>
       <h2>{playerName}</h2>

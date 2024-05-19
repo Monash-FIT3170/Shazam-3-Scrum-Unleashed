@@ -2,27 +2,53 @@ import { useEffect, useState } from "react";
 import DisplayLogo from "../components/DisplayLogo";
 import WaitingToStart from "../components/WaitingToStart";
 import { socket } from "../App";
-import ChoosePlayerMove from "../components/ChoosePlayerMove";
-import CountDownTimer from "../components/CountDownTimer";
-import WinnerPlayer from "../components/WinnerPlayer";
+import { PlayerAttributes } from "../../../types/types.ts";
+import ChoosePlayerMove from "../components/ChoosePlayerMove.tsx";
+import { useLoaderData } from "react-router-dom";
+
+// import ChoosePlayerMove from "../components/ChoosePlayerMove";
+// import CountDownTimer from "../components/CountDownTimer";
+// import WinnerPlayer from "../components/WinnerPlayer";
+
+function getUserPlayer(players: PlayerAttributes[]) {
+  for (const player of players) {
+    if (player.userID === socket.userID) {
+      return player;
+    }
+  }
+  return null;
+}
 
 const PlayerScreen = () => {
-  const [renderMoveComponent, setRenderMoveComponent] = useState(false);
-  const [isWinner, setIsWinner] = useState(false);
+  const { loadedTournamentCode, loadedPlayerName } = useLoaderData() as {
+    loadedTournamentCode: string;
+    loadedPlayerName: string;
+  };
+
+  const [tournamentCode, setTournamentCode] = useState(loadedTournamentCode);
+  const [playerName, setPlayerName] = useState(loadedPlayerName);
+  const [players, setPlayers] = useState<PlayerAttributes[]>([]);
 
   useEffect(() => {
-    socket.on("CHOOSE_PLAYER_MOVE", () => {
-      setRenderMoveComponent(true);
+    socket.on("MATCH_STARTED", (players) => {
+      setPlayers(players);
+      console.log(players);
+    });
 
-      socket.on("GAME_WINNER", () => {
-        setIsWinner(true); // Set isWinner to true when GAME_WINNER event is received
-      });
+    socket.on("MATCH_INFO", (players, winnerUserID) => {
+      setPlayers(players);
+      console.log(players, "Winner: ", winnerUserID);
+      // Move to duel animation screen
+
+      if (winnerUserID) {
+        // show trophy or x after, duel animation.
+      }
     });
 
     return () => {
       // Clean up socket event listener
-      socket.off("CHOOSE_PLAYER_MOVE");
-      socket.off("GAME_WINNER");
+      socket.off("MATCH_STARTED");
+      socket.off("MATCH_INFO");
     };
   }, []);
 
@@ -33,18 +59,16 @@ const PlayerScreen = () => {
           <DisplayLogo />
         </div>
         <div className="flex flex-col items-center justify-center mt-10">
-          {!isWinner && !renderMoveComponent && (
-            <div className="mt-20">
-              <WaitingToStart />
-            </div>
+          {players?.length === 0 ? (
+            <WaitingToStart />
+          ) : (
+            <ChoosePlayerMove tournamentCode={tournamentCode} />
           )}
-          {!isWinner && renderMoveComponent && (
-            <div className="mt-20">
-              <CountDownTimer />
-              <ChoosePlayerMove />
-            </div>
-          )}
-          {isWinner && <WinnerPlayer />}
+
+          {/* <WinnerPlayer />
+          <CountDownTimer />
+
+           */}
         </div>
       </div>
     </div>
