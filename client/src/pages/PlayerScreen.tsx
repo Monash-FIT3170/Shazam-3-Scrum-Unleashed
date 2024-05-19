@@ -10,23 +10,23 @@ import { useLoaderData } from "react-router-dom";
 // import CountDownTimer from "../components/CountDownTimer";
 // import WinnerPlayer from "../components/WinnerPlayer";
 
-function getUserPlayer(players: PlayerAttributes[]) {
-  for (const player of players) {
-    if (player.userID === socket.userID) {
-      return player;
-    }
-  }
-  return null;
-}
+// function getUserPlayer(players: PlayerAttributes[]) {
+//   for (const player of players) {
+//     if (player.userID === socket.userID) {
+//       return player;
+//     }
+//   }
+//   return null;
+// }
 
 const PlayerScreen = () => {
-  const { loadedTournamentCode, loadedPlayerName } = useLoaderData() as {
+  const { loadedTournamentCode } = useLoaderData() as {
     loadedTournamentCode: string;
     loadedPlayerName: string;
   };
 
-  const [tournamentCode, setTournamentCode] = useState(loadedTournamentCode);
-  const [playerName, setPlayerName] = useState(loadedPlayerName);
+  const [tournamentCode] = useState(loadedTournamentCode);
+  // const [playerName, setPlayerName] = useState(loadedPlayerName);
   const [players, setPlayers] = useState<PlayerAttributes[]>([]);
 
   useEffect(() => {

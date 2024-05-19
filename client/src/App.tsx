@@ -16,12 +16,12 @@ import {
   JOIN_GAME_PATH,
   GAME_LOBBY_PATH,
   PLAYER_SCREEN,
-  TOURNAMENT_SCREEN,
+  // TOURNAMENT_SCREEN,
 } from "./pages/pagePaths.ts";
 import GameLobby from "./pages/GameLobby.tsx";
 import { joinGameLoader, newGameLoader, playerScreenLoader } from "./loaders";
 import PlayerScreen from "./pages/PlayerScreen.tsx";
-import TournamentScreen from "./pages/TournamentScreen.tsx";
+// import TournamentScreen from "./pages/TournamentScreen.tsx";
 import Home from "./pages/Home.tsx";
 
 declare module "socket.io-client" {
@@ -57,7 +57,7 @@ const router = createBrowserRouter(
         loader={playerScreenLoader}
       />
       {/* creating a route for the tournament screen */}
-      <Route path={TOURNAMENT_SCREEN} element={<TournamentScreen />} />
+      {/* <Route path={TOURNAMENT_SCREEN} element={<TournamentScreen />} /> */}
     </Route>,
   ),
 );
