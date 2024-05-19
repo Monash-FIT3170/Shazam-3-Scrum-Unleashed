@@ -21,5 +21,5 @@ export function startTournamentSocket(
     return;
   }
 
-  roundInitialisor(tournament, io);
+  void roundInitialisor(tournament, io);
 }

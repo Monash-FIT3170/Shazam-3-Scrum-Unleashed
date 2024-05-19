@@ -4,7 +4,7 @@
  * Please add any new events, data or fix any formatting
  */
 
-import { Action, PlayerAttributes } from "../types";
+import { Action, PlayerAttributes, ReactionData } from "../types";
 import { JoinErrorCode } from "./eventArguments";
 
 /**
@@ -40,6 +40,7 @@ interface PlayerToServerEvents {
     playerUserID: string,
     action: Action
   ) => void;
+  ADD_REACTION: (tournamentCode: string, reaction: ReactionData, spectatorID: string) => void;
 }
 
 interface ServerToHostEvents {
@@ -53,4 +54,5 @@ interface ServerToPlayerEvents {
   JOINED_GAME: (joinErrorCode: JoinErrorCode) => void;
   MATCH_STARTED: (players: PlayerAttributes[]) => void;
   MATCH_INFO: (players: PlayerAttributes[], winnerUserID: string | undefined) => void;
+  REACTION_ADDED: (reaction: ReactionData) => void;
 }

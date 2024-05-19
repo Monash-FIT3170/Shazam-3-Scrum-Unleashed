@@ -6,6 +6,7 @@ export interface PlayerAttributes {
   isBot: boolean;
   spectatingId: string | null;
   spectatorCount: number;
+  spectatorIDs: string[];
 }
 
 export type Action = "ROCK" | "PAPER" | "SCISSORS" | null;
@@ -16,3 +17,9 @@ export type ReactionType =
   | "SKULL"
   | "PARTY_POPPER"
   | "GOAT";
+
+export interface ReactionData {
+  reaction: ReactionType;
+  x: number;
+  y: number;
+}

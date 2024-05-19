@@ -58,7 +58,7 @@ export function chooseActionSocket(
             return;
           }
           roundTerminator(tournament, io);
-          roundInitialisor(tournament, io);
+          void roundInitialisor(tournament, io);
         }, 8000);
       }
     }

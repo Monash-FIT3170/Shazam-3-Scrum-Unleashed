@@ -8,6 +8,7 @@ import DuelOutcome from "../components/duel/DuelOutcome.tsx";
 import PlayerAndSpectatorsInfo from "../components/PlayerAndSpectatorsInfo.tsx";
 import MatchOutcomeScreen from "../components/MatchOutcomeScreen.tsx";
 import TournamentWin from "../components/TournamentWin.tsx";
+import ReactionOverlay from "../components/reactions/ReactionsOverlay.tsx";
 
 // import ChoosePlayerMove from "../components/ChoosePlayerMove";
 // import CountDownTimer from "../components/CountDownTimer";
@@ -31,27 +32,51 @@ const PlayerScreen = () => {
   const [tournamentWinner, setTournamentWinner] = useState<
     string | undefined
   >();
+  const [isSpectator, setIsSpectator] = useState(false);
 
   function setPlayers(players: PlayerAttributes[]) {
     for (const player of players) {
-      if (player.userID === socket.userID) {
-        setUserPlayer(player);
-      } else {
-        setOpponent(player);
+      let canSetPlayer = true;
+      for (const spectatingID of player.spectatorIDs) {
+        if (socket.userID === spectatingID) {
+          setUserPlayer(player);
+          canSetPlayer = false;
+          break;
+        }
+      }
+
+      if (canSetPlayer) {
+        if (player.userID === socket.userID) {
+          setUserPlayer(player);
+        } else {
+          setOpponent(player);
+        }
       }
     }
+  }
+
+  function getIsSpectator(players: PlayerAttributes[]) {
+    for (const player of players) {
+      if (player.userID === socket.userID) {
+        return false;
+      }
+    }
+    return true;
   }
 
   useEffect(() => {
     socket.on("MATCH_STARTED", (players) => {
       setPlayers(players);
+      setIsSpectator(getIsSpectator(players));
     });
 
     socket.on("MATCH_INFO", (players, winnerUserID) => {
+      console.log(players);
       setPlayers(players);
       setDuelComplete(true);
+      setIsSpectator(getIsSpectator(players));
 
-      console.log(winnerUserID, "weewrew");
+      console.log("is spectator ", getIsSpectator(players));
 
       if (winnerUserID) {
         setMatchComplete(true);
@@ -93,24 +118,34 @@ const PlayerScreen = () => {
     }, 4000);
   } else if (tournamentWinner !== undefined) {
     content = <TournamentWin playerName={tournamentWinner} />;
+  } else if (isSpectator) {
+    content = <></>;
   } else {
     content = <ChoosePlayerMove tournamentCode={tournamentCode} />;
   }
 
   return (
-    <div className="overflow-hidden h-screen relative">
-      <div className="pt-12">
-        <div className="flex flex-col items-center justify-center mt-10">
-          {userPlayer !== undefined && opponent !== undefined && (
-            <PlayerAndSpectatorsInfo
-              userPlayer={userPlayer}
-              opponent={opponent}
-            />
-          )}
-          {content}
+    <>
+      {
+        <ReactionOverlay
+          gameCode={tournamentCode}
+          spectatingID={isSpectator ? userPlayer!.userID : null}
+        />
+      }
+      <div className="overflow-hidden h-screen relative">
+        <div className="pt-12">
+          <div className="flex flex-col items-center justify-center mt-10">
+            {userPlayer !== undefined && opponent !== undefined && (
+              <PlayerAndSpectatorsInfo
+                userPlayer={userPlayer}
+                opponent={opponent}
+              />
+            )}
+            {content}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
