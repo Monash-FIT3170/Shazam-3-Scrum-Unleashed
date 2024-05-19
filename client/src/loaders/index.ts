@@ -15,7 +15,7 @@ export const joinGameLoader = async ({ request }: LoaderProps) => {
   const url = new URL(request.url);
 
   // TODO - Verify game code is of valid format
-  const gameCode = url.searchParams.get("gameCode");
+  const gameCode = url.searchParams.get("tournamentCode");
   if (!gameCode) {
     return "";
   }

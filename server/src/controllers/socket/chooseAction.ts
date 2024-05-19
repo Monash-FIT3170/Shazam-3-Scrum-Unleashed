@@ -41,8 +41,6 @@ export function chooseActionSocket(
       matchWinnerUserID,
     );
 
-    io.to(tournament.hostUID).emit("PLAYERS_UPDATE", tournament.players);
-
     match.resetActions();
 
     if (matchWinnerUserID !== undefined) {
@@ -58,6 +56,7 @@ export function chooseActionSocket(
             return;
           }
           roundTerminator(tournament, io);
+          io.to(tournament.hostUID).emit("PLAYERS_UPDATE", tournament.players);
           void roundInitialisor(tournament, io);
         }, 8000);
       }

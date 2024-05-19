@@ -32,7 +32,7 @@ export function DisplayReaction({
             width: `${reactionSize}px`,
           }}
         >
-          <img src={value} alt="Reaction" />
+          <img src={value} alt="Reaction" className="pointer-events-none" />
         </motion.span>
       )}
     </AnimatePresence>
