@@ -1,6 +1,7 @@
 import { roundInitialisor } from "src/controllers/helper/roundHelper";
 import Tournament from "src/model/tournament";
 import { Server, Socket } from "socket.io";
+import { duelStuff } from "./chooseAction";
 
 export function startTournamentSocket(
   socket: Socket,
@@ -22,4 +23,8 @@ export function startTournamentSocket(
   }
 
   void roundInitialisor(tournament, io);
+
+  for (const match of tournament.matches) {
+    match.startTimeout(duelStuff(tournament, io));
+  }
 }

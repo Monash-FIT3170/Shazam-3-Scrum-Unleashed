@@ -6,32 +6,10 @@ import {
   roundTerminator,
 } from "src/controllers/helper/roundHelper";
 import { tournamentMap } from "src/store";
+import { Match } from "../../model/match";
 
-export function chooseActionSocket(
-  playerUserID: string,
-  action: Action,
-  tournament: Tournament | undefined,
-  io: Server,
-) {
-  if (!tournament) {
-    console.error("No tournament found");
-    return;
-  }
-
-  const match = tournament.getMatch(playerUserID);
-
-  if (!match) {
-    console.error("Match not found" + " " + playerUserID);
-    return;
-  }
-
-  for (const player of match.players) {
-    if (player.userID === playerUserID) {
-      player.actionChoice = action;
-    }
-  }
-
-  if (match.isDuelComplete()) {
+export const duelStuff =
+  (tournament: Tournament, io: Server) => (match: Match) => {
     match.playDuel();
 
     const matchWinner = match.getMatchWinner();
@@ -59,8 +37,44 @@ export function chooseActionSocket(
           roundTerminator(tournament, io);
           io.to(tournament.hostUID).emit("PLAYERS_UPDATE", tournament.players);
           void roundInitialisor(tournament, io);
+          for (const match of tournament.matches) {
+            match.startTimeout(duelStuff(tournament, io));
+          }
         }, 8000);
       }
+    } else {
+      match.startTimeout(duelStuff(tournament, io));
     }
+  };
+
+export function chooseActionSocket(
+  playerUserID: string,
+  action: Action,
+  tournament: Tournament | undefined,
+  io: Server,
+) {
+  if (!tournament) {
+    console.error("No tournament found");
+    return;
+  }
+
+  const match = tournament.getMatch(playerUserID);
+
+  if (!match) {
+    console.error("Match not found" + " " + playerUserID);
+    return;
+  }
+
+  for (const player of match.players) {
+    if (player.userID === playerUserID) {
+      player.actionChoice = action;
+    }
+  }
+
+  if (match.isDuelComplete()) {
+    if (match.timeOutHandler) {
+      clearTimeout(match.timeOutHandler);
+    }
+    duelStuff(tournament, io)(match);
   }
 }

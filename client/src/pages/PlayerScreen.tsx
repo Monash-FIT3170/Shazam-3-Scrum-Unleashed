@@ -96,7 +96,11 @@ const PlayerScreen = () => {
   }, []);
 
   let content = null;
-  if (userPlayer === undefined || opponent === undefined) {
+
+  if (tournamentWinner !== undefined) {
+    content = <TournamentWin playerName={tournamentWinner} />;
+  }
+  else if (userPlayer === undefined || opponent === undefined) {
     content = (
       <WaitingToStart tournamentCode={tournamentCode} playerName={playerName} />
     );
@@ -115,9 +119,8 @@ const PlayerScreen = () => {
     );
     setTimeout(() => {
       setMatchComplete(false);
+      setOpponent(undefined);
     }, 4000);
-  } else if (tournamentWinner !== undefined) {
-    content = <TournamentWin playerName={tournamentWinner} />;
   } else if (isSpectator) {
     content = <></>;
   } else {
