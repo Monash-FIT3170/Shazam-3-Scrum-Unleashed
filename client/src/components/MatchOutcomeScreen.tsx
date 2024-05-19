@@ -3,15 +3,15 @@ import cross from "../assets/Cross.svg";
 import { PlayerAttributes } from "../../../types/types";
 
 type MatchOutcomeScreenProps = {
-  player: PlayerAttributes
-  opponent: PlayerAttributes
-  isWin: boolean
+  player: PlayerAttributes;
+  opponent: PlayerAttributes;
+  isWin: boolean;
 };
 
 const MatchOutcomeScreen = ({
   player,
   opponent,
-  isWin
+  isWin,
 }: MatchOutcomeScreenProps) => {
   return (
     <div>
@@ -34,7 +34,9 @@ const MatchOutcomeScreen = ({
         <h1>
           <span className={isWin ? "text-[#65DB71]" : ""}>{player.score}</span>
           {" - "}
-          <span className={isWin ? "" : "text-[#FF5959]"}>{opponent.score}</span>
+          <span className={isWin ? "" : "text-[#FF5959]"}>
+            {opponent.score}
+          </span>
         </h1>
       </div>
 

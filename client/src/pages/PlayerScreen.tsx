@@ -24,7 +24,9 @@ const PlayerScreen = () => {
   const [opponent, setOpponent] = useState<PlayerAttributes>();
   const [duelComplete, setDuelComplete] = useState(false);
   const [matchComplete, setMatchComplete] = useState(false);
-  const [winnerUserID, setWinnerUserID] = useState<string|undefined>(undefined);
+  const [winnerUserID, setWinnerUserID] = useState<string | undefined>(
+    undefined,
+  );
 
   function setPlayers(players: PlayerAttributes[]) {
     for (const player of players) {
@@ -45,7 +47,7 @@ const PlayerScreen = () => {
       setPlayers(players);
       setDuelComplete(true);
 
-      console.log(winnerUserID, "weewrew")
+      console.log(winnerUserID, "weewrew");
 
       if (winnerUserID) {
         setMatchComplete(true);
@@ -66,18 +68,23 @@ const PlayerScreen = () => {
       <WaitingToStart tournamentCode={tournamentCode} playerName={playerName} />
     );
   } else if (duelComplete) {
-    content = (<DuelOutcome userPlayer={userPlayer} opponent={opponent} />);
+    content = <DuelOutcome userPlayer={userPlayer} opponent={opponent} />;
     setTimeout(() => {
       setDuelComplete(false);
     }, 3000);
-
   } else if (matchComplete) {
-    content = (<MatchOutcomeScreen player={userPlayer} opponent={opponent} isWin={winnerUserID === userPlayer.userID}/>)
+    content = (
+      <MatchOutcomeScreen
+        player={userPlayer}
+        opponent={opponent}
+        isWin={winnerUserID === userPlayer.userID}
+      />
+    );
     setTimeout(() => {
       setMatchComplete(false);
     }, 4000);
   } else {
-    content = (<ChoosePlayerMove tournamentCode={tournamentCode} />);
+    content = <ChoosePlayerMove tournamentCode={tournamentCode} />;
   }
 
   return (
