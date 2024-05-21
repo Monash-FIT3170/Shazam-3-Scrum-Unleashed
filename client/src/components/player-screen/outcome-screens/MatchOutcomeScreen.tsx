@@ -1,5 +1,5 @@
-import plainTrophy from "../../../assets/PlainTrophy.svg";
-import cross from "../../../assets/Cross.svg";
+import plainTrophy from "../../../assets/trophies/PlainTrophy.svg";
+import cross from "../../../assets/misc/Cross.svg";
 import { PlayerAttributes } from "../../../../../types/types.ts";
 
 type MatchOutcomeScreenProps = {

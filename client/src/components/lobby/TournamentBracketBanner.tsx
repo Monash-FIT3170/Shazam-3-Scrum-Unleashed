@@ -1,4 +1,4 @@
-import rockPaperShazam from "../../assets/RockPaperShazam.svg";
+import rockPaperShazam from "../../assets/logo/RockPaperShazam.svg";
 
 const TournamentBracketBanner = () => {
   return (

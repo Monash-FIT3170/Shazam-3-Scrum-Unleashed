@@ -2,7 +2,7 @@
 // Not entirely sure how this timer will integrate with the game logic at the moment.
 
 import { useState, useEffect } from "react";
-import Timer from "../../assets/ChooseMove/Timer.svg";
+import Timer from "../../assets/choose-move/Timer.svg";
 
 const CountDownTimer = () => {
   const [countdown, setCountdown] = useState(10);

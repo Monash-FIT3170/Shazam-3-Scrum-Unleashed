@@ -1,6 +1,6 @@
 import DisplayLogo from "../../DisplayLogo.tsx";
-import goldenWinnerCup from "../../../assets/GoldenWinnerCup.svg";
-import star from "../../../assets/PlainStar.svg";
+import goldenWinnerCup from "../../../assets/trophies/GoldenWinnerCup.svg";
+import star from "../../../assets/misc/PlainStar.svg";
 import {useNavigate} from "react-router-dom";
 import {BASE_PATH} from "../../../pages/pagePaths.ts";
 

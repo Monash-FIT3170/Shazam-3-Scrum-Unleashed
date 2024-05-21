@@ -1,4 +1,4 @@
-import loading from "../../../assets/Loading.svg";
+import loading from "../../../assets/misc/Loading.svg";
 
 type LoadingEffectProps = {
   isOpponent: boolean;
