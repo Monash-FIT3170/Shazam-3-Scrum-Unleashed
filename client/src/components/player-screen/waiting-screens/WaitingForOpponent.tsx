@@ -6,10 +6,9 @@ type WaitingForOpponentProps = {
   moveAction: NonNullable<Action>;
 };
 
-const WaitingForOpponent = ({moveAction}: WaitingForOpponentProps) => {
+const WaitingForOpponent = ({ moveAction }: WaitingForOpponentProps) => {
   return (
     <div>
-
       <LoadingEffect isOpponent={true} />
 
       <div className="text-white font-bold text-4xl md:text-6xl fixed top-[45%] mx-auto max-w-max inset-x-0">

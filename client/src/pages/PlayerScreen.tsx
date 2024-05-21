@@ -102,7 +102,10 @@ const PlayerScreen = () => {
     content = <TournamentWin playerName={tournamentWinner} />;
   } else if (userPlayer === undefined || opponent === undefined) {
     content = (
-      <WaitingForMatchStart tournamentCode={tournamentCode} playerName={playerName} />
+      <WaitingForMatchStart
+        tournamentCode={tournamentCode}
+        playerName={playerName}
+      />
     );
   } else if (duelComplete) {
     content = <DuelOutcome userPlayer={userPlayer} opponent={opponent} />;
@@ -143,7 +146,7 @@ const PlayerScreen = () => {
                 userPlayer={userPlayer}
                 opponent={opponent}
               />
-                // TODO probably only want to display during a match and not after a match
+              // TODO probably only want to display during a match and not after a match
             )}
             {content}
           </div>
