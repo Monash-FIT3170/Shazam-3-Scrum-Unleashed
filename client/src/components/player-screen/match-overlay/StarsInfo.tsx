@@ -1,5 +1,5 @@
-import filledStar from "../assets/FilledStar.svg";
-import unfilledStar from "../assets/UnfilledStar.svg";
+import filledStar from "../../../assets/FilledStar.svg";
+import unfilledStar from "../../../assets/UnfilledStar.svg";
 
 type StarsInfoProps = {
   playerName: string;

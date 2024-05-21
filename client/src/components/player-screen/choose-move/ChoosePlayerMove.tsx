@@ -1,11 +1,11 @@
 import { useState } from "react";
-import RockOption from "../assets/ChooseMove/RockOption.svg";
-import PaperOption from "../assets/ChooseMove/PaperOption.svg";
-import ScissorsOption from "../assets/ChooseMove/ScissorOption.svg";
-import { Action } from "../../../types/types";
-import MoveSelection from "./MoveSelection";
-import { socket } from "../App.tsx";
-import WaitingForOpponent from "./WaitingForOpponent.tsx";
+import RockOption from "../../../assets/ChooseMove/RockOption.svg";
+import PaperOption from "../../../assets/ChooseMove/PaperOption.svg";
+import ScissorsOption from "../../../assets/ChooseMove/ScissorOption.svg";
+import { Action } from "../../../../../types/types.ts";
+import MoveSelection from "./MoveSelection.tsx";
+import { socket } from "../../../App.tsx";
+import WaitingForOpponent from "../waiting-screens/WaitingForOpponent.tsx";
 
 interface ChoosePlayerMoveProps {
   tournamentCode: string;

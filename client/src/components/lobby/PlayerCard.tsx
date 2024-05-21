@@ -1,5 +1,5 @@
-import { PlayerAttributes } from "../../../types/types";
-import cross from "../assets/semitransparent-cross.svg";
+import { PlayerAttributes } from "../../../../types/types.ts";
+import cross from "../../assets/semitransparent-cross.svg";
 
 interface PlayerCardProps {
   player: PlayerAttributes;

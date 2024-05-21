@@ -1,9 +1,11 @@
-import loading from "../assets/Loading.svg";
+import loading from "../../../assets/Loading.svg";
 
 type LoadingEffectProps = {
   isOpponent: boolean;
 };
 
+// fixme, component is can only be placed in two spots, however these will not always be free
+//  probably just get rid of the positioning in here and allow the calling component to manage that.
 const LoadingEffect = ({ isOpponent }: LoadingEffectProps) => {
   return (
     <div

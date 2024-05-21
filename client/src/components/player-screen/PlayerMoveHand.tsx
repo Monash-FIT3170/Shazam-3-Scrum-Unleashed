@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Action } from "../../../types/types";
-import { HandImgType } from "../types";
+import { Action } from "../../../../types/types.ts";
+import { HandImgType } from "../../types";
 
 type PlayerMoveHandProps = {
   playerMove: NonNullable<Action>;

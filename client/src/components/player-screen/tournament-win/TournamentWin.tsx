@@ -1,12 +1,16 @@
-import DisplayLogo from "../components/DisplayLogo";
-import goldenWinnerCup from "../assets/GoldenWinnerCup.svg";
-import star from "../assets/PlainStar.svg";
+import DisplayLogo from "../../DisplayLogo.tsx";
+import goldenWinnerCup from "../../../assets/GoldenWinnerCup.svg";
+import star from "../../../assets/PlainStar.svg";
+import {useNavigate} from "react-router-dom";
+import {BASE_PATH} from "../../../pages/pagePaths.ts";
 
 interface TournamentWinScreenProps {
   playerName: string;
 }
 
 const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
+
+    const navigate = useNavigate()
   return (
     <div>
       <div className="h-60">
@@ -29,9 +33,9 @@ const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
         <img src={star} alt="goldenWinnerCup" className="md:w-60 hidden  md:visible" />
       </div>
       <div className="absolute inset-x-0 bottom-10">
-        {/* <button className="text-white bg-primary text-3xl w-80 md:w-96 lg:w-122 font-bold rounded-xl h-full border-white">
-          {"Host Another"}
-        </button> */}
+          <button className="text-white bg-primary text-3xl w-80 md:w-96 lg:w-122 font-bold rounded-xl h-full border-white" onClick={()=>navigate(BASE_PATH)}>
+          Home Screen
+        </button>
       </div>
     </div>
   );
