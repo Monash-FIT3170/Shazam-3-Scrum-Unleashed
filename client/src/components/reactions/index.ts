@@ -1,8 +1,8 @@
-import Heart from "../../assets/Reactions/Heart.svg";
-import Skull from "../../assets/Reactions/Skull.svg";
-import PartyPopper from "../../assets/Reactions/PartyPopper.svg";
-import Goat from "../../assets/Reactions/Goat.svg";
-import Laughing from "../../assets/Reactions/Laughing.svg";
+import Heart from "../../assets/reactions/Heart.svg";
+import Skull from "../../assets/reactions/Skull.svg";
+import PartyPopper from "../../assets/reactions/PartyPopper.svg";
+import Goat from "../../assets/reactions/Goat.svg";
+import Laughing from "../../assets/reactions/Laughing.svg";
 import { ReactionType } from "../../../../types/types";
 
 export interface Reaction {

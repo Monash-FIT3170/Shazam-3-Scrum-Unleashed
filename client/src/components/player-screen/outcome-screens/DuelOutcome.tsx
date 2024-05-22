@@ -1,6 +1,6 @@
-import { Action, PlayerAttributes } from "../../../../types/types";
-import DuelOutcomeText from "./DuelOutcomeText";
-import { DuelResult, HandImgType } from "../../types";
+import { Action, PlayerAttributes } from "../../../../../types/types.ts";
+import DuelOutcomeText from "./DuelOutcomeText.tsx";
+import { DuelResult, HandImgType } from "../../../types";
 import PlayerMoveHand from "../PlayerMoveHand.tsx";
 
 interface PlayerProps {
@@ -41,12 +41,6 @@ const DuelOutcome = ({ userPlayer, opponent }: PlayerProps) => {
         isOpponent={false}
         handType={userPlayerHandType}
       />
-      {/*<div className="absolute -top-80 left-1/2 transform -translate-x-1/2 rotate-180">*/}
-      {/*    <PlayerHand playerMove={opponent.actionChoice} filledHand={!filledHand || duelResult === "DRAW"} />*/}
-      {/*</div>*/}
-      {/*<div className="absolute -bottom-80 left-1/2 transform -translate-x-1/2">*/}
-      {/*    <PlayerHand playerMove={userPlayer.actionChoice} filledHand={filledHand} />*/}
-      {/*</div>*/}
       <div className="absolute inset-0 flex items-center justify-center">
         <DuelOutcomeText
           duelResult={duelResult}

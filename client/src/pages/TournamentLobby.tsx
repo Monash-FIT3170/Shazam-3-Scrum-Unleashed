@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { PlayerAttributes } from "../../../types/types.ts";
 import { socket } from "../App.tsx";
 import { BASE_PATH, JOIN_GAME_PATH } from "./pagePaths.ts";
-import PlayerCard from "../components/PlayerCard.tsx";
+import PlayerCard from "../components/lobby/PlayerCard.tsx";
 import TournamentLobbyBanner from "../components/lobby/TournamentLobbyBanner.tsx";
 import TournamentBracketBanner from "../components/lobby/TournamentBracketBanner.tsx";
-import TournamentWin from "../components/TournamentWin.tsx";
+import TournamentWin from "../components/player-screen/tournament-win/TournamentWin.tsx";
 
 async function fetchQrCode(
   returnUrl: string,

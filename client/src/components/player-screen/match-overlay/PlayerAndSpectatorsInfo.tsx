@@ -1,7 +1,7 @@
-import PlayerName from "./PlayerNameMobile";
-import StarsInfo from "./StarsInfo";
-import SpectatorCount from "./SpectatorCount";
-import { PlayerAttributes } from "../../../types/types.ts";
+import PlayerName from "./PlayerNameMobile.tsx";
+import StarsInfo from "./StarsInfo.tsx";
+import SpectatorCount from "./SpectatorCount.tsx";
+import { PlayerAttributes } from "../../../../../types/types.ts";
 
 type PlayerAndSpectatorsInfoProps = {
   userPlayer: PlayerAttributes;
