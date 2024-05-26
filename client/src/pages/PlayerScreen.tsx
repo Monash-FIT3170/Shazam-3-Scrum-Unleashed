@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import WaitingToStart from "../components/WaitingToStart";
+import WaitingForMatchStart from "../components/player-screen/waiting-screens/WaitingForMatchStart.tsx";
 import { socket } from "../App";
 import { PlayerAttributes } from "../../../types/types.ts";
-import ChoosePlayerMove from "../components/ChoosePlayerMove.tsx";
+import ChoosePlayerMove from "../components/player-screen/choose-move/ChoosePlayerMove.tsx";
 import { useLoaderData } from "react-router-dom";
-import DuelOutcome from "../components/duel/DuelOutcome.tsx";
-import PlayerAndSpectatorsInfo from "../components/PlayerAndSpectatorsInfo.tsx";
-import MatchOutcomeScreen from "../components/MatchOutcomeScreen.tsx";
-import TournamentWin from "../components/TournamentWin.tsx";
+import DuelOutcome from "../components/player-screen/outcome-screens/DuelOutcome.tsx";
+import PlayerAndSpectatorsInfo from "../components/player-screen/match-overlay/PlayerAndSpectatorsInfo.tsx";
+import MatchOutcomeScreen from "../components/player-screen/outcome-screens/MatchOutcomeScreen.tsx";
+import TournamentWin from "../components/player-screen/tournament-win/TournamentWin.tsx";
 import ReactionOverlay from "../components/reactions/ReactionsOverlay.tsx";
 
 // import ChoosePlayerMove from "../components/ChoosePlayerMove";
@@ -97,11 +97,15 @@ const PlayerScreen = () => {
 
   let content = null;
 
+  // FIXME would like to make this simpler
   if (tournamentWinner !== undefined) {
     content = <TournamentWin playerName={tournamentWinner} />;
   } else if (userPlayer === undefined || opponent === undefined) {
     content = (
-      <WaitingToStart tournamentCode={tournamentCode} playerName={playerName} />
+      <WaitingForMatchStart
+        tournamentCode={tournamentCode}
+        playerName={playerName}
+      />
     );
   } else if (duelComplete) {
     content = <DuelOutcome userPlayer={userPlayer} opponent={opponent} />;
@@ -142,6 +146,7 @@ const PlayerScreen = () => {
                 userPlayer={userPlayer}
                 opponent={opponent}
               />
+              // TODO probably only want to display during a match and not after a match
             )}
             {content}
           </div>

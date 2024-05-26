@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Action } from "../../../types/types";
-import { HandImgType } from "../types";
+import { Action } from "../../../../types/types.ts";
+import { HandImgType } from "../../types";
 
 type PlayerMoveHandProps = {
   playerMove: NonNullable<Action>;
@@ -36,7 +36,7 @@ function PlayerMoveHand({
         }
       >
         <img
-          src={`/shazam-3-scrum-unleashed/src/assets/${handType.toLowerCase()}-${playerMove.toLowerCase()}.svg`}
+          src={`/shazam-3-scrum-unleashed/src/assets/actions/${handType.toLowerCase()}-${playerMove.toLowerCase()}.svg`}
           alt={playerMove.toLowerCase()}
         />
       </div>

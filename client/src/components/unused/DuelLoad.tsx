@@ -9,6 +9,7 @@ interface LoadProps {
   phase: number;
 }
 
+// FIXME probably can rewrite this in much simpler logic
 const DuelLoad = ({ phase }: LoadProps) => {
   if (window.innerHeight <= 800 && window.innerWidth <= 500) {
     if (phase === 0) {

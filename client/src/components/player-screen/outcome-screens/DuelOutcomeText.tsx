@@ -1,4 +1,4 @@
-import { DuelResult } from "../../types";
+import { DuelResult } from "../../../types";
 
 interface DuelOutcomeTextProps {
   duelResult: DuelResult;

@@ -60,8 +60,6 @@ const router = createBrowserRouter(
         element={<PlayerScreen />}
         loader={playerScreenLoader}
       />
-      {/* creating a route for the tournament screen */}
-      {/* <Route path={TOURNAMENT_SCREEN} element={<TournamentScreen />} /> */}
     </Route>,
   ),
 );
