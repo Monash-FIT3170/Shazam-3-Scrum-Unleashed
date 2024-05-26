@@ -1,8 +1,6 @@
+
 {
-  "devDependencies": {
-    "@playwright/test": "^1.44.1",
-    "@types/node": "^20.12.12",
-    "tsx": "^4.11.0"
-  },
-  "scripts": {}
+    "scripts": {
+        "start": "cd ./client && npm run dev & cd ./server && npm run dev"
+    }
 }

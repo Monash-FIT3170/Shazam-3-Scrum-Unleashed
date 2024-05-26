@@ -1,10 +1,8 @@
 import { test, expect, Browser, Page } from "@playwright/test";
 
-const baseURL = "http://localhost:5173/shazam-3-scrum-unleashed/";
-
 // Utility function to create a tournament and get the game code
 async function createTournament(page: Page) {
-  await page.goto(baseURL);
+  await page.goto("/");
   await page.getByText("CREATE GAME").click();
   await page.getByText("Create Tournament").click();
   const gameCode = await page.getByTestId("tournament-code").textContent();
@@ -56,7 +54,7 @@ async function joinGame(
   await new Promise((resolve) => setTimeout(resolve, 100 * index));
 
   const page = await browser.newPage();
-  await page.goto(baseURL);
+  await page.goto("/");
   await page.getByText("JOIN GAME").click();
 
   const randomName = generateUniqueName(existingNames);
@@ -68,21 +66,16 @@ async function joinGame(
   return page;
 }
 
-async function handleRound(page: Page) {
-  // TODO - Fix this error catching rubbish
-  let round = 0;
+async function autoClickMoves(page: Page) {
   while (true) {
-    round++;
-
+    const move = ["rock", "paper", "scissors"][Math.floor(Math.random() * 3)];
     try {
-      const move = ["rock", "paper", "scissors"][Math.floor(Math.random() * 3)];
-      const moveButton = await page.waitForSelector(`[data-testid="${move}"]`, {
-        timeout: 1000,
-      });
-      if (moveButton) {
-        await moveButton.click();
-      }
-    } catch {}
+      const optionButton = page.getByTestId(move);
+      await optionButton.waitFor({ timeout: 0 });
+      await optionButton.click();
+    } catch {
+      break;
+    }
   }
 }
 
@@ -94,26 +87,25 @@ test.describe("Tournament Game Automation", () => {
 
     const existingNames = new Set<string>();
     const joinPromises: Promise<Page>[] = [];
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 10; i++) {
       joinPromises.push(
         joinGame(gameCode as string, browser, existingNames, i + 1)
       );
     }
 
     const playerPages = await Promise.all(joinPromises);
+    await expect(hostPage.getByTestId("lobby-player-item")).toHaveCount(
+      playerPages.length
+    );
 
-    await expect(hostPage.getByTestId("lobby-player-item")).toHaveCount(playerPages.length);
     await hostPage.getByText("Start Tournament").click();
 
-    const playerRoundPromises: Promise<void>[] = [];
     for (let context of playerPages) {
-      playerRoundPromises.push(handleRound(context));
+      autoClickMoves(context);
     }
 
-    await Promise.all(playerRoundPromises);
-
-    for (const page of playerPages) {
-      expect(page.locator("Winner").first()).toBeVisible();
-    }
+    await Promise.all(
+      playerPages.map((page) => page.getByText("Winner").waitFor())
+    );
   });
 });

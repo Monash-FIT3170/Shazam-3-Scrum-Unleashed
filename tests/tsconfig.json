@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["./**/*.ts", "./**/*.js"],
+  "exclude": ["node_modules/**/*"]
+}
