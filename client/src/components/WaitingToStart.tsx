@@ -34,11 +34,7 @@ const WaitingToStart = ({
           <p className="text-white md:text-lg text-sm font-bold mb-2">
             TOURNAMENT CODE:
           </p>
-          <p
-            className="text-white md:text-3xl font-bold"
-          >
-            {tournamentCode}
-          </p>
+          <p className="text-white md:text-3xl font-bold">{tournamentCode}</p>
         </div>
       </div>
     </>
