@@ -10,11 +10,11 @@ import TournamentWin from "../components/TournamentWin.tsx";
 
 async function fetchQrCode(
   returnUrl: string,
-  setQrCode: (qrCode: string) => void,
+  setQrCode: (qrCode: string) => void
 ) {
   const qrcode = await fetch(
     // TODO: Make this an environment variable
-    "http://localhost:3010/qr-code/" + encodeURIComponent(returnUrl),
+    "http://localhost:3010/qr-code/" + encodeURIComponent(returnUrl)
   );
   const qrCode = await qrcode.json();
   setQrCode(qrCode.qrCode);
@@ -26,16 +26,16 @@ const TournamentLobby = () => {
   const [qrCode, setQrCode] = useState("");
   const [tournamentStarted, setTournamentStarted] = useState(false);
   const [tournamentWinner, setTournamentWinner] = useState<string | undefined>(
-    undefined,
+    undefined
   );
 
   useEffect(
     () =>
       void fetchQrCode(
         `${window.location.origin}/${BASE_PATH}/${JOIN_GAME_PATH}?tournamentCode=${tournamentCode}`,
-        setQrCode,
+        setQrCode
       ),
-    [],
+    []
   );
 
   const startTournament = () => {
@@ -90,7 +90,7 @@ const TournamentLobby = () => {
             )}
           </div>
 
-          <div className="player-list">
+          <div className="player-list" data-testid="player-list">
             {players.map((player, index) => (
               <PlayerCard key={player.userID} player={player} cardNum={index} />
             ))}

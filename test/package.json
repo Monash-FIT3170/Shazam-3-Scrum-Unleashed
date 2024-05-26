@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "puppeteer": "^22.10.0",
+    "typescript": "^5.4.5"
+  },
+  "scripts": {
+    "cy:open": "cypress open"
+  },
+  "type": "module"
+}

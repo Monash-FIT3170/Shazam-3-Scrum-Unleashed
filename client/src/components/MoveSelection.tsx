@@ -16,6 +16,7 @@ const MoveSelection: React.FC<MoveSelectionProps> = ({
     <button
       onClick={() => onSelectMove(selection)}
       className="w-1/5 focus:outline-none mr-5"
+      data-testid={selection?.toLocaleLowerCase()}
     >
       <img src={img} alt={img} className="w-full" />
     </button>
