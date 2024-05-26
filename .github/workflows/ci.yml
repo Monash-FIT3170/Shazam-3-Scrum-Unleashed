@@ -55,7 +55,7 @@ jobs:
       - name: Install Playwright Browsers
         run: |
           cd tests
-          npx playwright install --with-deps
+          npx playwright install chromium
 
       - name: Run Playwright tests
         run: |
