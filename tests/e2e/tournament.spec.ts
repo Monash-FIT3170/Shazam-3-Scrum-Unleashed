@@ -39,7 +39,10 @@ function generateUniqueName(existingNames: Set<string>) {
   do {
     name =
       adjectives[Math.floor(Math.random() * adjectives.length)] +
-      nouns[Math.floor(Math.random() * nouns.length)];
+      " " +
+      nouns[Math.floor(Math.random() * nouns.length)] +
+      " " +
+      String(Math.floor(Math.random() * 1000));
   } while (existingNames.has(name));
   existingNames.add(name);
   return name;
@@ -62,6 +65,8 @@ async function joinGame(
 
   await page.getByTestId("tournament-code-input").fill(gameCode);
   await page.getByText("Join Room").click();
+
+  await expect(page).toHaveURL(/player-screen/);
 
   return page;
 }
