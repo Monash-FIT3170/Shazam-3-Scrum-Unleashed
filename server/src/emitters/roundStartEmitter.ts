@@ -12,7 +12,7 @@ export async function roundStartEmitter(tournament: Tournament, io: Server) {
       const socketSetID = io.sockets.adapter.rooms.get(player.userID);
       if (socketSetID === undefined || socketSetID.size !== 1) {
         // throw new Error("We fucked up");
-        continue
+        continue;
       }
 
       const playerSocketID = Array.from(socketSetID)[0];
