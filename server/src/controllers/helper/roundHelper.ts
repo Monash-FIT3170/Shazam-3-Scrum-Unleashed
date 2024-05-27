@@ -26,7 +26,8 @@ export async function roundInitialisor(tournament: Tournament, io: Server) {
             spectatorPlayer.userID,
           );
           if (socketSetID === undefined || socketSetID.size !== 1) {
-            throw new Error("We fucked up");
+            // throw new Error("We fucked up");
+            continue
           }
 
           const playerSocketID = Array.from(socketSetID)[0];

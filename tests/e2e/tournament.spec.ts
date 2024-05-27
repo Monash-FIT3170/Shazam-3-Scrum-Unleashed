@@ -1,5 +1,7 @@
 import { test, expect, Browser, Page } from "@playwright/test";
 
+type AdverseUserInteraction = "refresh" | "leave" | "slow";
+
 // Utility function to create a tournament and get the game code
 async function createTournament(page: Page) {
   await page.goto("/");
@@ -71,16 +73,32 @@ async function joinGame(
   return page;
 }
 
-async function autoClickMoves(page: Page) {
+async function autoClickMoves(
+  page: Page,
+  adverseUserInteraction: AdverseUserInteraction = null
+) {
+  let i = 1;
   while (true) {
+    if (adverseUserInteraction === "refresh" && i % 10 === 0) {
+      await page.reload();
+    } else if (adverseUserInteraction === "leave" && i % 10 === 0) {
+      page.close();
+      return;
+    } else if (adverseUserInteraction === "slow" && i % 10 === 0) {
+      await new Promise((resolve) => setTimeout(resolve, 15000));
+    }
+
     const move = ["rock", "paper", "scissors"][Math.floor(Math.random() * 3)];
     try {
       const optionButton = page.getByTestId(move);
-      await optionButton.waitFor({ timeout: 0 });
-      await optionButton.click();
+      await optionButton.click({ timeout: 0 });
+      i++;
     } catch {
+      // If error is thrown, stop making moves
       break;
     }
+    // Make sure the buttons disspear after you click them
+    expect(page.getByTestId(move)).toBeHidden();
   }
 }
 
@@ -106,12 +124,34 @@ test.describe("Tournament Game Automation", () => {
 
     await hostPage.getByText("Start Tournament").click();
 
-    for (let context of playerPages) {
-      autoClickMoves(context);
+    for (let [i, context] of playerPages.entries()) {
+      let userInteraction: AdverseUserInteraction = null;
+
+      if (i % 10 === 0) {
+        userInteraction = "slow";
+      }
+
+      if ((i + 1) % 10 === 0) {
+        userInteraction = "leave";
+      }
+
+      if ((i + 2) % 10 === 0) {
+        userInteraction = "refresh";
+      }
+
+      autoClickMoves(context, userInteraction);
     }
 
     await Promise.all(
-      playerPages.map((page) => page.getByText("Winner").waitFor())
+      playerPages.map(
+        (page) =>
+          new Promise<void>(async (resolve) => {
+            try {
+              await page.getByText("Winner").waitFor({ timeout: 0 });
+            } catch (error) {}
+            resolve();
+          })
+      )
     );
   });
 });

@@ -6,6 +6,10 @@
   },
   "scripts": {
     "start": "cd ../ && npm run start",
-    "test": "npx playwright test"
+    "test": "npx playwright test",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "prettier": "^3.2.5"
   }
 }
