@@ -1,0 +1,7 @@
+
+{
+    "scripts": {
+        "start": "cd ./client && npm run dev & cd ./server && npm run dev",
+        "format": "cd ./client && npm run format && cd ../server && npm run format"
+    }
+}

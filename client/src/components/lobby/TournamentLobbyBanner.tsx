@@ -32,7 +32,10 @@ const TournamentLobbyBanner = ({
           <div className="text-white text-xl font-bold uppercase">
             Tournament Code
           </div>
-          <div className="text-red text-5xl font-bold uppercase ">
+          <div
+            className="text-red text-5xl font-bold uppercase "
+            data-testid="tournament-code"
+          >
             {tournamentCode}
           </div>
         </div>

@@ -15,7 +15,7 @@ const PlayerCard = (props: PlayerCardProps) => {
       ? props.player.name.substring(0, 5) + "..."
       : props.player.name;
   return (
-    <div className={`${cardName} relative`}>
+    <div className={`${cardName} relative`} data-testid="lobby-player-item">
       <div>
         {" "}
         {playerName}

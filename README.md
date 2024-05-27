@@ -44,3 +44,9 @@ Team Members:
 Remember to run the 2 following commands to ensure the code passes the automated linting test
 1. `npm run format`
 2. `npm run lint`
+
+# Testing
+
+To run E2E tests, run the following command in the test directory:
+
+`npm run test`

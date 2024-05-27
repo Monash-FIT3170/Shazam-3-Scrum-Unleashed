@@ -1,0 +1,15 @@
+{
+  "devDependencies": {
+    "@playwright/test": "^1.44.1",
+    "@types/node": "^20.12.12",
+    "tsx": "^4.11.0"
+  },
+  "scripts": {
+    "start": "cd ../ && npm run start",
+    "test": "npx playwright test",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "prettier": "^3.2.5"
+  }
+}

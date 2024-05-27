@@ -4,7 +4,7 @@
   "main": "src/server.ts",
   "type": "module",
   "scripts": {
-    "dev": "nodemon --exec npx tsx src/server.ts",
+    "dev": "npx tsx src/server.ts",
     "lint": "prettier --check . && npx eslint .",
     "format": "prettier --write ."
   },

@@ -90,7 +90,7 @@ const TournamentLobby = () => {
             )}
           </div>
 
-          <div className="player-list">
+          <div className="player-list" data-testid="player-list">
             {players.map((player, index) => (
               <PlayerCard key={player.userID} player={player} cardNum={index} />
             ))}

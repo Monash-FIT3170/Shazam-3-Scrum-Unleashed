@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "types": ["node"],
+    "target": "es6",
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext"
+  },
+  "include": ["./**/*.ts", "./**/*.js"],
+  "exclude": ["node_modules/**/*"]
+}

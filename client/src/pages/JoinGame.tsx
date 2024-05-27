@@ -62,6 +62,7 @@ const JoinGame = () => {
           <input
             type="text"
             placeholder="6 DIGIT ROOM CODE"
+            data-testid="tournament-code-input"
             className="bg-primary-dark text-white rounded-xl w-1/3 h-10 mt-4 border-2 border-white pl-2"
             value={tournamentCode}
             onChange={(event) => {
@@ -76,6 +77,7 @@ const JoinGame = () => {
           <input
             type="text"
             placeholder="NAME"
+            data-testid="player-name-input"
             className="bg-primary-dark text-white rounded-xl w-1/3 h-10 mt-4 border-2 border-white pl-2"
             onChange={(event) => {
               setPlayerName(event.target.value);
