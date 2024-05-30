@@ -8,11 +8,15 @@ export function sessionMiddleware(
   next: (err?: ExtendedError | undefined) => void,
 ) {
   const sessionID = socket.handshake.auth["sessionID"] as string;
+  const tournamentCode = socket.handshake.auth["tournamentCode"] as
+    | string
+    | undefined;
   if (sessionID) {
     const userID = sessionStorage.findSession(sessionID);
     if (userID) {
       socket.sessionID = sessionID;
       socket.userID = userID;
+      socket.tournamentCode = tournamentCode;
       next();
       return;
     }

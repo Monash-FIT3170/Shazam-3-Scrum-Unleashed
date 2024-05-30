@@ -65,15 +65,10 @@ const PlayerScreen = () => {
   }
 
   useEffect(() => {
-    socket.on("MATCH_STARTED", (players) => {
-      setPlayers(players);
-      setIsSpectator(getIsSpectator(players));
-    });
-
-    socket.on("MATCH_INFO", (players, winnerUserID) => {
+    socket.on("MATCH_INFO", (players, isDuelComplete, winnerUserID) => {
       console.log(players);
       setPlayers(players);
-      setDuelComplete(true);
+      setDuelComplete(isDuelComplete);
       setIsSpectator(getIsSpectator(players));
 
       console.log("is spectator ", getIsSpectator(players));
@@ -89,8 +84,6 @@ const PlayerScreen = () => {
     });
 
     return () => {
-      // Clean up socket event listener
-      socket.off("MATCH_STARTED");
       socket.off("MATCH_INFO");
     };
   }, []);
