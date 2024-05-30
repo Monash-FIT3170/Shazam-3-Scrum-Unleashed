@@ -2,7 +2,6 @@ import DisplayLogo from "../../DisplayLogo.tsx";
 import goldenWinnerCup from "../../../assets/trophies/GoldenWinnerCup.svg";
 import star from "../../../assets/misc/PlainStar.svg";
 import { useNavigate } from "react-router-dom";
-import { BASE_PATH } from "../../../pages/pagePaths.ts";
 
 interface TournamentWinScreenProps {
   playerName: string;
@@ -44,7 +43,7 @@ const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
       <div className="absolute inset-x-0 bottom-10">
         <button
           className="text-white bg-primary text-3xl w-80 md:w-96 lg:w-122 font-bold rounded-xl h-full border-white"
-          onClick={() => navigate(BASE_PATH)}
+          onClick={() => navigate("/")}
         >
           Home Screen
         </button>

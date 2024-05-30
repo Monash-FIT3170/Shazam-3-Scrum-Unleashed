@@ -2,7 +2,7 @@ import { useLoaderData } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { PlayerAttributes } from "../../../types/types.ts";
 import { socket } from "../App.tsx";
-import { BASE_PATH, JOIN_GAME_PATH } from "./pagePaths.ts";
+import { JOIN_GAME_PATH } from "./pagePaths.ts";
 import PlayerCard from "../components/lobby/PlayerCard.tsx";
 import TournamentLobbyBanner from "../components/lobby/TournamentLobbyBanner.tsx";
 import TournamentBracketBanner from "../components/lobby/TournamentBracketBanner.tsx";
@@ -32,8 +32,8 @@ const TournamentLobby = () => {
   useEffect(
     () =>
       void fetchQrCode(
-        `${window.location.origin}/${BASE_PATH}/${JOIN_GAME_PATH}?tournamentCode=${tournamentCode}`,
-        setQrCode
+        `${window.location.origin}/${JOIN_GAME_PATH}?tournamentCode=${tournamentCode}`,
+        setQrCode,
       ),
     []
   );

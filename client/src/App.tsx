@@ -10,7 +10,6 @@ import { io, Socket } from "socket.io-client";
 import { Events } from "../../types/socket/events.ts";
 import CreateTournament from "./pages/CreateTournament.tsx";
 import {
-  BASE_PATH,
   CREATE_TOURNAMENT_PATH,
   HOME_PATH,
   JOIN_GAME_PATH,
@@ -42,7 +41,7 @@ export const socket: Socket<Events> = io(import.meta.env.VITE_API_BASE_URL, {
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path={BASE_PATH}>
+    <Route path={"/"}>
       <Route path={HOME_PATH} element={<Home />} />
       <Route
         path={JOIN_GAME_PATH}
