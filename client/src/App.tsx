@@ -60,8 +60,8 @@ const router = createBrowserRouter(
         element={<PlayerScreen />}
         loader={playerScreenLoader}
       />
-    </Route>
-  )
+    </Route>,
+  ),
 );
 
 function App() {

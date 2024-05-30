@@ -2,7 +2,10 @@ import Tournament from "src/model/tournament";
 import { Server } from "socket.io";
 import { Events } from "../../../types/socket/events";
 
-export async function roundStartEmitter(tournament: Tournament, io: Server<Events>) {
+export async function roundStartEmitter(
+  tournament: Tournament,
+  io: Server<Events>,
+) {
   const matches = tournament.matches;
   for (const match of matches) {
     for (const player of match.players) {

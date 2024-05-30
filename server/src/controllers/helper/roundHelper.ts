@@ -5,7 +5,10 @@ import Tournament from "src/model/tournament";
 import { Server } from "socket.io";
 import { Events } from "../../../../types/socket/events";
 
-export async function roundInitialisor(tournament: Tournament, io: Server<Events>) {
+export async function roundInitialisor(
+  tournament: Tournament,
+  io: Server<Events>,
+) {
   const { matches, bots } = roundAllocator(tournament);
 
   tournament.players = [...tournament.players, ...bots];
