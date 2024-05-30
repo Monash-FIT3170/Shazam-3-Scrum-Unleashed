@@ -56,7 +56,6 @@ interface ServerToHostEvents {
 
 interface ServerToPlayerEvents {
   JOINED_GAME: (joinErrorCode: JoinErrorCode) => void;
-  // MATCH_STARTED: (players: PlayerAttributes[]) => void;
   MATCH_INFO: (
     players: PlayerAttributes[],
     isDuelComplete: boolean,

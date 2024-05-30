@@ -16,7 +16,7 @@ export function sessionMiddleware(
     if (userID) {
       socket.sessionID = sessionID;
       socket.userID = userID;
-      socket.data.tournamentCode = tournamentCode;
+      socket.tournamentCode = tournamentCode;
       next();
       return;
     }

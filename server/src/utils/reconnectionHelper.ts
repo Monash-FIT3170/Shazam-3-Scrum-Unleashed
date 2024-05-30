@@ -7,8 +7,8 @@ export async function reconnectionHandler(
   io: Server<Events>,
   tournamentMap: Map<string, Tournament>,
 ) {
-  if (socket.data.tournamentCode) {
-    const tournament = tournamentMap.get(socket.data.tournamentCode);
+  if (socket.tournamentCode) {
+    const tournament = tournamentMap.get(socket.tournamentCode);
     if (tournament === undefined) {
       return;
     }
