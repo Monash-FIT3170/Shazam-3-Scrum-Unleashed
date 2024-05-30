@@ -15,6 +15,7 @@ import { chooseActionSocket } from "src/controllers/socket/chooseAction";
 import { tournamentMap, sessionStorage } from "src/store";
 import { Action } from "../../types/types";
 import { addReactionSocket } from "./controllers/socket/addReaction";
+import { reconnectionHandler } from "./utils/reconnectionHelper";
 
 const app = express();
 
@@ -41,6 +42,7 @@ io.on("connection", async (socket) => {
   sessionStorage.saveSession(socket.sessionID, socket.userID);
   await socket.join(socket.userID);
   io.to(socket.userID).emit("SESSION_INFO", socket.sessionID, socket.userID);
+  await reconnectionHandler(socket, io, tournamentMap);
 
   socket.on(
     "CREATE_TOURNAMENT",

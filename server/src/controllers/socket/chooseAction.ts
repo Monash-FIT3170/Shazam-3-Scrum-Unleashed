@@ -7,9 +7,10 @@ import {
 } from "src/controllers/helper/roundHelper";
 import { tournamentMap } from "src/store";
 import { Match } from "../../model/match";
+import { Events } from "../../../../types/socket/events";
 
 export const duelStuff =
-  (tournament: Tournament, io: Server) => (match: Match) => {
+  (tournament: Tournament, io: Server<Events>) => (match: Match) => {
     match.playDuel();
 
     const matchWinner = match.getMatchWinner();
@@ -17,7 +18,8 @@ export const duelStuff =
     io.to(match.matchRoomID).emit(
       "MATCH_INFO",
       match.players,
-      matchWinnerUserID,
+      true,
+      matchWinnerUserID ?? null,
     );
 
     match.resetActions();
@@ -28,8 +30,7 @@ export const duelStuff =
           if (tournament.matches.length === 1) {
             io.to(match.matchRoomID)
               .to(tournament.hostUID)
-              .emit("TOURNAMENT_COMPLETE", matchWinner?.name);
-
+              .emit("TOURNAMENT_COMPLETE", matchWinner?.name ?? "");
             roundTerminator(tournament, io);
             tournamentMap.delete(tournament.hostUID);
             return;

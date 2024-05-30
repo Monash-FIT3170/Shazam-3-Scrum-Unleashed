@@ -40,7 +40,11 @@ interface PlayerToServerEvents {
     playerUserID: string,
     action: Action
   ) => void;
-  ADD_REACTION: (tournamentCode: string, reaction: ReactionData, spectatorID: string) => void;
+  ADD_REACTION: (
+    tournamentCode: string,
+    reaction: ReactionData,
+    spectatorID: string
+  ) => void;
 }
 
 interface ServerToHostEvents {
@@ -52,7 +56,11 @@ interface ServerToHostEvents {
 
 interface ServerToPlayerEvents {
   JOINED_GAME: (joinErrorCode: JoinErrorCode) => void;
-  MATCH_STARTED: (players: PlayerAttributes[]) => void;
-  MATCH_INFO: (players: PlayerAttributes[], winnerUserID: string | undefined) => void;
+  // MATCH_STARTED: (players: PlayerAttributes[]) => void;
+  MATCH_INFO: (
+    players: PlayerAttributes[],
+    isDuelComplete: boolean,
+    winnerUserID: string | null
+  ) => void;
   REACTION_ADDED: (reaction: ReactionData) => void;
 }
