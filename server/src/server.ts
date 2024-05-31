@@ -1,6 +1,10 @@
 import express from "express";
 import cors from "cors";
-import * as http from "http";
+import http from "http";
+import https from "https";
+import fs from "fs";
+import "dotenv/config";
+
 import { Server } from "socket.io";
 import { Events } from "../../types/socket/events";
 
@@ -85,6 +89,19 @@ io.on("connection", async (socket) => {
 
 app.get("/qr-code/:url", qrCode);
 
-server.listen(3010, () => {
-  console.log("SERVER IS RUNNING ON PORT 3010");
-});
+const isProduction = process.env["NODE_ENV"] === "production";
+const PORT = isProduction ? 443 : 3010;
+
+if (isProduction) {
+  const options = {
+    key: fs.readFileSync(process.env["SSL_KEY_PATH"] ?? ""),
+    cert: fs.readFileSync(process.env["SSL_CERT_PATH"] ?? ""),
+  };
+  https.createServer(options, app).listen(PORT, () => {
+    console.log(`Server running on https://localhost:${PORT}`);
+  });
+} else {
+  http.createServer(app).listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
