@@ -35,9 +35,12 @@ declare module "socket.io-client" {
 }
 
 // TODO: We need to make this an environment variable
-export const socket: Socket<Events> = io(import.meta.env.VITE_API_BASE_URL, {
-  autoConnect: false,
-});
+export const socket: Socket<Events> = io(
+  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3010",
+  {
+    autoConnect: false,
+  },
+);
 
 const router = createBrowserRouter(
   createRoutesFromElements(

@@ -14,7 +14,7 @@ async function fetchQrCode(
 ) {
   const qrcode = await fetch(
     // TODO: Make this an environment variable
-    `${import.meta.env.VITE_API_BASE_URL}/qr-code/${encodeURIComponent(returnUrl)}`,
+    `${import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3010"}/qr-code/${encodeURIComponent(returnUrl)}`,
   );
   const qrCode = await qrcode.json();
   setQrCode(qrCode.qrCode);
