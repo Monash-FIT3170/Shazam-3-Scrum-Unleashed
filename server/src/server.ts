@@ -98,10 +98,10 @@ if (isProduction) {
     cert: fs.readFileSync(process.env["SSL_CERT_PATH"] ?? ""),
   };
   https.createServer(options, app).listen(PORT, () => {
-    console.log(`Server running on https://localhost:${PORT}`);
+    console.log(`Server running on https://localhost:${String(PORT)}`);
   });
 } else {
   http.createServer(app).listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on http://localhost:${String(PORT)}`);
   });
 }
