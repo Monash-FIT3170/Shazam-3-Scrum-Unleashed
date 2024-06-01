@@ -26,7 +26,20 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const server = http.createServer(app);
+const isProduction = process.env["NODE_ENV"] === "production";
+const PORT = isProduction ? 443 : 3010;
+let server;
+
+if (isProduction) {
+  const options = {
+    key: fs.readFileSync(process.env["SSL_KEY_PATH"] ?? ""),
+    cert: fs.readFileSync(process.env["SSL_CERT_PATH"] ?? ""),
+  };
+  server = https.createServer(options, app);
+} else {
+  server = http.createServer(app);
+}
+
 const io = new Server<Events>(server, {
   cors: {
     origin: "*",
@@ -89,19 +102,6 @@ io.on("connection", async (socket) => {
 
 app.get("/qr-code/:url", qrCode);
 
-const isProduction = process.env["NODE_ENV"] === "production";
-const PORT = isProduction ? 443 : 3010;
-
-if (isProduction) {
-  const options = {
-    key: fs.readFileSync(process.env["SSL_KEY_PATH"] ?? ""),
-    cert: fs.readFileSync(process.env["SSL_CERT_PATH"] ?? ""),
-  };
-  https.createServer(options, app).listen(PORT, () => {
-    console.log(`Server running on https://localhost:${String(PORT)}`);
-  });
-} else {
-  http.createServer(app).listen(PORT, () => {
-    console.log(`Server running on http://localhost:${String(PORT)}`);
-  });
-}
+server.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${String(PORT)}`);
+});
