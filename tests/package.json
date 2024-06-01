@@ -7,7 +7,8 @@
   "scripts": {
     "start": "cd ../ && npm run start",
     "test": "npx playwright test",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "lint": "prettier --check ."
   },
   "dependencies": {
     "prettier": "^3.2.5"

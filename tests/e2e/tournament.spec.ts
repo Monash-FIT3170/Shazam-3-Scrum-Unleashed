@@ -68,7 +68,7 @@ async function joinGame(
   await page.getByTestId("tournament-code-input").fill(gameCode);
   await page.getByText("Join Room").click();
 
-  await expect(page).toHaveURL(/player-screen/);
+  await expect(page).toHaveURL(/player-screen/, { timeout: 30000 });
 
   return page;
 }
@@ -113,7 +113,7 @@ test.describe("Tournament Game Automation", () => {
     const numPlayers = process.env.CI ? 8 : 50;
     for (let i = 0; i < numPlayers; i++) {
       joinPromises.push(
-        joinGame(gameCode as string, browser, existingNames, i + 1)
+        joinGame(gameCode as string, browser, existingNames, i + 1),
       );
     }
 
@@ -150,8 +150,8 @@ test.describe("Tournament Game Automation", () => {
               await page.getByText("Winner").waitFor({ timeout: 0 });
             } catch (error) {}
             resolve();
-          })
-      )
+          }),
+      ),
     );
   });
 });
