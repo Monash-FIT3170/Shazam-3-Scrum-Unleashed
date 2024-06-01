@@ -10,11 +10,11 @@ import TournamentWin from "../components/player-screen/tournament-win/Tournament
 
 async function fetchQrCode(
   returnUrl: string,
-  setQrCode: (qrCode: string) => void
+  setQrCode: (qrCode: string) => void,
 ) {
   const qrcode = await fetch(
     // TODO: Make this an environment variable
-    `${import.meta.env.VITE_API_BASE_URL}/qr-code/${encodeURIComponent(returnUrl)}`
+    `${import.meta.env.VITE_API_BASE_URL}/qr-code/${encodeURIComponent(returnUrl)}`,
   );
   const qrCode = await qrcode.json();
   setQrCode(qrCode.qrCode);
@@ -26,7 +26,7 @@ const TournamentLobby = () => {
   const [qrCode, setQrCode] = useState("");
   const [tournamentStarted, setTournamentStarted] = useState(false);
   const [tournamentWinner, setTournamentWinner] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   useEffect(
@@ -35,7 +35,7 @@ const TournamentLobby = () => {
         `${window.location.origin}/${JOIN_GAME_PATH}?tournamentCode=${tournamentCode}`,
         setQrCode,
       ),
-    []
+    [],
   );
 
   const startTournament = () => {
