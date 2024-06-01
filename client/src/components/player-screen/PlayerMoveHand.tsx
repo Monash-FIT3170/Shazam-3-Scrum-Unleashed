@@ -36,7 +36,7 @@ function PlayerMoveHand({
         }
       >
         <img
-          src={`/src/assets/actions/${handType.toLowerCase()}-${playerMove.toLowerCase()}.svg`}
+          src={`/actions/${handType.toLowerCase()}-${playerMove.toLowerCase()}.svg`}
           alt={playerMove.toLowerCase()}
         />
       </div>
