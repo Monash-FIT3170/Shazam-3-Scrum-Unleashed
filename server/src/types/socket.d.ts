@@ -4,5 +4,6 @@ declare module "socket.io" {
   interface Socket {
     sessionID: string;
     userID: string;
+    tournamentCode: string | undefined;
   }
 }

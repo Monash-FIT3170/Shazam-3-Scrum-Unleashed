@@ -36,7 +36,7 @@ function PlayerMoveHand({
         }
       >
         <img
-          src={`/shazam-3-scrum-unleashed/src/assets/actions/${handType.toLowerCase()}-${playerMove.toLowerCase()}.svg`}
+          src={`/src/assets/actions/${handType.toLowerCase()}-${playerMove.toLowerCase()}.svg`}
           alt={playerMove.toLowerCase()}
         />
       </div>

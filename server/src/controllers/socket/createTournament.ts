@@ -1,5 +1,6 @@
 import Tournament from "src/model/tournament";
 import { Socket, Server } from "socket.io";
+import { Events } from "../../../../types/socket/events";
 
 export async function createTournamentSocket(
   socket: Socket,
@@ -7,7 +8,7 @@ export async function createTournamentSocket(
   duelTime: number,
   matchTime: number,
   tournamentMap: Map<string, Tournament>,
-  io: Server,
+  io: Server<Events>,
 ) {
   console.log(`Host : ${socket.userID} is creating a game`);
 

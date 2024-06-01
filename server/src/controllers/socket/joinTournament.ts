@@ -1,6 +1,7 @@
 import Player from "src/model/player";
 import Tournament from "src/model/tournament";
 import { Server, Socket } from "socket.io";
+import { Events } from "../../../../types/socket/events";
 
 export function joinTournamentSocket(
   socket: Socket,
@@ -8,7 +9,7 @@ export function joinTournamentSocket(
   playerName: string,
   tournamentMap: Map<string, Tournament>,
 
-  io: Server,
+  io: Server<Events>,
 ) {
   const tournament = tournamentMap.get(tournamentCode);
 

@@ -1,5 +1,4 @@
 import DisplayLogo from "../DisplayLogo.tsx";
-import { BASE_PATH } from "../../pages/pagePaths.ts";
 import lightning from "../../assets/logo/Lightning.svg";
 
 type TournamentLobbyBannerProps = {
@@ -22,8 +21,8 @@ const TournamentLobbyBanner = ({
           <div className="text-white text-2xl font-bold uppercase">
             JOIN THE TOURNAMENT AT
           </div>
-          <div className="text-red text-3xl font-bold uppercase ">
-            {BASE_PATH.substring(1, BASE_PATH.length - 1)}
+          <div className="text-red text-3xl font-bold uppercase">
+            {window.location.href}
           </div>
           {/*// todo fix*/}
         </div>

@@ -2,12 +2,13 @@ import { roundInitialisor } from "src/controllers/helper/roundHelper";
 import Tournament from "src/model/tournament";
 import { Server, Socket } from "socket.io";
 import { duelStuff } from "./chooseAction";
+import { Events } from "../../../../types/socket/events";
 
 export function startTournamentSocket(
   socket: Socket,
   tournamentCode: string,
   tournamentMap: Map<string, Tournament>,
-  io: Server,
+  io: Server<Events>,
 ) {
   const tournament = tournamentMap.get(tournamentCode);
 

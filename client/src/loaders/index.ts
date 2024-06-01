@@ -27,6 +27,7 @@ export const playerScreenLoader = async ({ request }: LoaderProps) => {
 
   const loadedPlayerName = url.searchParams.get("playerName");
   const loadedTournamentCode = url.searchParams.get("tournamentCode");
+  document.cookie = `tournamentCode=${loadedTournamentCode};`;
 
   return { loadedTournamentCode, loadedPlayerName };
 };

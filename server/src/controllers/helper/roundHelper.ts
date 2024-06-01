@@ -3,8 +3,12 @@ import { Match } from "src/model/match";
 import Player from "src/model/player";
 import Tournament from "src/model/tournament";
 import { Server } from "socket.io";
+import { Events } from "../../../../types/socket/events";
 
-export async function roundInitialisor(tournament: Tournament, io: Server) {
+export async function roundInitialisor(
+  tournament: Tournament,
+  io: Server<Events>,
+) {
   const { matches, bots } = roundAllocator(tournament);
 
   tournament.players = [...tournament.players, ...bots];
@@ -46,7 +50,7 @@ export async function roundInitialisor(tournament: Tournament, io: Server) {
   }
 }
 
-export function roundTerminator(tournament: Tournament, io: Server) {
+export function roundTerminator(tournament: Tournament, io: Server<Events>) {
   for (const match of tournament.matches) {
     handleSpectators(tournament, match);
     io.in(match.matchRoomID).socketsLeave(match.matchRoomID);

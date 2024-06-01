@@ -1,12 +1,13 @@
 import { Server } from "socket.io";
 import { ReactionData } from "../../../../types/types";
 import Tournament from "src/model/tournament";
+import { Events } from "../../../../types/socket/events";
 
 export function addReactionSocket(
   tournamentCode: string,
   reaction: ReactionData,
   spectatorID: string,
-  io: Server,
+  io: Server<Events>,
   tournamentMap: Map<string, Tournament>,
 ) {
   const match = tournamentMap.get(tournamentCode)?.getMatch(spectatorID);

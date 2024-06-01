@@ -1,6 +1,10 @@
 import express from "express";
 import cors from "cors";
-import * as http from "http";
+import http from "http";
+import https from "https";
+import fs from "fs";
+import "dotenv/config";
+
 import { Server } from "socket.io";
 import { Events } from "../../types/socket/events";
 
@@ -15,16 +19,30 @@ import { chooseActionSocket } from "src/controllers/socket/chooseAction";
 import { tournamentMap, sessionStorage } from "src/store";
 import { Action } from "../../types/types";
 import { addReactionSocket } from "./controllers/socket/addReaction";
+import { reconnectionHandler } from "./utils/reconnectionHelper";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-const server = http.createServer(app);
+const isProduction = process.env["NODE_ENV"] === "production";
+const PORT = isProduction ? 443 : 3010;
+let server;
+
+if (isProduction) {
+  const options = {
+    key: fs.readFileSync(process.env["SSL_KEY_PATH"] ?? ""),
+    cert: fs.readFileSync(process.env["SSL_CERT_PATH"] ?? ""),
+  };
+  server = https.createServer(options, app);
+} else {
+  server = http.createServer(app);
+}
+
 const io = new Server<Events>(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
@@ -41,6 +59,7 @@ io.on("connection", async (socket) => {
   sessionStorage.saveSession(socket.sessionID, socket.userID);
   await socket.join(socket.userID);
   io.to(socket.userID).emit("SESSION_INFO", socket.sessionID, socket.userID);
+  await reconnectionHandler(socket, io, tournamentMap);
 
   socket.on(
     "CREATE_TOURNAMENT",
@@ -83,6 +102,6 @@ io.on("connection", async (socket) => {
 
 app.get("/qr-code/:url", qrCode);
 
-server.listen(3010, () => {
-  console.log("SERVER IS RUNNING ON PORT 3010");
+server.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${String(PORT)}`);
 });

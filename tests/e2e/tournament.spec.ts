@@ -54,7 +54,7 @@ async function joinGame(
   gameCode: string,
   browser: Browser,
   existingNames: Set<string>,
-  index: number
+  index: number,
 ) {
   await new Promise((resolve) => setTimeout(resolve, 100 * index));
 
@@ -75,14 +75,14 @@ async function joinGame(
 
 async function autoClickMoves(
   page: Page,
-  adverseUserInteraction: AdverseUserInteraction = null
+  adverseUserInteraction: AdverseUserInteraction = null,
 ) {
   let i = 1;
   while (true) {
     if (adverseUserInteraction === "refresh" && i % 10 === 0) {
       await page.reload();
     } else if (adverseUserInteraction === "leave" && i % 10 === 0) {
-      page.close();
+      await page.close();
       return;
     } else if (adverseUserInteraction === "slow" && i % 10 === 0) {
       await new Promise((resolve) => setTimeout(resolve, 15000));
@@ -98,7 +98,7 @@ async function autoClickMoves(
       break;
     }
     // Make sure the buttons disspear after you click them
-    expect(page.getByTestId(move)).toBeHidden();
+    await expect(page.getByTestId(move)).toBeHidden();
   }
 }
 
@@ -110,7 +110,7 @@ test.describe("Tournament Game Automation", () => {
 
     const existingNames = new Set<string>();
     const joinPromises: Promise<Page>[] = [];
-    const numPlayers = process.env.CI ? 3 : 50;
+    const numPlayers = process.env.CI ? 8 : 50;
     for (let i = 0; i < numPlayers; i++) {
       joinPromises.push(
         joinGame(gameCode as string, browser, existingNames, i + 1)
@@ -119,7 +119,7 @@ test.describe("Tournament Game Automation", () => {
 
     const playerPages = await Promise.all(joinPromises);
     await expect(hostPage.getByTestId("lobby-player-item")).toHaveCount(
-      playerPages.length
+      playerPages.length,
     );
 
     await hostPage.getByText("Start Tournament").click();

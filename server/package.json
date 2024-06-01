@@ -5,12 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "npx tsx src/server.ts",
+    "start": "npx tsx src/server.ts",
     "lint": "prettier --check . && npx eslint .",
     "format": "prettier --write ."
   },
   "dependencies": {
     "@types/qrcode": "^1.5.5",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "nodemon": "^3.1.0",
     "prettier": "^3.2.5",

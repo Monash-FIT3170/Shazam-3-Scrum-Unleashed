@@ -10,7 +10,6 @@ import { io, Socket } from "socket.io-client";
 import { Events } from "../../types/socket/events.ts";
 import CreateTournament from "./pages/CreateTournament.tsx";
 import {
-  BASE_PATH,
   CREATE_TOURNAMENT_PATH,
   HOME_PATH,
   JOIN_GAME_PATH,
@@ -36,13 +35,16 @@ declare module "socket.io-client" {
 }
 
 // TODO: We need to make this an environment variable
-export const socket: Socket<Events> = io("http://localhost:3010", {
-  autoConnect: false,
-});
+export const socket: Socket<Events> = io(
+  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3010",
+  {
+    autoConnect: false,
+  },
+);
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path={BASE_PATH}>
+    <Route path={"/"}>
       <Route path={HOME_PATH} element={<Home />} />
       <Route
         path={JOIN_GAME_PATH}
@@ -65,23 +67,29 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  const cookieStrings = document.cookie.split("=");
-
-  if (cookieStrings[0] === "sessionID") {
-    socket.auth = { sessionID: cookieStrings[1] };
+  let sessionIdCookie = "";
+  let tournamentCodeCookie = "";
+  const cookieStrings = document.cookie.split(";");
+  for (const cookie of cookieStrings) {
+    if (cookie.startsWith("sessionID")) {
+      const sessionID = cookie.split("=")[1];
+      sessionIdCookie = sessionID;
+    } else if (cookie.trim().startsWith("tournamentCode")) {
+      tournamentCodeCookie = cookie.split("=")[1];
+    }
   }
+
+  socket.auth = {
+    sessionID: sessionIdCookie,
+    tournamentCode: tournamentCodeCookie,
+  };
+
   socket.connect();
 
   socket.on("SESSION_INFO", (sessionID, userID) => {
-    // attach the session ID to the next reconnection attempts
     socket.auth = { sessionID };
-    // save the ID of the user
     socket.userID = userID;
     document.cookie = `sessionID=${sessionID};`;
-  });
-
-  socket.on("disconnect", function () {
-    // Do stuff (probably some jQuery)
   });
 
   return (
