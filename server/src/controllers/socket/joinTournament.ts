@@ -17,7 +17,7 @@ export function joinTournamentSocket(
     console.error(
       `Player : ${playerName} was unable to join Game : ${tournamentCode}`,
     );
-    io.to(socket.userID).emit("JOINED_GAME", "INVALID_GAME_CODE");
+    io.to(socket.userID).emit("JOINED_TOURNAMENT", "INVALID_GAME_CODE");
     return;
   }
 
@@ -31,7 +31,7 @@ export function joinTournamentSocket(
 
   if (!tournament.isPlayerNameFree(playerName)) {
     console.log(`Player : ${playerName} is already taken`);
-    io.to(socket.userID).emit("JOINED_GAME", "NAME_TAKEN");
+    io.to(socket.userID).emit("JOINED_TOURNAMENT", "NAME_TAKEN");
     return;
   }
 
@@ -40,6 +40,6 @@ export function joinTournamentSocket(
 
   console.log(`Player : ${playerName} has joined Game : ${tournamentCode}`);
 
-  io.to(socket.userID).emit("JOINED_GAME", "SUCCESS");
+  io.to(socket.userID).emit("JOINED_TOURNAMENT", "SUCCESS");
   io.to(tournament.hostUID).emit("PLAYERS_UPDATE", tournament.players);
 }
