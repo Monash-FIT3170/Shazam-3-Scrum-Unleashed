@@ -9,6 +9,9 @@ import FormButton from "../components/buttons/FormButton.tsx";
 
 type JoinState = "NoCurrentRequest" | "Waiting" | "Joining";
 
+type PlayerNameError = null | "Enter Valid Player Name" | "Player Name Taken" | "Player Name Inappropriate";
+type TournamentCodeError = null | "Enter Valid Tournament Code" | "Tournament Does Not Exist";
+
 const JoinTournament = () => {
     const urlTournamentCode = useLoaderData() as string;
     const navigate = useNavigate();
@@ -17,8 +20,8 @@ const JoinTournament = () => {
     const [playerName, setPlayerName] = useState("");
     const [joinState, setJoinState] = useState<JoinState>("NoCurrentRequest");
 
-    const [playerNameError, setPlayerNameError] = useState<string|null>(null)
-    const [tournamentCodeError, setTournamentCodeError] = useState<string|null>(null)
+    const [playerNameError, setPlayerNameError] = useState<PlayerNameError>(null)
+    const [tournamentCodeError, setTournamentCodeError] = useState<TournamentCodeError>(null)
 
     const firstError = () =>{
         return tournamentCodeError !== null ? tournamentCodeError : playerNameError !== null ? playerNameError : null;
@@ -72,6 +75,14 @@ const JoinTournament = () => {
                 setJoinState("NoCurrentRequest");
                 setTournamentCodeError("Tournament Does Not Exist")
                 break;
+            case "INAPPROPRIATE_NAME":
+                setJoinState("NoCurrentRequest");
+                setPlayerNameError("Player Name Inappropriate")
+                break;
+            case "SOCKET_ALREADY_CONNECTED_TO_TOURNAMENT":
+                // TODO
+                break;
+
         }
     });
 
@@ -89,12 +100,12 @@ const JoinTournament = () => {
                 <DisplayLogo/>
             </div>
 
-            <InputComponent value={tournamentCode} callback={changeTournamentCode} error={tournamentCodeError}
-                            placeholder={"6 DIGIT ROOM CODE"} testid={"tournament-code-input"}/>
-            <InputComponent value={playerName} callback={changePlayerName} error={playerNameError}
-                            placeholder={"NAME"} testid={"player-name-input"}/>
+            <InputComponent value={tournamentCode} callback={changeTournamentCode} error={tournamentCodeError !== null}
+                            placeholder={"6 DIGIT ROOM CODE"} testid={"tournament-code-input"} disabled={joinState!=="NoCurrentRequest"}/>
+            <InputComponent value={playerName} callback={changePlayerName} error={playerNameError !== null}
+                            placeholder={"NAME"} testid={"player-name-input"} disabled={joinState!=="NoCurrentRequest"}/>
 
-            <FormButton text={"Join Game"} error={firstError()} loading={joinState === "Joining"} callback={joinTournament}/>
+            <FormButton text={"Join Game"} error={firstError()} loading={joinState !=="NoCurrentRequest"} callback={joinTournament}/>
 
         </div>
     );

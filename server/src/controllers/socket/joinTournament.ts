@@ -2,6 +2,7 @@ import Player from "src/model/player";
 import Tournament from "src/model/tournament";
 import { Server, Socket } from "socket.io";
 import { Events } from "../../../../types/socket/events";
+import {obscenityMatcher} from "../../store";
 
 export function joinTournamentSocket(
   socket: Socket,
@@ -17,7 +18,7 @@ export function joinTournamentSocket(
     console.error(
       `Player : ${playerName} was unable to join Game : ${tournamentCode}`,
     );
-    io.to(socket.userID).emit("JOINED_TOURNAMENT", "INVALID_GAME_CODE");
+    io.to(socket.userID).emit("JOINED_TOURNAMENT", "INVALID_TOURNAMENT_CODE");
     return;
   }
 
@@ -25,7 +26,15 @@ export function joinTournamentSocket(
     console.error(
       `Player : ${socket.userID} has already connected to Game : ${tournamentCode}`,
     );
-    // TODO need to send an event (USER_ALREADY_JOINED or something)
+    io.to(socket.userID).emit("JOINED_TOURNAMENT", "SOCKET_ALREADY_CONNECTED_TO_TOURNAMENT");
+    return;
+  }
+
+  if (obscenityMatcher.hasMatch(playerName)){
+    console.error(
+        `Player : ${socket.userID} has an inappropriate name`,
+    );
+    io.to(socket.userID).emit("JOINED_TOURNAMENT", "INAPPROPRIATE_NAME");
     return;
   }
 
@@ -34,6 +43,8 @@ export function joinTournamentSocket(
     io.to(socket.userID).emit("JOINED_TOURNAMENT", "NAME_TAKEN");
     return;
   }
+
+
 
   const player = new Player(socket.userID, playerName, false);
   tournament.addPlayer(player);
