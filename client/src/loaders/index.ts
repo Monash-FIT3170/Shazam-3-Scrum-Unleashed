@@ -15,7 +15,7 @@ export const joinTournamentLoader = async ({ request }: LoaderProps) => {
   const url = new URL(request.url);
 
   const tournamentCode = url.searchParams.get("tournamentCode");
-  if (!tournamentCode || !/^\d{6}$/.test(tournamentCode) ) {
+  if (!tournamentCode || !/^\d{6}$/.test(tournamentCode)) {
     return "";
   }
   return tournamentCode;
