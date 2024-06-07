@@ -1,5 +1,5 @@
 import "./App.css";
-import JoinGame from "./pages/JoinGame.tsx";
+import JoinTournament from "./pages/JoinTournament.tsx";
 import {
   Route,
   createBrowserRouter,
@@ -19,7 +19,7 @@ import {
 } from "./pages/pagePaths.ts";
 import GameLobby from "./pages/TournamentLobby.tsx";
 import {
-  joinGameLoader,
+  joinTournamentLoader,
   tournamentLobbyLoader,
   playerScreenLoader,
 } from "./loaders";
@@ -48,8 +48,8 @@ const router = createBrowserRouter(
       <Route path={HOME_PATH} element={<Home />} />
       <Route
         path={JOIN_GAME_PATH}
-        element={<JoinGame />}
-        loader={joinGameLoader}
+        element={<JoinTournament />}
+        loader={joinTournamentLoader}
       />
       <Route path={CREATE_TOURNAMENT_PATH} element={<CreateTournament />} />
       <Route
@@ -72,8 +72,7 @@ function App() {
   const cookieStrings = document.cookie.split(";");
   for (const cookie of cookieStrings) {
     if (cookie.startsWith("sessionID")) {
-      const sessionID = cookie.split("=")[1];
-      sessionIdCookie = sessionID;
+      sessionIdCookie = cookie.split("=")[1];
     } else if (cookie.trim().startsWith("tournamentCode")) {
       tournamentCodeCookie = cookie.split("=")[1];
     }

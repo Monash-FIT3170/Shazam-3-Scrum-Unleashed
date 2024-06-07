@@ -66,7 +66,7 @@ async function joinGame(
   await page.getByTestId("player-name-input").fill(randomName);
 
   await page.getByTestId("tournament-code-input").fill(gameCode);
-  await page.getByText("Join Room").click();
+  await page.getByText("Join Game").click();
 
   await expect(page).toHaveURL(/player-screen/, { timeout: 30000 });
 

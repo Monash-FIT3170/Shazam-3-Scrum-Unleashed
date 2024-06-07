@@ -11,15 +11,14 @@ export const tournamentLobbyLoader = async ({ request }: LoaderProps) => {
   return { tournamentCode };
 };
 
-export const joinGameLoader = async ({ request }: LoaderProps) => {
+export const joinTournamentLoader = async ({ request }: LoaderProps) => {
   const url = new URL(request.url);
 
-  // TODO - Verify game code is of valid format
-  const gameCode = url.searchParams.get("tournamentCode");
-  if (!gameCode) {
+  const tournamentCode = url.searchParams.get("tournamentCode");
+  if (!tournamentCode || !/^\d{6}$/.test(tournamentCode)) {
     return "";
   }
-  return gameCode;
+  return tournamentCode;
 };
 
 export const playerScreenLoader = async ({ request }: LoaderProps) => {
