@@ -40,7 +40,7 @@ const JoinTournament = () => {
   };
 
   const changeTournamentCode = (code: string) => {
-    if (/\d+/.test(code) && code.length <= 6) {
+    if (/^\d*$/.test(code) && code.length <= 6) {
       setTournamentCode(code);
       setTournamentCodeError(null);
     }
