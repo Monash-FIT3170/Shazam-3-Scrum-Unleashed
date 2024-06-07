@@ -5,7 +5,7 @@
  */
 
 import { Action, PlayerAttributes, ReactionData } from "../types";
-import { JoinErrorCode } from "./eventArguments";
+import { JoinStatusCode } from "./eventArguments";
 
 /**
  * Add any new Event Categories to this
@@ -55,7 +55,7 @@ interface ServerToHostEvents {
 }
 
 interface ServerToPlayerEvents {
-  JOINED_GAME: (joinErrorCode: JoinErrorCode) => void;
+  JOINED_TOURNAMENT: (joinErrorCode: JoinStatusCode) => void;
   MATCH_INFO: (
     players: PlayerAttributes[],
     isDuelComplete: boolean,
