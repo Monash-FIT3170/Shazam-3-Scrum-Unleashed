@@ -91,7 +91,7 @@ const JoinTournament = () => {
         setJoinState("NoCurrentRequest");
         setPlayerNameError("Player Name Inappropriate");
         break;
-      case "SOCKET_ALREADY_CONNECTED_TO_TOURNAMENT":
+      case "SOCKET_ALREADY_CONNECTED":
         // TODO
         break;
     }

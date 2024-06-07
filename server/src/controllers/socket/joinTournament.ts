@@ -16,7 +16,7 @@ export function joinTournamentSocket(
 
   if (tournament == undefined) {
     console.error(
-      `Player : ${playerName} was unable to join Game : ${tournamentCode}`,
+      `Player : ${playerName} was unable to join Tournament : ${tournamentCode}`,
     );
     io.to(socket.userID).emit("JOINED_TOURNAMENT", "INVALID_TOURNAMENT_CODE");
     return;
@@ -24,11 +24,11 @@ export function joinTournamentSocket(
 
   if (!tournament.canSocketJoin(socket.userID)) {
     console.error(
-      `Player : ${socket.userID} has already connected to Game : ${tournamentCode}`,
+      `Player : ${socket.userID} has already connected to Tournament : ${tournamentCode}`,
     );
     io.to(socket.userID).emit(
       "JOINED_TOURNAMENT",
-      "SOCKET_ALREADY_CONNECTED_TO_TOURNAMENT",
+      "SOCKET_ALREADY_CONNECTED",
     );
     return;
   }
