@@ -37,7 +37,7 @@ const PlayerAndSpectatorsInfo = ({
       </div>
 
       <div className="hidden md:block">
-        <SpectatorCount count={userPlayer.spectatorCount} />
+        <SpectatorCount count={userPlayer.spectatorIDs.length} />
       </div>
     </div>
   );
