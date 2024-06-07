@@ -4,7 +4,7 @@ import { Server, Socket } from "socket.io";
 import { duelStuff } from "./chooseAction";
 import { Events } from "../../../../types/socket/events";
 
-export function startTournamentSocket(
+export async function startTournamentSocket(
   socket: Socket,
   tournamentCode: string,
   tournamentMap: Map<string, Tournament>,
@@ -23,7 +23,7 @@ export function startTournamentSocket(
     return;
   }
 
-  void roundInitialisor(tournament, io);
+  await roundInitialisor(tournament, io);
 
   for (const match of tournament.matches) {
     match.startTimeout(duelStuff(tournament, io));

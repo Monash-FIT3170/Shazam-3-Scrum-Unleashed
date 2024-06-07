@@ -79,8 +79,8 @@ io.on("connection", async (socket) => {
     joinTournamentSocket(socket, gameCode, playerName, tournamentMap, io);
   });
 
-  socket.on("START_TOURNAMENT", (gameCode: string) => {
-    startTournamentSocket(socket, gameCode, tournamentMap, io);
+  socket.on("START_TOURNAMENT", async (gameCode: string) => {
+    await startTournamentSocket(socket, gameCode, tournamentMap, io);
   });
 
   socket.on(

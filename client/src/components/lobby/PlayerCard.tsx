@@ -6,20 +6,18 @@ interface PlayerCardProps {
   cardNum: number;
 }
 
-const PlayerCard = (props: PlayerCardProps) => {
+const PlayerCard = ({ player, cardNum }: PlayerCardProps) => {
   // card name of varying borders
-  const cardName = "player-card-" + (props.cardNum % 4);
+  const cardName = "player-card-" + (cardNum % 4);
   // checking if the player's name can fit onto the card
   const playerName =
-    props.player.name.length > 8
-      ? props.player.name.substring(0, 5) + "..."
-      : props.player.name;
+    player.name.length > 8 ? player.name.substring(0, 5) + "..." : player.name;
   return (
     <div className={`${cardName} relative`} data-testid="lobby-player-item">
       <div>
         {" "}
         {playerName}
-        {props.player.spectatingId ? (
+        {player.isEliminated ? (
           <img
             src={cross}
             alt={"Player Eliminated"}
