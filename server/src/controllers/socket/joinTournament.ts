@@ -26,10 +26,7 @@ export function joinTournamentSocket(
     console.error(
       `Player : ${socket.userID} has already connected to Tournament : ${tournamentCode}`,
     );
-    io.to(socket.userID).emit(
-      "JOINED_TOURNAMENT",
-      "SOCKET_ALREADY_CONNECTED",
-    );
+    io.to(socket.userID).emit("JOINED_TOURNAMENT", "SOCKET_ALREADY_CONNECTED");
     return;
   }
 
