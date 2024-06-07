@@ -4,8 +4,7 @@ export interface PlayerAttributes {
   actionChoice: Action;
   score: number;
   isBot: boolean;
-  spectatingId: string | null;
-  spectatorCount: number;
+  isEliminated: boolean;
   spectatorIDs: string[];
 }
 

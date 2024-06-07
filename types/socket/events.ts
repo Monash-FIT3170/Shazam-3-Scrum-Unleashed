@@ -50,8 +50,6 @@ interface PlayerToServerEvents {
 interface ServerToHostEvents {
   TOURNAMENT_CREATED: (gameCode: string) => void;
   PLAYERS_UPDATE: (players: PlayerAttributes[]) => void;
-  ROUND_STARTED: (/*TODO*/) => void;
-  ROUND_RESULTS: (/*TODO*/) => void;
 }
 
 interface ServerToPlayerEvents {

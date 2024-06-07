@@ -7,9 +7,15 @@ export class Match {
   public duelsToWin: number;
   public timeOutHandler: NodeJS.Timeout | null;
 
-  constructor(players: Player[], matchRoomID: string, duelsToWin: number) {
+  private rulesMap: Map<Action, Action> = new Map<Action, Action>([
+    ["ROCK", "SCISSORS"],
+    ["PAPER", "ROCK"],
+    ["SCISSORS", "PAPER"],
+  ]);
+
+  constructor(players: Player[], duelsToWin: number) {
     this.players = players;
-    this.matchRoomID = matchRoomID;
+    this.matchRoomID = crypto.randomUUID();
     this.duelsToWin = duelsToWin;
     this.timeOutHandler = null;
   }
@@ -31,12 +37,6 @@ export class Match {
     }
     return null;
   }
-
-  private rulesMap: Map<Action, Action> = new Map<Action, Action>([
-    ["ROCK", "SCISSORS"],
-    ["PAPER", "ROCK"],
-    ["SCISSORS", "PAPER"],
-  ]);
 
   public playDuel() {
     const player1 = this.players[0];
@@ -77,11 +77,32 @@ export class Match {
     this.timeOutHandler = setTimeout(
       () => {
         if (!this.isDuelComplete()) {
-          for (const player of this.players) {
-            if (player.actionChoice === null) {
-              player.actionChoice = ["ROCK", "PAPER", "SCISSORS"][
-                Math.floor(Math.random() * 3)
-              ] as Action;
+          const [player1, player2] = this.players;
+          if (player1.actionChoice === null && player2.actionChoice === null) {
+            let modifier = 0;
+            if (Math.random() < 0.5) {
+              modifier = 1;
+            } else {
+              modifier = -1;
+            }
+            const player1ActionIndex = Math.floor(Math.random() * 3);
+            player1.actionChoice = ["ROCK", "PAPER", "SCISSORS"][
+              player1ActionIndex
+            ] as Action;
+            player2.actionChoice = ["ROCK", "PAPER", "SCISSORS"].at(
+              (player1ActionIndex + modifier) % 3,
+            ) as Action;
+          } else {
+            if (player1.actionChoice === null) {
+              const player1Action = this.rulesMap.get(player2.actionChoice);
+              if (player1Action !== undefined) {
+                player1.actionChoice = player1Action;
+              }
+            } else {
+              const player2Action = this.rulesMap.get(player1.actionChoice);
+              if (player2Action !== undefined) {
+                player2.actionChoice = player2Action;
+              }
             }
           }
         }
