@@ -13,11 +13,25 @@ async function fetchQrCode(
   setQrCode: (qrCode: string) => void,
 ) {
   const qrcode = await fetch(
-    // TODO: Make this an environment variable
     `${import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3010"}/qr-code/${encodeURIComponent(returnUrl)}`,
   );
   const qrCode = await qrcode.json();
   setQrCode(qrCode.qrCode);
+}
+
+async function postStartTournament(userID: string, tournamentCode: string) {
+  const res = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/start-tournament`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({ userID, tournamentCode }),
+    },
+  );
+
+  return res.ok;
 }
 
 const TournamentLobby = () => {
@@ -38,10 +52,11 @@ const TournamentLobby = () => {
     [],
   );
 
-  const startTournament = () => {
+  const startTournament = async () => {
     if (!tournamentStarted) {
-      socket.emit("START_TOURNAMENT", tournamentCode);
-      setTournamentStarted(true);
+      setTournamentStarted(
+        await postStartTournament(socket.userID, tournamentCode),
+      );
     }
   };
 
