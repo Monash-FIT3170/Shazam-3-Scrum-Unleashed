@@ -5,14 +5,12 @@
  */
 
 import { Action, PlayerAttributes, ReactionData } from "../types";
-import { JoinStatusCode } from "./eventArguments";
 
 /**
  * Add any new Event Categories to this
  */
 export interface Events
   extends HostToClientEvents,
-    HostToServerEvents,
     PlayerToServerEvents,
     ServerToHostEvents,
     ServerToPlayerEvents {}
@@ -22,19 +20,7 @@ interface HostToClientEvents {
   TOURNAMENT_COMPLETE: (playerName: string) => void;
 }
 
-interface HostToServerEvents {
-  CREATE_TOURNAMENT: (
-    duelPerMatch: number,
-    duelTime: number,
-    matchTime: number
-  ) => void;
-  START_TOURNAMENT: (gameCode: string) => void;
-  KICK_PLAYER: (gameCode: string, playerName: PlayerAttributes) => void;
-}
-
 interface PlayerToServerEvents {
-  JOIN_TOURNAMENT: (gameCode: string, playerName: string) => void;
-  LEAVE_GAME: (gameCode: string, player: PlayerAttributes) => void;
   CHOOSE_ACTION: (
     tournamentCode: string,
     playerUserID: string,
@@ -48,12 +34,10 @@ interface PlayerToServerEvents {
 }
 
 interface ServerToHostEvents {
-  TOURNAMENT_CREATED: (gameCode: string) => void;
   PLAYERS_UPDATE: (players: PlayerAttributes[]) => void;
 }
 
 interface ServerToPlayerEvents {
-  JOINED_TOURNAMENT: (joinErrorCode: JoinStatusCode) => void;
   MATCH_INFO: (
     players: PlayerAttributes[],
     isDuelComplete: boolean,

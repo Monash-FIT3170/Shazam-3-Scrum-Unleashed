@@ -14,7 +14,6 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "nodemon": "^3.1.0",
     "obscenity": "^0.2.1",
     "prettier": "^3.2.5",
     "qrcode": "^1.5.3",

@@ -1,6 +1,7 @@
 import Tournament from "src/model/tournament";
 import { Server } from "socket.io";
 import { Events } from "../../../types/socket/events";
+import { playDuel } from "../controllers/socket/chooseAction";
 
 export async function roundStartEmitter(
   tournament: Tournament,
@@ -18,6 +19,7 @@ export async function roundStartEmitter(
       }
     }
     io.to(match.matchRoomID).emit("MATCH_INFO", match.players, false, null);
+    match.startTimeout(playDuel(tournament, io));
   }
 }
 

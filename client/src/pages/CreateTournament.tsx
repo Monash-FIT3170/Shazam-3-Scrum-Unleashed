@@ -5,10 +5,35 @@ import { GAME_LOBBY_PATH } from "./pagePaths.ts";
 import { socket } from "../App.tsx";
 import DisplayLogo from "../components/DisplayLogo.tsx";
 import CreateTournamentInput from "../components/inputs/CreateTournamentInput";
+import { CreateTournamentRes } from "../../../types/requestTypes.ts";
 
 const defaultDuelsToWin: number = 3;
 const defaultDuelTime: number = 15;
 const defaultRoundTime: number = 120;
+
+async function postTournament(
+  userID: string,
+  duelsToWin: number,
+  duelTime: number,
+  roundTime: number,
+) {
+  try {
+    console.log(JSON.stringify({ userID, duelsToWin, duelTime, roundTime }));
+    const res = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/create-tournament`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({ userID, duelsToWin, duelTime, roundTime }),
+      },
+    );
+    return (await res.json()).body as CreateTournamentRes;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 const CreateTournament = () => {
   const navigate = useNavigate();
@@ -25,21 +50,14 @@ const CreateTournament = () => {
   };
 
   const [loading, setLoading] = useState(false);
-  const createGame = () => {
-    socket.emit("CREATE_TOURNAMENT", duelsToWin, duelTime, roundTime);
-  };
 
-  const [gameCode, setGameCode] = useState("");
-  socket.on("TOURNAMENT_CREATED", (gameCode) => {
-    setGameCode(gameCode);
-    setLoading(true);
-  });
+  const [tournamentCode, setTournamentCode] = useState("");
 
   useEffect(() => {
     if (loading) {
-      navigate(`../${GAME_LOBBY_PATH}?tournamentCode=${gameCode}`);
+      navigate(`../${GAME_LOBBY_PATH}?tournamentCode=${tournamentCode}`);
     }
-  }, [gameCode]);
+  }, [tournamentCode]);
 
   return (
     <div>
@@ -82,7 +100,18 @@ const CreateTournament = () => {
       <div className="h-14 mt-16">
         <button
           className={`w-1/4 text-white ${inputErrors.includes(true) ? "bg-bright-red" : "bg-primary"} text-2xl font-bold px-7 rounded-xl h-full uppercase`}
-          onClick={createGame}
+          onClick={async () => {
+            const code = await postTournament(
+              socket.userID,
+              duelsToWin,
+              duelTime,
+              roundTime,
+            );
+            if (code) {
+              setTournamentCode(code.tournamentCode);
+              setLoading(true);
+            }
+          }}
           disabled={loading || inputErrors.includes(true)}
         >
           {inputErrors.includes(true)

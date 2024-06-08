@@ -1,4 +1,7 @@
 
-
-export type JoinStatusCode = "SUCCESS" | "NAME_TAKEN" | "INVALID_TOURNAMENT_CODE" | "SOCKET_ALREADY_CONNECTED" | "INAPPROPRIATE_NAME";
-
+export type JoinError =
+    | "Enter Valid Player Name"
+    | "Player Name Taken"
+    | "Player Name Inappropriate"
+    | "Enter Valid Tournament Code"
+    | "Tournament Does Not Exist";
