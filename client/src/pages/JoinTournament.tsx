@@ -6,18 +6,29 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import { PLAYER_SCREEN } from "./pagePaths.ts";
 import InputComponent from "../components/inputs/InputComponent.tsx";
 import FormButton from "../components/buttons/FormButton.tsx";
+import { JoinTournamentRes } from "../../../types/requestTypes.ts";
+import { JoinError } from "../../../types/socket/eventArguments.ts";
 
-type JoinState = "NoCurrentRequest" | "Waiting" | "Joining";
-
-type PlayerNameError =
-  | null
-  | "Enter Valid Player Name"
-  | "Player Name Taken"
-  | "Player Name Inappropriate";
-type TournamentCodeError =
-  | null
-  | "Enter Valid Tournament Code"
-  | "Tournament Does Not Exist";
+async function postJoinTournament(
+  userID: string,
+  tournamentCode: string,
+  playerName: string,
+) {
+  const res = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/join-tournament`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({ userID, playerName, tournamentCode }),
+    },
+  );
+  if (res.ok) {
+    return "OK";
+  }
+  return ((await res.json()).body as JoinTournamentRes).message;
+}
 
 const JoinTournament = () => {
   const urlTournamentCode = useLoaderData() as string;
@@ -25,85 +36,56 @@ const JoinTournament = () => {
 
   const [tournamentCode, setTournamentCode] = useState(urlTournamentCode);
   const [playerName, setPlayerName] = useState("");
-  const [joinState, setJoinState] = useState<JoinState>("NoCurrentRequest");
-
-  const [playerNameError, setPlayerNameError] = useState<PlayerNameError>(null);
-  const [tournamentCodeError, setTournamentCodeError] =
-    useState<TournamentCodeError>(null);
-
-  const firstError = () => {
-    return tournamentCodeError !== null
-      ? tournamentCodeError
-      : playerNameError !== null
-        ? playerNameError
-        : null;
-  };
+  const [status, setStatus] = useState<JoinError | "OK">();
+  const [loading, setLoading] = useState(false);
 
   const changeTournamentCode = (code: string) => {
     if (/^\d*$/.test(code) && code.length <= 6) {
       setTournamentCode(code);
-      setTournamentCodeError(null);
     }
   };
 
   const changePlayerName = (name: string) => {
     setPlayerName(name);
-    setPlayerNameError(null);
   };
 
   const tournamentCodeValidation = () => {
-    return /^\d{6}$/.test(tournamentCode) && tournamentCodeError === null;
+    return /^\d{6}$/.test(tournamentCode);
   };
 
   const playerNameValidation = () => {
-    return playerName.length > 0 && playerNameError === null;
+    return playerName.length > 0;
   };
 
-  const joinTournament = () => {
-    if (!tournamentCodeValidation() || !playerNameValidation()) {
-      if (!tournamentCodeValidation()) {
-        setTournamentCodeError("Enter Valid Tournament Code");
-      }
-      if (!playerNameValidation()) {
-        setPlayerNameError("Enter Valid Player Name");
-      }
+  const joinTournament = async () => {
+    if (!tournamentCodeValidation()) {
+      setStatus("Enter Valid Tournament Code");
       return;
     }
 
-    setJoinState("Waiting");
-    socket.emit("JOIN_TOURNAMENT", tournamentCode, playerName);
+    if (!playerNameValidation()) {
+      setStatus("Enter Valid Player Name");
+      return;
+    }
+
+    setLoading(true);
+    const status = await postJoinTournament(
+      socket.userID,
+      tournamentCode,
+      playerName,
+    );
+
+    setStatus(status);
+    setLoading(false);
   };
 
-  socket.on("JOINED_TOURNAMENT", (joinErrorCode) => {
-    switch (joinErrorCode) {
-      case "SUCCESS":
-        setJoinState("Joining");
-        break;
-      case "NAME_TAKEN":
-        setJoinState("NoCurrentRequest");
-        setPlayerName("Player Name Taken");
-        break;
-      case "INVALID_TOURNAMENT_CODE":
-        setJoinState("NoCurrentRequest");
-        setTournamentCodeError("Tournament Does Not Exist");
-        break;
-      case "INAPPROPRIATE_NAME":
-        setJoinState("NoCurrentRequest");
-        setPlayerNameError("Player Name Inappropriate");
-        break;
-      case "SOCKET_ALREADY_CONNECTED":
-        // TODO
-        break;
-    }
-  });
-
   useEffect(() => {
-    if (joinState === "Joining") {
+    if (status === "OK") {
       navigate(
         `../${PLAYER_SCREEN}?playerName=${playerName}&tournamentCode=${tournamentCode}`,
       );
     }
-  }, [joinState]);
+  }, [status]);
 
   return (
     <div className="flex flex-col items-center justify-center h-screen overflow-hidden">
@@ -114,24 +96,22 @@ const JoinTournament = () => {
       <InputComponent
         value={tournamentCode}
         callback={changeTournamentCode}
-        error={tournamentCodeError !== null}
         placeholder={"6 DIGIT ROOM CODE"}
-        testid={"tournament-code-input"}
-        disabled={joinState !== "NoCurrentRequest"}
+        disabled={loading}
+        data-testid={"tournament-code-input"}
       />
       <InputComponent
         value={playerName}
         callback={changePlayerName}
-        error={playerNameError !== null}
         placeholder={"NAME"}
-        testid={"player-name-input"}
-        disabled={joinState !== "NoCurrentRequest"}
+        disabled={loading}
+        data-testid={"player-name-input"}
       />
 
       <FormButton
         text={"Join Game"}
-        error={firstError()}
-        loading={joinState !== "NoCurrentRequest"}
+        status={status ?? "OK"}
+        loading={loading}
         callback={joinTournament}
       />
     </div>

@@ -1,23 +1,23 @@
 type FormButtonInputs = {
   text: string;
-  error: string | null;
+  status: string | "OK";
   loading: boolean;
   callback: () => void;
 };
 
 const FormButtonComponent = ({
   text,
-  error,
+  status,
   loading,
   callback,
 }: FormButtonInputs) => {
   return (
     <button
-      className={`h-12 mt-8 text-white ${error !== null ? "bg-bright-red" : "bg-primary"} text-2xl font-bold w-1/3 rounded-xl`}
+      className={`h-12 mt-8 text-white ${status !== "OK" ? "bg-bright-red" : "bg-primary"} text-2xl font-bold w-1/3 rounded-xl`}
       onClick={callback}
-      disabled={loading || error !== null}
+      disabled={loading || status !== "OK"}
     >
-      {loading ? "Loading..." : error !== null ? error : text}
+      {loading ? "Loading..." : status !== "OK" ? status : text}
     </button>
   );
 };

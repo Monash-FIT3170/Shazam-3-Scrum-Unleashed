@@ -38,7 +38,7 @@ export class Match {
     return null;
   }
 
-  public playDuel() {
+  public updateScores() {
     const player1 = this.players[0];
     const player2 = this.players[1];
 

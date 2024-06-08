@@ -5,7 +5,7 @@ import Tournament from "src/model/tournament";
 import { Server } from "socket.io";
 import { Events } from "../../../../types/socket/events";
 
-export async function roundInitialisor(
+export async function roundInitialiser(
   tournament: Tournament,
   io: Server<Events>,
 ) {
