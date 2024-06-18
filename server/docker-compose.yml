@@ -1,15 +1,16 @@
 version: "3.8"
 
 services:
-  express-app:
+  server:
     build: .
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2.8-alpine
+    restart: unless-stopped
     ports:
-      - "3010:3010"
-    restart: always
-    deploy:
-      update_config:
-        order: start-first
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
