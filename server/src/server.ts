@@ -1,4 +1,5 @@
 import express from "express";
+import http from "http";
 import cors from "cors";
 import "dotenv/config";
 
@@ -16,17 +17,13 @@ import { reconnectionHandler } from "./utils/reconnectionHelper";
 import { createTournamentHandler } from "./controllers/http/createTournamentHandler";
 import { joinTournamentHandler } from "./controllers/http/joinTournamentHandler";
 import { startTournamentHandler } from "./controllers/http/startTournamentHandler";
-import { configureServer } from "./utils/configureServer";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-const isProduction = process.env["NODE_ENV"] === "production";
-
-const server = configureServer(app, isProduction);
-
+const server = http.createServer(app);
 const io = new Server<Events>(server, {
   cors: {
     origin: "*",
@@ -60,8 +57,6 @@ app.post(
   (req, res) => void startTournamentHandler(req, res, io),
 );
 
-server.listen(isProduction ? 443 : 3010, () => {
-  console.log(
-    `Server running on http://localhost:${String(isProduction ? 443 : 3010)}`,
-  );
+server.listen(3010, () => {
+  console.log(`Server running on http://localhost:3010`);
 });
