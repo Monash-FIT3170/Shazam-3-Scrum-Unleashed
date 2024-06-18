@@ -1,3 +1,3 @@
 api.3170.fit {
-    reverse_proxy server:3010
+	reverse_proxy server:3010
 }
