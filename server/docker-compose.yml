@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  express-app:
+    build: .
+    ports:
+      - "3010:3010"
+    restart: always
+    deploy:
+      update_config:
+        order: start-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3

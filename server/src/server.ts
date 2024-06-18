@@ -60,8 +60,6 @@ app.post(
   (req, res) => void startTournamentHandler(req, res, io),
 );
 
-server.listen(isProduction ? 443 : 3010, () => {
-  console.log(
-    `Server running on http://localhost:${String(isProduction ? 443 : 3010)}`,
-  );
+server.listen(3010, () => {
+  console.log(`Server running on http://localhost:3010`);
 });
