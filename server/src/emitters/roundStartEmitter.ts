@@ -19,7 +19,7 @@ export async function roundStartEmitter(
       }
     }
     io.to(match.matchRoomID).emit("MATCH_INFO", match.players, false, null);
-    match.startTimeout(playDuel(tournament, io));
+    match.startTimeout(playDuel(tournament, io), tournament.duelTime);
   }
 }
 
