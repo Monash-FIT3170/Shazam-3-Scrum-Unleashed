@@ -10,7 +10,7 @@ import { Match } from "../../model/match";
 import { Events } from "../../../../types/socket/events";
 
 const LIFE_AFTER_COMPLETION = 60000;
-const ROUND_GAP = 8000;
+const ROUND_BUFFER_TIME = 8000;
 
 export const playDuel =
   (tournament: Tournament, io: Server<Events>) => (match: Match) => {
@@ -47,7 +47,7 @@ export const playDuel =
         roundTerminator(tournament, io);
         io.to(tournament.hostUID).emit("PLAYERS_UPDATE", tournament.players);
         void roundInitialiser(tournament, io);
-      }, ROUND_GAP);
+      }, ROUND_BUFFER_TIME);
     }
   };
 

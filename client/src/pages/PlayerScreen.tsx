@@ -10,8 +10,6 @@ import MatchOutcomeScreen from "../components/player-screen/outcome-screens/Matc
 import TournamentWin from "../components/player-screen/tournament-win/TournamentWin.tsx";
 import ReactionOverlay from "../components/reactions/ReactionsOverlay.tsx";
 
-
-
 const PlayerScreen = () => {
   const { loadedTournamentCode, loadedPlayerName } = useLoaderData() as {
     loadedTournamentCode: string;
