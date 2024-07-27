@@ -8,6 +8,7 @@ import InputComponent from "../components/inputs/InputComponent.tsx";
 import FormButton from "../components/buttons/FormButton.tsx";
 import { JoinTournamentRes } from "../../../types/requestTypes.ts";
 import { JoinError } from "../../../types/socket/eventArguments.ts";
+import ErrorBanner from "../components/ErrorBanner.tsx";
 
 async function postJoinTournament(
   userID: string,
@@ -42,11 +43,13 @@ const JoinTournament = () => {
   const changeTournamentCode = (code: string) => {
     if (/^\d*$/.test(code) && code.length <= 6) {
       setTournamentCode(code);
+      setStatus(undefined);
     }
   };
 
   const changePlayerName = (name: string) => {
     setPlayerName(name);
+    setStatus(undefined);
   };
 
   const tournamentCodeValidation = () => {
@@ -88,32 +91,35 @@ const JoinTournament = () => {
   }, [status]);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen overflow-hidden">
-      <div className=" items-center size-60 w-full">
-        <DisplayLogo />
+    <div>
+      <div className="flex flex-col items-center justify-center h-screen overflow-hidden">
+        <div className="items-center size-60 md:size-96 w-full">
+          <DisplayLogo />
+        </div>
+
+        <InputComponent
+          value={tournamentCode}
+          callback={changeTournamentCode}
+          placeholder={"6 DIGIT CODE"}
+          disabled={loading}
+          data-testid={"tournament-code-input"}
+        />
+        <InputComponent
+          value={playerName}
+          callback={changePlayerName}
+          placeholder={"NAME"}
+          disabled={loading}
+          data-testid={"player-name-input"}
+        />
+
+        <FormButton
+          text={"Join Game"}
+          loading={loading}
+          callback={joinTournament}
+        />
       </div>
-
-      <InputComponent
-        value={tournamentCode}
-        callback={changeTournamentCode}
-        placeholder={"6 DIGIT ROOM CODE"}
-        disabled={loading}
-        data-testid={"tournament-code-input"}
-      />
-      <InputComponent
-        value={playerName}
-        callback={changePlayerName}
-        placeholder={"NAME"}
-        disabled={loading}
-        data-testid={"player-name-input"}
-      />
-
-      <FormButton
-        text={"Join Game"}
-        status={status ?? "OK"}
-        loading={loading}
-        callback={joinTournament}
-      />
+      {
+        (!status && status !== "OK") ? null: <ErrorBanner message={status}/>}
     </div>
   );
 };

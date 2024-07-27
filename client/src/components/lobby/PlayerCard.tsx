@@ -21,7 +21,7 @@ const PlayerCard = ({ player, cardNum }: PlayerCardProps) => {
           <img
             src={cross}
             alt={"Player Eliminated"}
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-40 scale-50 opacity-50"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-40 cale-50s opacity-50"
           />
         ) : (
           ""
