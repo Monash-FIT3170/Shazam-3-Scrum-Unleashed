@@ -9,6 +9,9 @@ import { tournamentMap } from "src/store";
 import { Match } from "../../model/match";
 import { Events } from "../../../../types/socket/events";
 
+const LIFE_AFTER_COMPLETION = 60000;
+const ROUND_GAP = 8000;
+
 export const playDuel =
   (tournament: Tournament, io: Server<Events>) => (match: Match) => {
     match.updateScores();
@@ -24,7 +27,7 @@ export const playDuel =
     match.resetActions();
 
     if (matchWinnerUserID === undefined) {
-      match.startTimeout(playDuel(tournament, io));
+      match.startTimeout(playDuel(tournament, io), tournament.duelTime);
       return;
     }
 
@@ -38,13 +41,13 @@ export const playDuel =
           setTimeout(() => {
             io.in(match.matchRoomID).socketsLeave(match.matchRoomID);
             tournamentMap.delete(tournament.hostUID);
-          }, 60000);
+          }, LIFE_AFTER_COMPLETION);
           return;
         }
         roundTerminator(tournament, io);
         io.to(tournament.hostUID).emit("PLAYERS_UPDATE", tournament.players);
         void roundInitialiser(tournament, io);
-      }, 8000);
+      }, ROUND_GAP);
     }
   };
 

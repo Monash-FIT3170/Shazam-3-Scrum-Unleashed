@@ -73,7 +73,7 @@ export class Match {
     bot.actionChoice = botMove;
   }
 
-  public startTimeout(callback: (match: Match) => void) {
+  public startTimeout(callback: (match: Match) => void, timeoutDuration: number) {
     this.timeOutHandler = setTimeout(
       () => {
         if (!this.isDuelComplete()) {
@@ -108,7 +108,7 @@ export class Match {
         }
         callback(this);
       },
-      12000 + Math.random() * 100,
+        timeoutDuration + Math.random() * 100,
     );
   }
 }

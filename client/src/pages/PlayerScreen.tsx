@@ -10,12 +10,16 @@ import MatchOutcomeScreen from "../components/player-screen/outcome-screens/Matc
 import TournamentWin from "../components/player-screen/tournament-win/TournamentWin.tsx";
 import ReactionOverlay from "../components/reactions/ReactionsOverlay.tsx";
 
+
+
 const PlayerScreen = () => {
   const { loadedTournamentCode, loadedPlayerName } = useLoaderData() as {
     loadedTournamentCode: string;
     loadedPlayerName: string;
   };
 
+  const DUEL_COMPLETION_TIME = 3000;
+  const MATCH_COMPLETION_TIME = 4000;
   const [tournamentCode] = useState(loadedTournamentCode);
   const [playerName] = useState(loadedPlayerName);
   const [userPlayer, setUserPlayer] = useState<PlayerAttributes>();
@@ -100,7 +104,7 @@ const PlayerScreen = () => {
     content = <DuelOutcome userPlayer={userPlayer} opponent={opponent} />;
     setTimeout(() => {
       setDuelComplete(false);
-    }, 3000);
+    }, DUEL_COMPLETION_TIME);
   } else if (matchComplete) {
     content = (
       <MatchOutcomeScreen
@@ -112,7 +116,7 @@ const PlayerScreen = () => {
     setTimeout(() => {
       setMatchComplete(false);
       setOpponent(undefined);
-    }, 4000);
+    }, MATCH_COMPLETION_TIME);
   } else if (isSpectator) {
     content = <></>;
   } else {
