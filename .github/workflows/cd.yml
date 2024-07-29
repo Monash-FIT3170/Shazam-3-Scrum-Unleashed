@@ -23,4 +23,6 @@ jobs:
             cd /root/Shazam-3-Scrum-Unleashed/server
             git pull origin main
             docker compose down
+            docker compose rm -f
+            docker image prune -a -f
             docker compose up --build -d
