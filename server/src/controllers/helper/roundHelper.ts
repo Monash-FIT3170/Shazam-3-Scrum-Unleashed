@@ -1,9 +1,10 @@
 import { roundStartEmitter } from "src/emitters/roundStartEmitter";
-import { Match } from "src/model/match";
+import { RpsMatch } from "src/model/rpsMatch";
 import Player from "src/model/player";
 import Tournament from "src/model/tournament";
 import { Server } from "socket.io";
 import { Events } from "../../../../types/socket/events";
+import { Match } from "src/model/match";
 
 export async function roundInitialiser(
   tournament: Tournament,
@@ -23,7 +24,7 @@ export function roundTerminator(tournament: Tournament, io: Server<Events>) {
 
     for (const player of match.players) {
       player.score = 0;
-      player.actionChoice = null;
+      player.gameData = null;
     }
   }
 }
@@ -46,7 +47,10 @@ function handleSpectators(match: Match) {
   }
 }
 
-function roundAllocator(tournament: Tournament) {
+function roundAllocator(tournament: Tournament): {
+  matches: Match[];
+  bots: Player[];
+} {
   const winningPlayers = tournament.players.filter(
     (player) => !player.isEliminated,
   );
@@ -56,11 +60,11 @@ function roundAllocator(tournament: Tournament) {
   for (let i = 0; i < winningPlayers.length; i++) {
     if (i < bots.length) {
       matches.push(
-        new Match([winningPlayers[i], bots[i]], tournament.duelsToWin),
+        new RpsMatch([winningPlayers[i], bots[i]], tournament.duelsToWin),
       );
     } else {
       matches.push(
-        new Match(
+        new RpsMatch(
           [winningPlayers[i], winningPlayers[i + 1]],
           tournament.duelsToWin,
         ),

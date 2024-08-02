@@ -6,14 +6,14 @@ import {
   roundTerminator,
 } from "src/controllers/helper/roundHelper";
 import { tournamentMap } from "src/store";
-import { Match } from "../../model/match";
+import { RpsMatch } from "../../model/rpsMatch";
 import { Events } from "../../../../types/socket/events";
 
 const LIFE_AFTER_COMPLETION = 60000;
 const ROUND_BUFFER_TIME = 8000;
 
 export const playDuel =
-  (tournament: Tournament, io: Server<Events>) => (match: Match) => {
+  (tournament: Tournament, io: Server<Events>) => (match: RpsMatch) => {
     match.updateScores();
     const matchWinner = match.getMatchWinner();
     const matchWinnerUserID = matchWinner?.userID;
@@ -70,14 +70,12 @@ export const chooseActionSocket =
 
     for (const player of match.players) {
       if (player.userID === playerUserID) {
-        player.actionChoice = action;
+        player.gameData = action;
       }
     }
 
-    if (match.isDuelComplete()) {
-      if (match.timeOutHandler) {
-        clearTimeout(match.timeOutHandler);
-      }
-      playDuel(tournament, io)(match);
+    const rpsMatch = match as RpsMatch;
+    if (rpsMatch.isDuelComplete()) {
+      rpsMatch.completeDuel(io, tournament);
     }
   };

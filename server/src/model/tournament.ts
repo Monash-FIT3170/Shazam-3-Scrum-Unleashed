@@ -1,5 +1,7 @@
-import Player from "./player";
 import { Match } from "./match";
+import Player from "./player";
+
+type MatchType = "PONG" | "RPS";
 
 export default class Tournament {
   public hostUID: string;
@@ -8,12 +10,14 @@ export default class Tournament {
   public duelTime: number;
   public matchTime: number;
   public matches: Match[];
+  public matchType: MatchType;
 
   constructor(
     hostID: string,
     duelsToWin: number,
     duelTime: number,
     matchTime: number,
+    // matchType: MatchType,
   ) {
     this.hostUID = hostID;
     this.duelsToWin = duelsToWin;
@@ -21,6 +25,7 @@ export default class Tournament {
     this.matchTime = matchTime;
     this.players = new Array<Player>();
     this.matches = [];
+    this.matchType = "PONG";
   }
 
   public addPlayer(player: Player) {
