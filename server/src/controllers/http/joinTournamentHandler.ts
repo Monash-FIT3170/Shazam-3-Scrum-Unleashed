@@ -23,11 +23,19 @@ export const joinTournamentHandler =
       return;
     }
 
+    if (tournament.hasStarted()){
+        console.error(
+            `Tournament : ${tournamentCode} has already started`,
+        );
+        res.status(422).json({ body: { message: "Tournament Has Already Started" } });
+        return;
+    }
+
     if (!tournament.canSocketJoin(userID)) {
       console.error(
         `Player : ${userID} has already connected to Tournament : ${tournamentCode}`,
       );
-      res.status(422).json({ body: { message: "Socket Already Connected" } });
+      res.status(422).json({ body: { message: "Player Has Already Joined" } });
       return;
     }
 

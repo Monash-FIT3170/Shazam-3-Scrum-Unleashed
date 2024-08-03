@@ -8,6 +8,7 @@ export default class Tournament {
   public duelTime: number;
   public matchTime: number;
   public matches: Match[];
+  public inProgress : boolean;
 
   constructor(
     hostID: string,
@@ -21,6 +22,11 @@ export default class Tournament {
     this.matchTime = matchTime;
     this.players = new Array<Player>();
     this.matches = [];
+    this.inProgress = false;
+  }
+
+  public hasStarted() {
+    return this.inProgress;
   }
 
   public addPlayer(player: Player) {

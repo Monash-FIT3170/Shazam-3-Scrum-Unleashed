@@ -20,7 +20,7 @@ export async function startTournamentHandler(
     res.sendStatus(403);
     return;
   }
-
+  tournament.inProgress = true;
   await roundInitialiser(tournament, io);
   res.sendStatus(200);
 }
