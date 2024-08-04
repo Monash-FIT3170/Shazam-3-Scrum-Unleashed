@@ -32,6 +32,8 @@ export interface PongBallPosition {
 
 export interface PongPaddleState {
   x: number;
+  y: number;
   direction: number; // 0 = no movement, 1 = right, -1 = left
+  width: number;
 }
 

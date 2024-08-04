@@ -47,10 +47,26 @@ io.on("connection", async (socket) => {
   io.to(socket.userID).emit("SESSION_INFO", socket.sessionID, socket.userID);
   await reconnectionHandler(socket, io, tournamentMap);
 
-  const player = new Player(socket.userID, "Test", false)
-  const match = new PongMatch([player,], 3)
-  await socket.join(match.matchRoomID)
-  match.emitGameData(io)
+  const player = new Player(socket.userID, "Test", false);
+  const match = new PongMatch([player], 3);
+  await socket.join(match.matchRoomID);
+  match.emitGameData(io);
+
+  socket.on("PONG_PADDLE_MOVEMENT", (start: boolean, left: boolean) => {
+    if (start) {
+      if (left) {
+        match.paddlePositions[0].direction = -1;
+      } else {
+        match.paddlePositions[0].direction = 1;
+      }
+    } else {
+      if (left && match.paddlePositions[0].direction == -1) {
+        match.paddlePositions[0].direction = 0;
+      } else if (!left && match.paddlePositions[0].direction == 1) {
+        match.paddlePositions[0].direction = 0;
+      }
+    }
+  });
 
   socket.on("CHOOSE_ACTION", chooseActionSocket(io));
   socket.on("ADD_REACTION", addReactionSocket(io));
