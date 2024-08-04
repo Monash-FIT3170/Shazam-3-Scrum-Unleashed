@@ -44,10 +44,9 @@ export class PongMatch implements Match {
   }
 
   emitGameData(io: Server<Events>): void {
-    this.intervalHandler = setInterval(
-      () => this.tick(io),
-      1000 / this.pollRate,
-    );
+    this.intervalHandler = setInterval(() => {
+      this.tick(io);
+    }, 1000 / this.pollRate);
   }
 
   tick(io: Server<Events>): void {
@@ -88,9 +87,9 @@ export class PongMatch implements Match {
 
     // preventing paddle from moving offscreen
     if (paddle0 + this.paddlePositions[0].width >= 100) {
-      paddle0 = 100 -  this.paddlePositions[0].width;
+      paddle0 = 100 - this.paddlePositions[0].width;
     } else if (paddle0 <= 0) {
-        paddle0 = 0;
+      paddle0 = 0;
     }
 
     if (paddle1 + this.paddlePositions[1].width >= 100) {
