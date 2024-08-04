@@ -54,7 +54,7 @@ interface ServerToPlayerEvents {
     ballPosition: PongBallPosition,
     players: PlayerAttributes[],
     paddlePositions: PongPaddleState[],
-    isDuelComplete: boolean,
+    score: number[],
     winnerUserID: string | null
   ) => void;
 }

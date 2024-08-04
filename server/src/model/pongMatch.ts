@@ -16,6 +16,7 @@ export class PongMatch implements Match {
   ballPosition: PongBallPosition;
   pollRate: number; // Hz
   intervalHandler: NodeJS.Timeout | null;
+  score: number[];
 
   constructor(players: Player[], duelsToWin: number) {
     this.players = players;
@@ -33,6 +34,7 @@ export class PongMatch implements Match {
     };
     this.pollRate = 15;
     this.intervalHandler = null;
+    this.score = [0, 0]
   }
 
   isDuelComplete(): boolean {
@@ -65,6 +67,7 @@ export class PongMatch implements Match {
       (this.paddlePositions[1].direction * 60) / this.pollRate;
 
     // ball collision with paddles
+    let paddleCollision = false;
     if (newBallY <= this.paddlePositions[0].y) {
       if (
         newBallX >= paddle0 &&
@@ -72,6 +75,7 @@ export class PongMatch implements Match {
       ) {
         this.ballPosition.yVelocity = -this.ballPosition.yVelocity;
         newBallY = this.paddlePositions[0].y;
+        paddleCollision = true;
       }
     }
 
@@ -82,6 +86,7 @@ export class PongMatch implements Match {
       ) {
         this.ballPosition.yVelocity = -this.ballPosition.yVelocity;
         newBallY = this.paddlePositions[1].y;
+        paddleCollision = true;
       }
     }
 
@@ -106,14 +111,20 @@ export class PongMatch implements Match {
       this.ballPosition.xVelocity = -this.ballPosition.xVelocity;
     }
 
-    // Score
-    if (newBallY >= 100) {
-      newBallY = 100;
-      this.ballPosition.yVelocity = -this.ballPosition.yVelocity;
-    }
-    if (newBallY <= 0) {
-      newBallY = 0;
-      this.ballPosition.yVelocity = -this.ballPosition.yVelocity;
+    // Score (can only happen when paddle did not collide)
+    if (!paddleCollision){
+      if (newBallY >= 100) {
+        newBallY = 50;
+        newBallX = 50;
+        this.ballPosition.yVelocity = -this.ballPosition.yVelocity;
+        this.score[1] += 1;
+      }
+      if (newBallY <= 0) {
+        newBallY = 50;
+        newBallX = 50;
+        this.ballPosition.yVelocity = -this.ballPosition.yVelocity;
+        this.score[0] += 1;
+      }
     }
 
     // Update paddle positions
@@ -129,7 +140,7 @@ export class PongMatch implements Match {
       this.ballPosition,
       this.players,
       this.paddlePositions,
-      this.isDuelComplete(),
+      this.score,
       this.getMatchWinner()?.name ?? null,
     );
     console.log(this.ballPosition);
