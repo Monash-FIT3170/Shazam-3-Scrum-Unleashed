@@ -4,7 +4,7 @@
  * Please add any new events, data or fix any formatting
  */
 
-import { Action, PlayerAttributes, PongBallPosition, ReactionData } from "../types";
+import {Action, PlayerAttributes, PongBallPosition, PongPaddleState, ReactionData} from "../types";
 
 /**
  * Add any new Event Categories to this
@@ -53,6 +53,7 @@ interface ServerToPlayerEvents {
   PONG_STATE: (
     ballPosition: PongBallPosition,
     players: PlayerAttributes[],
+    paddlePositions: PongPaddleState[],
     isDuelComplete: boolean,
     winnerUserID: string | null
   ) => void;

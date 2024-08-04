@@ -1,14 +1,10 @@
-import {
-  Action,
-  PlayerAttributes,
-  PongPaddlePosition,
-} from "../../../types/types";
+import { Action, PlayerAttributes } from "../../../types/types";
 
 export default class Player implements PlayerAttributes {
   public userID: string;
   public name: string;
   public score: number;
-  public gameData: Action | PongPaddlePosition;
+  public gameData: Action;
   public isBot: boolean;
   public isEliminated: boolean;
   public spectatorIDs: string[];

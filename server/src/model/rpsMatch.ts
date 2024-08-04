@@ -55,7 +55,7 @@ export class RpsMatch implements Match {
     }
 
     if (player1.gameData !== player2.gameData) {
-      if (this.rulesMap.get(player1.gameData as Action) === player2.gameData) {
+      if (this.rulesMap.get(player1.gameData) === player2.gameData) {
         player1.score++;
       } else {
         player2.score++;
@@ -70,7 +70,7 @@ export class RpsMatch implements Match {
   }
 
   private getBotAction(bot: Player, player: Player) {
-    const botMove = this.rulesMap.get(player.gameData as Action);
+    const botMove = this.rulesMap.get(player.gameData);
     if (botMove === undefined) {
       console.error("Invalid move chosen by player");
       return;
@@ -102,16 +102,12 @@ export class RpsMatch implements Match {
             ) as Action;
           } else {
             if (player1.gameData === null) {
-              const player1Action = this.rulesMap.get(
-                player2.gameData as Action,
-              );
+              const player1Action = this.rulesMap.get(player2.gameData);
               if (player1Action !== undefined) {
                 player1.gameData = player1Action;
               }
             } else {
-              const player2Action = this.rulesMap.get(
-                player1.gameData as Action,
-              );
+              const player2Action = this.rulesMap.get(player1.gameData);
               if (player2Action !== undefined) {
                 player2.gameData = player2Action;
               }
