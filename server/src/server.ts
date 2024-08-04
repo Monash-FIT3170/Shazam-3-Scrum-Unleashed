@@ -17,6 +17,8 @@ import { reconnectionHandler } from "./utils/reconnectionHelper";
 import { createTournamentHandler } from "./controllers/http/createTournamentHandler";
 import { joinTournamentHandler } from "./controllers/http/joinTournamentHandler";
 import { startTournamentHandler } from "./controllers/http/startTournamentHandler";
+import { PongMatch } from "./model/pongMatch";
+import Player from "./model/player";
 
 const app = express();
 
@@ -44,6 +46,11 @@ io.on("connection", async (socket) => {
   await socket.join(socket.userID);
   io.to(socket.userID).emit("SESSION_INFO", socket.sessionID, socket.userID);
   await reconnectionHandler(socket, io, tournamentMap);
+
+  const player = new Player(socket.userID, "Test", false)
+  const match = new PongMatch([player,], 3)
+  await socket.join(match.matchRoomID)
+  match.emitGameData(io)
 
   socket.on("CHOOSE_ACTION", chooseActionSocket(io));
   socket.on("ADD_REACTION", addReactionSocket(io));

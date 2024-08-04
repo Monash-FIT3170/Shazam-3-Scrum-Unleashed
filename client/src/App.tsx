@@ -26,6 +26,7 @@ import {
 import PlayerScreen from "./pages/PlayerScreen.tsx";
 // import TournamentScreen from "./pages/TournamentScreen.tsx";
 import Home from "./pages/Home.tsx";
+import { Pong } from "./components/pong/Pong.tsx";
 
 declare module "socket.io-client" {
   interface Socket {
@@ -93,7 +94,8 @@ function App() {
 
   return (
     <div className="w-full">
-      <RouterProvider router={router} />
+      <Pong />
+      {/* <RouterProvider router={router} /> */}
     </div>
   );
 }

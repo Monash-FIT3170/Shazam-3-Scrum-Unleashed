@@ -28,10 +28,10 @@ export class PongMatch implements Match {
     this.ballPosition = {
       x: 0,
       y: 0,
-      xVelocity: 10,
-      yVelocity: 10,
+      xVelocity: 100,
+      yVelocity: 100,
     };
-    this.pollRate = 10;
+    this.pollRate = 240;
     this.intervalHandler = null;
   }
 
@@ -44,19 +44,10 @@ export class PongMatch implements Match {
   }
 
   emitGameData(io: Server<Events>): void {
-    io.to(this.matchRoomID).emit(
-      "PONG_STATE",
-      this.ballPosition,
-      this.players,
-      this.paddlePositions,
-      this.isDuelComplete(),
-      this.getMatchWinner()?.name ?? null,
-    );
-
-    this.intervalHandler = setInterval(this.tick,1000/this.pollRate);
+    this.intervalHandler = setInterval(() => this.tick(io), 1000/this.pollRate);
   }
 
-  tick(): void {
+  tick(io: Server<Events>): void {
     // Check if ball collisions
     // - Score Zone
     // - Player
@@ -71,5 +62,14 @@ export class PongMatch implements Match {
       x: this.ballPosition.x + this.ballPosition.xVelocity / this.pollRate,
       y: this.ballPosition.y + this.ballPosition.yVelocity / this.pollRate,
     };
+
+    io.to(this.matchRoomID).emit(
+      "PONG_STATE",
+      this.ballPosition,
+      this.players,
+      this.paddlePositions,
+      this.isDuelComplete(),
+      this.getMatchWinner()?.name ?? null,
+    );
   }
 }
