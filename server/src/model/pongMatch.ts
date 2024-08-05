@@ -23,8 +23,8 @@ export class PongMatch implements Match {
     this.players = players;
     this.ballSpeed = 45;
     this.paddlePositions = [
-      { x: 50, y: 3, direction: 0, width: 20 },
-      { x: 50, y: 97, direction: 0, width: 20 },
+      { x: 50, y: 5, direction: 0, width: 20 },
+      { x: 50, y: 95, direction: 0, width: 20 },
     ];
     this.matchRoomID = crypto.randomUUID();
     this.duelsToWin = duelsToWin;

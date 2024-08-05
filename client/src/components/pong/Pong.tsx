@@ -13,7 +13,7 @@ const BALL_SIZE = 10;
 
 const Ball = ({ x, y }: BallPosition) => (
   <div
-    className="absolute bg-white rounded-full"
+    className="absolute bg-white rounded-full translate-x-1/2 -translate-y-1/2"
     style={{
       left: `${x}%`,
       top: `${y}%`,
@@ -23,9 +23,9 @@ const Ball = ({ x, y }: BallPosition) => (
   />
 );
 
-const Paddle = ( { x, y, width } : PongPaddleState) => (
+const Paddle = ( { x, y, width, top } : PongPaddleState & { top: boolean }) => (
     <div
-        className="absolute bg-white"
+        className={"absolute bg-white " + (top ? "origin-bottom -translate-y-full" : "")}
         style={{
             left: `${x}%`,
             top: `${y}%`,
@@ -81,10 +81,7 @@ const Pong = () => {
               className="relative bg-black"
               style={{width: `${GAME_WIDTH}px`, height: `${GAME_HEIGHT}px`}}
           >
-              <div className="justify-content-center align-items-center text-white text-5xl" style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
+              <div className="justify-center items-center flex text-white text-5xl" style={{
                   height: `${GAME_HEIGHT}px`
               }}>
                   {player1Score} : {player2Score}
@@ -92,10 +89,11 @@ const Pong = () => {
               <Ball x={ballPosition.x} y={ballPosition.y}/>
               {paddle1Position !== undefined &&
                   <Paddle x={paddle1Position.x} y={paddle1Position.y} width={paddle1Position.width}
-                          direction={paddle1Position.direction}/>}
+                          direction={paddle1Position.direction} top/>
+                          }
               {paddle2Position !== undefined &&
                   <Paddle x={paddle2Position.x} y={paddle2Position.y} width={paddle2Position.width}
-                          direction={paddle2Position.direction}/>}
+                          direction={paddle2Position.direction} top={false}/>}
           </div>
 
   );
