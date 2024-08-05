@@ -1,7 +1,7 @@
 export interface PlayerAttributes {
   name: string;
   userID: string;
-  gameData: Action | PongPaddleState;
+  gameData: Action;
   score: number;
   isBot: boolean;
   isEliminated: boolean;
@@ -23,7 +23,7 @@ export interface ReactionData {
   y: number;
 }
 
-export interface PongBallPosition {
+export interface PongBallState {
   x: number;
   y: number;
   xVelocity: number;

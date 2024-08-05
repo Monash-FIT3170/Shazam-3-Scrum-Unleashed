@@ -55,15 +55,15 @@ io.on("connection", async (socket) => {
   socket.on("PONG_PADDLE_MOVEMENT", (start: boolean, left: boolean) => {
     if (start) {
       if (left) {
-        match.paddlePositions[0].direction = -1;
+        match.paddleStates[0].direction = -1;
       } else {
-        match.paddlePositions[0].direction = 1;
+        match.paddleStates[0].direction = 1;
       }
     } else {
-      if (left && match.paddlePositions[0].direction == -1) {
-        match.paddlePositions[0].direction = 0;
-      } else if (!left && match.paddlePositions[0].direction == 1) {
-        match.paddlePositions[0].direction = 0;
+      if (left && match.paddleStates[0].direction == -1) {
+        match.paddleStates[0].direction = 0;
+      } else if (!left && match.paddleStates[0].direction == 1) {
+        match.paddleStates[0].direction = 0;
       }
     }
   });

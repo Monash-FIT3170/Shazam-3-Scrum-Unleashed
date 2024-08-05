@@ -19,8 +19,8 @@ const DuelOutcome = ({ userPlayer, opponent }: PlayerProps) => {
   let duelResult: DuelResult = "DRAW";
   let userPlayerHandType: HandImgType = "FILLED";
   let opponentHandType: HandImgType = "FILLED";
-  if (userPlayer.actionChoice !== opponent.actionChoice) {
-    if (rulesMap.get(userPlayer.actionChoice) === opponent.actionChoice) {
+  if (userPlayer.gameData !== opponent.gameData) {
+    if (rulesMap.get(userPlayer.gameData) === opponent.gameData) {
       duelResult = "WIN";
       opponentHandType = "OUTLINED";
     } else {
@@ -32,12 +32,12 @@ const DuelOutcome = ({ userPlayer, opponent }: PlayerProps) => {
   return (
     <div>
       <PlayerMoveHand
-        playerMove={opponent.actionChoice ?? "ROCK"}
+        playerMove={opponent.gameData ?? "ROCK"}
         isOpponent={true}
         handType={opponentHandType}
       />
       <PlayerMoveHand
-        playerMove={userPlayer.actionChoice ?? "ROCK"}
+        playerMove={userPlayer.gameData ?? "ROCK"}
         isOpponent={false}
         handType={userPlayerHandType}
       />

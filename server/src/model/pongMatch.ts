@@ -1,42 +1,42 @@
 import { Server } from "socket.io";
 import {
   PlayerAttributes,
-  PongBallPosition,
+  PongBallState,
   PongPaddleState,
 } from "../../../types/types";
 import { Match } from "./match";
 import Player from "./player";
 import { Events } from "../../../types/socket/events";
 
+const INITIAL_BALL_Y_SPEED = 30;
+const POLL_RATE = 30; // Hz
+
 export class PongMatch implements Match {
   duelsToWin: number;
   matchRoomID: string;
   players: PlayerAttributes[];
-  paddlePositions: PongPaddleState[];
-  ballPosition: PongBallPosition;
-  pollRate: number; // Hz
+  paddleStates: PongPaddleState[];
+  ballState: PongBallState;
   intervalHandler: NodeJS.Timeout | null;
   score: number[];
-  ballSpeed: number;
 
   constructor(players: Player[], duelsToWin: number) {
     this.players = players;
-    this.ballSpeed = 45;
-    this.paddlePositions = [
+
+    this.paddleStates = [
       { x: 50, y: 5, direction: 0, width: 20 },
       { x: 50, y: 95, direction: 0, width: 20 },
     ];
     this.matchRoomID = crypto.randomUUID();
     this.duelsToWin = duelsToWin;
-    this.ballPosition = {
+    this.ballState = {
       x: 50,
       y: 50,
-      xVelocity: Math.sqrt(Math.pow(this.ballSpeed,2)/2),
-      yVelocity: - Math.sqrt(Math.pow(this.ballSpeed,2)/2),
+      xVelocity: this.randomXVelocity(),
+      yVelocity: INITIAL_BALL_Y_SPEED,
     };
-    this.pollRate = 30;
     this.intervalHandler = null;
-    this.score = [0, 0]
+    this.score = [0, 0];
   }
 
   isDuelComplete(): boolean {
@@ -50,112 +50,127 @@ export class PongMatch implements Match {
   emitGameData(io: Server<Events>): void {
     this.intervalHandler = setInterval(() => {
       this.tick(io);
-    }, 1000 / this.pollRate);
+    }, 1000 / POLL_RATE);
+  }
+
+  randomXVelocity(): number {
+    return (Math.random() - 0.5) * 2 * INITIAL_BALL_Y_SPEED;
+  }
+
+  ballPaddleCollision(
+    paddleX: number,
+    paddleWidth: number,
+    ballX: number,
+  ): void {
+    if (this.ballState.yVelocity < 0) {
+      this.ballState.yVelocity -= 1;
+    } else {
+      this.ballState.yVelocity += 1;
+    }
+    this.ballState.yVelocity *= -1;
+
+    const relativeIntersectX = paddleX + paddleWidth / 2 - ballX;
+    const normalizedRelativeIntersectionY =
+      relativeIntersectX / (paddleWidth / 2);
+    const bounceAngle = (normalizedRelativeIntersectionY * 5 * Math.PI) / 12;
+
+    this.ballState.xVelocity =
+      Math.abs(this.ballState.yVelocity) * -Math.sin(bounceAngle);
   }
 
   tick(io: Server<Events>): void {
     // Calculating the new ball and paddle coordinates
-    let newBallX =
-      this.ballPosition.x + this.ballPosition.xVelocity / this.pollRate;
-    let newBallY =
-      this.ballPosition.y + this.ballPosition.yVelocity / this.pollRate;
+    let newBallX = this.ballState.x + this.ballState.xVelocity / POLL_RATE;
+    let newBallY = this.ballState.y + this.ballState.yVelocity / POLL_RATE;
 
     let paddle0 =
-      this.paddlePositions[0].x +
-      (this.paddlePositions[0].direction * 60) / this.pollRate;
+      this.paddleStates[0].x +
+      (this.paddleStates[0].direction * 60) / POLL_RATE;
 
     let paddle1 =
-      this.paddlePositions[1].x +
-      (this.paddlePositions[1].direction * 60) / this.pollRate;
+      this.paddleStates[1].x +
+      (this.paddleStates[1].direction * 60) / POLL_RATE;
 
     // ball collision with paddles
     let paddleCollision = false;
-    if (newBallY <= this.paddlePositions[0].y) {
+    if (newBallY <= this.paddleStates[0].y) {
       if (
         newBallX >= paddle0 &&
-        newBallX <= paddle0 + this.paddlePositions[0].width
+        newBallX <= paddle0 + this.paddleStates[0].width
       ) {
-
-        this.ballSpeed += 1;
-        const relativeIntersectX = (paddle0+(this.paddlePositions[0].width/2)) - newBallX;
-
-        const normalizedRelativeIntersectionY = (relativeIntersectX/(this.paddlePositions[0].width/2));
-
-        const bounceAngle = normalizedRelativeIntersectionY * 5*Math.PI/12;
-
-        this.ballPosition.xVelocity = this.ballSpeed*-Math.sin(bounceAngle);
-        this.ballPosition.yVelocity = this.ballSpeed*Math.cos(bounceAngle);
-
-        //this.ballPosition.yVelocity = -this.ballPosition.yVelocity;
-        newBallY = this.paddlePositions[0].y;
+        this.ballPaddleCollision(paddle0, this.paddleStates[0].width, newBallX);
+        newBallY = this.paddleStates[0].y;
         paddleCollision = true;
       }
     }
 
-    if (newBallY >= this.paddlePositions[1].y) {
+    if (newBallY >= this.paddleStates[1].y) {
       if (
         newBallX >= paddle1 &&
-        newBallX <= paddle1 + this.paddlePositions[1].width
+        newBallX <= paddle1 + this.paddleStates[1].width
       ) {
-        this.ballPosition.yVelocity = -this.ballPosition.yVelocity;
-        newBallY = this.paddlePositions[1].y;
+        this.ballPaddleCollision(paddle1, this.paddleStates[1].width, newBallX);
+        newBallY = this.paddleStates[1].y;
         paddleCollision = true;
       }
     }
 
-    // preventing paddle from moving offscreen
-    if (paddle0 + this.paddlePositions[0].width >= 100) {
-      paddle0 = 100 - this.paddlePositions[0].width;
+    // Preventing paddles from moving offscreen
+    if (paddle0 + this.paddleStates[0].width >= 100) {
+      paddle0 = 100 - this.paddleStates[0].width;
     } else if (paddle0 <= 0) {
       paddle0 = 0;
     }
 
-    if (paddle1 + this.paddlePositions[1].width >= 100) {
-      paddle1 = 100 - this.paddlePositions[1].width;
+    if (paddle1 + this.paddleStates[1].width >= 100) {
+      paddle1 = 100 - this.paddleStates[1].width;
     } else if (paddle1 <= 0) {
       paddle1 = 0;
     }
 
+    // Bounce ball off walls
     if (newBallX >= 100) {
       newBallX = 100;
-      this.ballPosition.xVelocity = -this.ballPosition.xVelocity;
+      this.ballState.xVelocity = -this.ballState.xVelocity;
     } else if (newBallX <= 0) {
       newBallX = 0;
-      this.ballPosition.xVelocity = -this.ballPosition.xVelocity;
+      this.ballState.xVelocity = -this.ballState.xVelocity;
     }
 
     // Score (can only happen when paddle did not collide)
-    if (!paddleCollision){
+    if (!paddleCollision) {
       if (newBallY >= 100) {
         newBallY = 50;
         newBallX = 50;
-        this.ballPosition.yVelocity = -this.ballPosition.yVelocity;
+        this.ballState.yVelocity = INITIAL_BALL_Y_SPEED;
+        this.ballState.xVelocity = this.randomXVelocity();
         this.score[1] += 1;
       }
       if (newBallY <= 0) {
         newBallY = 50;
         newBallX = 50;
-        this.ballPosition.yVelocity = -this.ballPosition.yVelocity;
+        this.ballState.yVelocity = -INITIAL_BALL_Y_SPEED;
+        this.ballState.xVelocity = this.randomXVelocity();
         this.score[0] += 1;
       }
     }
 
     // Update paddle positions
-    this.paddlePositions[0].x = paddle0;
-    this.paddlePositions[1].x = paddle1;
+    this.paddleStates[0].x = paddle0;
+    this.paddleStates[1].x = paddle1;
 
     // Update Ball
-    this.ballPosition.x = newBallX;
-    this.ballPosition.y = newBallY;
+    this.ballState.x = newBallX;
+    this.ballState.y = newBallY;
 
     io.to(this.matchRoomID).emit(
       "PONG_STATE",
-      this.ballPosition,
+      this.ballState,
       this.players,
-      this.paddlePositions,
+      this.paddleStates,
       this.score,
       this.getMatchWinner()?.name ?? null,
     );
-    console.log(this.ballPosition);
+    console.log(this.ballState);
   }
 }
