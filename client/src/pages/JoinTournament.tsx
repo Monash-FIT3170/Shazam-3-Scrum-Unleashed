@@ -8,6 +8,7 @@ import InputComponent from "../components/inputs/InputComponent.tsx";
 import FormButton from "../components/buttons/FormButton.tsx";
 import { JoinTournamentRes } from "../../../types/requestTypes.ts";
 import { JoinError } from "../../../types/socket/eventArguments.ts";
+import ButtonComponent from "../components/buttons/BorderedButtonComponent.tsx";
 
 async function postJoinTournament(
   userID: string,
@@ -88,32 +89,37 @@ const JoinTournament = () => {
   }, [status]);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen overflow-hidden">
-      <div className=" items-center size-60 w-full">
-        <DisplayLogo />
+    <div>
+      <div className="fixed top-0 md:right-20 right-5">
+        <ButtonComponent linkPath="/" text={"Back"} />
       </div>
+      <div className="flex flex-col items-center justify-center h-screen overflow-hidden">
+        <div className=" items-center size-60 w-full">
+          <DisplayLogo />
+        </div>
 
-      <InputComponent
-        value={tournamentCode}
-        callback={changeTournamentCode}
-        placeholder={"6 DIGIT ROOM CODE"}
-        disabled={loading}
-        data-testid={"tournament-code-input"}
-      />
-      <InputComponent
-        value={playerName}
-        callback={changePlayerName}
-        placeholder={"NAME"}
-        disabled={loading}
-        data-testid={"player-name-input"}
-      />
+        <InputComponent
+          value={tournamentCode}
+          callback={changeTournamentCode}
+          placeholder={"6 DIGIT ROOM CODE"}
+          disabled={loading}
+          data-testid={"tournament-code-input"}
+        />
+        <InputComponent
+          value={playerName}
+          callback={changePlayerName}
+          placeholder={"NAME"}
+          disabled={loading}
+          data-testid={"player-name-input"}
+        />
 
-      <FormButton
-        text={"Join Game"}
-        status={status ?? "OK"}
-        loading={loading}
-        callback={joinTournament}
-      />
+        <FormButton
+          text={"Join Game"}
+          status={status ?? "OK"}
+          loading={loading}
+          callback={joinTournament}
+        />
+      </div>
     </div>
   );
 };

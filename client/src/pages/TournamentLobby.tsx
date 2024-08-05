@@ -7,6 +7,7 @@ import PlayerCard from "../components/lobby/PlayerCard.tsx";
 import TournamentLobbyBanner from "../components/lobby/TournamentLobbyBanner.tsx";
 import TournamentBracketBanner from "../components/lobby/TournamentBracketBanner.tsx";
 import TournamentWin from "../components/player-screen/tournament-win/TournamentWin.tsx";
+import ButtonComponent from "../components/buttons/BorderedButtonComponent.tsx";
 
 async function fetchQrCode(
   returnUrl: string,
@@ -112,6 +113,9 @@ const TournamentLobby = () => {
           </div>
         </div>
       )}
+      <div className="fixed bottom-10 md:left-20 left-5">
+        <ButtonComponent linkPath="/" text={"Quit Tournament"} />
+      </div>
     </div>
   );
 };
