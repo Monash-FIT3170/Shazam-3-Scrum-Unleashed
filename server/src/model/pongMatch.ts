@@ -17,22 +17,24 @@ export class PongMatch implements Match {
   pollRate: number; // Hz
   intervalHandler: NodeJS.Timeout | null;
   score: number[];
+  ballSpeed: number;
 
   constructor(players: Player[], duelsToWin: number) {
     this.players = players;
+    this.ballSpeed = 45;
     this.paddlePositions = [
-      { x: 50, y: 3, direction: 0, width: 15 },
-      { x: 50, y: 97, direction: 0, width: 15 },
+      { x: 50, y: 3, direction: 0, width: 20 },
+      { x: 50, y: 97, direction: 0, width: 20 },
     ];
     this.matchRoomID = crypto.randomUUID();
     this.duelsToWin = duelsToWin;
     this.ballPosition = {
       x: 50,
       y: 50,
-      xVelocity: 30,
-      yVelocity: 30,
+      xVelocity: Math.sqrt(Math.pow(this.ballSpeed,2)/2),
+      yVelocity: - Math.sqrt(Math.pow(this.ballSpeed,2)/2),
     };
-    this.pollRate = 15;
+    this.pollRate = 30;
     this.intervalHandler = null;
     this.score = [0, 0]
   }
@@ -73,7 +75,18 @@ export class PongMatch implements Match {
         newBallX >= paddle0 &&
         newBallX <= paddle0 + this.paddlePositions[0].width
       ) {
-        this.ballPosition.yVelocity = -this.ballPosition.yVelocity;
+
+        this.ballSpeed += 1;
+        const relativeIntersectX = (paddle0+(this.paddlePositions[0].width/2)) - newBallX;
+
+        const normalizedRelativeIntersectionY = (relativeIntersectX/(this.paddlePositions[0].width/2));
+
+        const bounceAngle = normalizedRelativeIntersectionY * 5*Math.PI/12;
+
+        this.ballPosition.xVelocity = this.ballSpeed*-Math.sin(bounceAngle);
+        this.ballPosition.yVelocity = this.ballSpeed*Math.cos(bounceAngle);
+
+        //this.ballPosition.yVelocity = -this.ballPosition.yVelocity;
         newBallY = this.paddlePositions[0].y;
         paddleCollision = true;
       }
