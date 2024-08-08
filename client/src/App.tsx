@@ -94,8 +94,8 @@ function App() {
 
   return (
     <div className="w-full">
-      <Pong />
-      {/* <RouterProvider router={router} /> */}
+      {/*<Pong />*/}
+       <RouterProvider router={router} />
     </div>
   );
 }

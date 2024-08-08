@@ -31,6 +31,13 @@ export const playDuel =
       return;
     }
 
+    for (const player of match.players){
+        if (player.userID !== matchWinnerUserID){
+            player.isEliminated = true;
+        }
+    }
+    io.to(tournament.hostUID).emit("PLAYERS_UPDATE", tournament.players);
+
     if (tournament.matches.every((e) => e.getMatchWinner() !== null)) {
       setTimeout(() => {
         if (tournament.matches.length === 1) {
