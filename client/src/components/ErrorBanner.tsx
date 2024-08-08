@@ -2,12 +2,13 @@ import closeSymbol from "../assets/close.svg";
 import errorSymbol from "../assets/outlined-error.svg";
 
 type BannerProps = {
-    message:string;
+    message:string|undefined;
+    removeError:()=>void;
 };
 
 
 
-const ErrorBanner = ({message}: BannerProps) => {
+const ErrorBanner = ({message, removeError}: BannerProps) => {
   return (
     <div
       id="bottom-banner"
@@ -24,6 +25,7 @@ const ErrorBanner = ({message}: BannerProps) => {
           data-dismiss-target="#bottom-banner"
           type="button"
           className="text-red hover:bg-gray-400 rounded-lg"
+          onClick={()=>removeError()}
         >
           <img src={closeSymbol} alt={"Close Error Banner"}/>
           <span className="sr-only">Close banner</span>
