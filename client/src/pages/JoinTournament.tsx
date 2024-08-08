@@ -118,8 +118,14 @@ const JoinTournament = () => {
           callback={joinTournament}
         />
       </div>
-      {
-        (!status && status !== "OK") ? null: <ErrorBanner message={status} removeError={()=>{setStatus(undefined)}}/>}
+      {!status && status !== "OK" ? null : (
+        <ErrorBanner
+          message={status}
+          removeError={() => {
+            setStatus(undefined);
+          }}
+        />
+      )}
     </div>
   );
 };

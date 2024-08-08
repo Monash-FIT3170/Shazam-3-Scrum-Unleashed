@@ -8,7 +8,7 @@ export default class Tournament {
   public duelTime: number;
   public matchTime: number;
   public matches: Match[];
-  public inProgress : boolean;
+  public inProgress: boolean;
 
   constructor(
     hostID: string,

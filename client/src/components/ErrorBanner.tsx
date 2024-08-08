@@ -2,32 +2,28 @@ import closeSymbol from "../assets/close.svg";
 import errorSymbol from "../assets/outlined-error.svg";
 
 type BannerProps = {
-    message:string|undefined;
-    removeError:()=>void;
+  message: string | undefined;
+  removeError: () => void;
 };
 
-
-
-const ErrorBanner = ({message, removeError}: BannerProps) => {
+const ErrorBanner = ({ message, removeError }: BannerProps) => {
   return (
     <div
       id="bottom-banner"
       className="fixed bottom-0 start-0 z-50 flex justify-between w-full h-32 p-4 bg-bright-red"
     >
       <div className="flex items-center mx-auto">
-        <img src={errorSymbol} alt={"Error"}/>
-        <p className="flex font-bold text-3xl text-white pl-2">
-            {message}
-        </p>
+        <img src={errorSymbol} alt={"Error"} />
+        <p className="flex font-bold text-3xl text-white pl-2">{message}</p>
       </div>
       <div className="flex items-center">
         <button
           data-dismiss-target="#bottom-banner"
           type="button"
           className="text-red hover:bg-gray-400 rounded-lg"
-          onClick={()=>removeError()}
+          onClick={() => removeError()}
         >
-          <img src={closeSymbol} alt={"Close Error Banner"}/>
+          <img src={closeSymbol} alt={"Close Error Banner"} />
           <span className="sr-only">Close banner</span>
         </button>
       </div>
