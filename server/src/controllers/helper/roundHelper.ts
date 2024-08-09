@@ -5,6 +5,7 @@ import Tournament from "src/model/tournament";
 import { Server } from "socket.io";
 import { Events } from "../../../../types/socket/events";
 import { Match } from "src/model/match";
+import { PongMatch } from "../../model/pongMatch";
 
 export async function roundInitialiser(
   tournament: Tournament,
@@ -60,11 +61,11 @@ function roundAllocator(tournament: Tournament): {
   for (let i = 0; i < winningPlayers.length; i++) {
     if (i < bots.length) {
       matches.push(
-        new RpsMatch([winningPlayers[i], bots[i]], tournament.duelsToWin),
+        new PongMatch([winningPlayers[i], bots[i]], tournament.duelsToWin),
       );
     } else {
       matches.push(
-        new RpsMatch(
+        new PongMatch(
           [winningPlayers[i], winningPlayers[i + 1]],
           tournament.duelsToWin,
         ),

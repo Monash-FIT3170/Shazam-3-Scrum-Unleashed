@@ -33,6 +33,8 @@ interface PlayerToServerEvents {
   ) => void;
 
   PONG_PADDLE_MOVEMENT: (
+    tournamentCode: string,
+    playerID: string,
     start: boolean,
     left: boolean,
   ) => void;

@@ -171,6 +171,5 @@ export class PongMatch implements Match {
       this.score,
       this.getMatchWinner()?.name ?? null,
     );
-    console.log(this.ballState);
   }
 }

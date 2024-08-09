@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import WaitingForMatchStart from "../components/player-screen/waiting-screens/WaitingForMatchStart.tsx";
 import { socket } from "../App";
-import { PlayerAttributes } from "../../../types/types.ts";
+import {PlayerAttributes, PongBallState, PongPaddleState} from "../../../types/types.ts";
 import ChoosePlayerMove from "../components/player-screen/choose-move/ChoosePlayerMove.tsx";
 import { useLoaderData } from "react-router-dom";
 import DuelOutcome from "../components/player-screen/outcome-screens/DuelOutcome.tsx";
@@ -9,6 +9,17 @@ import PlayerAndSpectatorsInfo from "../components/player-screen/match-overlay/P
 import MatchOutcomeScreen from "../components/player-screen/outcome-screens/MatchOutcomeScreen.tsx";
 import TournamentWin from "../components/player-screen/tournament-win/TournamentWin.tsx";
 import ReactionOverlay from "../components/reactions/ReactionsOverlay.tsx";
+import {Pong} from "../components/pong/Pong.tsx";
+
+
+export type PongStateIHateThis = {
+  ballState: PongBallState,
+  players: PlayerAttributes[],
+  paddleStates: PongPaddleState[],
+  score: number[],
+  winnerUserID: string | null
+}
+
 
 const PlayerScreen = () => {
   const { loadedTournamentCode, loadedPlayerName } = useLoaderData() as {
@@ -31,6 +42,8 @@ const PlayerScreen = () => {
     string | undefined
   >();
   const [isSpectator, setIsSpectator] = useState(false);
+
+  const [pongState, setPongState] = useState<PongStateIHateThis>();
 
   function setPlayers(players: PlayerAttributes[]) {
     for (const player of players) {
@@ -63,6 +76,12 @@ const PlayerScreen = () => {
   }
 
   useEffect(() => {
+    socket.on("PONG_STATE", (ballState, players, paddleStates, score, winnerUserID) => {
+        setPongState({ballState, players, paddleStates, score, winnerUserID});
+        setPlayers(players);
+    });
+
+
     socket.on("MATCH_INFO", (players, isDuelComplete, winnerUserID) => {
       console.log(players);
       setPlayers(players);
@@ -118,7 +137,8 @@ const PlayerScreen = () => {
   } else if (isSpectator) {
     content = <></>;
   } else {
-    content = <ChoosePlayerMove tournamentCode={tournamentCode} />;
+    //content = <ChoosePlayerMove tournamentCode={tournamentCode} />;
+    content = <Pong tournamentCode={tournamentCode} playerID={userPlayer.userID} pongState={pongState}/>
   }
 
   return (
