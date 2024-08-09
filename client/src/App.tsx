@@ -24,7 +24,6 @@ import {
   playerScreenLoader,
 } from "./loaders";
 import PlayerScreen from "./pages/PlayerScreen.tsx";
-// import TournamentScreen from "./pages/TournamentScreen.tsx";
 import Home from "./pages/Home.tsx";
 
 declare module "socket.io-client" {

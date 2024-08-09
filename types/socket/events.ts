@@ -4,16 +4,16 @@
  * Please add any new events, data or fix any formatting
  */
 
-import { Action, PlayerAttributes, ReactionData } from "../types";
+import {Action, PlayerAttributes, PongBallState, PongPaddleState, ReactionData} from "../types";
 
 /**
  * Add any new Event Categories to this
  */
 export interface Events
   extends HostToClientEvents,
-    PlayerToServerEvents,
-    ServerToHostEvents,
-    ServerToPlayerEvents {}
+  PlayerToServerEvents,
+  ServerToHostEvents,
+  ServerToPlayerEvents { }
 
 interface HostToClientEvents {
   SESSION_INFO: (sessionID: string, userID: string) => void;
@@ -31,6 +31,13 @@ interface PlayerToServerEvents {
     reaction: ReactionData,
     spectatorID: string
   ) => void;
+
+  PONG_PADDLE_MOVEMENT: (
+    tournamentCode: string,
+    playerID: string,
+    start: boolean,
+    left: boolean,
+  ) => void;
 }
 
 interface ServerToHostEvents {
@@ -44,4 +51,11 @@ interface ServerToPlayerEvents {
     winnerUserID: string | null
   ) => void;
   REACTION_ADDED: (reaction: ReactionData) => void;
+
+  PONG_STATE: (
+    ballState: PongBallState,
+    players: PlayerAttributes[],
+    paddleStates: PongPaddleState[],
+    winnerUserID: string | null
+  ) => void;
 }

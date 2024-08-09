@@ -1,19 +1,24 @@
-import Player from "./player";
 import { Match } from "./match";
+import Player from "./player";
+
+type MatchType = "PONG" | "RPS";
 
 export default class Tournament {
-  public hostUID: string;
-  public players: Player[];
-  public duelsToWin: number;
-  public duelTime: number;
-  public matchTime: number;
-  public matches: Match[];
+  hostUID: string;
+  players: Player[];
+  duelsToWin: number;
+  duelTime: number;
+  matchTime: number;
+  matches: Match[];
+  matchTypeOrder: MatchType[];
+  roundCounter: number;
 
   constructor(
     hostID: string,
     duelsToWin: number,
     duelTime: number,
     matchTime: number,
+    // matchType: MatchType,
   ) {
     this.hostUID = hostID;
     this.duelsToWin = duelsToWin;
@@ -21,6 +26,8 @@ export default class Tournament {
     this.matchTime = matchTime;
     this.players = new Array<Player>();
     this.matches = [];
+    this.matchTypeOrder = ["PONG", "RPS"];
+    this.roundCounter = 0;
   }
 
   public addPlayer(player: Player) {

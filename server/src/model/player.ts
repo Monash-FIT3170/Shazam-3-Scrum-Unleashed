@@ -4,7 +4,7 @@ export default class Player implements PlayerAttributes {
   public userID: string;
   public name: string;
   public score: number;
-  public actionChoice: Action;
+  public gameData: Action;
   public isBot: boolean;
   public isEliminated: boolean;
   public spectatorIDs: string[];
@@ -14,7 +14,7 @@ export default class Player implements PlayerAttributes {
     this.name = name;
     this.score = 0;
     this.isBot = isBot;
-    this.actionChoice = null;
+    this.gameData = null;
     this.isEliminated = false;
     this.spectatorIDs = [];
   }

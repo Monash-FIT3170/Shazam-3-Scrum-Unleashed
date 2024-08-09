@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import WaitingForMatchStart from "../components/player-screen/waiting-screens/WaitingForMatchStart.tsx";
 import { socket } from "../App";
-import { PlayerAttributes } from "../../../types/types.ts";
+import {
+  PlayerAttributes,
+  PongBallState,
+  PongPaddleState,
+} from "../../../types/types.ts";
 import ChoosePlayerMove from "../components/player-screen/choose-move/ChoosePlayerMove.tsx";
 import { useLoaderData } from "react-router-dom";
 import DuelOutcome from "../components/player-screen/outcome-screens/DuelOutcome.tsx";
@@ -9,6 +13,14 @@ import PlayerAndSpectatorsInfo from "../components/player-screen/match-overlay/P
 import MatchOutcomeScreen from "../components/player-screen/outcome-screens/MatchOutcomeScreen.tsx";
 import TournamentWin from "../components/player-screen/tournament-win/TournamentWin.tsx";
 import ReactionOverlay from "../components/reactions/ReactionsOverlay.tsx";
+import { Pong } from "../components/pong/Pong.tsx";
+
+export type PongState = {
+  ballState: PongBallState;
+  players: PlayerAttributes[];
+  paddleStates: PongPaddleState[];
+  winnerUserID: string | null;
+};
 
 const PlayerScreen = () => {
   const { loadedTournamentCode, loadedPlayerName } = useLoaderData() as {
@@ -31,6 +43,8 @@ const PlayerScreen = () => {
     string | undefined
   >();
   const [isSpectator, setIsSpectator] = useState(false);
+
+  const [pongState, setPongState] = useState<PongState>();
 
   function setPlayers(players: PlayerAttributes[]) {
     for (const player of players) {
@@ -63,11 +77,36 @@ const PlayerScreen = () => {
   }
 
   useEffect(() => {
+    socket.on(
+      "PONG_STATE",
+      (ballState, players, paddleStates, winnerUserID) => {
+        requestAnimationFrame(() => {
+          setPongState({
+            ballState,
+            players,
+            paddleStates,
+            winnerUserID,
+          });
+
+          setIsSpectator(getIsSpectator(players));
+
+          if (winnerUserID) {
+            setMatchComplete(true);
+            setWinnerUserID(winnerUserID);
+          }
+
+          // TODO - Rory to send players in seperate event, we don't need this every time.
+          setPlayers(players);
+        });
+      },
+    );
+
     socket.on("MATCH_INFO", (players, isDuelComplete, winnerUserID) => {
       console.log(players);
       setPlayers(players);
       setDuelComplete(isDuelComplete);
       setIsSpectator(getIsSpectator(players));
+      setPongState(undefined);
 
       console.log("is spectator ", getIsSpectator(players));
 
@@ -117,8 +156,16 @@ const PlayerScreen = () => {
     }, MATCH_COMPLETION_TIME);
   } else if (isSpectator) {
     content = <></>;
-  } else {
+  } else if (!pongState) {
     content = <ChoosePlayerMove tournamentCode={tournamentCode} />;
+  } else {
+    content = (
+      <Pong
+        tournamentCode={tournamentCode}
+        playerID={userPlayer.userID}
+        pongState={pongState}
+      />
+    );
   }
 
   return (
