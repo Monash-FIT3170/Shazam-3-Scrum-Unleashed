@@ -15,11 +15,10 @@ import TournamentWin from "../components/player-screen/tournament-win/Tournament
 import ReactionOverlay from "../components/reactions/ReactionsOverlay.tsx";
 import { Pong } from "../components/pong/Pong.tsx";
 
-export type PongStateIHateThis = {
+export type PongState = {
   ballState: PongBallState;
   players: PlayerAttributes[];
   paddleStates: PongPaddleState[];
-  score: number[];
   winnerUserID: string | null;
 };
 
@@ -45,7 +44,7 @@ const PlayerScreen = () => {
   >();
   const [isSpectator, setIsSpectator] = useState(false);
 
-  const [pongState, setPongState] = useState<PongStateIHateThis>();
+  const [pongState, setPongState] = useState<PongState>();
 
   function setPlayers(players: PlayerAttributes[]) {
     for (const player of players) {
@@ -80,13 +79,12 @@ const PlayerScreen = () => {
   useEffect(() => {
     socket.on(
       "PONG_STATE",
-      (ballState, players, paddleStates, score, winnerUserID) => {
+      (ballState, players, paddleStates, winnerUserID) => {
         requestAnimationFrame(() => {
           setPongState({
             ballState,
             players,
             paddleStates,
-            score,
             winnerUserID,
           });
 
@@ -156,14 +154,14 @@ const PlayerScreen = () => {
   } else if (isSpectator) {
     content = <></>;
   } else {
-    //content = <ChoosePlayerMove tournamentCode={tournamentCode} />;
-    content = (
-      <Pong
-        tournamentCode={tournamentCode}
-        playerID={userPlayer.userID}
-        pongState={pongState}
-      />
-    );
+    content = <ChoosePlayerMove tournamentCode={tournamentCode} />;
+    // content = (
+    //   <Pong
+    //     tournamentCode={tournamentCode}
+    //     playerID={userPlayer.userID}
+    //     pongState={pongState}
+    //   />
+    // );
   }
 
   return (

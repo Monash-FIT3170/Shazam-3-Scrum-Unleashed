@@ -7,9 +7,11 @@ import {
 import { Match } from "./match";
 import Player from "./player";
 import { Events } from "../../../types/socket/events";
+import Tournament from "./tournament";
+import { roundChecker } from "../controllers/helper/roundHelper";
 
 const INITIAL_BALL_Y_SPEED = 30;
-const POLL_RATE = 1000; // Hz
+const POLL_RATE = 30; // Hz
 
 export class PongMatch implements Match {
   duelsToWin: number;
@@ -17,11 +19,12 @@ export class PongMatch implements Match {
   players: PlayerAttributes[];
   paddleStates: PongPaddleState[];
   ballState: PongBallState;
-  intervalHandler: NodeJS.Timeout | null;
+  tournament: Tournament;
+  intervalHandler: NodeJS.Timeout | undefined;
 
-  constructor(players: Player[], duelsToWin: number) {
+  constructor(players: Player[], duelsToWin: number, tournament: Tournament) {
     this.players = players;
-
+    this.tournament = tournament;
     this.paddleStates = [
       { x: 50, y: 5, direction: 0, width: 20 },
       { x: 50, y: 95, direction: 0, width: 20 },
@@ -34,7 +37,7 @@ export class PongMatch implements Match {
       xVelocity: this.randomXVelocity(),
       yVelocity: INITIAL_BALL_Y_SPEED,
     };
-    this.intervalHandler = null;
+    this.intervalHandler = undefined;
   }
 
   // TODO - we don't need is duel complete for pong
@@ -43,9 +46,9 @@ export class PongMatch implements Match {
   }
 
   getMatchWinner(): Player | null {
-    if (this.players[0].score >= 3) {
+    if (this.players[0].score >= this.duelsToWin) {
       return this.players[0];
-    } else if (this.players[1].score >= 3) {
+    } else if (this.players[1].score >= this.duelsToWin) {
       return this.players[1];
     } else {
       return null;
@@ -143,6 +146,7 @@ export class PongMatch implements Match {
     }
 
     // Score (can only happen when paddle did not collide)
+    let winner = null;
     if (!paddleCollision) {
       if (newBallY >= 100) {
         newBallY = 50;
@@ -150,6 +154,7 @@ export class PongMatch implements Match {
         this.ballState.yVelocity = INITIAL_BALL_Y_SPEED;
         this.ballState.xVelocity = this.randomXVelocity();
         this.players[1].score += 1;
+        winner = this.getMatchWinner();
       }
       if (newBallY <= 0) {
         newBallY = 50;
@@ -157,6 +162,7 @@ export class PongMatch implements Match {
         this.ballState.yVelocity = -INITIAL_BALL_Y_SPEED;
         this.ballState.xVelocity = this.randomXVelocity();
         this.players[0].score += 1;
+        winner = this.getMatchWinner();
       }
     }
 
@@ -173,11 +179,12 @@ export class PongMatch implements Match {
       this.ballState,
       this.players,
       this.paddleStates,
-
-      // TODO - don't need to transmit score
-      this.players.map((player) => player.score),
-
-      this.getMatchWinner()?.name ?? null,
+      winner?.name ?? null,
     );
+
+    if (winner != null) {
+      roundChecker(this.tournament, io, this);
+      clearInterval(this.intervalHandler);
+    }
   }
 }

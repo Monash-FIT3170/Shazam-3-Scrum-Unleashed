@@ -1,11 +1,15 @@
 import { roundStartEmitter } from "src/emitters/roundStartEmitter";
-import { RpsMatch } from "src/model/rpsMatch";
 import Player from "src/model/player";
 import Tournament from "src/model/tournament";
 import { Server } from "socket.io";
 import { Events } from "../../../../types/socket/events";
 import { Match } from "src/model/match";
 import { PongMatch } from "../../model/pongMatch";
+import { tournamentMap } from "../../store";
+import { RpsMatch } from "../../model/rpsMatch";
+
+const LIFE_AFTER_COMPLETION = 60000;
+const ROUND_BUFFER_TIME = 8000;
 
 export async function roundInitialiser(
   tournament: Tournament,
@@ -18,7 +22,33 @@ export async function roundInitialiser(
   await roundStartEmitter(tournament, io);
 }
 
+export function roundChecker(
+  tournament: Tournament,
+  io: Server<Events>,
+  match: Match,
+) {
+  if (tournament.matches.every((e) => e.getMatchWinner() !== null)) {
+    setTimeout(() => {
+      if (tournament.matches.length === 1) {
+        io.to(match.matchRoomID)
+          .to(tournament.hostUID)
+          .emit("TOURNAMENT_COMPLETE", match.getMatchWinner()?.name ?? "");
+
+        setTimeout(() => {
+          io.in(match.matchRoomID).socketsLeave(match.matchRoomID);
+          tournamentMap.delete(tournament.hostUID);
+        }, LIFE_AFTER_COMPLETION);
+        return;
+      }
+      roundTerminator(tournament, io);
+      io.to(tournament.hostUID).emit("PLAYERS_UPDATE", tournament.players);
+      void roundInitialiser(tournament, io);
+    }, ROUND_BUFFER_TIME);
+  }
+}
+
 export function roundTerminator(tournament: Tournament, io: Server<Events>) {
+  tournament.roundCounter++;
   for (const match of tournament.matches) {
     handleSpectators(match);
     io.in(match.matchRoomID).socketsLeave(match.matchRoomID);
@@ -48,6 +78,17 @@ function handleSpectators(match: Match) {
   }
 }
 
+function createMatch(players: Player[], tournament: Tournament) {
+  switch (tournament.roundCounter % tournament.matchTypeOrder.length) {
+    case 0:
+      return new RpsMatch(players, tournament.duelsToWin);
+    case 1:
+      return new PongMatch(players, tournament.duelsToWin, tournament);
+    default:
+      return new RpsMatch(players, tournament.duelsToWin);
+  }
+}
+
 function roundAllocator(tournament: Tournament): {
   matches: Match[];
   bots: Player[];
@@ -60,15 +101,10 @@ function roundAllocator(tournament: Tournament): {
   const matches = [];
   for (let i = 0; i < winningPlayers.length; i++) {
     if (i < bots.length) {
-      matches.push(
-        new PongMatch([winningPlayers[i], bots[i]], tournament.duelsToWin),
-      );
+      matches.push(createMatch([winningPlayers[i], bots[i]], tournament));
     } else {
       matches.push(
-        new PongMatch(
-          [winningPlayers[i], winningPlayers[i + 1]],
-          tournament.duelsToWin,
-        ),
+        createMatch([winningPlayers[i], winningPlayers[i + 1]], tournament),
       );
       i++;
     }

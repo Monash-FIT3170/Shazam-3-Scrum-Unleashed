@@ -17,9 +17,7 @@ import { reconnectionHandler } from "./utils/reconnectionHelper";
 import { createTournamentHandler } from "./controllers/http/createTournamentHandler";
 import { joinTournamentHandler } from "./controllers/http/joinTournamentHandler";
 import { startTournamentHandler } from "./controllers/http/startTournamentHandler";
-import { PongMatch } from "./model/pongMatch";
-import Player from "./model/player";
-import {pongPaddleMovementSocket} from "./controllers/socket/pongPaddleMovement";
+import { pongPaddleMovementSocket } from "./controllers/socket/pongPaddleMovement";
 
 const app = express();
 

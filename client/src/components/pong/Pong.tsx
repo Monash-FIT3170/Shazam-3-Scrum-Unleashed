@@ -60,8 +60,6 @@ const Pong = ({tournamentCode, playerID, pongState} : PongProps) => {
   }
   const paddle1Position = pongState?.paddleStates[0];
   const paddle2Position = pongState?.paddleStates[1];
-  const player1Score = pongState?.score[0];
-  const player2Score = pongState?.score[1];
 
   const ballPosition = pongState?.ballState;
 
@@ -103,7 +101,6 @@ const Pong = ({tournamentCode, playerID, pongState} : PongProps) => {
           height: `${GAME_HEIGHT}px`,
         }}
       >
-        {player1Score} : {player2Score}
       </div>
       <Ball x={ballPosition.x} y={ballPosition.y} />
       {paddle1Position !== undefined && (
