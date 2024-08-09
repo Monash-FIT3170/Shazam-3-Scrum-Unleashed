@@ -26,7 +26,7 @@ export default class Tournament {
     this.matchTime = matchTime;
     this.players = new Array<Player>();
     this.matches = [];
-    this.matchTypeOrder = ["RPS"];
+    this.matchTypeOrder = ["PONG", "RPS"];
     this.roundCounter = 0;
   }
 

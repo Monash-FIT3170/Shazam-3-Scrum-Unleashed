@@ -88,6 +88,8 @@ const PlayerScreen = () => {
             winnerUserID,
           });
 
+          setIsSpectator(getIsSpectator(players));
+
           if (winnerUserID) {
             setMatchComplete(true);
             setWinnerUserID(winnerUserID);
@@ -104,6 +106,7 @@ const PlayerScreen = () => {
       setPlayers(players);
       setDuelComplete(isDuelComplete);
       setIsSpectator(getIsSpectator(players));
+      setPongState(undefined);
 
       console.log("is spectator ", getIsSpectator(players));
 
@@ -153,16 +156,18 @@ const PlayerScreen = () => {
     }, MATCH_COMPLETION_TIME);
   } else if (isSpectator) {
     content = <></>;
-  } else {
-    content = <ChoosePlayerMove tournamentCode={tournamentCode} />;
-    // content = (
-    //   <Pong
-    //     tournamentCode={tournamentCode}
-    //     playerID={userPlayer.userID}
-    //     pongState={pongState}
-    //   />
-    // );
-  }
+  } else if (!pongState) {
+      content = <ChoosePlayerMove tournamentCode={tournamentCode} />;
+    }
+    else {
+      content = (
+        <Pong
+          tournamentCode={tournamentCode}
+          playerID={userPlayer.userID}
+          pongState={pongState}
+        />
+      );
+    }
 
   return (
     <>
