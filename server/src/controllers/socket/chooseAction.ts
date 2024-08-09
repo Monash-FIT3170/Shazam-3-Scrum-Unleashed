@@ -31,6 +31,7 @@ export const playDuel =
       return;
     }
 
+    // TODO - extract as a funtion to use in Pong as well. Put this on tournament object as a method. Not sure where we call this regarding pong match - probably inside every call to getMatchWinner when the result is not null.
     if (tournament.matches.every((e) => e.getMatchWinner() !== null)) {
       setTimeout(() => {
         if (tournament.matches.length === 1) {

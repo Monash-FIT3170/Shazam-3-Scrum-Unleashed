@@ -9,7 +9,7 @@ import Player from "./player";
 import { Events } from "../../../types/socket/events";
 
 const INITIAL_BALL_Y_SPEED = 30;
-const POLL_RATE = 30; // Hz
+const POLL_RATE = 1000; // Hz
 
 export class PongMatch implements Match {
   duelsToWin: number;
@@ -18,7 +18,6 @@ export class PongMatch implements Match {
   paddleStates: PongPaddleState[];
   ballState: PongBallState;
   intervalHandler: NodeJS.Timeout | null;
-  score: number[];
 
   constructor(players: Player[], duelsToWin: number) {
     this.players = players;
@@ -36,15 +35,21 @@ export class PongMatch implements Match {
       yVelocity: INITIAL_BALL_Y_SPEED,
     };
     this.intervalHandler = null;
-    this.score = [0, 0];
   }
 
+  // TODO - we don't need is duel complete for pong
   isDuelComplete(): boolean {
     return false;
   }
 
   getMatchWinner(): Player | null {
-    return null;
+    if (this.players[0].score >= 3) {
+      return this.players[0];
+    } else if (this.players[1].score >= 3) {
+      return this.players[1];
+    } else {
+      return null;
+    }
   }
 
   emitGameData(io: Server<Events>): void {
@@ -144,14 +149,14 @@ export class PongMatch implements Match {
         newBallX = 50;
         this.ballState.yVelocity = INITIAL_BALL_Y_SPEED;
         this.ballState.xVelocity = this.randomXVelocity();
-        this.score[1] += 1;
+        this.players[1].score += 1;
       }
       if (newBallY <= 0) {
         newBallY = 50;
         newBallX = 50;
         this.ballState.yVelocity = -INITIAL_BALL_Y_SPEED;
         this.ballState.xVelocity = this.randomXVelocity();
-        this.score[0] += 1;
+        this.players[0].score += 1;
       }
     }
 
@@ -168,7 +173,10 @@ export class PongMatch implements Match {
       this.ballState,
       this.players,
       this.paddleStates,
-      this.score,
+
+      // TODO - don't need to transmit score
+      this.players.map((player) => player.score),
+
       this.getMatchWinner()?.name ?? null,
     );
   }
