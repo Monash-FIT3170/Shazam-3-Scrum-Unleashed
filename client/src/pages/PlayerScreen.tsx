@@ -157,17 +157,16 @@ const PlayerScreen = () => {
   } else if (isSpectator) {
     content = <></>;
   } else if (!pongState) {
-      content = <ChoosePlayerMove tournamentCode={tournamentCode} />;
-    }
-    else {
-      content = (
-        <Pong
-          tournamentCode={tournamentCode}
-          playerID={userPlayer.userID}
-          pongState={pongState}
-        />
-      );
-    }
+    content = <ChoosePlayerMove tournamentCode={tournamentCode} />;
+  } else {
+    content = (
+      <Pong
+        tournamentCode={tournamentCode}
+        playerID={userPlayer.userID}
+        pongState={pongState}
+      />
+    );
+  }
 
   return (
     <>

@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { socket } from "../../App";
-import {PlayerAttributes, PongBallState, PongPaddleState} from "../../../../types/types.ts";
-import {PongStateIHateThis} from "../../pages/PlayerScreen.tsx";
+import { PongPaddleState } from "../../../../types/types.ts";
+import { PongState } from "../../pages/PlayerScreen.tsx";
 
 interface BallPosition {
   x: number;
@@ -38,15 +38,13 @@ const Paddle = ({ x, y, width, top }: PongPaddleState & { top: boolean }) => (
   />
 );
 
+type PongProps = {
+  tournamentCode: string;
+  playerID: string;
+  pongState?: PongState;
+};
 
-
-type PongProps ={
-tournamentCode : string,
-  playerID :string
-  pongState? : PongStateIHateThis
-}
-
-const Pong = ({tournamentCode, playerID, pongState} : PongProps) => {
+const Pong = ({ tournamentCode, playerID, pongState }: PongProps) => {
   // const [ballPosition, setBallPosition] = useState<BallPosition>({
   //   x: GAME_WIDTH / 2,
   //   y: GAME_HEIGHT / 2,
@@ -55,7 +53,7 @@ const Pong = ({tournamentCode, playerID, pongState} : PongProps) => {
   // const [paddle2Position, setPaddle2Position] = useState<PongPaddleState>();
   // const [player1Score, setPlayer1Score] = useState<number>(0);
   // const [player2Score, setPlayer2Score] = useState<number>(0);
-  if (pongState == undefined){
+  if (pongState == undefined) {
     return;
   }
   const paddle1Position = pongState?.paddleStates[0];
@@ -75,17 +73,41 @@ const Pong = ({tournamentCode, playerID, pongState} : PongProps) => {
 
     document.addEventListener("keydown", (event) => {
       if (event.key === "ArrowLeft") {
-        socket.emit("PONG_PADDLE_MOVEMENT", tournamentCode, playerID, true, true);
+        socket.emit(
+          "PONG_PADDLE_MOVEMENT",
+          tournamentCode,
+          playerID,
+          true,
+          true,
+        );
       } else if (event.key === "ArrowRight") {
-        socket.emit("PONG_PADDLE_MOVEMENT", tournamentCode, playerID,true, false);
+        socket.emit(
+          "PONG_PADDLE_MOVEMENT",
+          tournamentCode,
+          playerID,
+          true,
+          false,
+        );
       }
     });
 
     document.addEventListener("keyup", (event) => {
       if (event.key === "ArrowLeft") {
-        socket.emit("PONG_PADDLE_MOVEMENT",tournamentCode, playerID, false, true);
+        socket.emit(
+          "PONG_PADDLE_MOVEMENT",
+          tournamentCode,
+          playerID,
+          false,
+          true,
+        );
       } else if (event.key === "ArrowRight") {
-        socket.emit("PONG_PADDLE_MOVEMENT", tournamentCode, playerID,false, false);
+        socket.emit(
+          "PONG_PADDLE_MOVEMENT",
+          tournamentCode,
+          playerID,
+          false,
+          false,
+        );
       }
     });
   }, []);
@@ -100,8 +122,7 @@ const Pong = ({tournamentCode, playerID, pongState} : PongProps) => {
         style={{
           height: `${GAME_HEIGHT}px`,
         }}
-      >
-      </div>
+      ></div>
       <Ball x={ballPosition.x} y={ballPosition.y} />
       {paddle1Position !== undefined && (
         <Paddle

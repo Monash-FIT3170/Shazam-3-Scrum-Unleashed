@@ -92,7 +92,7 @@ function App() {
 
   return (
     <div className="w-full">
-       <RouterProvider router={router} />
+      <RouterProvider router={router} />
     </div>
   );
 }
