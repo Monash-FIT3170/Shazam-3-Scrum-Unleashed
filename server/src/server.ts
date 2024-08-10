@@ -47,7 +47,7 @@ io.on("connection", async (socket) => {
   await reconnectionHandler(socket, io, tournamentMap);
 
   socket.on("PONG_PADDLE_MOVEMENT", pongPaddleMovementSocket);
-  socket.on("CHOOSE_ACTION", chooseActionSocket(io));
+  socket.on("RPS_CHOOSE_ACTION", chooseActionSocket(io));
   socket.on("ADD_REACTION", addReactionSocket(io));
 });
 

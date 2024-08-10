@@ -1,16 +1,19 @@
-import Player from "./player";
-import { Action } from "../../../types/types";
+import Player from "../player";
+import { Action } from "../../../../types/types";
 import { type Match } from "./match";
 import { Server } from "socket.io";
-import { Events } from "../../../types/socket/events";
-import { playDuel } from "../controllers/socket/chooseAction";
-import Tournament from "./tournament";
+import { Events } from "../../../../types/socket/events";
+import { playDuel } from "../../controllers/socket/chooseAction";
+import Tournament from "../tournament";
+import * as crypto from "node:crypto";
 
 export class RpsMatch implements Match {
-  public players: Player[];
-  public matchRoomID: string;
-  public duelsToWin: number;
-  public timeOutHandler: NodeJS.Timeout | null;
+  players: Player[];
+  p1Action: Action;
+  p2Action: Action;
+  matchRoomID: string;
+  duelsToWin: number;
+  timeOutHandler: NodeJS.Timeout | null;
 
   private rulesMap: Map<Action, Action> = new Map<Action, Action>([
     ["ROCK", "SCISSORS"],
@@ -20,18 +23,15 @@ export class RpsMatch implements Match {
 
   constructor(players: Player[], duelsToWin: number) {
     this.players = players;
+    this.p1Action = null;
+    this.p2Action = null;
     this.matchRoomID = crypto.randomUUID();
     this.duelsToWin = duelsToWin;
     this.timeOutHandler = null;
   }
 
   public isDuelComplete() {
-    for (const player of this.players) {
-      if (player.gameData === null && !player.isBot) {
-        return false;
-      }
-    }
-    return true;
+    return (this.p1Action !== null || this.players[0].isBot) && (this.p2Action !== null || this.players[1].isBot);
   }
 
   public getMatchWinner() {
@@ -49,13 +49,15 @@ export class RpsMatch implements Match {
 
     // Set bot action to always lose to player
     if (player1.isBot) {
-      this.getBotAction(player1, player2);
-    } else if (player2.isBot) {
-      this.getBotAction(player2, player1);
+      this.p1Action = this.getBotAction(this.p2Action);
     }
 
-    if (player1.gameData !== player2.gameData) {
-      if (this.rulesMap.get(player1.gameData) === player2.gameData) {
+    if (player2.isBot) {
+      this.p2Action = this.getBotAction(this.p1Action);
+    }
+
+    if (this.p1Action !== this.p2Action) {
+      if (this.rulesMap.get(this.p1Action) === this.p2Action) {
         player1.score++;
       } else {
         player2.score++;
@@ -64,18 +66,18 @@ export class RpsMatch implements Match {
   }
 
   public resetActions() {
-    for (const player of this.players) {
-      player.gameData = null;
-    }
+    this.p1Action = null;
+    this.p2Action = null;
   }
 
-  private getBotAction(bot: Player, player: Player) {
-    const botMove = this.rulesMap.get(player.gameData);
-    if (botMove === undefined) {
-      console.error("Invalid move chosen by player");
-      return;
+  private getBotAction(action:Action):Action {
+    const botMove = this.rulesMap.get(action);
+    if (botMove !== undefined) {
+      return botMove;
     }
-    bot.gameData = botMove;
+
+    // this case can now happen when two bots verse each other, or if the player action is not valid for some reason
+    return "ROCK";
   }
 
   public startTimeout(
@@ -85,8 +87,7 @@ export class RpsMatch implements Match {
     this.timeOutHandler = setTimeout(
       () => {
         if (!this.isDuelComplete()) {
-          const [player1, player2] = this.players;
-          if (player1.gameData === null && player2.gameData === null) {
+          if (this.p1Action === null && this.p2Action === null) {
             let modifier = 0;
             if (Math.random() < 0.5) {
               modifier = 1;
@@ -94,22 +95,25 @@ export class RpsMatch implements Match {
               modifier = -1;
             }
             const player1ActionIndex = Math.floor(Math.random() * 3);
-            player1.gameData = ["ROCK", "PAPER", "SCISSORS"][
+
+            this.p1Action = ["ROCK", "PAPER", "SCISSORS"][
               player1ActionIndex
             ] as Action;
-            player2.gameData = ["ROCK", "PAPER", "SCISSORS"].at(
+
+            this.p2Action = ["ROCK", "PAPER", "SCISSORS"].at(
               (player1ActionIndex + modifier) % 3,
             ) as Action;
+
           } else {
-            if (player1.gameData === null) {
-              const player1Action = this.rulesMap.get(player2.gameData);
+            if (this.p1Action === null) {
+              const player1Action = this.rulesMap.get(this.p2Action);
               if (player1Action !== undefined) {
-                player1.gameData = player1Action;
+                this.p1Action = player1Action;
               }
             } else {
-              const player2Action = this.rulesMap.get(player1.gameData);
+              const player2Action = this.rulesMap.get(this.p1Action);
               if (player2Action !== undefined) {
-                player2.gameData = player2Action;
+                this.p2Action = player2Action;
               }
             }
           }
@@ -120,8 +124,9 @@ export class RpsMatch implements Match {
     );
   }
 
-  emitGameData(io: Server<Events>, tournament: Tournament): void {
-    io.to(this.matchRoomID).emit("MATCH_INFO", this.players, false, null);
+  startMatch(io: Server<Events>, tournament: Tournament): void {
+    io.to(this.matchRoomID).emit("MATCH_START", this.players, "RPS");
+    // io.to(this.matchRoomID).emit("MATCH_INFO", this.players, false, null);
     this.startTimeout(playDuel(tournament, io), tournament.duelTime);
   }
 
@@ -130,5 +135,12 @@ export class RpsMatch implements Match {
       clearTimeout(this.timeOutHandler);
     }
     playDuel(tournament, io)(this);
+  }
+
+  reconnect(io: Server<Events>, userID:string): void {
+    io.to(userID).emit(
+      "MATCH_SCORE_UPDATE",
+      this.players,// emit the actions
+    );
   }
 }

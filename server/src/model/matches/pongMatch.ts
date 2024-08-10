@@ -3,12 +3,13 @@ import {
   PlayerAttributes,
   PongBallState,
   PongPaddleState,
-} from "../../../types/types";
+} from "../../../../types/types";
 import { Match } from "./match";
-import Player from "./player";
-import { Events } from "../../../types/socket/events";
-import Tournament from "./tournament";
-import { roundChecker } from "../controllers/helper/roundHelper";
+import Player from "../player";
+import { Events } from "../../../../types/socket/events";
+import Tournament from "../tournament";
+import { roundChecker } from "../../controllers/helper/roundHelper";
+import * as crypto from "node:crypto";
 
 const INITIAL_BALL_Y_SPEED = 30;
 const POLL_RATE = 30; // Hz
@@ -55,10 +56,14 @@ export class PongMatch implements Match {
     }
   }
 
-  emitGameData(io: Server<Events>): void {
-    this.intervalHandler = setInterval(() => {
-      this.tick(io);
-    }, 1000 / POLL_RATE);
+  startMatch(io: Server<Events>): void {
+    io.to(this.matchRoomID).emit("MATCH_START", this.players, "PONG");
+
+    setTimeout(() => {
+      this.intervalHandler = setInterval(() => {
+        this.tick(io);
+      }, 1000 / POLL_RATE);
+    }, 1000); // this will start the pong match after a short delay, maybe not required.
   }
 
   randomXVelocity(): number {
@@ -155,6 +160,12 @@ export class PongMatch implements Match {
         this.ballState.xVelocity = this.randomXVelocity();
         this.players[1].score += 1;
         winner = this.getMatchWinner();
+
+        io.to(this.matchRoomID).emit(
+            "MATCH_SCORE_UPDATE",
+            this.players
+        );
+
       }
       if (newBallY <= 0) {
         newBallY = 50;
@@ -163,6 +174,12 @@ export class PongMatch implements Match {
         this.ballState.xVelocity = this.randomXVelocity();
         this.players[0].score += 1;
         winner = this.getMatchWinner();
+
+        io.to(this.matchRoomID).emit(
+            "MATCH_SCORE_UPDATE",
+            this.players
+        );
+
       }
     }
 
@@ -175,16 +192,24 @@ export class PongMatch implements Match {
     this.ballState.y = newBallY;
 
     io.to(this.matchRoomID).emit(
-      "PONG_STATE",
+      "MATCH_PONG_STATE",
       this.ballState,
-      this.players,
-      this.paddleStates,
-      winner?.name ?? null,
+      this.paddleStates
     );
 
     if (winner != null) {
+
+      setTimeout(()=>{      io.to(this.matchRoomID).emit("MATCH_WINNER",
+          winner.name
+      )}, 1000) // may not want
+
       roundChecker(this.tournament, io, this);
       clearInterval(this.intervalHandler);
     }
+  }
+
+  reconnect(io: Server<Events>, userID:string): void {
+    io.to(userID).emit("MATCH_PONG_STATE",       this.ballState,
+        this.paddleStates)
   }
 }

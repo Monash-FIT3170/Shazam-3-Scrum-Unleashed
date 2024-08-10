@@ -1,7 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { socket } from "../../App";
 import { PongPaddleState } from "../../../../types/types.ts";
-import { PongState } from "../../pages/PlayerScreen.tsx";
 
 interface BallPosition {
   x: number;
@@ -40,43 +39,32 @@ const Paddle = ({ x, y, width, top }: PongPaddleState & { top: boolean }) => (
 
 type PongProps = {
   tournamentCode: string;
-  playerID: string;
-  pongState?: PongState;
 };
 
-const Pong = ({ tournamentCode, playerID, pongState }: PongProps) => {
-  // const [ballPosition, setBallPosition] = useState<BallPosition>({
-  //   x: GAME_WIDTH / 2,
-  //   y: GAME_HEIGHT / 2,
-  // });
-  // const [paddle1Position, setPaddle1Position] = useState<PongPaddleState>();
-  // const [paddle2Position, setPaddle2Position] = useState<PongPaddleState>();
-  // const [player1Score, setPlayer1Score] = useState<number>(0);
-  // const [player2Score, setPlayer2Score] = useState<number>(0);
-  if (pongState == undefined) {
-    return;
-  }
-  const paddle1Position = pongState?.paddleStates[0];
-  const paddle2Position = pongState?.paddleStates[1];
-
-  const ballPosition = pongState?.ballState;
+const Pong = ({ tournamentCode }: PongProps) => {
+  const [ballPosition, setBallPosition] = useState<BallPosition>({
+    x: GAME_WIDTH / 2,
+    y: GAME_HEIGHT / 2,
+  });
+  const [paddle1Position, setPaddle1Position] = useState<PongPaddleState>();
+  const [paddle2Position, setPaddle2Position] = useState<PongPaddleState>();
 
   useEffect(() => {
-    // read initial position from backend
-    // socket.on("PONG_STATE", (ballState, players, paddleStates, score) => {
-    //   setBallPosition({ x: ballState.x, y: ballState.y });
-    //   setPaddle1Position(paddleStates[0]);
-    //   setPaddle2Position(paddleStates[1]);
-    //   setPlayer1Score(score[0]);
-    //   setPlayer2Score(score[1]);
-    // });
+    socket.on("MATCH_PONG_STATE", (ballState, paddleStates) => {
+      console.log(paddleStates);
+      requestAnimationFrame(() => {
+        setBallPosition(ballState);
+        setPaddle1Position(paddleStates[0]);
+        setPaddle2Position(paddleStates[1]);
+      });
+    });
 
     document.addEventListener("keydown", (event) => {
       if (event.key === "ArrowLeft") {
         socket.emit(
           "PONG_PADDLE_MOVEMENT",
           tournamentCode,
-          playerID,
+            socket.userID,
           true,
           true,
         );
@@ -84,7 +72,7 @@ const Pong = ({ tournamentCode, playerID, pongState }: PongProps) => {
         socket.emit(
           "PONG_PADDLE_MOVEMENT",
           tournamentCode,
-          playerID,
+            socket.userID,
           true,
           false,
         );
@@ -96,7 +84,7 @@ const Pong = ({ tournamentCode, playerID, pongState }: PongProps) => {
         socket.emit(
           "PONG_PADDLE_MOVEMENT",
           tournamentCode,
-          playerID,
+            socket.userID,
           false,
           true,
         );
@@ -104,7 +92,7 @@ const Pong = ({ tournamentCode, playerID, pongState }: PongProps) => {
         socket.emit(
           "PONG_PADDLE_MOVEMENT",
           tournamentCode,
-          playerID,
+            socket.userID,
           false,
           false,
         );

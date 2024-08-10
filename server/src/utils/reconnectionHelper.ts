@@ -26,12 +26,7 @@ export async function reconnectionHandler(
               match.getMatchWinner()?.name ?? "",
             );
           } else {
-            io.to(socket.userID).emit(
-              "MATCH_INFO",
-              match.players,
-              false,
-              match.getMatchWinner()?.userID ?? null,
-            );
+            match.reconnect(io, socket.userID);
           }
           break;
         }

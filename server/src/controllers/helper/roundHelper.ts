@@ -3,10 +3,10 @@ import Player from "src/model/player";
 import Tournament from "src/model/tournament";
 import { Server } from "socket.io";
 import { Events } from "../../../../types/socket/events";
-import { Match } from "src/model/match";
-import { PongMatch } from "../../model/pongMatch";
+import { Match } from "src/model/matches/match";
+import { PongMatch } from "../../model/matches/pongMatch";
 import { tournamentMap } from "../../store";
-import { RpsMatch } from "../../model/rpsMatch";
+import { RpsMatch } from "../../model/matches/rpsMatch";
 
 const LIFE_AFTER_COMPLETION = 60000;
 const ROUND_BUFFER_TIME = 8000;
@@ -55,7 +55,6 @@ export function roundTerminator(tournament: Tournament, io: Server<Events>) {
 
     for (const player of match.players) {
       player.score = 0;
-      player.gameData = null;
     }
   }
 }
@@ -79,13 +78,16 @@ function handleSpectators(match: Match) {
 }
 
 function createMatch(players: Player[], tournament: Tournament) {
-  switch (tournament.roundCounter % tournament.matchTypeOrder.length) {
-    case 0:
+  const nextMatchType =
+    tournament.matchTypeOrder[
+      tournament.roundCounter % tournament.matchTypeOrder.length
+    ];
+  console.log(nextMatchType);
+  switch (nextMatchType) {
+    case "RPS":
       return new RpsMatch(players, tournament.duelsToWin);
-    case 1:
+    case "PONG":
       return new PongMatch(players, tournament.duelsToWin, tournament);
-    default:
-      return new RpsMatch(players, tournament.duelsToWin);
   }
 }
 

@@ -18,7 +18,7 @@ export async function roundStartEmitter(
       }
     }
 
-    match.emitGameData(io, tournament);
+    match.startMatch(io, tournament);
   }
 }
 

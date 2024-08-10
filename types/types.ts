@@ -1,7 +1,6 @@
 export interface PlayerAttributes {
   name: string;
   userID: string;
-  gameData: Action;
   score: number;
   isBot: boolean;
   isEliminated: boolean;

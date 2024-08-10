@@ -1,5 +1,5 @@
 import { tournamentMap } from "../../store";
-import { PongMatch } from "../../model/pongMatch";
+import { PongMatch } from "../../model/matches/pongMatch";
 
 export const pongPaddleMovementSocket = (
   tournamentCode: string,
@@ -9,7 +9,7 @@ export const pongPaddleMovementSocket = (
 ) => {
   const match = tournamentMap.get(tournamentCode)?.getMatch(playerID);
 
-  if (match === undefined) {
+  if (!match) {
     console.error("Player not found for paddle movement");
     return;
   }

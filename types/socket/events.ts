@@ -5,6 +5,7 @@
  */
 
 import {Action, PlayerAttributes, PongBallState, PongPaddleState, ReactionData} from "../types";
+import {MatchType} from "./eventArguments";
 
 /**
  * Add any new Event Categories to this
@@ -21,11 +22,13 @@ interface HostToClientEvents {
 }
 
 interface PlayerToServerEvents {
-  CHOOSE_ACTION: (
+
+  RPS_CHOOSE_ACTION: (
     tournamentCode: string,
     playerUserID: string,
     action: Action
   ) => void;
+
   ADD_REACTION: (
     tournamentCode: string,
     reaction: ReactionData,
@@ -45,17 +48,29 @@ interface ServerToHostEvents {
 }
 
 interface ServerToPlayerEvents {
-  MATCH_INFO: (
-    players: PlayerAttributes[],
-    isDuelComplete: boolean,
-    winnerUserID: string | null
-  ) => void;
-  REACTION_ADDED: (reaction: ReactionData) => void;
 
-  PONG_STATE: (
-    ballState: PongBallState,
-    players: PlayerAttributes[],
-    paddleStates: PongPaddleState[],
-    winnerUserID: string | null
+  MATCH_START : (
+      players: PlayerAttributes[],
+      matchType:MatchType
+  )=>void;
+
+  MATCH_SCORE_UPDATE : (
+      players : PlayerAttributes[] // TODO can probably combined this with MATCH_WINNER
+  )=>void;
+
+  MATCH_WINNER : (
+      winnerUserID: string
   ) => void;
+
+  MATCH_RPS_DUEL_STATE : (
+      p1Action: Action,
+      p2Action: Action
+  )=> void;
+
+  MATCH_PONG_STATE: (
+    ballState: PongBallState,
+    paddleStates: PongPaddleState[],
+  ) => void;
+
+  REACTION_ADDED: (reaction: ReactionData) => void;
 }
