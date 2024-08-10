@@ -47,9 +47,9 @@ export class PongMatch implements Match {
   }
 
   getMatchWinner(): Player | null {
-    if (this.players[0].score >= 10) {
+    if (this.players[0].score >= this.duelsToWin) {
       return this.players[0];
-    } else if (this.players[1].score >= 10) {
+    } else if (this.players[1].score >= this.duelsToWin) {
       return this.players[1];
     } else {
       return null;
