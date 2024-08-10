@@ -26,12 +26,15 @@ export async function reconnectionHandler(
               match.getMatchWinner()?.name ?? "",
             );
           } else {
-            io.to(socket.userID).emit(
-              "MATCH_INFO",
-              match.players,
-              false,
-              match.getMatchWinner()?.userID ?? null,
-            );
+            if (!match.getMatchWinner()) {
+              io.to(socket.userID).emit(
+                "MATCH_START",
+                match.players,
+                tournament.matchTypeOrder[
+                  tournament.roundCounter % tournament.matchTypeOrder.length
+                ],
+              );
+            }
           }
           break;
         }

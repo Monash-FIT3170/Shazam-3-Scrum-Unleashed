@@ -24,8 +24,10 @@ export function createTournamentHandler(req: Request, res: Response) {
   const tournament: Tournament = new Tournament(
     userID,
     Number(duelsToWin),
-    Number(duelTime),
-    Number(matchTime),
+    Number(duelTime) * 1000,
+    Number(matchTime) * 1000,
+    // ["RPS", "PONG"] // TODO make it so the client can send data, which decides this
+    ["PONG"],
   );
 
   let tournamentCode;

@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import WaitingForMatchStart from "../components/player-screen/waiting-screens/WaitingForMatchStart.tsx";
 import { socket } from "../App";
 import { PlayerAttributes } from "../../../types/types.ts";
-import ChoosePlayerMove from "../components/player-screen/choose-move/ChoosePlayerMove.tsx";
 import { useLoaderData } from "react-router-dom";
-import DuelOutcome from "../components/player-screen/outcome-screens/DuelOutcome.tsx";
 import PlayerAndSpectatorsInfo from "../components/player-screen/match-overlay/PlayerAndSpectatorsInfo.tsx";
 import MatchOutcomeScreen from "../components/player-screen/outcome-screens/MatchOutcomeScreen.tsx";
 import TournamentWin from "../components/player-screen/tournament-win/TournamentWin.tsx";
 import ReactionOverlay from "../components/reactions/ReactionsOverlay.tsx";
+import { Pong } from "../components/pong/Pong.tsx";
+import { MatchType } from "../../../types/socket/eventArguments.ts";
+import { RPS } from "../components/rps/RPS.tsx";
 
 const PlayerScreen = () => {
   const { loadedTournamentCode, loadedPlayerName } = useLoaderData() as {
@@ -16,27 +17,29 @@ const PlayerScreen = () => {
     loadedPlayerName: string;
   };
 
-  const DUEL_COMPLETION_TIME = 3000;
   const MATCH_COMPLETION_TIME = 4000;
   const [tournamentCode] = useState(loadedTournamentCode);
   const [playerName] = useState(loadedPlayerName);
   const [userPlayer, setUserPlayer] = useState<PlayerAttributes>();
   const [opponent, setOpponent] = useState<PlayerAttributes>();
-  const [duelComplete, setDuelComplete] = useState(false);
-  const [matchComplete, setMatchComplete] = useState(false);
-  const [winnerUserID, setWinnerUserID] = useState<string | undefined>(
-    undefined,
-  );
-  const [tournamentWinner, setTournamentWinner] = useState<
-    string | undefined
-  >();
+  const [matchWinnerID, setMatchWinnerID] = useState<string>();
+  const [tournamentWinner, setTournamentWinner] = useState<string>();
   const [isSpectator, setIsSpectator] = useState(false);
+  const [matchType, setMatchType] = useState<MatchType>();
+  const [isPlayerOne, setIsPlayerOne] = useState(false);
 
   function setPlayers(players: PlayerAttributes[]) {
-    for (const player of players) {
+    for (let i = 0; i < players.length; i++) {
+      const player = players[i];
+      if (player.userID === socket.userID) {
+        setIsPlayerOne(i + 1 === 1);
+      }
+
+      setIsPlayerOne(players[0].userID === socket.userID);
       let canSetPlayer = true;
       for (const spectatingID of player.spectatorIDs) {
         if (socket.userID === spectatingID) {
+          setIsPlayerOne(i + 1 === 1);
           setUserPlayer(player);
           canSetPlayer = false;
           break;
@@ -63,18 +66,15 @@ const PlayerScreen = () => {
   }
 
   useEffect(() => {
-    socket.on("MATCH_INFO", (players, isDuelComplete, winnerUserID) => {
-      console.log(players);
+    socket.on("MATCH_START", (players, matchType) => {
       setPlayers(players);
-      setDuelComplete(isDuelComplete);
+      setMatchType(matchType);
       setIsSpectator(getIsSpectator(players));
+    });
 
-      console.log("is spectator ", getIsSpectator(players));
-
-      if (winnerUserID) {
-        setMatchComplete(true);
-        setWinnerUserID(winnerUserID);
-      }
+    socket.on("MATCH_DATA", (players, winnerUserID) => {
+      setMatchWinnerID(winnerUserID);
+      setPlayers(players);
     });
 
     socket.on("TOURNAMENT_COMPLETE", (playerName) => {
@@ -82,7 +82,9 @@ const PlayerScreen = () => {
     });
 
     return () => {
-      socket.off("MATCH_INFO");
+      socket.off("MATCH_START");
+      socket.off("MATCH_DATA");
+      socket.off("TOURNAMENT_COMPLETE");
     };
   }, []);
 
@@ -98,27 +100,38 @@ const PlayerScreen = () => {
         playerName={playerName}
       />
     );
-  } else if (duelComplete) {
-    content = <DuelOutcome userPlayer={userPlayer} opponent={opponent} />;
-    setTimeout(() => {
-      setDuelComplete(false);
-    }, DUEL_COMPLETION_TIME);
-  } else if (matchComplete) {
+  } else if (matchWinnerID != undefined) {
     content = (
       <MatchOutcomeScreen
         player={userPlayer}
         opponent={opponent}
-        isWin={winnerUserID === userPlayer.userID}
+        isWin={matchWinnerID === userPlayer.userID}
       />
     );
     setTimeout(() => {
-      setMatchComplete(false);
+      setMatchWinnerID(undefined);
       setOpponent(undefined);
     }, MATCH_COMPLETION_TIME);
-  } else if (isSpectator) {
-    content = <></>;
   } else {
-    content = <ChoosePlayerMove tournamentCode={tournamentCode} />;
+    switch (matchType) {
+      case "PONG": {
+        content = (
+          <Pong tournamentCode={tournamentCode} isPlayerOne={isPlayerOne} />
+        );
+        break;
+      }
+      case "RPS": {
+        content = (
+          <RPS
+            tournamentCode={tournamentCode}
+            player={userPlayer}
+            opponent={opponent}
+            isPlayerOne={isPlayerOne}
+          />
+        );
+        break;
+      }
+    }
   }
 
   return (

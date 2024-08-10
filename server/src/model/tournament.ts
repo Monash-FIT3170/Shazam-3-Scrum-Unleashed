@@ -1,19 +1,23 @@
+import { Match } from "./matches/match";
 import Player from "./player";
-import { Match } from "./match";
+import { MatchType } from "../../../types/socket/eventArguments";
 
 export default class Tournament {
-  public hostUID: string;
-  public players: Player[];
-  public duelsToWin: number;
-  public duelTime: number;
-  public matchTime: number;
-  public matches: Match[];
+  hostUID: string;
+  players: Player[];
+  duelsToWin: number;
+  duelTime: number;
+  matchTime: number;
+  matches: Match[];
+  matchTypeOrder: MatchType[];
+  roundCounter: number;
 
   constructor(
     hostID: string,
     duelsToWin: number,
     duelTime: number,
     matchTime: number,
+    matchTypesOrder: MatchType[],
   ) {
     this.hostUID = hostID;
     this.duelsToWin = duelsToWin;
@@ -21,6 +25,8 @@ export default class Tournament {
     this.matchTime = matchTime;
     this.players = new Array<Player>();
     this.matches = [];
+    this.matchTypeOrder = matchTypesOrder;
+    this.roundCounter = 0;
   }
 
   public addPlayer(player: Player) {
