@@ -66,20 +66,12 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  let sessionIdCookie = "";
-  let tournamentCodeCookie = "";
-  const cookieStrings = document.cookie.split(";");
-  for (const cookie of cookieStrings) {
-    if (cookie.startsWith("sessionID")) {
-      sessionIdCookie = cookie.split("=")[1];
-    } else if (cookie.trim().startsWith("tournamentCode")) {
-      tournamentCodeCookie = cookie.split("=")[1];
-    }
-  }
+  const sessionID = localStorage.getItem("sessionID") ?? "";
+  const tournamentCode = localStorage.getItem("tournamentCode") ?? "";
 
   socket.auth = {
-    sessionID: sessionIdCookie,
-    tournamentCode: tournamentCodeCookie,
+    sessionID: sessionID,
+    tournamentCode: tournamentCode,
   };
 
   socket.connect();
@@ -87,7 +79,8 @@ function App() {
   socket.on("SESSION_INFO", (sessionID, userID) => {
     socket.auth = { sessionID };
     socket.userID = userID;
-    document.cookie = `sessionID=${sessionID};`;
+    // document.cookie = `sessionID=${sessionID};`;
+    localStorage.setItem("sessionID", sessionID);
   });
 
   return (
