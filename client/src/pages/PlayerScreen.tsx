@@ -29,10 +29,18 @@ const PlayerScreen = () => {
   const [isPlayerOne, setIsPlayerOne] = useState(false);
 
   function setPlayers(players: PlayerAttributes[]) {
-    for (const player of players) {
+    
+    for (let i = 0; i < players.length; i++) {
+      const player = players[i];
+      if (player.userID === socket.userID) {
+        setIsPlayerOne(i + 1 === 1);
+      }
+
+      setIsPlayerOne(players[0].userID === socket.userID);
       let canSetPlayer = true;
       for (const spectatingID of player.spectatorIDs) {
         if (socket.userID === spectatingID) {
+          setIsPlayerOne(i + 1 === 1);
           setUserPlayer(player);
           canSetPlayer = false;
           break;
@@ -65,11 +73,8 @@ const PlayerScreen = () => {
       setIsSpectator(getIsSpectator(players));
     });
 
-    socket.on("MATCH_WINNER", (winnerUserID) => {
+    socket.on("MATCH_DATA", (players, winnerUserID) => {
       setMatchWinnerID(winnerUserID);
-    });
-
-    socket.on("MATCH_SCORE_UPDATE", (players) => {
       setPlayers(players);
     });
 
@@ -79,8 +84,7 @@ const PlayerScreen = () => {
 
     return () => {
       socket.off("MATCH_START");
-      socket.off("MATCH_WINNER");
-      socket.off("MATCH_SCORE_UPDATE");
+      socket.off("MATCH_DATA");
       socket.off("TOURNAMENT_COMPLETE");
     };
   }, []);
@@ -120,9 +124,10 @@ const PlayerScreen = () => {
       case "RPS": {
         content = (
           <RPS
-            tournamentCode={tournamentCode}
-            player={userPlayer}
-            opponent={opponent}
+          tournamentCode={tournamentCode}
+          player={userPlayer}
+          opponent={opponent}
+          isPlayerOne={isPlayerOne}
           />
         );
         break;

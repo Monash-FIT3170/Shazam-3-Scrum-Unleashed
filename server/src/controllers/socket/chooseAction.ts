@@ -10,22 +10,21 @@ export const playDuel =
   (tournament: Tournament, io: Server<Events>) => (match: RpsMatch) => {
     match.updateScores();
     const matchWinner = match.getMatchWinner();
-    const matchWinnerUserID = matchWinner?.userID;
-    io.to(match.matchRoomID).emit(
-      "MATCH_SCORE_UPDATE",
-      match.players,
-    );
-
+    const matchWinnerUserID = matchWinner?.userID;  
+    io.to(match.matchRoomID).emit("MATCH_RPS_DUEL_STATE", match.p1Action, match.p2Action);
     match.resetActions();
+    
+    io.to(match.matchRoomID).emit(
+      "MATCH_DATA",
+      match.players,
+      matchWinnerUserID
+    );
 
     if (matchWinnerUserID === undefined) {
       match.startTimeout(playDuel(tournament, io), tournament.duelTime);
       return;
     }
 
-      setTimeout(()=>{      io.to(match.matchRoomID).emit("MATCH_WINNER",
-          matchWinnerUserID
-      )}, 3000) // may not want
 
     roundChecker(tournament, io, match);
   };

@@ -54,12 +54,9 @@ interface ServerToPlayerEvents {
       matchType:MatchType
   )=>void;
 
-  MATCH_SCORE_UPDATE : (
-      players : PlayerAttributes[] // TODO can probably combined this with MATCH_WINNER
-  )=>void;
-
-  MATCH_WINNER : (
-      winnerUserID: string
+  MATCH_DATA : (
+    players : PlayerAttributes[],
+    winnerUserID: string | undefined
   ) => void;
 
   MATCH_RPS_DUEL_STATE : (

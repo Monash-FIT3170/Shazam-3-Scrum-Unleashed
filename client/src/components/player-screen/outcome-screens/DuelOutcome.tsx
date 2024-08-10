@@ -6,6 +6,8 @@ import PlayerMoveHand from "../PlayerMoveHand.tsx";
 interface PlayerProps {
   userPlayer: PlayerAttributes;
   opponent: PlayerAttributes;
+  userAction: Action;
+  opponentAction: Action;
 }
 
 const rulesMap: Map<Action, Action> = new Map<Action, Action>([
@@ -15,12 +17,12 @@ const rulesMap: Map<Action, Action> = new Map<Action, Action>([
 ]);
 
 // fixme scuffed
-const DuelOutcome = ({ userPlayer, opponent }: PlayerProps) => {
+const DuelOutcome = ({ userPlayer, opponent, userAction, opponentAction }: PlayerProps) => {
   let duelResult: DuelResult = "DRAW";
   let userPlayerHandType: HandImgType = "FILLED";
   let opponentHandType: HandImgType = "FILLED";
-  if (userPlayer.gameData !== opponent.gameData) {
-    if (rulesMap.get(userPlayer.gameData) === opponent.gameData) {
+  if (userAction !== opponentAction) {
+    if (rulesMap.get(userAction) === opponentAction) {
       duelResult = "WIN";
       opponentHandType = "OUTLINED";
     } else {
@@ -32,12 +34,12 @@ const DuelOutcome = ({ userPlayer, opponent }: PlayerProps) => {
   return (
     <div>
       <PlayerMoveHand
-        playerMove={opponent.gameData ?? "ROCK"}
+        playerMove={opponentAction ?? "ROCK"}
         isOpponent={true}
         handType={opponentHandType}
       />
       <PlayerMoveHand
-        playerMove={userPlayer.gameData ?? "ROCK"}
+        playerMove={userAction ?? "ROCK"}
         isOpponent={false}
         handType={userPlayerHandType}
       />

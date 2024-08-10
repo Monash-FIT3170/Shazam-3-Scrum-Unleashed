@@ -1,5 +1,5 @@
 import DuelOutcome from "../player-screen/outcome-screens/DuelOutcome.tsx";
-import { PlayerAttributes } from "../../../../types/types.ts";
+import { Action, PlayerAttributes } from "../../../../types/types.ts";
 import ChoosePlayerMove from "../player-screen/choose-move/ChoosePlayerMove.tsx";
 import {socket} from "../../App.tsx";
 import {useEffect, useState} from "react";
@@ -8,20 +8,27 @@ type RPSProps = {
   tournamentCode: string;
   player: PlayerAttributes;
   opponent: PlayerAttributes;
+  isPlayerOne: boolean;
 };
 
-const RPS = ({ tournamentCode, player, opponent}: RPSProps) => {
-  const [duelComplete, setDuelComplete] = useState(false);
+const RPS = ({ tournamentCode, player, opponent, isPlayerOne}: RPSProps) => {
+  const [userAction, setUserAction] = useState<Action>();
+  const [opponentAction, setOpponentAction] = useState<Action>();
 
   useEffect(() => {
-    socket.on("MATCH_SCORE_UPDATE", () => {
-        setDuelComplete(true); // TODO fix,
+    socket.on("MATCH_RPS_DUEL_STATE", (p1Action, p2Action) => {
+      console.log(p1Action, p2Action)
+      setUserAction(isPlayerOne ? p1Action : p2Action)
+      setOpponentAction(isPlayerOne ? p2Action : p1Action)
     });
   }, []);
 
-  if (duelComplete) {
-      setTimeout(()=>{setDuelComplete(false)}, 3000)
-      return <DuelOutcome userPlayer={player} opponent={opponent} />;
+  if (userAction && opponentAction) {
+      setTimeout(()=>{
+        setUserAction(undefined);
+        setOpponentAction(undefined);
+      }, 3000)
+      return <DuelOutcome userPlayer={player} opponent={opponent} userAction={userAction} opponentAction={opponentAction} />;
   } else {
       return <ChoosePlayerMove tournamentCode={tournamentCode} />;
   }
