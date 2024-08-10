@@ -33,7 +33,6 @@ declare module "socket.io-client" {
   }
 }
 
-// TODO: We need to make this an environment variable
 export const socket: Socket<Events> = io(
   import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3010",
   {
@@ -79,7 +78,6 @@ function App() {
   socket.on("SESSION_INFO", (sessionID, userID) => {
     socket.auth = { sessionID };
     socket.userID = userID;
-    // document.cookie = `sessionID=${sessionID};`;
     localStorage.setItem("sessionID", sessionID);
   });
 
