@@ -39,9 +39,10 @@ const Paddle = ({ x, y, width, top }: PongPaddleState & { top: boolean }) => (
 
 type PongProps = {
   tournamentCode: string;
+  isPlayerOne: boolean;
 };
 
-const Pong = ({ tournamentCode }: PongProps) => {
+const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
   const [ballPosition, setBallPosition] = useState<BallPosition>({
     x: GAME_WIDTH / 2,
     y: GAME_HEIGHT / 2,
@@ -51,7 +52,6 @@ const Pong = ({ tournamentCode }: PongProps) => {
 
   useEffect(() => {
     socket.on("MATCH_PONG_STATE", (ballState, paddleStates) => {
-      console.log(paddleStates);
       requestAnimationFrame(() => {
         setBallPosition(ballState);
         setPaddle1Position(paddleStates[0]);
@@ -64,17 +64,17 @@ const Pong = ({ tournamentCode }: PongProps) => {
         socket.emit(
           "PONG_PADDLE_MOVEMENT",
           tournamentCode,
-            socket.userID,
+          socket.userID,
           true,
-          true,
+          isPlayerOne ? false : true,
         );
       } else if (event.key === "ArrowRight") {
         socket.emit(
           "PONG_PADDLE_MOVEMENT",
           tournamentCode,
-            socket.userID,
+          socket.userID,
           true,
-          false,
+          isPlayerOne ? true : false,
         );
       }
     });
@@ -84,17 +84,17 @@ const Pong = ({ tournamentCode }: PongProps) => {
         socket.emit(
           "PONG_PADDLE_MOVEMENT",
           tournamentCode,
-            socket.userID,
+          socket.userID,
           false,
-          true,
+          isPlayerOne ? false : true,
         );
       } else if (event.key === "ArrowRight") {
         socket.emit(
           "PONG_PADDLE_MOVEMENT",
           tournamentCode,
-            socket.userID,
+          socket.userID,
           false,
-          false,
+          isPlayerOne ? true : false,
         );
       }
     });
@@ -103,7 +103,11 @@ const Pong = ({ tournamentCode }: PongProps) => {
   return (
     <div
       className="relative bg-black"
-      style={{ width: `${GAME_WIDTH}px`, height: `${GAME_HEIGHT}px` }}
+      style={{
+        width: `${GAME_WIDTH}px`,
+        height: `${GAME_HEIGHT}px`,
+        transform: `rotate(${isPlayerOne ? "180deg" : "0deg"})`,
+      }}
     >
       <div
         className="justify-center items-center flex text-white text-5xl"

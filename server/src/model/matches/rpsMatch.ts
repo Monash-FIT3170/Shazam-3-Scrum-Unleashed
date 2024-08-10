@@ -31,7 +31,10 @@ export class RpsMatch implements Match {
   }
 
   public isDuelComplete() {
-    return (this.p1Action !== null || this.players[0].isBot) && (this.p2Action !== null || this.players[1].isBot);
+    return (
+      (this.p1Action !== null || this.players[0].isBot) &&
+      (this.p2Action !== null || this.players[1].isBot)
+    );
   }
 
   public getMatchWinner() {
@@ -70,7 +73,7 @@ export class RpsMatch implements Match {
     this.p2Action = null;
   }
 
-  private getBotAction(action:Action):Action {
+  private getBotAction(action: Action): Action {
     const botMove = this.rulesMap.get(action);
     if (botMove !== undefined) {
       return botMove;
@@ -103,7 +106,6 @@ export class RpsMatch implements Match {
             this.p2Action = ["ROCK", "PAPER", "SCISSORS"].at(
               (player1ActionIndex + modifier) % 3,
             ) as Action;
-
           } else {
             if (this.p1Action === null) {
               const player1Action = this.rulesMap.get(this.p2Action);
@@ -126,7 +128,6 @@ export class RpsMatch implements Match {
 
   startMatch(io: Server<Events>, tournament: Tournament): void {
     io.to(this.matchRoomID).emit("MATCH_START", this.players, "RPS");
-    // io.to(this.matchRoomID).emit("MATCH_INFO", this.players, false, null);
     this.startTimeout(playDuel(tournament, io), tournament.duelTime);
   }
 
@@ -135,12 +136,5 @@ export class RpsMatch implements Match {
       clearTimeout(this.timeOutHandler);
     }
     playDuel(tournament, io)(this);
-  }
-
-  reconnect(io: Server<Events>, userID:string): void {
-    io.to(userID).emit(
-      "MATCH_SCORE_UPDATE",
-      this.players,// emit the actions
-    );
   }
 }

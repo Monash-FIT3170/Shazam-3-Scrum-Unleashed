@@ -11,6 +11,4 @@ export interface Match {
 
   getMatchWinner(): Player | null;
   startMatch(io: Server<Events>, tournament: Tournament): void;
-  reconnect(io: Server<Events>, userID:string): void;
-
 }

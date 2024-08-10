@@ -17,7 +17,12 @@ const rulesMap: Map<Action, Action> = new Map<Action, Action>([
 ]);
 
 // fixme scuffed
-const DuelOutcome = ({ userPlayer, opponent, userAction, opponentAction }: PlayerProps) => {
+const DuelOutcome = ({
+  userPlayer,
+  opponent,
+  userAction,
+  opponentAction,
+}: PlayerProps) => {
   let duelResult: DuelResult = "DRAW";
   let userPlayerHandType: HandImgType = "FILLED";
   let opponentHandType: HandImgType = "FILLED";

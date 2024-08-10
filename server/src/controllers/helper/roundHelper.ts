@@ -82,7 +82,6 @@ function createMatch(players: Player[], tournament: Tournament) {
     tournament.matchTypeOrder[
       tournament.roundCounter % tournament.matchTypeOrder.length
     ];
-  console.log(nextMatchType);
   switch (nextMatchType) {
     case "RPS":
       return new RpsMatch(players, tournament.duelsToWin);
@@ -123,7 +122,7 @@ function createBots(players: Player[]) {
   const numBots: number = nextPowerOf2 - players.length;
 
   for (let i = 0; i < numBots; i++) {
-    const bot = new Player("", `🤖 Bot #${String(i + 1)}`, true);
+    const bot = new Player(i.toString(), `🤖 Bot #${String(i + 1)}`, true);
     bots.push(bot);
   }
   return bots;

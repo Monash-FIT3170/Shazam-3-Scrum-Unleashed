@@ -29,7 +29,6 @@ const PlayerScreen = () => {
   const [isPlayerOne, setIsPlayerOne] = useState(false);
 
   function setPlayers(players: PlayerAttributes[]) {
-    
     for (let i = 0; i < players.length; i++) {
       const player = players[i];
       if (player.userID === socket.userID) {
@@ -117,17 +116,17 @@ const PlayerScreen = () => {
     switch (matchType) {
       case "PONG": {
         content = (
-          <Pong tournamentCode={tournamentCode}/>
+          <Pong tournamentCode={tournamentCode} isPlayerOne={isPlayerOne} />
         );
         break;
       }
       case "RPS": {
         content = (
           <RPS
-          tournamentCode={tournamentCode}
-          player={userPlayer}
-          opponent={opponent}
-          isPlayerOne={isPlayerOne}
+            tournamentCode={tournamentCode}
+            player={userPlayer}
+            opponent={opponent}
+            isPlayerOne={isPlayerOne}
           />
         );
         break;

@@ -10,21 +10,24 @@ export const playDuel =
   (tournament: Tournament, io: Server<Events>) => (match: RpsMatch) => {
     match.updateScores();
     const matchWinner = match.getMatchWinner();
-    const matchWinnerUserID = matchWinner?.userID;  
-    io.to(match.matchRoomID).emit("MATCH_RPS_DUEL_STATE", match.p1Action, match.p2Action);
+    const matchWinnerUserID = matchWinner?.userID;
+    io.to(match.matchRoomID).emit(
+      "MATCH_RPS_DUEL_STATE",
+      match.p1Action,
+      match.p2Action,
+    );
     match.resetActions();
-    
+
     io.to(match.matchRoomID).emit(
       "MATCH_DATA",
       match.players,
-      matchWinnerUserID
+      matchWinnerUserID,
     );
 
     if (matchWinnerUserID === undefined) {
       match.startTimeout(playDuel(tournament, io), tournament.duelTime);
       return;
     }
-
 
     roundChecker(tournament, io, match);
   };
@@ -48,10 +51,10 @@ export const chooseActionSocket =
 
     const rpsMatch = match as RpsMatch;
 
-    if (rpsMatch.players[0].userID === playerUserID){
-        rpsMatch.p1Action = action;
+    if (rpsMatch.players[0].userID === playerUserID) {
+      rpsMatch.p1Action = action;
     } else {
-        rpsMatch.p2Action = action;
+      rpsMatch.p2Action = action;
     }
 
     if (rpsMatch.isDuelComplete()) {

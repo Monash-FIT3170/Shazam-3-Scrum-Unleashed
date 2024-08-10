@@ -47,9 +47,9 @@ export class PongMatch implements Match {
   }
 
   getMatchWinner(): Player | null {
-    if (this.players[0].score >= this.duelsToWin) {
+    if (this.players[0].score >= 10) {
       return this.players[0];
-    } else if (this.players[1].score >= this.duelsToWin) {
+    } else if (this.players[1].score >= 10) {
       return this.players[1];
     } else {
       return null;
@@ -76,9 +76,9 @@ export class PongMatch implements Match {
     ballX: number,
   ): void {
     if (this.ballState.yVelocity < 0) {
-      this.ballState.yVelocity -= 1;
+      this.ballState.yVelocity *= 1.1;
     } else {
-      this.ballState.yVelocity += 1;
+      this.ballState.yVelocity *= 1.1;
     }
     this.ballState.yVelocity *= -1;
 
@@ -158,28 +158,26 @@ export class PongMatch implements Match {
         newBallX = 50;
         this.ballState.yVelocity = INITIAL_BALL_Y_SPEED;
         this.ballState.xVelocity = this.randomXVelocity();
-        this.players[1].score += 1;
+        this.players[0].score += 1;
         winner = this.getMatchWinner();
-
         io.to(this.matchRoomID).emit(
-            "MATCH_SCORE_UPDATE",
-            this.players
+          "MATCH_DATA",
+          this.players,
+          winner?.userID,
         );
-
       }
       if (newBallY <= 0) {
         newBallY = 50;
         newBallX = 50;
         this.ballState.yVelocity = -INITIAL_BALL_Y_SPEED;
         this.ballState.xVelocity = this.randomXVelocity();
-        this.players[0].score += 1;
+        this.players[1].score += 1;
         winner = this.getMatchWinner();
-
         io.to(this.matchRoomID).emit(
-            "MATCH_SCORE_UPDATE",
-            this.players
+          "MATCH_DATA",
+          this.players,
+          winner?.userID,
         );
-
       }
     }
 
@@ -194,22 +192,12 @@ export class PongMatch implements Match {
     io.to(this.matchRoomID).emit(
       "MATCH_PONG_STATE",
       this.ballState,
-      this.paddleStates
+      this.paddleStates,
     );
 
     if (winner != null) {
-
-      setTimeout(()=>{      io.to(this.matchRoomID).emit("MATCH_WINNER",
-          winner.name
-      )}, 1000) // may not want
-
       roundChecker(this.tournament, io, this);
       clearInterval(this.intervalHandler);
     }
-  }
-
-  reconnect(io: Server<Events>, userID:string): void {
-    io.to(userID).emit("MATCH_PONG_STATE",       this.ballState,
-        this.paddleStates)
   }
 }

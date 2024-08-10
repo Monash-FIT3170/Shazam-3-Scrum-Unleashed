@@ -26,7 +26,14 @@ export async function reconnectionHandler(
               match.getMatchWinner()?.name ?? "",
             );
           } else {
-            match.reconnect(io, socket.userID);
+            // if (!match.getMatchWinner()) { 
+              io.to(socket.userID).emit("MATCH_START", match.players, tournament.matchTypeOrder[tournament.roundCounter % tournament.matchTypeOrder.length])
+            // }
+            // io.to(player.userID).emit(
+            //   "MATCH_DATA",
+            //   match.players,
+            //   match.getMatchWinner()?.userID
+            // );
           }
           break;
         }
