@@ -7,18 +7,18 @@ interface BallPosition {
   y: number;
 }
 
-const GAME_WIDTH = 350;
+const GAME_WIDTH = 600;
 const GAME_HEIGHT = 600;
-const BALL_SIZE = 10;
+const BALL_SIZE = 4;
 
 const Ball = ({ x, y }: BallPosition) => (
   <div
-    className="absolute bg-white rounded-full translate-x-1/2 -translate-y-1/2"
+    className="absolute bg-white rounded-full -translate-x-1/2 -translate-y-1/2"
     style={{
       left: `${x}%`,
       top: `${y}%`,
-      width: `${BALL_SIZE}px`,
-      height: `${BALL_SIZE}px`,
+      height: `${BALL_SIZE * (GAME_HEIGHT / 100)}px`,
+      width: `${BALL_SIZE * (GAME_WIDTH / 100)}px`,
     }}
   />
 );

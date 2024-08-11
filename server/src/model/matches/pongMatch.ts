@@ -92,6 +92,8 @@ export class PongMatch implements Match {
   }
 
   tick(io: Server<Events>): void {
+    const BALL_RADIUS = 2;
+
     // Calculating the new ball and paddle coordinates
     let newBallX = this.ballState.x + this.ballState.xVelocity / POLL_RATE;
     let newBallY = this.ballState.y + this.ballState.yVelocity / POLL_RATE;
@@ -106,24 +108,24 @@ export class PongMatch implements Match {
 
     // ball collision with paddles
     let paddleCollision = false;
-    if (newBallY <= this.paddleStates[0].y) {
+    if (newBallY - BALL_RADIUS <= this.paddleStates[0].y) {
       if (
         newBallX >= paddle0 &&
         newBallX <= paddle0 + this.paddleStates[0].width
       ) {
         this.ballPaddleCollision(paddle0, this.paddleStates[0].width, newBallX);
-        newBallY = this.paddleStates[0].y;
+        newBallY = this.paddleStates[0].y + BALL_RADIUS;
         paddleCollision = true;
       }
     }
 
-    if (newBallY >= this.paddleStates[1].y) {
+    if (newBallY + BALL_RADIUS >= this.paddleStates[1].y) {
       if (
         newBallX >= paddle1 &&
         newBallX <= paddle1 + this.paddleStates[1].width
       ) {
         this.ballPaddleCollision(paddle1, this.paddleStates[1].width, newBallX);
-        newBallY = this.paddleStates[1].y;
+        newBallY = this.paddleStates[1].y - BALL_RADIUS;
         paddleCollision = true;
       }
     }
@@ -142,11 +144,11 @@ export class PongMatch implements Match {
     }
 
     // Bounce ball off walls
-    if (newBallX >= 100) {
-      newBallX = 100;
+    if (newBallX + BALL_RADIUS >= 100) {
+      newBallX = 100 - BALL_RADIUS;
       this.ballState.xVelocity = -this.ballState.xVelocity;
-    } else if (newBallX <= 0) {
-      newBallX = 0;
+    } else if (newBallX - BALL_RADIUS <= 0) {
+      newBallX = 0 + BALL_RADIUS;
       this.ballState.xVelocity = -this.ballState.xVelocity;
     }
 
