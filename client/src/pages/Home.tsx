@@ -3,7 +3,6 @@ import ButtonComponent from "../components/buttons/ButtonComponent.tsx";
 import BorderedButtonComponent from "../components/buttons/BorderedButtonComponent.tsx";
 import DisplayLogo from "../components/DisplayLogo.tsx";
 
-
 const Home = () => {
   return (
     <div>
