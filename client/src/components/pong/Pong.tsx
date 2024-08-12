@@ -1,36 +1,12 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { socket } from "../../App";
 import { PongBallState, PongPaddleState } from "../../../../types/types.ts";
 
 const GAME_WIDTH = 600;
 const GAME_HEIGHT = 600;
 const BALL_SIZE = 10;
+const PADDLE_HEIGHT = GAME_HEIGHT * 0.02;
 
-const Ball = ({ x, y }: { x: number; y: number }) => (
-  <div
-    className="absolute bg-white rounded-full translate-x-1/2 -translate-y-1/2"
-    style={{
-      left: `${x}%`,
-      top: `${y}%`,
-      width: `${BALL_SIZE}px`,
-      height: `${BALL_SIZE}px`,
-    }}
-  />
-);
-
-const Paddle = ({ x, y, width, top }: PongPaddleState & { top: boolean }) => (
-  <div
-    className={
-      "absolute bg-white " + (top ? "origin-bottom -translate-y-full" : "")
-    }
-    style={{
-      left: `${x}%`,
-      top: `${y}%`,
-      width: `${width}%`,
-      height: `2%`,
-    }}
-  />
-);
 
 type PongProps = {
   tournamentCode: string;
@@ -38,49 +14,91 @@ type PongProps = {
 };
 
 const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
-  const [ballState, setBallState] = useState<PongBallState>({
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const ballState = useRef<PongBallState>({
     x: GAME_WIDTH / 2,
     y: GAME_HEIGHT / 2,
     xVelocity: 0,
     yVelocity: 0,
   });
-  const [paddle1Position, setPaddle1Position] = useState<PongPaddleState>();
-  const [paddle2Position, setPaddle2Position] = useState<PongPaddleState>();
+  const paddle1Position = useRef<PongPaddleState>();
+  const paddle2Position = useRef<PongPaddleState>();
   const lastUpdateTime = useRef(performance.now());
   const animationFrameId = useRef<number>();
 
   const updateServerBallPosition = (
-    ballState: PongBallState,
-    paddleStates: PongPaddleState[]
+    serverBallState: PongBallState,
+    serverPaddleStates: PongPaddleState[]
   ) => {
     requestAnimationFrame(() => {
-      setBallState(ballState);
-      setPaddle1Position(paddleStates[0]);
-      setPaddle2Position(paddleStates[1]);
+      ballState.current = {
+        x: serverBallState.x * (GAME_WIDTH / 100),
+        y: serverBallState.y * (GAME_WIDTH / 100),
+        xVelocity: serverBallState.xVelocity * (GAME_WIDTH / 100),
+        yVelocity: serverBallState.yVelocity * (GAME_WIDTH / 100),
+      };
+      paddle1Position.current = {
+        ...serverPaddleStates[0],
+        width: serverPaddleStates[0].width * (GAME_WIDTH / 100),
+        x: serverPaddleStates[0].x * (GAME_WIDTH / 100),
+        y: serverPaddleStates[0].y * (GAME_WIDTH / 100) - PADDLE_HEIGHT,
+      };
+      paddle2Position.current = {
+        ...serverPaddleStates[1],
+        width: serverPaddleStates[1].width * (GAME_WIDTH / 100),
+        x: serverPaddleStates[1].x * (GAME_WIDTH / 100),
+        y: serverPaddleStates[1].y * (GAME_WIDTH / 100),
+      };
+
       lastUpdateTime.current = performance.now();
-      console.log("Update from server")
     });
   };
 
-  const animateBall = () => {
-    console.log("animating ball");
+  const drawGame = (ctx: CanvasRenderingContext2D) => {
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+
+    ctx.fillStyle = "white";
+    ctx.beginPath();
+    ctx.arc(ballState.current.x, ballState.current.y, BALL_SIZE / 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    if (paddle1Position.current) {
+      ctx.fillRect(
+        paddle1Position.current.x,
+        paddle1Position.current.y,
+        paddle1Position.current.width,
+        PADDLE_HEIGHT
+      );
+    }
+
+    if (paddle2Position.current) {
+      ctx.fillRect(
+        paddle2Position.current.x,
+        paddle2Position.current.y,
+        paddle2Position.current.width,
+        PADDLE_HEIGHT
+      );
+    }
+  };
+
+  const drawFrame = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!ctx) return
+
     const now = performance.now();
     const deltaTime = (now - lastUpdateTime.current) / 1000;
-    console.log(deltaTime);
     lastUpdateTime.current = now;
-  
-    setBallState(prevState => {
-      const newX = prevState.x + prevState.xVelocity * deltaTime;
-      const newY = prevState.y + prevState.yVelocity * deltaTime;
-      const boundedX = Math.max(0, Math.min(newX, 100));
-  
-      return {
-        ...prevState,
-        x: boundedX,
-        y: newY,
-      };
-    });
-    animationFrameId.current = requestAnimationFrame(animateBall);
+
+    ballState.current = {
+      ...ballState.current,
+      x: ballState.current.x + ballState.current.xVelocity * deltaTime,
+      y: ballState.current.y + ballState.current.yVelocity * deltaTime,
+    };
+
+    drawGame(ctx);
+    animationFrameId.current = requestAnimationFrame(drawFrame);
   };
 
   useEffect(() => {
@@ -121,51 +139,23 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
   }, [tournamentCode, isPlayerOne]);
 
   useEffect(() => {
-    console.log("kicking off request animation loop")
-    animationFrameId.current = requestAnimationFrame(animateBall);
+    animationFrameId.current = requestAnimationFrame(drawFrame);
     return () => {
       if (animationFrameId.current) {
-        console.log("cancelling animation request frame")
         cancelAnimationFrame(animationFrameId.current);
       }
     };
   }, []);
 
   return (
-    <div
-      className="relative bg-black"
+    <canvas
+      ref={canvasRef}
+      width={GAME_WIDTH}
+      height={GAME_HEIGHT}
       style={{
-        width: `${GAME_WIDTH}px`,
-        height: `${GAME_HEIGHT}px`,
         transform: `rotate(${isPlayerOne ? "180deg" : "0deg"})`,
       }}
-    >
-      <div
-        className="justify-center items-center flex text-white text-5xl"
-        style={{
-          height: `${GAME_HEIGHT}px`,
-        }}
-      ></div>
-      <Ball x={ballState.x} y={ballState.y} />
-      {paddle1Position && (
-        <Paddle
-          x={paddle1Position.x}
-          y={paddle1Position.y}
-          width={paddle1Position.width}
-          direction={paddle1Position.direction}
-          top
-        />
-      )}
-      {paddle2Position && (
-        <Paddle
-          x={paddle2Position.x}
-          y={paddle2Position.y}
-          width={paddle2Position.width}
-          direction={paddle2Position.direction}
-          top={false}
-        />
-      )}
-    </div>
+    />
   );
 };
 
