@@ -12,7 +12,7 @@ import { roundChecker } from "../../controllers/helper/roundHelper";
 import * as crypto from "node:crypto";
 
 const INITIAL_BALL_Y_SPEED = 30;
-const POLL_RATE = 30; // Hz
+const POLL_RATE = 5; // Hz
 
 export class PongMatch implements Match {
   duelsToWin: number;
