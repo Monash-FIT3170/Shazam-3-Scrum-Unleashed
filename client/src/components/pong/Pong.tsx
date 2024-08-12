@@ -4,8 +4,9 @@ import { PongBallState, PongPaddleState } from "../../../../types/types.ts";
 
 const GAME_WIDTH = 600;
 const GAME_HEIGHT = 600;
-const BALL_SIZE = 10;
+const BALL_RADIUS = 2;
 const PADDLE_HEIGHT = GAME_HEIGHT * 0.02;
+const SCALING_FACTOR = GAME_WIDTH / 100;
 
 
 type PongProps = {
@@ -32,22 +33,22 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
   ) => {
     requestAnimationFrame(() => {
       ballState.current = {
-        x: serverBallState.x * (GAME_WIDTH / 100),
-        y: serverBallState.y * (GAME_WIDTH / 100),
-        xVelocity: serverBallState.xVelocity * (GAME_WIDTH / 100),
-        yVelocity: serverBallState.yVelocity * (GAME_WIDTH / 100),
+        x: serverBallState.x * SCALING_FACTOR,
+        y: serverBallState.y * SCALING_FACTOR,
+        xVelocity: serverBallState.xVelocity * SCALING_FACTOR,
+        yVelocity: serverBallState.yVelocity * SCALING_FACTOR,
       };
       paddle1Position.current = {
         ...serverPaddleStates[0],
-        width: serverPaddleStates[0].width * (GAME_WIDTH / 100),
-        x: serverPaddleStates[0].x * (GAME_WIDTH / 100),
-        y: serverPaddleStates[0].y * (GAME_WIDTH / 100) - PADDLE_HEIGHT,
+        width: serverPaddleStates[0].width * SCALING_FACTOR,
+        x: serverPaddleStates[0].x * SCALING_FACTOR,
+        y: serverPaddleStates[0].y * SCALING_FACTOR - PADDLE_HEIGHT,
       };
       paddle2Position.current = {
         ...serverPaddleStates[1],
-        width: serverPaddleStates[1].width * (GAME_WIDTH / 100),
-        x: serverPaddleStates[1].x * (GAME_WIDTH / 100),
-        y: serverPaddleStates[1].y * (GAME_WIDTH / 100),
+        width: serverPaddleStates[1].width * SCALING_FACTOR,
+        x: serverPaddleStates[1].x * SCALING_FACTOR,
+        y: serverPaddleStates[1].y * SCALING_FACTOR,
       };
 
       lastUpdateTime.current = performance.now();
@@ -55,29 +56,59 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
   };
 
   const drawGame = (ctx: CanvasRenderingContext2D) => {
-    ctx.fillStyle = "black";
+    // Background
+    ctx.fillStyle = "#22026c";
     ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-
-    ctx.fillStyle = "white";
+  
+    // Border
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 4;
+    ctx.strokeRect(2, 2, GAME_WIDTH - 4, GAME_HEIGHT - 4);
+  
+    // Center line
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+    ctx.setLineDash([5, 5]);
     ctx.beginPath();
-    ctx.arc(ballState.current.x, ballState.current.y, BALL_SIZE / 2, 0, Math.PI * 2);
+    ctx.moveTo(0, GAME_HEIGHT / 2);
+    ctx.lineTo(GAME_WIDTH, GAME_HEIGHT / 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  
+    // Ball
+    ctx.fillStyle = "#ff00ff";
+    ctx.beginPath();
+    ctx.arc(ballState.current.x, ballState.current.y, BALL_RADIUS * SCALING_FACTOR, 0, Math.PI * 2);
     ctx.fill();
-
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  
+    // Paddles
+    const drawPaddle = (x: number, y: number, width: number, height: number, color: string) => {
+      ctx.fillStyle = color;
+      ctx.fillRect(x, y, width, height);
+      ctx.strokeStyle = "white";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(x, y, width, height);
+    };
+  
     if (paddle1Position.current) {
-      ctx.fillRect(
+      drawPaddle(
         paddle1Position.current.x,
         paddle1Position.current.y,
         paddle1Position.current.width,
-        PADDLE_HEIGHT
+        PADDLE_HEIGHT,
+        "#ff4757"
       );
     }
-
+  
     if (paddle2Position.current) {
-      ctx.fillRect(
+      drawPaddle(
         paddle2Position.current.x,
         paddle2Position.current.y,
         paddle2Position.current.width,
-        PADDLE_HEIGHT
+        PADDLE_HEIGHT,
+        "#2ed573"
       );
     }
   };
