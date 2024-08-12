@@ -1,17 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { socket } from "../../App";
-import { PongPaddleState } from "../../../../types/types.ts";
+import { PongBallState, PongPaddleState } from "../../../../types/types.ts";
 
-interface BallPosition {
-  x: number;
-  y: number;
-}
-
-const GAME_WIDTH = 350;
+const GAME_WIDTH = 600;
 const GAME_HEIGHT = 600;
 const BALL_SIZE = 10;
 
-const Ball = ({ x, y }: BallPosition) => (
+const Ball = ({ x, y }: { x: number; y: number }) => (
   <div
     className="absolute bg-white rounded-full translate-x-1/2 -translate-y-1/2"
     style={{
@@ -43,61 +38,97 @@ type PongProps = {
 };
 
 const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
-  const [ballPosition, setBallPosition] = useState<BallPosition>({
+  const [ballState, setBallState] = useState<PongBallState>({
     x: GAME_WIDTH / 2,
     y: GAME_HEIGHT / 2,
+    xVelocity: 0,
+    yVelocity: 0,
   });
   const [paddle1Position, setPaddle1Position] = useState<PongPaddleState>();
   const [paddle2Position, setPaddle2Position] = useState<PongPaddleState>();
+  const lastUpdateTime = useRef(performance.now());
+  const animationFrameId = useRef<number>();
+
+  const updateServerBallPosition = (
+    ballState: PongBallState,
+    paddleStates: PongPaddleState[]
+  ) => {
+    requestAnimationFrame(() => {
+      setBallState(ballState);
+      setPaddle1Position(paddleStates[0]);
+      setPaddle2Position(paddleStates[1]);
+      lastUpdateTime.current = performance.now();
+      console.log("Update from server")
+    });
+  };
+
+  const animateBall = () => {
+    console.log("animating ball");
+    const now = performance.now();
+    const deltaTime = (now - lastUpdateTime.current) / 1000;
+    console.log(deltaTime);
+    lastUpdateTime.current = now;
+  
+    setBallState(prevState => {
+      const newX = prevState.x + prevState.xVelocity * deltaTime;
+      const newY = prevState.y + prevState.yVelocity * deltaTime;
+      const boundedX = Math.max(0, Math.min(newX, 100));
+  
+      return {
+        ...prevState,
+        x: boundedX,
+        y: newY,
+      };
+    });
+    animationFrameId.current = requestAnimationFrame(animateBall);
+  };
 
   useEffect(() => {
-    socket.on("MATCH_PONG_STATE", (ballState, paddleStates) => {
-      requestAnimationFrame(() => {
-        setBallPosition(ballState);
-        setPaddle1Position(paddleStates[0]);
-        setPaddle2Position(paddleStates[1]);
-      });
-    });
+    socket.on("MATCH_PONG_STATE", updateServerBallPosition);
 
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "ArrowLeft") {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
         socket.emit(
           "PONG_PADDLE_MOVEMENT",
           tournamentCode,
           socket.userID,
           true,
-          isPlayerOne ? false : true,
-        );
-      } else if (event.key === "ArrowRight") {
-        socket.emit(
-          "PONG_PADDLE_MOVEMENT",
-          tournamentCode,
-          socket.userID,
-          true,
-          isPlayerOne ? true : false,
+          (event.key === "ArrowRight") === isPlayerOne
         );
       }
-    });
+    };
 
-    document.addEventListener("keyup", (event) => {
-      if (event.key === "ArrowLeft") {
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
         socket.emit(
           "PONG_PADDLE_MOVEMENT",
           tournamentCode,
           socket.userID,
           false,
-          isPlayerOne ? false : true,
-        );
-      } else if (event.key === "ArrowRight") {
-        socket.emit(
-          "PONG_PADDLE_MOVEMENT",
-          tournamentCode,
-          socket.userID,
-          false,
-          isPlayerOne ? true : false,
+          (event.key === "ArrowRight") === isPlayerOne
         );
       }
-    });
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("keyup", handleKeyUp);
+
+    return () => {
+      socket.off("MATCH_PONG_STATE", updateServerBallPosition);
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [tournamentCode, isPlayerOne]);
+
+  useEffect(() => {
+    console.log("kicking off request animation loop")
+    animationFrameId.current = requestAnimationFrame(animateBall);
+    return () => {
+      if (animationFrameId.current) {
+        console.log("cancelling animation request frame")
+        cancelAnimationFrame(animationFrameId.current);
+      }
+    };
   }, []);
 
   return (
@@ -115,8 +146,8 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
           height: `${GAME_HEIGHT}px`,
         }}
       ></div>
-      <Ball x={ballPosition.x} y={ballPosition.y} />
-      {paddle1Position !== undefined && (
+      <Ball x={ballState.x} y={ballState.y} />
+      {paddle1Position && (
         <Paddle
           x={paddle1Position.x}
           y={paddle1Position.y}
@@ -125,7 +156,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
           top
         />
       )}
-      {paddle2Position !== undefined && (
+      {paddle2Position && (
         <Paddle
           x={paddle2Position.x}
           y={paddle2Position.y}
