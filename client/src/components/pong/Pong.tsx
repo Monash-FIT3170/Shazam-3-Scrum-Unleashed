@@ -24,17 +24,15 @@ const clampY = (
   paddlePosition: PongPaddleState | undefined,
   ballState: PongBallState
 ) => {
-
   if (!paddlePosition) {
     return number;
   }
 
-  console.log(paddlePosition.y);
-  console.log(number);
-
   if (
     number < paddlePosition.y + BALL_RADIUS * SCALING_FACTOR &&
-    ballState.y < 50 * SCALING_FACTOR
+    ballState.y < 50 * SCALING_FACTOR &&
+    ballState.x > paddlePosition.x &&
+    ballState.x < paddlePosition.x + paddlePosition.width
   ) {
     return paddlePosition.y + BALL_RADIUS * SCALING_FACTOR;
   } else if (
@@ -101,7 +99,6 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
     ctx.fillStyle = "#22026c";
     ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
-    
     // Center line
     ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
     ctx.setLineDash([5, 5]);
