@@ -16,13 +16,13 @@ type PongProps = {
 const clampX = (number: number, gameWidth: number) =>
   Math.min(
     Math.max(number, 0 + BALL_RADIUS * SCALING_FACTOR),
-    gameWidth - BALL_RADIUS * SCALING_FACTOR,
+    gameWidth - BALL_RADIUS * SCALING_FACTOR
   );
 
 const clampY = (
   number: number,
   paddlePosition: PongPaddleState | undefined,
-  ballState: PongBallState,
+  ballState: PongBallState
 ) => {
   if (!paddlePosition) {
     return number;
@@ -42,6 +42,17 @@ const clampY = (
     return paddlePosition.y - BALL_RADIUS * SCALING_FACTOR;
   }
 
+  // if (
+  //   ballState.x + BALL_RADIUS * SCALING_FACTOR >
+  //     paddlePosition.x - paddlePosition.width / 2 &&
+  //   ballState.x - BALL_RADIUS * SCALING_FACTOR <
+  //     paddlePosition.x + paddlePosition.width / 2
+  // ) {
+  //   return number > 50 * SCALING_FACTOR
+  //     ? paddlePosition.y - BALL_RADIUS * SCALING_FACTOR
+  //     : paddlePosition.y + BALL_RADIUS * SCALING_FACTOR;
+  // }
+
   return number;
 };
 
@@ -60,7 +71,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
 
   const updateServerBallPosition = (
     serverBallState: PongBallState,
-    serverPaddleStates: PongPaddleState[],
+    serverPaddleStates: PongPaddleState[]
   ) => {
     ballState.current = {
       x: serverBallState.x * SCALING_FACTOR,
@@ -106,7 +117,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
     const yClamped = clampY(
       ballState.current.y,
       closestPaddle.current,
-      ballState.current,
+      ballState.current
     );
 
     const strokeWidth = 2;
@@ -127,7 +138,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
       width: number,
       height: number,
       color: string,
-      isTop = false,
+      isTop = false
     ) => {
       const strokeWidth = 2;
       const adjustedX = x + strokeWidth / 2;
@@ -144,7 +155,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
         adjustedX,
         adjustedY + topOffset,
         adjustedWidth,
-        adjustedHeight,
+        adjustedHeight
       );
     };
 
@@ -156,7 +167,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
         paddle1Position.current.width,
         PADDLE_HEIGHT,
         "#ff4757",
-        true,
+        true
       );
     }
 
@@ -166,7 +177,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
         paddle2Position.current.y,
         paddle2Position.current.width,
         PADDLE_HEIGHT,
-        "#2ed573",
+        "#2ed573"
       );
     }
   };
@@ -200,7 +211,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
           tournamentCode,
           socket.userID,
           true,
-          (event.key === "ArrowRight") === isPlayerOne,
+          (event.key === "ArrowRight") === isPlayerOne
         );
       }
     };
@@ -212,7 +223,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
           tournamentCode,
           socket.userID,
           false,
-          (event.key === "ArrowRight") === isPlayerOne,
+          (event.key === "ArrowRight") === isPlayerOne
         );
       }
     };

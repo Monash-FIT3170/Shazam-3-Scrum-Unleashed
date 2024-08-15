@@ -46,7 +46,6 @@ io.on("connection", async (socket) => {
   io.to(socket.userID).emit("SESSION_INFO", socket.sessionID, socket.userID);
   await reconnectionHandler(socket, io, tournamentMap);
 
-  // TODO - move listener inside pongMatch method
   socket.on("PONG_PADDLE_MOVEMENT", pongPaddleMovementSocket);
   socket.on("RPS_CHOOSE_ACTION", chooseActionSocket(io));
   socket.on("ADD_REACTION", addReactionSocket(io));
