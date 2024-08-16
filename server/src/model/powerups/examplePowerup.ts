@@ -16,7 +16,7 @@ export default class ExamplePowerup extends Powerup {
         const P2 = rpsMatch.players[1];
         const coinFlip = Math.random() >= 0.5;
         if (coinFlip) {
-            P1.score = 0;
+            P1.score = 0;   
         } else {
             P2.score = 0;
         }
