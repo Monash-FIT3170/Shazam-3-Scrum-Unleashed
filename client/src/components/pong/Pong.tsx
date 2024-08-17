@@ -37,7 +37,9 @@ const clampY = (
     return paddlePosition.y + BALL_RADIUS * SCALING_FACTOR;
   } else if (
     number > paddlePosition.y - BALL_RADIUS * SCALING_FACTOR &&
-    ballState.y > 50 * SCALING_FACTOR
+    ballState.y > 50 * SCALING_FACTOR &&
+    ballState.x > paddlePosition.x &&
+    ballState.x < paddlePosition.x + paddlePosition.width
   ) {
     return paddlePosition.y - BALL_RADIUS * SCALING_FACTOR;
   }
@@ -84,6 +86,12 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
   };
 
   const drawGame = (ctx: CanvasRenderingContext2D) => {
+    if (isPlayerOne) {
+      ctx.save();
+      ctx.scale(1, -1);
+      ctx.translate(0, -GAME_HEIGHT);
+    }
+
     // Background
     ctx.fillStyle = "#22026c";
     ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
@@ -169,6 +177,10 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
         "#2ed573",
       );
     }
+
+    if (isPlayerOne) {
+      ctx.restore();
+    }
   };
 
   const drawFrame = () => {
@@ -200,7 +212,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
           tournamentCode,
           socket.userID,
           true,
-          (event.key === "ArrowRight") === isPlayerOne,
+          event.key === "ArrowLeft",
         );
       }
     };
@@ -212,7 +224,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
           tournamentCode,
           socket.userID,
           false,
-          (event.key === "ArrowRight") === isPlayerOne,
+          event.key === "ArrowLeft",
         );
       }
     };
@@ -238,14 +250,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
 
   return (
     <div className="bg-white p-1">
-      <canvas
-        ref={canvasRef}
-        width={GAME_WIDTH}
-        height={GAME_HEIGHT}
-        style={{
-          transform: `rotate(${isPlayerOne ? "180deg" : "0deg"})`,
-        }}
-      />
+      <canvas ref={canvasRef} width={GAME_WIDTH} height={GAME_HEIGHT} />
     </div>
   );
 };
