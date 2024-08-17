@@ -84,6 +84,12 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
   };
 
   const drawGame = (ctx: CanvasRenderingContext2D) => {
+    if (isPlayerOne) {
+      ctx.save();
+      ctx.scale(1, -1);
+      ctx.translate(0, -GAME_HEIGHT);
+    }
+
     // Background
     ctx.fillStyle = "#22026c";
     ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
@@ -169,6 +175,10 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
         "#2ed573",
       );
     }
+
+    if (isPlayerOne) {
+      ctx.restore();
+    }
   };
 
   const drawFrame = () => {
@@ -200,7 +210,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
           tournamentCode,
           socket.userID,
           true,
-          (event.key === "ArrowRight") === isPlayerOne,
+          event.key === "ArrowLeft",
         );
       }
     };
@@ -212,7 +222,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
           tournamentCode,
           socket.userID,
           false,
-          (event.key === "ArrowRight") === isPlayerOne,
+          event.key === "ArrowLeft",
         );
       }
     };
@@ -242,9 +252,6 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
         ref={canvasRef}
         width={GAME_WIDTH}
         height={GAME_HEIGHT}
-        style={{
-          transform: `rotate(${isPlayerOne ? "180deg" : "0deg"})`,
-        }}
       />
     </div>
   );
