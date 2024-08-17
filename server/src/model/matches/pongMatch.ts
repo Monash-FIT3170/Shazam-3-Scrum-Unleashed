@@ -11,8 +11,8 @@ import Tournament from "../tournament";
 import { roundChecker } from "../../controllers/helper/roundHelper";
 import * as crypto from "node:crypto";
 
-const INITIAL_BALL_Y_SPEED = 30;
-const POLL_RATE = 30; // Hz
+const INITIAL_BALL_Y_SPEED = 50;
+const POLL_RATE = 10; // Hz
 
 export class PongMatch implements Match {
   duelsToWin: number;
@@ -76,9 +76,9 @@ export class PongMatch implements Match {
     ballX: number,
   ): void {
     if (this.ballState.yVelocity < 0) {
-      this.ballState.yVelocity *= 1.1;
+      this.ballState.yVelocity -= 5;
     } else {
-      this.ballState.yVelocity *= 1.1;
+      this.ballState.yVelocity += 5;
     }
     this.ballState.yVelocity *= -1;
 
@@ -93,18 +93,25 @@ export class PongMatch implements Match {
 
   tick(io: Server<Events>): void {
     const BALL_RADIUS = 2;
+    let emitData = false;
 
     // Calculating the new ball and paddle coordinates
     let newBallX = this.ballState.x + this.ballState.xVelocity / POLL_RATE;
     let newBallY = this.ballState.y + this.ballState.yVelocity / POLL_RATE;
 
+    if (this.paddleStates[0].direction || this.paddleStates[1].direction) {
+      emitData = true;
+    }
+
     let paddle0 =
       this.paddleStates[0].x +
-      (this.paddleStates[0].direction * 60) / POLL_RATE;
+      (this.paddleStates[0].direction * Math.abs(this.ballState.yVelocity)) /
+        POLL_RATE;
 
     let paddle1 =
       this.paddleStates[1].x +
-      (this.paddleStates[1].direction * 60) / POLL_RATE;
+      (this.paddleStates[1].direction * Math.abs(this.ballState.yVelocity)) /
+        POLL_RATE;
 
     // ball collision with paddles
     let paddleCollision = false;
@@ -116,6 +123,7 @@ export class PongMatch implements Match {
         this.ballPaddleCollision(paddle0, this.paddleStates[0].width, newBallX);
         newBallY = this.paddleStates[0].y + BALL_RADIUS;
         paddleCollision = true;
+        emitData = true;
       }
     }
 
@@ -127,6 +135,7 @@ export class PongMatch implements Match {
         this.ballPaddleCollision(paddle1, this.paddleStates[1].width, newBallX);
         newBallY = this.paddleStates[1].y - BALL_RADIUS;
         paddleCollision = true;
+        emitData = true;
       }
     }
 
@@ -147,9 +156,11 @@ export class PongMatch implements Match {
     if (newBallX + BALL_RADIUS >= 100) {
       newBallX = 100 - BALL_RADIUS;
       this.ballState.xVelocity = -this.ballState.xVelocity;
+      emitData = true;
     } else if (newBallX - BALL_RADIUS <= 0) {
       newBallX = 0 + BALL_RADIUS;
       this.ballState.xVelocity = -this.ballState.xVelocity;
+      emitData = true;
     }
 
     // Score (can only happen when paddle did not collide)
@@ -191,11 +202,13 @@ export class PongMatch implements Match {
     this.ballState.x = newBallX;
     this.ballState.y = newBallY;
 
-    io.to(this.matchRoomID).emit(
-      "MATCH_PONG_STATE",
-      this.ballState,
-      this.paddleStates,
-    );
+    if (emitData) {
+      io.to(this.matchRoomID).emit(
+        "MATCH_PONG_STATE",
+        this.ballState,
+        this.paddleStates,
+      );
+    }
 
     if (winner != null) {
       roundChecker(this.tournament, io, this);
