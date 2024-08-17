@@ -69,5 +69,10 @@ interface ServerToPlayerEvents {
     paddleStates: PongPaddleState[],
   ) => void;
 
+  TEMP_MATCH_PONG_STATE: (
+      ballState: PongBallState,
+      paddleStates: PongPaddleState[],
+  ) => void;
+
   REACTION_ADDED: (reaction: ReactionData) => void;
 }

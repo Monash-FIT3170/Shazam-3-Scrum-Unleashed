@@ -22,7 +22,7 @@ const clampX = (number: number, gameWidth: number) =>
 const clampY = (
   number: number,
   paddlePosition: PongPaddleState | undefined,
-  ballState: PongBallState
+  ballState: PongBallState,
 ) => {
   if (!paddlePosition) {
     return number;
@@ -64,6 +64,14 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
     xVelocity: 0,
     yVelocity: 0,
   });
+
+  const tempServerBallState = useRef<PongBallState>({
+    x: GAME_WIDTH / 2,
+    y: GAME_HEIGHT / 2,
+    xVelocity: 0,
+    yVelocity: 0,
+  });
+
   const paddle1Position = useRef<PongPaddleState>();
   const paddle2Position = useRef<PongPaddleState>();
   const lastUpdateTime = useRef(performance.now());
@@ -71,14 +79,57 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
 
   const updateServerBallPosition = (
     serverBallState: PongBallState,
-    serverPaddleStates: PongPaddleState[]
+    serverPaddleStates: PongPaddleState[],
   ) => {
+    tempServerBallState.current = {
+      x: serverBallState.x * SCALING_FACTOR,
+      y: serverBallState.y * SCALING_FACTOR,
+      xVelocity: serverBallState.xVelocity * SCALING_FACTOR,
+      yVelocity: serverBallState.yVelocity * SCALING_FACTOR,
+    };
+
+    if (ballState.current.yVelocity == 0) {
+      ballState.current = {
+        x: serverBallState.x * SCALING_FACTOR,
+        y: serverBallState.y * SCALING_FACTOR,
+        xVelocity: serverBallState.xVelocity * SCALING_FACTOR,
+        yVelocity: serverBallState.yVelocity * SCALING_FACTOR,
+      };
+    }
+
+    paddle1Position.current = {
+      ...serverPaddleStates[0],
+      width: serverPaddleStates[0].width * SCALING_FACTOR,
+      x: serverPaddleStates[0].x * SCALING_FACTOR,
+      y: serverPaddleStates[0].y * SCALING_FACTOR,
+    };
+    paddle2Position.current = {
+      ...serverPaddleStates[1],
+      width: serverPaddleStates[1].width * SCALING_FACTOR,
+      x: serverPaddleStates[1].x * SCALING_FACTOR,
+      y: serverPaddleStates[1].y * SCALING_FACTOR,
+    };
+    lastUpdateTime.current = performance.now();
+  };
+
+  const updateGameState = (
+    serverBallState: PongBallState,
+    serverPaddleStates: PongPaddleState[],
+  ) => {
+    tempServerBallState.current = {
+      x: serverBallState.x * SCALING_FACTOR,
+      y: serverBallState.y * SCALING_FACTOR,
+      xVelocity: serverBallState.xVelocity * SCALING_FACTOR,
+      yVelocity: serverBallState.yVelocity * SCALING_FACTOR,
+    };
+
     ballState.current = {
       x: serverBallState.x * SCALING_FACTOR,
       y: serverBallState.y * SCALING_FACTOR,
       xVelocity: serverBallState.xVelocity * SCALING_FACTOR,
       yVelocity: serverBallState.yVelocity * SCALING_FACTOR,
     };
+
     paddle1Position.current = {
       ...serverPaddleStates[0],
       width: serverPaddleStates[0].width * SCALING_FACTOR,
@@ -117,7 +168,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
     const yClamped = clampY(
       ballState.current.y,
       closestPaddle.current,
-      ballState.current
+      ballState.current,
     );
 
     const strokeWidth = 2;
@@ -131,6 +182,21 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
     ctx.lineWidth = strokeWidth;
     ctx.stroke();
 
+    // Temporary test, Server Ball
+    ctx.fillStyle = "black";
+    ctx.beginPath();
+    ctx.arc(
+      tempServerBallState.current.x,
+      tempServerBallState.current.y,
+      adjustedRadius,
+      0,
+      Math.PI * 2,
+    );
+    ctx.fill();
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = strokeWidth;
+    ctx.stroke();
+
     // Paddles
     const drawPaddle = (
       x: number,
@@ -138,7 +204,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
       width: number,
       height: number,
       color: string,
-      isTop = false
+      isTop = false,
     ) => {
       const strokeWidth = 2;
       const adjustedX = x + strokeWidth / 2;
@@ -155,7 +221,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
         adjustedX,
         adjustedY + topOffset,
         adjustedWidth,
-        adjustedHeight
+        adjustedHeight,
       );
     };
 
@@ -167,7 +233,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
         paddle1Position.current.width,
         PADDLE_HEIGHT,
         "#ff4757",
-        true
+        true,
       );
     }
 
@@ -177,7 +243,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
         paddle2Position.current.y,
         paddle2Position.current.width,
         PADDLE_HEIGHT,
-        "#2ed573"
+        "#2ed573",
       );
     }
   };
@@ -202,7 +268,8 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
   };
 
   useEffect(() => {
-    socket.on("MATCH_PONG_STATE", updateServerBallPosition);
+    socket.on("TEMP_MATCH_PONG_STATE", updateServerBallPosition);
+    socket.on("MATCH_PONG_STATE", updateGameState);
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
@@ -211,7 +278,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
           tournamentCode,
           socket.userID,
           true,
-          (event.key === "ArrowRight") === isPlayerOne
+          (event.key === "ArrowRight") === isPlayerOne,
         );
       }
     };
@@ -223,7 +290,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
           tournamentCode,
           socket.userID,
           false,
-          (event.key === "ArrowRight") === isPlayerOne
+          (event.key === "ArrowRight") === isPlayerOne,
         );
       }
     };
@@ -233,6 +300,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
 
     return () => {
       socket.off("MATCH_PONG_STATE", updateServerBallPosition);
+      socket.off("TEMP_MATCH_PONG_STATE", updateServerBallPosition);
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
     };

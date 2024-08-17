@@ -27,11 +27,11 @@ export class PongMatch implements Match {
     this.players = players;
     this.tournament = tournament;
     this.paddleStates = [
-      { x: 50, y: 5, direction: 0, width: 20 },
+      { x: 50, y: 5, direction: 0, width: 100 },
       { x: 50, y: 95, direction: 0, width: 20 },
     ];
     this.matchRoomID = crypto.randomUUID();
-    this.duelsToWin = duelsToWin;
+    this.duelsToWin = 10;
     this.ballState = {
       x: 50,
       y: 50,
@@ -39,11 +39,6 @@ export class PongMatch implements Match {
       yVelocity: INITIAL_BALL_Y_SPEED,
     };
     this.intervalHandler = undefined;
-  }
-
-  // TODO - we don't need is duel complete for pong
-  isDuelComplete(): boolean {
-    return false;
   }
 
   getMatchWinner(): Player | null {
@@ -114,7 +109,7 @@ export class PongMatch implements Match {
         newBallX <= paddle0 + this.paddleStates[0].width
       ) {
         this.ballPaddleCollision(paddle0, this.paddleStates[0].width, newBallX);
-        newBallY = this.paddleStates[0].y + BALL_RADIUS;
+        newBallY = this.paddleStates[0].y + BALL_RADIUS - (newBallY - this.paddleStates[0].y);
         paddleCollision = true;
       }
     }
@@ -125,7 +120,7 @@ export class PongMatch implements Match {
         newBallX <= paddle1 + this.paddleStates[1].width
       ) {
         this.ballPaddleCollision(paddle1, this.paddleStates[1].width, newBallX);
-        newBallY = this.paddleStates[1].y - BALL_RADIUS;
+        newBallY = this.paddleStates[1].y - BALL_RADIUS - (newBallY - this.paddleStates[1].y);
         paddleCollision = true;
       }
     }
@@ -145,15 +140,16 @@ export class PongMatch implements Match {
 
     // Bounce ball off walls
     if (newBallX + BALL_RADIUS >= 100) {
-      newBallX = 100 - BALL_RADIUS;
+      newBallX = 100 - BALL_RADIUS - (newBallX - 100);
       this.ballState.xVelocity = -this.ballState.xVelocity;
     } else if (newBallX - BALL_RADIUS <= 0) {
-      newBallX = 0 + BALL_RADIUS;
+      newBallX = BALL_RADIUS - newBallX;
       this.ballState.xVelocity = -this.ballState.xVelocity;
     }
 
     // Score (can only happen when paddle did not collide)
     let winner = null;
+    let scoreChanged = false;
     if (!paddleCollision) {
       if (newBallY >= 100) {
         newBallY = 50;
@@ -167,6 +163,7 @@ export class PongMatch implements Match {
           this.players,
           winner?.userID,
         );
+        scoreChanged = true;
       }
       if (newBallY <= 0) {
         newBallY = 50;
@@ -180,6 +177,7 @@ export class PongMatch implements Match {
           this.players,
           winner?.userID,
         );
+        scoreChanged = true;
       }
     }
 
@@ -191,11 +189,22 @@ export class PongMatch implements Match {
     this.ballState.x = newBallX;
     this.ballState.y = newBallY;
 
-    io.to(this.matchRoomID).emit(
-      "MATCH_PONG_STATE",
-      this.ballState,
-      this.paddleStates,
-    );
+
+    if (scoreChanged){
+      io.to(this.matchRoomID).emit(
+          "MATCH_PONG_STATE",
+          this.ballState,
+          this.paddleStates,
+      );
+    } else{
+      io.to(this.matchRoomID).emit(
+          "TEMP_MATCH_PONG_STATE",
+          this.ballState,
+          this.paddleStates,
+      );
+
+    }
+
 
     if (winner != null) {
       roundChecker(this.tournament, io, this);
