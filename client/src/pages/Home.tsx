@@ -1,4 +1,4 @@
-import { CREATE_TOURNAMENT_PATH, JOIN_GAME_PATH } from "./pagePaths.ts";
+import { JOIN_GAME_PATH, GAME_SCREEN } from "./pagePaths.ts";
 import ButtonComponent from "../components/buttons/ButtonComponent.tsx";
 import BorderedButtonComponent from "../components/buttons/BorderedButtonComponent.tsx";
 import DisplayLogo from "../components/DisplayLogo.tsx";
@@ -15,7 +15,7 @@ const Home = () => {
           text={"JOIN GAME"}
         ></ButtonComponent>
         <BorderedButtonComponent
-          linkPath={CREATE_TOURNAMENT_PATH}
+          linkPath={GAME_SCREEN}
           text={"CREATE GAME"}
         ></BorderedButtonComponent>
       </div>
