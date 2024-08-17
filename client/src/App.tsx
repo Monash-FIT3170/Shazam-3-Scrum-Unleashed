@@ -15,6 +15,8 @@ import {
   JOIN_GAME_PATH,
   GAME_LOBBY_PATH,
   PLAYER_SCREEN,
+  GAME_SCREEN,
+
   // TOURNAMENT_SCREEN,
 } from "./pages/pagePaths.ts";
 import GameLobby from "./pages/TournamentLobby.tsx";
@@ -24,6 +26,7 @@ import {
   playerScreenLoader,
 } from "./loaders";
 import PlayerScreen from "./pages/PlayerScreen.tsx";
+import GameMenu from "./pages/GameMenu.tsx";
 import Home from "./pages/Home.tsx";
 
 declare module "socket.io-client" {
@@ -60,6 +63,7 @@ const router = createBrowserRouter(
         element={<PlayerScreen />}
         loader={playerScreenLoader}
       />
+      <Route path={GAME_SCREEN} element={<GameMenu />} />
     </Route>,
   ),
 );
