@@ -37,7 +37,9 @@ const clampY = (
     return paddlePosition.y + BALL_RADIUS * SCALING_FACTOR;
   } else if (
     number > paddlePosition.y - BALL_RADIUS * SCALING_FACTOR &&
-    ballState.y > 50 * SCALING_FACTOR
+    ballState.y > 50 * SCALING_FACTOR &&
+    ballState.x > paddlePosition.x &&
+    ballState.x < paddlePosition.x + paddlePosition.width
   ) {
     return paddlePosition.y - BALL_RADIUS * SCALING_FACTOR;
   }
@@ -248,11 +250,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
 
   return (
     <div className="bg-white p-1">
-      <canvas
-        ref={canvasRef}
-        width={GAME_WIDTH}
-        height={GAME_HEIGHT}
-      />
+      <canvas ref={canvasRef} width={GAME_WIDTH} height={GAME_HEIGHT} />
     </div>
   );
 };
