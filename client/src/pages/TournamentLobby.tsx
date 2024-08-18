@@ -39,7 +39,7 @@ const TournamentLobby = () => {
   const { tournamentCode } = useLoaderData() as { tournamentCode: string };
   const [players, setPlayers] = useState<PlayerAttributes[]>([]);
   const [qrCode, setQrCode] = useState("");
-  const [tournamentStarted, setTournamentStarted] = useState(false);
+  const [inProgress, setTournamentStarted] = useState(false);
   const [tournamentWinner, setTournamentWinner] = useState<string | undefined>(
     undefined,
   );
@@ -57,7 +57,7 @@ const TournamentLobby = () => {
   );
 
   const startTournament = async () => {
-    if (!tournamentStarted) {
+    if (!inProgress) {
       setTournamentStarted(
         await postStartTournament(socket.userID, tournamentCode),
       );
@@ -75,8 +75,9 @@ const TournamentLobby = () => {
   };
 
   useEffect(() => {
-    socket.on("PLAYERS_UPDATE", (players) => {
+    socket.on("TOURNAMENT_STATE", (players, inProgress) => {
       setPlayers(players);
+      setTournamentStarted(inProgress);
     });
 
     socket.on("TOURNAMENT_COMPLETE", (tournamentWinner) => {
@@ -84,7 +85,7 @@ const TournamentLobby = () => {
     });
 
     return () => {
-      socket.off("PLAYERS_UPDATE");
+      socket.off("TOURNAMENT_STATE");
       socket.off("TOURNAMENT_COMPLETE");
     };
   }, []);
@@ -100,7 +101,7 @@ const TournamentLobby = () => {
         <TournamentWin playerName={tournamentWinner} />
       ) : (
         <div>
-          {tournamentStarted ? (
+          {inProgress ? (
             <TournamentBracketBanner />
           ) : (
             <TournamentLobbyBanner
@@ -113,7 +114,7 @@ const TournamentLobby = () => {
             <div className="text-white text-xl uppercase ">
               Players: {players.length}
             </div>
-            {!tournamentStarted && (
+            {!inProgress && (
               <button
                 className="hover:bg-blue-700 text-white bg-primary text-xl rounded-xl h-full uppercase w-1/4"
                 onClick={startTournament}

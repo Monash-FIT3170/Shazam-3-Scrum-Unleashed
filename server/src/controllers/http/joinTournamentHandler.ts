@@ -48,6 +48,6 @@ export const joinTournamentHandler =
 
     console.log(`Player : ${playerName} has joined Game : ${tournamentCode}`);
 
-    io.to(tournament.hostUID).emit("PLAYERS_UPDATE", tournament.players);
+    io.to(tournament.hostUID).emit("TOURNAMENT_STATE", tournament.players);
     res.sendStatus(200);
   };

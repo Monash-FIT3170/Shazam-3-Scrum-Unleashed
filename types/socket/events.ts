@@ -50,7 +50,7 @@ interface PlayerToServerEvents {
 }
 
 interface ServerToHostEvents {
-  PLAYERS_UPDATE: (players: PlayerAttributes[]) => void;
+  TOURNAMENT_STATE: (players: PlayerAttributes[], inProgress:boolean) => void;
 }
 
 interface ServerToPlayerEvents {

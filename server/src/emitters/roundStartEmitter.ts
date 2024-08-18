@@ -21,6 +21,7 @@ export async function roundStartEmitter(
 
     match.startMatch(io, tournament);
   }
+  io.to(tournament.hostUID).emit("TOURNAMENT_STATE", tournament.players, true);
 }
 
 async function playerJoinMatchRoom(
