@@ -13,11 +13,8 @@ export async function reconnectionHandler(
       return;
     }
 
-    if (tournament.hostUID === socket.userID){
-      io.to(socket.userID).emit(
-          "PLAYERS_UPDATE",
-          tournament.players
-      );
+    if (tournament.hostUID === socket.userID) {
+      io.to(socket.userID).emit("PLAYERS_UPDATE", tournament.players);
       return;
     }
 
@@ -39,8 +36,10 @@ export async function reconnectionHandler(
               io.to(socket.userID).emit(
                 "MATCH_START",
                 match.players,
-                  match.type(),
+                match.type(),
               );
+
+              match.emitMatchState(io);
             }
           }
           break;

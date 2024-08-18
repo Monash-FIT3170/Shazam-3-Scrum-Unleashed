@@ -5,7 +5,7 @@ import { Events } from "../../../../types/socket/events";
 import { playDuel } from "../../controllers/socket/chooseAction";
 import Tournament from "../tournament";
 import { Match } from "./match";
-import {MatchType} from "../../../../types/socket/eventArguments";
+import { MatchType } from "../../../../types/socket/eventArguments";
 
 export class RpsMatch extends Match {
   p1Action: Action;
@@ -115,6 +115,11 @@ export class RpsMatch extends Match {
   override startMatch(io: Server<Events>, tournament: Tournament): void {
     io.to(this.matchRoomID).emit("MATCH_START", this.players, "RPS");
     this.startTimeout(playDuel(tournament, io), tournament.duelTime);
+  }
+
+  emitMatchState(io: Server<Events>): void {
+    // currently not really needed, probs needed for the power version, if we have multiple stages of the game
+    // as the users will need to know what stage it is currently.
   }
 
   completeDuel(io: Server<Events>, tournament: Tournament) {

@@ -5,10 +5,11 @@ import Player from "../player";
 import { Events } from "../../../../types/socket/events";
 import Tournament from "../tournament";
 import { roundChecker } from "../../controllers/helper/roundHelper";
-import {MatchType} from "../../../../types/socket/eventArguments";
+import { MatchType } from "../../../../types/socket/eventArguments";
 
 const INITIAL_BALL_Y_SPEED = 50;
 const POLL_RATE = 10; // Hz
+const BALL_RADIUS = 2;
 
 export class PongMatch extends Match {
   paddleStates: PongPaddleState[];
@@ -17,7 +18,7 @@ export class PongMatch extends Match {
   intervalHandler: NodeJS.Timeout | undefined;
 
   constructor(players: Player[], duelsToWin: number, tournament: Tournament) {
-    super(players, 10);
+    super(players, duelsToWin);
     this.tournament = tournament;
     this.paddleStates = [
       { x: 50, y: 5, direction: 0, width: 20 },
@@ -36,10 +37,19 @@ export class PongMatch extends Match {
     io.to(this.matchRoomID).emit("MATCH_START", this.players, "PONG");
 
     setTimeout(() => {
+      this.emitMatchState(io);
       this.intervalHandler = setInterval(() => {
         this.tick(io);
       }, 1000 / POLL_RATE);
     }, 1000); // this will start the pong match after a short delay, maybe not required.
+  }
+
+  emitMatchState(io: Server<Events>): void {
+    io.to(this.matchRoomID).emit(
+      "MATCH_PONG_STATE",
+      this.ballState,
+      this.paddleStates,
+    );
   }
 
   randomXVelocity(): number {
@@ -68,7 +78,6 @@ export class PongMatch extends Match {
   }
 
   tick(io: Server<Events>): void {
-    const BALL_RADIUS = 2;
     let emitData = false;
 
     // Calculating the new ball and paddle coordinates
@@ -154,6 +163,7 @@ export class PongMatch extends Match {
           this.players,
           winner?.userID,
         );
+        emitData = true;
       }
       if (newBallY <= 0) {
         newBallY = 50;
@@ -167,6 +177,7 @@ export class PongMatch extends Match {
           this.players,
           winner?.userID,
         );
+        emitData = true;
       }
     }
 
@@ -179,11 +190,7 @@ export class PongMatch extends Match {
     this.ballState.y = newBallY;
 
     if (emitData) {
-      io.to(this.matchRoomID).emit(
-        "MATCH_PONG_STATE",
-        this.ballState,
-        this.paddleStates,
-      );
+      this.emitMatchState(io);
     }
 
     if (winner != null) {
