@@ -125,9 +125,7 @@ const TournamentLobby = () => {
 
           <div className="player-list" data-testid="player-list">
             {players.map((player, index) => (
-              <div key={player.userID} onClick={() => spectatePlayer(player)}>
-                <PlayerCard player={player} cardNum={index} />
-              </div>
+                <PlayerCard player={player} cardNum={index} key={player.userID} interact={() => spectatePlayer(player)}/>
             ))}
           </div>
         </div>
