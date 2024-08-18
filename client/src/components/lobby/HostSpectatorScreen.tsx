@@ -7,15 +7,19 @@ import WaitingForMatchStart from "../player-screen/waiting-screens/WaitingForMat
 import MatchOutcomeScreen from "../player-screen/outcome-screens/MatchOutcomeScreen.tsx";
 import { Pong } from "../pong/Pong.tsx";
 import { RPS } from "../rps/RPS.tsx";
-import ReactionOverlay from "../reactions/ReactionsOverlay.tsx";
 import PlayerAndSpectatorsInfo from "../player-screen/match-overlay/PlayerAndSpectatorsInfo.tsx";
 
 interface PlayerScreenProps {
   tournamentCode: string;
   targetUserID: string;
+  stopSpectating: () => void;
 }
 
-const PlayerScreen = ({ tournamentCode, targetUserID }: PlayerScreenProps) => {
+const PlayerScreen = ({
+  tournamentCode,
+  targetUserID,
+  stopSpectating,
+}: PlayerScreenProps) => {
   const MATCH_COMPLETION_TIME = 4000;
   const [playerName] = useState("HOST");
   const [userPlayer, setUserPlayer] = useState<PlayerAttributes>(); // spectating player
@@ -108,12 +112,18 @@ const PlayerScreen = ({ tournamentCode, targetUserID }: PlayerScreenProps) => {
   return (
     <>
       {
-        <ReactionOverlay
-          gameCode={tournamentCode}
-          spectatingID={targetUserID}
-        />
+        // <ReactionOverlay
+        //   gameCode={tournamentCode}
+        //   spectatingID={targetUserID}
+        // />
       }
       <div className="overflow-hidden h-screen relative">
+        <button
+          className={`h-12 text-white fixed top-5 left-5 bg-primary text-2xl font-bold w-1/6 rounded-xl`}
+          onClick={stopSpectating}
+        >
+          RETURN
+        </button>
         <div className="pt-12">
           <div className="flex flex-col items-center justify-center mt-10">
             {userPlayer !== undefined && opponent !== undefined && (

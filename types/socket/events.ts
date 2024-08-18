@@ -24,7 +24,8 @@ interface ServerToClientEvents {
 interface HostToServerEvents {
   SPECTATE_PLAYER: (    hostID : string, tournamentCode: string,
                         playerUserID: string,) => void;
-  RETURN_TO_LOBBY: () => void;
+  STOP_SPECTATING: (hostID : string, tournamentCode: string,
+                    playerUserID: string,) => void;
 }
 
 interface PlayerToServerEvents {

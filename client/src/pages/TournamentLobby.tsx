@@ -74,6 +74,19 @@ const TournamentLobby = () => {
     );
   };
 
+  const stopSpectating = () => {
+    console.log("hello");
+    if (spectatingUserID) {
+      socket.emit(
+        "STOP_SPECTATING",
+        socket.userID,
+        tournamentCode,
+        spectatingUserID,
+      );
+      setSpectatingUserID(undefined);
+    }
+  };
+
   useEffect(() => {
     socket.on("TOURNAMENT_STATE", (players, inProgress) => {
       setPlayers(players);
@@ -91,10 +104,13 @@ const TournamentLobby = () => {
   }, []);
 
   return spectatingUserID !== undefined ? (
-    <HostSpectatorScreen
-      tournamentCode={tournamentCode}
-      targetUserID={spectatingUserID}
-    />
+    <div>
+      <HostSpectatorScreen
+        tournamentCode={tournamentCode}
+        targetUserID={spectatingUserID}
+        stopSpectating={stopSpectating}
+      />
+    </div>
   ) : (
     <div>
       {tournamentWinner !== undefined ? (

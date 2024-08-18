@@ -1,5 +1,5 @@
 import Player from "../player";
-import {Action, PlayerAttributes} from "../../../../types/types";
+import { Action, PlayerAttributes } from "../../../../types/types";
 import { Server } from "socket.io";
 import { Events } from "../../../../types/socket/events";
 import { playDuel } from "../../controllers/socket/chooseAction";

@@ -1,5 +1,9 @@
 import { Server } from "socket.io";
-import {PlayerAttributes, PongBallState, PongPaddleState} from "../../../../types/types";
+import {
+  PlayerAttributes,
+  PongBallState,
+  PongPaddleState,
+} from "../../../../types/types";
 import { Match } from "./match";
 import Player from "../player";
 import { Events } from "../../../../types/socket/events";

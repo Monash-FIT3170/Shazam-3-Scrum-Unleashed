@@ -5,7 +5,7 @@ import Tournament from "../tournament";
 import Player from "../player";
 import { MatchType } from "../../../../types/socket/eventArguments";
 
-export  interface Match {
+export interface Match {
   players: PlayerAttributes[];
   matchRoomID: string;
   duelsToWin: number;
