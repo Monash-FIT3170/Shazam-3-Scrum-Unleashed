@@ -44,7 +44,7 @@ export class PongMatch extends Match {
     }, 1000); // this will start the pong match after a short delay, maybe not required.
   }
 
-  emitMatchState(io: Server<Events>): void {
+  override emitMatchState(io: Server<Events>): void {
     io.to(this.matchRoomID).emit(
       "MATCH_PONG_STATE",
       this.ballState,
@@ -199,7 +199,7 @@ export class PongMatch extends Match {
     }
   }
 
-  type(): MatchType {
+  override type(): MatchType {
     return "PONG";
   }
 }

@@ -1,7 +1,7 @@
 import Tournament from "src/model/tournament";
 import { Server } from "socket.io";
 import { Events } from "../../../types/socket/events";
-import {getSocket} from "../utils/socketUtils";
+import { getSocket } from "../utils/socketUtils";
 
 export async function roundStartEmitter(
   tournament: Tournament,
@@ -28,7 +28,7 @@ async function playerJoinMatchRoom(
   matchRoomID: string,
   io: Server<Events>,
 ) {
-  const playerSocket = getSocket(userID, io)
+  const playerSocket = getSocket(userID, io);
   if (playerSocket !== undefined) {
     await playerSocket.join(matchRoomID);
   }

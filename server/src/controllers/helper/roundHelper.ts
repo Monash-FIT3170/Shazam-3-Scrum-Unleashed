@@ -22,7 +22,6 @@ export async function roundInitialiser(
   await roundStartEmitter(tournament, io);
 }
 
-
 export function roundChecker(
   tournament: Tournament,
   io: Server<Events>,

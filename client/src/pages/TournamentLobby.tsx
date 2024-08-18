@@ -43,7 +43,9 @@ const TournamentLobby = () => {
   const [tournamentWinner, setTournamentWinner] = useState<string | undefined>(
     undefined,
   );
-  const [spectatingUserID, setSpectatingUserID] = useState<string|undefined>(undefined);
+  const [spectatingUserID, setSpectatingUserID] = useState<string | undefined>(
+    undefined,
+  );
 
   useEffect(
     () =>
@@ -62,10 +64,15 @@ const TournamentLobby = () => {
     }
   };
 
-  const spectatePlayer = (player : PlayerAttributes) => {
+  const spectatePlayer = (player: PlayerAttributes) => {
     setSpectatingUserID(player.userID);
-    socket.emit("SPECTATE_PLAYER", socket.userID, tournamentCode, player.userID)
-  }
+    socket.emit(
+      "SPECTATE_PLAYER",
+      socket.userID,
+      tournamentCode,
+      player.userID,
+    );
+  };
 
   useEffect(() => {
     socket.on("PLAYERS_UPDATE", (players) => {
@@ -82,8 +89,12 @@ const TournamentLobby = () => {
     };
   }, []);
 
-  return (
-      (spectatingUserID !== undefined ? <HostSpectatorScreen tournamentCode={tournamentCode} targetUserID={spectatingUserID}/> :
+  return spectatingUserID !== undefined ? (
+    <HostSpectatorScreen
+      tournamentCode={tournamentCode}
+      targetUserID={spectatingUserID}
+    />
+  ) : (
     <div>
       {tournamentWinner !== undefined ? (
         <TournamentWin playerName={tournamentWinner} />
@@ -114,15 +125,14 @@ const TournamentLobby = () => {
 
           <div className="player-list" data-testid="player-list">
             {players.map((player, index) => (
-                <div key={player.userID} onClick={()=>spectatePlayer(player)}>
-                  <PlayerCard player={player} cardNum={index}/>
-                </div>
+              <div key={player.userID} onClick={() => spectatePlayer(player)}>
+                <PlayerCard player={player} cardNum={index} />
+              </div>
             ))}
           </div>
         </div>
       )}
     </div>
-      )
   );
 };
 

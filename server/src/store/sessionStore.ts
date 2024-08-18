@@ -2,7 +2,6 @@
  * Stores all the sessions that have recently been connected to the server.
  */
 export default class InMemorySessionStore {
-
   /**
    * A Map of Session IDs (private) to User IDs (public)
    */

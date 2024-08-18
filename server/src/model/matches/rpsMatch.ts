@@ -117,7 +117,7 @@ export class RpsMatch extends Match {
     this.startTimeout(playDuel(tournament, io), tournament.duelTime);
   }
 
-  emitMatchState(io: Server<Events>): void {
+  override emitMatchState(): void {
     // currently not really needed, probs needed for the power version, if we have multiple stages of the game
     // as the users will need to know what stage it is currently.
   }
@@ -129,7 +129,7 @@ export class RpsMatch extends Match {
     playDuel(tournament, io)(this);
   }
 
-  type(): MatchType {
+  override type(): MatchType {
     return "RPS";
   }
 }

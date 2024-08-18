@@ -18,7 +18,7 @@ import { createTournamentHandler } from "./controllers/http/createTournamentHand
 import { joinTournamentHandler } from "./controllers/http/joinTournamentHandler";
 import { startTournamentHandler } from "./controllers/http/startTournamentHandler";
 import { pongPaddleMovementSocket } from "./controllers/socket/pongPaddleMovement";
-import {spectateMatchSocket} from "./controllers/socket/spectateMatch";
+import { spectateMatchSocket } from "./controllers/socket/spectateMatch";
 
 const app = express();
 
