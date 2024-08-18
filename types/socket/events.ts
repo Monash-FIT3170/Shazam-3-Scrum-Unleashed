@@ -11,14 +11,20 @@ import {MatchType} from "./eventArguments";
  * Add any new Event Categories to this
  */
 export interface Events
-  extends HostToClientEvents,
+  extends ServerToClientEvents,
   PlayerToServerEvents,
   ServerToHostEvents,
-  ServerToPlayerEvents { }
+  ServerToPlayerEvents, HostToServerEvents { }
 
-interface HostToClientEvents {
+interface ServerToClientEvents {
   SESSION_INFO: (sessionID: string, userID: string) => void;
   TOURNAMENT_COMPLETE: (playerName: string) => void;
+}
+
+interface HostToServerEvents {
+  SPECTATE_PLAYER: (    hostID : string, tournamentCode: string,
+                        playerUserID: string,) => void;
+  RETURN_TO_LOBBY: () => void;
 }
 
 interface PlayerToServerEvents {

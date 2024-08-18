@@ -7,6 +7,7 @@ import PlayerCard from "../components/lobby/PlayerCard.tsx";
 import TournamentLobbyBanner from "../components/lobby/TournamentLobbyBanner.tsx";
 import TournamentBracketBanner from "../components/lobby/TournamentBracketBanner.tsx";
 import TournamentWin from "../components/player-screen/tournament-win/TournamentWin.tsx";
+import HostSpectatorScreen from "../components/lobby/HostSpectatorScreen.tsx";
 
 async function fetchQrCode(
   returnUrl: string,
@@ -42,6 +43,7 @@ const TournamentLobby = () => {
   const [tournamentWinner, setTournamentWinner] = useState<string | undefined>(
     undefined,
   );
+  const [spectatingUserID, setSpectatingUserID] = useState<string|undefined>(undefined);
 
   useEffect(
     () =>
@@ -60,23 +62,28 @@ const TournamentLobby = () => {
     }
   };
 
+  const spectatePlayer = (player : PlayerAttributes) => {
+    setSpectatingUserID(player.userID);
+    socket.emit("SPECTATE_PLAYER", socket.userID, tournamentCode, player.userID)
+  }
+
   useEffect(() => {
     socket.on("PLAYERS_UPDATE", (players) => {
-      console.log(players);
       setPlayers(players);
     });
 
     socket.on("TOURNAMENT_COMPLETE", (tournamentWinner) => {
-      console.log(players);
       setTournamentWinner(tournamentWinner);
     });
 
     return () => {
       socket.off("PLAYERS_UPDATE");
+      socket.off("TOURNAMENT_COMPLETE");
     };
   }, []);
 
   return (
+      (spectatingUserID !== undefined ? <HostSpectatorScreen tournamentCode={tournamentCode} targetUserID={spectatingUserID}/> :
     <div>
       {tournamentWinner !== undefined ? (
         <TournamentWin playerName={tournamentWinner} />
@@ -107,12 +114,15 @@ const TournamentLobby = () => {
 
           <div className="player-list" data-testid="player-list">
             {players.map((player, index) => (
-              <PlayerCard key={player.userID} player={player} cardNum={index} />
+                <div key={player.userID} onClick={()=>spectatePlayer(player)}>
+                  <PlayerCard player={player} cardNum={index}/>
+                </div>
             ))}
           </div>
         </div>
       )}
     </div>
+      )
   );
 };
 

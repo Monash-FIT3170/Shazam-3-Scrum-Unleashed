@@ -18,6 +18,7 @@ import { createTournamentHandler } from "./controllers/http/createTournamentHand
 import { joinTournamentHandler } from "./controllers/http/joinTournamentHandler";
 import { startTournamentHandler } from "./controllers/http/startTournamentHandler";
 import { pongPaddleMovementSocket } from "./controllers/socket/pongPaddleMovement";
+import {spectateMatchSocket} from "./controllers/socket/spectateMatch";
 
 const app = express();
 
@@ -47,6 +48,7 @@ io.on("connection", async (socket) => {
   await reconnectionHandler(socket, io, tournamentMap);
 
   // TODO - move listener inside pongMatch method
+  socket.on("SPECTATE_PLAYER", spectateMatchSocket(io));
   socket.on("PONG_PADDLE_MOVEMENT", pongPaddleMovementSocket);
   socket.on("RPS_CHOOSE_ACTION", chooseActionSocket(io));
   socket.on("ADD_REACTION", addReactionSocket(io));
