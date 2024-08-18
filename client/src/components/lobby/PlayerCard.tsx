@@ -4,17 +4,21 @@ import cross from "../../assets/misc/Cross.svg";
 interface PlayerCardProps {
   player: PlayerAttributes;
   cardNum: number;
-  interact: ()=>void;
+  interact: () => void;
 }
 
-const PlayerCard = ({ player, cardNum, interact}: PlayerCardProps) => {
+const PlayerCard = ({ player, cardNum, interact }: PlayerCardProps) => {
   // card name of varying borders
   const cardName = "player-card-" + (cardNum % 4);
   // checking if the player's name can fit onto the card
   const playerName =
     player.name.length > 8 ? player.name.substring(0, 5) + "..." : player.name;
   return (
-    <div className={`${cardName} relative`} data-testid="lobby-player-item" onClick={interact}>
+    <div
+      className={`${cardName} relative`}
+      data-testid="lobby-player-item"
+      onClick={interact}
+    >
       <div>
         {" "}
         {playerName}
