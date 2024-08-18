@@ -1,18 +1,14 @@
 import Player from "../player";
 import { Action } from "../../../../types/types";
-import { type Match } from "./match";
 import { Server } from "socket.io";
 import { Events } from "../../../../types/socket/events";
 import { playDuel } from "../../controllers/socket/chooseAction";
 import Tournament from "../tournament";
-import * as crypto from "node:crypto";
+import { Match } from "./match";
 
-export class RpsMatch implements Match {
-  players: Player[];
+export class RpsMatch extends Match {
   p1Action: Action;
   p2Action: Action;
-  matchRoomID: string;
-  duelsToWin: number;
   timeOutHandler: NodeJS.Timeout | null;
 
   private rulesMap: Map<Action, Action> = new Map<Action, Action>([
@@ -22,11 +18,9 @@ export class RpsMatch implements Match {
   ]);
 
   constructor(players: Player[], duelsToWin: number) {
-    this.players = players;
+    super(players, duelsToWin);
     this.p1Action = null;
     this.p2Action = null;
-    this.matchRoomID = crypto.randomUUID();
-    this.duelsToWin = duelsToWin;
     this.timeOutHandler = null;
   }
 
@@ -35,15 +29,6 @@ export class RpsMatch implements Match {
       (this.p1Action !== null || this.players[0].isBot) &&
       (this.p2Action !== null || this.players[1].isBot)
     );
-  }
-
-  public getMatchWinner() {
-    for (const player of this.players) {
-      if (player.score >= this.duelsToWin) {
-        return player;
-      }
-    }
-    return null;
   }
 
   public updateScores() {
@@ -126,7 +111,7 @@ export class RpsMatch implements Match {
     );
   }
 
-  startMatch(io: Server<Events>, tournament: Tournament): void {
+  override startMatch(io: Server<Events>, tournament: Tournament): void {
     io.to(this.matchRoomID).emit("MATCH_START", this.players, "RPS");
     this.startTimeout(playDuel(tournament, io), tournament.duelTime);
   }

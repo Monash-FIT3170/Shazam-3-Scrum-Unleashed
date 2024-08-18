@@ -1,37 +1,27 @@
 import { Server } from "socket.io";
-import {
-  PlayerAttributes,
-  PongBallState,
-  PongPaddleState,
-} from "../../../../types/types";
+import { PongBallState, PongPaddleState } from "../../../../types/types";
 import { Match } from "./match";
 import Player from "../player";
 import { Events } from "../../../../types/socket/events";
 import Tournament from "../tournament";
 import { roundChecker } from "../../controllers/helper/roundHelper";
-import * as crypto from "node:crypto";
 
 const INITIAL_BALL_Y_SPEED = 50;
 const POLL_RATE = 10; // Hz
 
-export class PongMatch implements Match {
-  duelsToWin: number;
-  matchRoomID: string;
-  players: PlayerAttributes[];
+export class PongMatch extends Match {
   paddleStates: PongPaddleState[];
   ballState: PongBallState;
   tournament: Tournament;
   intervalHandler: NodeJS.Timeout | undefined;
 
   constructor(players: Player[], duelsToWin: number, tournament: Tournament) {
-    this.players = players;
+    super(players, duelsToWin);
     this.tournament = tournament;
     this.paddleStates = [
       { x: 50, y: 5, direction: 0, width: 20 },
       { x: 50, y: 95, direction: 0, width: 20 },
     ];
-    this.matchRoomID = crypto.randomUUID();
-    this.duelsToWin = duelsToWin;
     this.ballState = {
       x: 50,
       y: 50,
@@ -41,22 +31,7 @@ export class PongMatch implements Match {
     this.intervalHandler = undefined;
   }
 
-  // TODO - we don't need is duel complete for pong
-  isDuelComplete(): boolean {
-    return false;
-  }
-
-  getMatchWinner(): Player | null {
-    if (this.players[0].score >= this.duelsToWin) {
-      return this.players[0];
-    } else if (this.players[1].score >= this.duelsToWin) {
-      return this.players[1];
-    } else {
-      return null;
-    }
-  }
-
-  startMatch(io: Server<Events>): void {
+  override startMatch(io: Server<Events>): void {
     io.to(this.matchRoomID).emit("MATCH_START", this.players, "PONG");
 
     setTimeout(() => {
@@ -158,7 +133,7 @@ export class PongMatch implements Match {
       this.ballState.xVelocity = -this.ballState.xVelocity;
       emitData = true;
     } else if (newBallX - BALL_RADIUS <= 0) {
-      newBallX = 0 + BALL_RADIUS;
+      newBallX = BALL_RADIUS;
       this.ballState.xVelocity = -this.ballState.xVelocity;
       emitData = true;
     }

@@ -22,11 +22,15 @@ export async function roundInitialiser(
   await roundStartEmitter(tournament, io);
 }
 
+
 export function roundChecker(
   tournament: Tournament,
   io: Server<Events>,
   match: Match,
 ) {
+  // At least one player has been eliminated when this function is called, therefore we can update the host
+  io.to(tournament.hostUID).emit("PLAYERS_UPDATE", tournament.players);
+
   if (tournament.matches.every((e) => e.getMatchWinner() !== null)) {
     setTimeout(() => {
       if (tournament.matches.length === 1) {
