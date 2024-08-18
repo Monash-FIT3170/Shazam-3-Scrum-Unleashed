@@ -5,6 +5,7 @@ import { Events } from "../../../../types/socket/events";
 import { playDuel } from "../../controllers/socket/chooseAction";
 import Tournament from "../tournament";
 import { Match } from "./match";
+import {MatchType} from "../../../../types/socket/eventArguments";
 
 export class RpsMatch extends Match {
   p1Action: Action;
@@ -121,5 +122,9 @@ export class RpsMatch extends Match {
       clearTimeout(this.timeOutHandler);
     }
     playDuel(tournament, io)(this);
+  }
+
+  type(): MatchType {
+    return "RPS";
   }
 }

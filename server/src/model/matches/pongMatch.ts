@@ -5,6 +5,7 @@ import Player from "../player";
 import { Events } from "../../../../types/socket/events";
 import Tournament from "../tournament";
 import { roundChecker } from "../../controllers/helper/roundHelper";
+import {MatchType} from "../../../../types/socket/eventArguments";
 
 const INITIAL_BALL_Y_SPEED = 50;
 const POLL_RATE = 10; // Hz
@@ -16,7 +17,7 @@ export class PongMatch extends Match {
   intervalHandler: NodeJS.Timeout | undefined;
 
   constructor(players: Player[], duelsToWin: number, tournament: Tournament) {
-    super(players, duelsToWin);
+    super(players, 10);
     this.tournament = tournament;
     this.paddleStates = [
       { x: 50, y: 5, direction: 0, width: 20 },
@@ -189,5 +190,9 @@ export class PongMatch extends Match {
       roundChecker(this.tournament, io, this);
       clearInterval(this.intervalHandler);
     }
+  }
+
+  type(): MatchType {
+    return "PONG";
   }
 }

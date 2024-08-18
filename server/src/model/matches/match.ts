@@ -4,6 +4,7 @@ import { Events } from "../../../../types/socket/events";
 import Tournament from "../tournament";
 import Player from "../player";
 import crypto from "node:crypto";
+import {MatchType} from "../../../../types/socket/eventArguments";
 
 export abstract class Match {
   players: PlayerAttributes[];
@@ -29,4 +30,6 @@ export abstract class Match {
   }
 
   abstract startMatch(io: Server<Events>, tournament: Tournament): void;
+
+  abstract type() : MatchType;
 }
