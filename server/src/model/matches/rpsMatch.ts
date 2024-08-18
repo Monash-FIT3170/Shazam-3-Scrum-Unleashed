@@ -1,5 +1,5 @@
 import Player from "../player";
-import { Action } from "../../../../types/types";
+import {Action, PlayerAttributes} from "../../../../types/types";
 import { Server } from "socket.io";
 import { Events } from "../../../../types/socket/events";
 import { playDuel } from "../../controllers/socket/chooseAction";
@@ -7,7 +7,10 @@ import Tournament from "../tournament";
 import { Match } from "./match";
 import { MatchType } from "../../../../types/socket/eventArguments";
 
-export class RpsMatch extends Match {
+export class RpsMatch implements Match {
+  players: PlayerAttributes[];
+  matchRoomID: string;
+  duelsToWin: number;
   p1Action: Action;
   p2Action: Action;
   timeOutHandler: NodeJS.Timeout | null;
@@ -19,7 +22,9 @@ export class RpsMatch extends Match {
   ]);
 
   constructor(players: Player[], duelsToWin: number) {
-    super(players, duelsToWin);
+    this.players = players;
+    this.duelsToWin = duelsToWin;
+    this.matchRoomID = crypto.randomUUID();
     this.p1Action = null;
     this.p2Action = null;
     this.timeOutHandler = null;
@@ -112,12 +117,12 @@ export class RpsMatch extends Match {
     );
   }
 
-  override startMatch(io: Server<Events>, tournament: Tournament): void {
+  startMatch(io: Server<Events>, tournament: Tournament): void {
     io.to(this.matchRoomID).emit("MATCH_START", this.players, "RPS");
     this.startTimeout(playDuel(tournament, io), tournament.duelTime);
   }
 
-  override emitMatchState(): void {
+  emitMatchState(): void {
     // currently not really needed, probs needed for the power version, if we have multiple stages of the game
     // as the users will need to know what stage it is currently.
   }
@@ -129,7 +134,19 @@ export class RpsMatch extends Match {
     playDuel(tournament, io)(this);
   }
 
-  override type(): MatchType {
+  type(): MatchType {
     return "RPS";
+  }
+
+  getMatchWinner(): Player | null {
+    if (this.players[0].score >= this.duelsToWin) {
+      this.players[1].isEliminated = true;
+      return this.players[0];
+    } else if (this.players[1].score >= this.duelsToWin) {
+      this.players[0].isEliminated = true;
+      return this.players[1];
+    } else {
+      return null;
+    }
   }
 }
