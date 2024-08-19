@@ -13,6 +13,8 @@ import * as crypto from "node:crypto";
 
 const INITIAL_BALL_Y_SPEED = 50;
 const POLL_RATE = 10; // Hz
+const GAME_WIDTH = 75;
+const GAME_HEIGHT = 100;
 
 export class PongMatch implements Match {
   duelsToWin: number;
@@ -27,8 +29,8 @@ export class PongMatch implements Match {
     this.players = players;
     this.tournament = tournament;
     this.paddleStates = [
-      { x: 50, y: 5, direction: 0, width: 20 },
-      { x: 50, y: 95, direction: 0, width: 20 },
+      { x: GAME_WIDTH / 2, y: 5, direction: 0, width: 20 },
+      { x: GAME_WIDTH / 2, y: 95, direction: 0, width: 20 },
     ];
     this.matchRoomID = crypto.randomUUID();
     this.duelsToWin = duelsToWin;
@@ -140,21 +142,21 @@ export class PongMatch implements Match {
     }
 
     // Preventing paddles from moving offscreen
-    if (paddle0 + this.paddleStates[0].width >= 100) {
-      paddle0 = 100 - this.paddleStates[0].width;
+    if (paddle0 + this.paddleStates[0].width >= GAME_WIDTH) {
+      paddle0 = GAME_WIDTH - this.paddleStates[0].width;
     } else if (paddle0 <= 0) {
       paddle0 = 0;
     }
 
-    if (paddle1 + this.paddleStates[1].width >= 100) {
-      paddle1 = 100 - this.paddleStates[1].width;
+    if (paddle1 + this.paddleStates[1].width >= GAME_WIDTH) {
+      paddle1 = GAME_WIDTH - this.paddleStates[1].width;
     } else if (paddle1 <= 0) {
       paddle1 = 0;
     }
 
     // Bounce ball off walls
-    if (newBallX + BALL_RADIUS >= 100) {
-      newBallX = 100 - BALL_RADIUS;
+    if (newBallX + BALL_RADIUS >= GAME_WIDTH) {
+      newBallX = GAME_WIDTH - BALL_RADIUS;
       this.ballState.xVelocity = -this.ballState.xVelocity;
       emitData = true;
     } else if (newBallX - BALL_RADIUS <= 0) {
@@ -166,9 +168,9 @@ export class PongMatch implements Match {
     // Score (can only happen when paddle did not collide)
     let winner = null;
     if (!paddleCollision) {
-      if (newBallY >= 100) {
-        newBallY = 50;
-        newBallX = 50;
+      if (newBallY >= GAME_HEIGHT) {
+        newBallY = GAME_HEIGHT / 2;
+        newBallX = GAME_WIDTH / 2;
         this.ballState.yVelocity = INITIAL_BALL_Y_SPEED;
         this.ballState.xVelocity = this.randomXVelocity();
         this.players[0].score += 1;
@@ -180,8 +182,8 @@ export class PongMatch implements Match {
         );
       }
       if (newBallY <= 0) {
-        newBallY = 50;
-        newBallX = 50;
+        newBallY = GAME_HEIGHT / 2;
+        newBallX = GAME_WIDTH / 2;
         this.ballState.yVelocity = -INITIAL_BALL_Y_SPEED;
         this.ballState.xVelocity = this.randomXVelocity();
         this.players[1].score += 1;
