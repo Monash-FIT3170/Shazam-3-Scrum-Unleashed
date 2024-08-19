@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import express from "express";
 import http from "http";
 import cors from "cors";
@@ -50,6 +52,14 @@ io.on("connection", async (socket) => {
   socket.on("PONG_PADDLE_MOVEMENT", pongPaddleMovementSocket);
   socket.on("RPS_CHOOSE_ACTION", chooseActionSocket(io));
   socket.on("ADD_REACTION", addReactionSocket(io));
+
+   socket.on("QUIT_TOURNAMENT", (tournamentCode) => {
+     if (tournamentMap.has(tournamentCode)) {
+       tournamentMap.delete(tournamentCode); // Remove the tournament from the map
+       console.log(`Tournament ${tournamentCode} has been removed.`);
+       // Implement disconnecting other players
+     } 
+   });
 });
 
 app.get("/qr-code/:url", qrCode);

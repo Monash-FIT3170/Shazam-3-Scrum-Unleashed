@@ -75,7 +75,14 @@ const TournamentLobby = () => {
     return () => {
       socket.off("PLAYERS_UPDATE");
     };
+    
   }, []);
+
+  const quitTournament = () => {
+    socket.emit("QUIT_TOURNAMENT", tournamentCode );
+    window.location.href = "/"; // Navigate to the home page
+  };
+
 
   return (
     <div>
@@ -114,7 +121,11 @@ const TournamentLobby = () => {
         </div>
       )}
       <div className="fixed bottom-10 md:left-20 left-5">
-        <ButtonComponent linkPath="/" text={"Quit Tournament"} />
+        <ButtonComponent
+          linkPath="/"
+          text={"Quit Tournament"}
+          onClick={quitTournament}
+        />
       </div>
     </div>
   );
