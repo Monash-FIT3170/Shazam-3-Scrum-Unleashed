@@ -54,7 +54,7 @@ const TournamentLobby = () => {
   );
 
   const startTournament = async () => {
-    if (!tournamentStarted) {
+    if (!tournamentStarted && players.length > 1) {
       setTournamentStarted(
         await postStartTournament(socket.userID, tournamentCode),
       );
