@@ -7,7 +7,12 @@ type ButtonInputs = {
   onClick?: () => void;
 };
 
-const ButtonComponent = ({ linkPath, text, large = false, onClick }: ButtonInputs) => {
+const ButtonComponent = ({
+  linkPath,
+  text,
+  large = false,
+  onClick,
+}: ButtonInputs) => {
   return (
     <div className={`mt-8 ${large ? "h-24" : "h-14"}`}>
       <Link to={linkPath}>

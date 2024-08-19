@@ -53,13 +53,13 @@ io.on("connection", async (socket) => {
   socket.on("RPS_CHOOSE_ACTION", chooseActionSocket(io));
   socket.on("ADD_REACTION", addReactionSocket(io));
 
-   socket.on("QUIT_TOURNAMENT", (tournamentCode) => {
-     if (tournamentMap.has(tournamentCode)) {
-       tournamentMap.delete(tournamentCode); // Remove the tournament from the map
-       console.log(`Tournament ${tournamentCode} has been removed.`);
-       // Implement disconnecting other players
-     } 
-   });
+  socket.on("QUIT_TOURNAMENT", (tournamentCode) => {
+    if (tournamentMap.has(tournamentCode)) {
+      tournamentMap.delete(tournamentCode); // Remove the tournament from the map
+      console.log(`Tournament ${tournamentCode} has been removed.`);
+      // Implement disconnecting other players
+    }
+  });
 });
 
 app.get("/qr-code/:url", qrCode);

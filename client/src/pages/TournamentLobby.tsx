@@ -75,14 +75,12 @@ const TournamentLobby = () => {
     return () => {
       socket.off("PLAYERS_UPDATE");
     };
-    
   }, []);
 
   const quitTournament = () => {
-    socket.emit("QUIT_TOURNAMENT", tournamentCode );
+    socket.emit("QUIT_TOURNAMENT", tournamentCode);
     window.location.href = "/"; // Navigate to the home page
   };
-
 
   return (
     <div>
