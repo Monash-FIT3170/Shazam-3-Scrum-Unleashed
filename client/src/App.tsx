@@ -15,6 +15,8 @@ import {
   JOIN_GAME_PATH,
   GAME_LOBBY_PATH,
   PLAYER_SCREEN,
+  GAME_SCREEN,
+
   // TOURNAMENT_SCREEN,
 } from "./pages/pagePaths.ts";
 import GameLobby from "./pages/TournamentLobby.tsx";
@@ -24,7 +26,7 @@ import {
   playerScreenLoader,
 } from "./loaders";
 import PlayerScreen from "./pages/PlayerScreen.tsx";
-// import TournamentScreen from "./pages/TournamentScreen.tsx";
+import GameMenu from "./pages/GameMenu.tsx";
 import Home from "./pages/Home.tsx";
 
 declare module "socket.io-client" {
@@ -34,7 +36,6 @@ declare module "socket.io-client" {
   }
 }
 
-// TODO: We need to make this an environment variable
 export const socket: Socket<Events> = io(
   import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3010",
   {
@@ -62,25 +63,18 @@ const router = createBrowserRouter(
         element={<PlayerScreen />}
         loader={playerScreenLoader}
       />
+      <Route path={GAME_SCREEN} element={<GameMenu />} />
     </Route>,
   ),
 );
 
 function App() {
-  let sessionIdCookie = "";
-  let tournamentCodeCookie = "";
-  const cookieStrings = document.cookie.split(";");
-  for (const cookie of cookieStrings) {
-    if (cookie.startsWith("sessionID")) {
-      sessionIdCookie = cookie.split("=")[1];
-    } else if (cookie.trim().startsWith("tournamentCode")) {
-      tournamentCodeCookie = cookie.split("=")[1];
-    }
-  }
+  const sessionID = localStorage.getItem("sessionID") ?? "";
+  const tournamentCode = localStorage.getItem("tournamentCode") ?? "";
 
   socket.auth = {
-    sessionID: sessionIdCookie,
-    tournamentCode: tournamentCodeCookie,
+    sessionID: sessionID,
+    tournamentCode: tournamentCode,
   };
 
   socket.connect();
@@ -88,7 +82,7 @@ function App() {
   socket.on("SESSION_INFO", (sessionID, userID) => {
     socket.auth = { sessionID };
     socket.userID = userID;
-    document.cookie = `sessionID=${sessionID};`;
+    localStorage.setItem("sessionID", sessionID);
   });
 
   return (

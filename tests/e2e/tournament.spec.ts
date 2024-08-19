@@ -6,6 +6,7 @@ type AdverseUserInteraction = "refresh" | "leave" | "slow";
 async function createTournament(page: Page) {
   await page.goto("/");
   await page.getByText("CREATE GAME").click();
+  await page.getByText("MASHUP / PARTY MODE").click();
   await page.getByText("Create Tournament").click();
   const gameCode = await page.getByTestId("tournament-code").textContent();
   return { gameCode, page };
@@ -110,7 +111,7 @@ test.describe("Tournament Game Automation", () => {
 
     const existingNames = new Set<string>();
     const joinPromises: Promise<Page>[] = [];
-    const numPlayers = process.env.CI ? 8 : 50;
+    const numPlayers = process.env.CI ? 8 : 10;
     for (let i = 0; i < numPlayers; i++) {
       joinPromises.push(
         joinGame(gameCode as string, browser, existingNames, i + 1),

@@ -17,6 +17,7 @@ import { reconnectionHandler } from "./utils/reconnectionHelper";
 import { createTournamentHandler } from "./controllers/http/createTournamentHandler";
 import { joinTournamentHandler } from "./controllers/http/joinTournamentHandler";
 import { startTournamentHandler } from "./controllers/http/startTournamentHandler";
+import { pongPaddleMovementSocket } from "./controllers/socket/pongPaddleMovement";
 
 const app = express();
 
@@ -45,7 +46,9 @@ io.on("connection", async (socket) => {
   io.to(socket.userID).emit("SESSION_INFO", socket.sessionID, socket.userID);
   await reconnectionHandler(socket, io, tournamentMap);
 
-  socket.on("CHOOSE_ACTION", chooseActionSocket(io));
+  // TODO - move listener inside pongMatch method
+  socket.on("PONG_PADDLE_MOVEMENT", pongPaddleMovementSocket);
+  socket.on("RPS_CHOOSE_ACTION", chooseActionSocket(io));
   socket.on("ADD_REACTION", addReactionSocket(io));
 });
 
