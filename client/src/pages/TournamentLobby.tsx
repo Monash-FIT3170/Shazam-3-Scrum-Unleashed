@@ -78,8 +78,10 @@ const TournamentLobby = () => {
   }, []);
 
   const quitTournament = () => {
-    socket.emit("QUIT_TOURNAMENT", tournamentCode);
-    window.location.href = "/"; // Navigate to the home page
+    if (!tournamentStarted) {
+      socket.emit("QUIT_TOURNAMENT", tournamentCode, socket.userID);
+      window.location.href = "/"; // Navigate to the home page
+    }
   };
 
   return (

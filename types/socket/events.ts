@@ -36,6 +36,7 @@ interface PlayerToServerEvents {
 
   QUIT_TOURNAMENT: (
     tournamentCode: string,
+    hostID: string
   ) => void;
 
   PONG_PADDLE_MOVEMENT: (

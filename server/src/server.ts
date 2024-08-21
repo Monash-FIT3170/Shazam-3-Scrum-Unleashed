@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import express from "express";
 import http from "http";
 import cors from "cors";
@@ -20,6 +18,7 @@ import { createTournamentHandler } from "./controllers/http/createTournamentHand
 import { joinTournamentHandler } from "./controllers/http/joinTournamentHandler";
 import { startTournamentHandler } from "./controllers/http/startTournamentHandler";
 import { pongPaddleMovementSocket } from "./controllers/socket/pongPaddleMovement";
+import { quitTournamentSocket } from "./controllers/socket/quitTournament";
 
 const app = express();
 
@@ -52,14 +51,7 @@ io.on("connection", async (socket) => {
   socket.on("PONG_PADDLE_MOVEMENT", pongPaddleMovementSocket);
   socket.on("RPS_CHOOSE_ACTION", chooseActionSocket(io));
   socket.on("ADD_REACTION", addReactionSocket(io));
-
-  socket.on("QUIT_TOURNAMENT", (tournamentCode) => {
-    if (tournamentMap.has(tournamentCode)) {
-      tournamentMap.delete(tournamentCode); // Remove the tournament from the map
-      console.log(`Tournament ${tournamentCode} has been removed.`);
-      // Implement disconnecting other players
-    }
-  });
+  socket.on("QUIT_TOURNAMENT", quitTournamentSocket());
 });
 
 app.get("/qr-code/:url", qrCode);
