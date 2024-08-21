@@ -15,11 +15,17 @@ export async function startTournamentHandler(
 ) {
   const { userID, tournamentCode } = req.body as StartTournamentHandlerBody;
   const tournament = tournamentMap.get(tournamentCode);
+  const player = tournament?.players;
 
   if (tournament?.hostUID !== userID) {
     res.sendStatus(403);
     return;
   }
+
+  if (!player || player.length < 2) {
+    res.sendStatus(400);
+    return;
+ }
 
   await roundInitialiser(tournament, io);
   res.sendStatus(200);
