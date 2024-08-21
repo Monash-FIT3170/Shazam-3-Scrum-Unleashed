@@ -54,7 +54,7 @@ const TournamentLobby = () => {
   );
 
   const startTournament = async () => {
-    if (!tournamentStarted) {
+    if (!tournamentStarted && players.length > 1) {
       setTournamentStarted(
         await postStartTournament(socket.userID, tournamentCode),
       );
@@ -76,6 +76,13 @@ const TournamentLobby = () => {
       socket.off("PLAYERS_UPDATE");
     };
   }, []);
+
+  const quitTournament = () => {
+    if (!tournamentStarted) {
+      socket.emit("QUIT_TOURNAMENT", tournamentCode, socket.userID);
+      window.location.href = "/"; // Navigate to the home page
+    }
+  };
 
   return (
     <div>
@@ -114,7 +121,11 @@ const TournamentLobby = () => {
         </div>
       )}
       <div className="fixed bottom-10 md:left-20 left-5">
-        <ButtonComponent linkPath="/" text={"Quit Tournament"} />
+        <ButtonComponent
+          linkPath="/"
+          text={"Quit Tournament"}
+          onClick={quitTournament}
+        />
       </div>
     </div>
   );
