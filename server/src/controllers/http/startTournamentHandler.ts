@@ -22,11 +22,6 @@ export async function startTournamentHandler(
     return;
   }
 
-  if (!player || player.length < 2) {
-    res.sendStatus(400);
-    return;
-  }
-
   await roundInitialiser(tournament, io);
   res.sendStatus(200);
 }
