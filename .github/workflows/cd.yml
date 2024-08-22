@@ -21,7 +21,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /root/Shazam-3-Scrum-Unleashed/server
-            git pull origin main
+            git fetch origin && git reset --hard origin/main
             docker compose down
             docker compose rm -f
             docker image prune -a -f
