@@ -1,5 +1,5 @@
 import Player from "../player";
-import { Action, PlayerAttributes } from "../../../../types/types";
+import { Action } from "../../../../types/types";
 import { Server } from "socket.io";
 import { Events } from "../../../../types/socket/events";
 import { playDuel } from "../../controllers/socket/chooseAction";
@@ -8,7 +8,7 @@ import { Match } from "./match";
 import { MatchType } from "../../../../types/socket/eventArguments";
 
 export class RpsMatch implements Match {
-  players: PlayerAttributes[];
+  players: Player[];
   matchRoomID: string;
   duelsToWin: number;
   p1Action: Action;

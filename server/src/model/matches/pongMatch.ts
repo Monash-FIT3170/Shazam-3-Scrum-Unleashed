@@ -1,9 +1,5 @@
 import { Server } from "socket.io";
-import {
-  PlayerAttributes,
-  PongBallState,
-  PongPaddleState,
-} from "../../../../types/types";
+import { PongBallState, PongPaddleState } from "../../../../types/types";
 import { Match } from "./match";
 import Player from "../player";
 import { Events } from "../../../../types/socket/events";
@@ -11,7 +7,6 @@ import Tournament from "../tournament";
 import { roundChecker } from "../../controllers/helper/roundHelper";
 import { MatchType } from "../../../../types/socket/eventArguments";
 import * as crypto from "node:crypto";
-
 
 const INITIAL_BALL_Y_SPEED = 50;
 const POLL_RATE = 10; // Hz
@@ -22,7 +17,7 @@ const GAME_HEIGHT = 100;
 export class PongMatch implements Match {
   duelsToWin: number;
   matchRoomID: string;
-  players: PlayerAttributes[];
+  players: Player[];
   paddleStates: PongPaddleState[];
   ballState: PongBallState;
   tournament: Tournament;

@@ -65,12 +65,12 @@ const TournamentLobby = () => {
     }
   };
 
-    const quitTournament = () => {
-        if (!tournamentStarted) {
-            socket.emit("QUIT_TOURNAMENT", tournamentCode, socket.userID);
-            window.location.href = "/"; // Navigate to the home page
-        }
-    };
+  const quitTournament = () => {
+    if (!inProgress) {
+      socket.emit("QUIT_TOURNAMENT", tournamentCode, socket.userID);
+      window.location.href = "/"; // Navigate to the home page
+    }
+  };
 
   const spectatePlayer = (player: PlayerAttributes) => {
     setSpectatingUserID(player.userID);

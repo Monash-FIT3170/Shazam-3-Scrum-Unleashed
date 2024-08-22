@@ -1,12 +1,11 @@
 import { Server } from "socket.io";
-import { PlayerAttributes } from "../../../../types/types";
 import { Events } from "../../../../types/socket/events";
 import Tournament from "../tournament";
 import Player from "../player";
 import { MatchType } from "../../../../types/socket/eventArguments";
 
 export interface Match {
-  players: PlayerAttributes[];
+  players: Player[];
   matchRoomID: string;
   duelsToWin: number;
 

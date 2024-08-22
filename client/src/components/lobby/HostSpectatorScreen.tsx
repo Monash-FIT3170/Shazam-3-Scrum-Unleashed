@@ -8,6 +8,7 @@ import MatchOutcomeScreen from "../player-screen/outcome-screens/MatchOutcomeScr
 import { Pong } from "../pong/Pong.tsx";
 import { RPS } from "../rps/RPS.tsx";
 import PlayerAndSpectatorsInfo from "../player-screen/match-overlay/PlayerAndSpectatorsInfo.tsx";
+import ReactionOverlay from "../reactions/ReactionsOverlay.tsx";
 
 interface PlayerScreenProps {
   tournamentCode: string;
@@ -15,7 +16,7 @@ interface PlayerScreenProps {
   stopSpectating: () => void;
 }
 
-const PlayerScreen = ({
+const HostSpectatorScreen = ({
   tournamentCode,
   targetUserID,
   stopSpectating,
@@ -65,7 +66,6 @@ const PlayerScreen = ({
 
   let content = null;
 
-  // FIXME would like to make this simpler
   if (tournamentWinner !== undefined) {
     content = <TournamentWin playerName={tournamentWinner} />;
   } else if (userPlayer === undefined || opponent === undefined) {
@@ -112,14 +112,14 @@ const PlayerScreen = ({
   return (
     <>
       {
-        // <ReactionOverlay
-        //   gameCode={tournamentCode}
-        //   spectatingID={targetUserID}
-        // />
+        <ReactionOverlay
+          gameCode={tournamentCode}
+          spectatingID={targetUserID}
+        />
       }
       <div className="overflow-hidden h-screen relative">
         <button
-          className={`h-12 text-white fixed top-5 left-5 bg-primary text-2xl font-bold w-1/6 rounded-xl`}
+          className={`h-12 text-white fixed top-5 left-5 bg-primary text-2xl font-bold w-1/6 rounded-xl z-50`}
           onClick={stopSpectating}
         >
           RETURN
@@ -141,4 +141,4 @@ const PlayerScreen = ({
   );
 };
 
-export default PlayerScreen;
+export default HostSpectatorScreen;

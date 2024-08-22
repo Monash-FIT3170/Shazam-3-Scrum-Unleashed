@@ -4,18 +4,31 @@ import Player from "../../model/player";
 import { Server } from "socket.io";
 
 interface JoinTournamentBody {
-  userID: string;
-  playerName: string;
-  tournamentCode: string;
+  userID: string | undefined;
+  playerName: string | undefined;
+  tournamentCode: string | undefined;
 }
 
 export const joinTournamentHandler =
   (io: Server) => (req: Request, res: Response) => {
     const { userID, playerName, tournamentCode } =
       req.body as JoinTournamentBody;
+
+    if (
+      userID === undefined ||
+      playerName === undefined ||
+      tournamentCode === undefined
+    ) {
+      console.error("Invalid Join Data sent");
+      res
+        .status(422)
+        .json({ body: { message: "An Error Occurred Try Again" } });
+      return;
+    }
+
     const tournament = tournamentMap.get(tournamentCode);
 
-    if (tournament == undefined) {
+    if (tournament === undefined) {
       console.error(
         `Player : ${playerName} was unable to join Tournament : ${tournamentCode}`,
       );
