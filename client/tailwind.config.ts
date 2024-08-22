@@ -20,7 +20,7 @@ export default {
       },
       keyframes: {
         // ROCK, PAPER text keyframes
-        customping: {
+        textanim: {
           from: {
             opacity: "0",
           },
@@ -33,7 +33,7 @@ export default {
           },
         },
         // SHAZAM text img keyframes
-        customping2: {
+        shazamanim: {
           from: {
             opacity: "0",
           },
@@ -49,8 +49,25 @@ export default {
           //   opacity: "0",
           // }
         },
+        shazamanim2: {
+          from: {
+            opacity: "0",
+            transform: "scale(0.5)",
+          },
+          "50%": {
+            opacity: "1",
+            transform: "scale(1.25)",
+          },
+          to: {
+            opacity: "1",
+            transform: "scale(1.25)",
+          },
+          // to: {
+          //   opacity: "0",
+          // }
+        },
         // explosion keyframes
-        customping3: {
+        explosionanim: {
           from: {
             opacity: "1",
           },
@@ -82,12 +99,14 @@ export default {
         },
       },
       animation: {
-        customping:
-          "customping 1s ease-out var(--customping-delay, 0) forwards",
-        customping2:
-          "customping2 1s ease-out var(--customping2-delay, 0) forwards",
-        customping3:
-          "customping3 1.5s ease-out var(--customping3-delay, 0) forwards",
+        textanim:
+          "textanim 1s ease-out var(--textanim-delay, 0) forwards",
+        shazamanim:
+          "shazamanim 1s ease-out var(--shazamanim-delay, 0) forwards",
+        shazamanim2:
+          "shazamanim2 1s ease-out var(--shazamanim-delay, 0) forwards",
+        explosionanim:
+          "explosionanim 1.5s ease-out var(--explosionanim-delay, 0) forwards",
         translateinbottom:
           "translateinbottom 0.5s ease-out var(--translateinbottom-delay, 0) forwards",
         translateintop:
