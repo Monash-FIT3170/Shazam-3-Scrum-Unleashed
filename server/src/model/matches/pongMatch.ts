@@ -30,8 +30,18 @@ export class PongMatch implements Match {
     this.players = players;
     this.tournament = tournament;
     this.paddleStates = [
-      { x: (GAME_WIDTH - PADDLE_WIDTH) / 2, y: 5, direction: 0, width: PADDLE_WIDTH },
-      { x: (GAME_WIDTH - PADDLE_WIDTH) / 2, y: 95, direction: 0, width: PADDLE_WIDTH },
+      {
+        x: (GAME_WIDTH - PADDLE_WIDTH) / 2,
+        y: 5,
+        direction: 0,
+        width: PADDLE_WIDTH,
+      },
+      {
+        x: (GAME_WIDTH - PADDLE_WIDTH) / 2,
+        y: 95,
+        direction: 0,
+        width: PADDLE_WIDTH,
+      },
     ];
     this.matchRoomID = crypto.randomUUID();
     this.duelsToWin = duelsToWin;
