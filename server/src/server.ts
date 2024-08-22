@@ -20,6 +20,7 @@ import { startTournamentHandler } from "./controllers/http/startTournamentHandle
 import { pongPaddleMovementSocket } from "./controllers/socket/pongPaddleMovement";
 import { spectateMatchSocket } from "./controllers/socket/spectateMatch";
 import { stopSpectatingSocket } from "./controllers/socket/stopSpectating";
+import { quitTournamentSocket } from "./controllers/socket/quitTournament";
 
 const app = express();
 
@@ -54,6 +55,7 @@ io.on("connection", async (socket) => {
   socket.on("PONG_PADDLE_MOVEMENT", pongPaddleMovementSocket);
   socket.on("RPS_CHOOSE_ACTION", chooseActionSocket(io));
   socket.on("ADD_REACTION", addReactionSocket(io));
+  socket.on("QUIT_TOURNAMENT", quitTournamentSocket());
 });
 
 app.get("/qr-code/:url", qrCode);

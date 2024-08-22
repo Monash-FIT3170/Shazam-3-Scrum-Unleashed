@@ -29,7 +29,6 @@ interface HostToServerEvents {
 }
 
 interface PlayerToServerEvents {
-
   RPS_CHOOSE_ACTION: (
     tournamentCode: string,
     playerUserID: string,
@@ -42,11 +41,16 @@ interface PlayerToServerEvents {
     spectatorID: string
   ) => void;
 
+  QUIT_TOURNAMENT: (
+    tournamentCode: string,
+    hostID: string
+  ) => void;
+
   PONG_PADDLE_MOVEMENT: (
     tournamentCode: string,
     playerID: string,
     start: boolean,
-    left: boolean,
+    left: boolean
   ) => void;
 }
 

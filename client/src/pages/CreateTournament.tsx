@@ -6,6 +6,7 @@ import { socket } from "../App.tsx";
 import DisplayLogo from "../components/DisplayLogo.tsx";
 import CreateTournamentInput from "../components/inputs/CreateTournamentInput";
 import { CreateTournamentRes } from "../../../types/requestTypes.ts";
+import ButtonComponent from "../components/buttons/BorderedButtonComponent.tsx";
 
 const defaultDuelsToWin: number = 3;
 const defaultDuelTime: number = 15;
@@ -61,6 +62,9 @@ const CreateTournament = () => {
 
   return (
     <div>
+      <div className="fixed top-0 md:right-20 right-5">
+        <ButtonComponent linkPath="/" text={"Back"} />
+      </div>
       <div className="w-full flex flex-row justify-start items-center py-10 px-10 gap-10">
         <div className="w-32">
           <DisplayLogo />
