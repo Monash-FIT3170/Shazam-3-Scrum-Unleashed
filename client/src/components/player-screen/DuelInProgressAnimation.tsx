@@ -17,7 +17,6 @@ function DuelInProgressAnimation() {
   // see tailwind.config.ts for animation keyframes
   return (
     <div className="flex">
-
       <div className="z-0 animate-textanim [--textanim-delay:100ms] opacity-0 text-[#E943E9] text-[55px] sm:text-[130px] lg:text-[150px] font-bold absolute inset-0 flex items-center justify-center">
         <p>ROCK</p>
       </div>

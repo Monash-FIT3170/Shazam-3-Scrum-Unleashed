@@ -99,8 +99,7 @@ export default {
         },
       },
       animation: {
-        textanim:
-          "textanim 1s ease-out var(--textanim-delay, 0) forwards",
+        textanim: "textanim 1s ease-out var(--textanim-delay, 0) forwards",
         shazamanim:
           "shazamanim 1s ease-out var(--shazamanim-delay, 0) forwards",
         shazamanim2:
