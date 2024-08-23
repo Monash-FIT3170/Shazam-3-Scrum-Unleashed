@@ -10,18 +10,16 @@ interface ChoosePlayerPowerupProps {
 }
 
 const ChoosePowerup = ({ tournamentCode }: ChoosePlayerPowerupProps) => {
-
   const [selectedPowerup, setSelectedPowerup] = useState<Powerup | null>(null);
 
-    const handlePowerUpSelection = (move: Selection) => {
-      if (!selectedPowerup) {
-        setSelectedPowerup(move as Powerup);
-        // Remove console log once socket is implemented
-        console.log(tournamentCode);
-        //socket.emit("POWERUP", tournamentCode, socket.userID, move);
-      }
-    };
-
+  const handlePowerUpSelection = (move: Selection) => {
+    if (!selectedPowerup) {
+      setSelectedPowerup(move as Powerup);
+      // Remove console log once socket is implemented
+      console.log(tournamentCode);
+      //socket.emit("POWERUP", tournamentCode, socket.userID, move);
+    }
+  };
 
   return (
     <>

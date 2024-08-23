@@ -18,7 +18,12 @@ const ChoosePlayerMove = ({ tournamentCode }: ChoosePlayerMoveProps) => {
   const handleMoveSelection = (move: Selection) => {
     if (!selectedAction) {
       setSelectedAction(move as Action);
-      socket.emit("RPS_CHOOSE_ACTION", tournamentCode, socket.userID, move as Action);
+      socket.emit(
+        "RPS_CHOOSE_ACTION",
+        tournamentCode,
+        socket.userID,
+        move as Action,
+      );
     }
   };
 
