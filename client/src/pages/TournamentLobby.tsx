@@ -9,6 +9,7 @@ import TournamentBracketBanner from "../components/lobby/TournamentBracketBanner
 import TournamentWin from "../components/player-screen/tournament-win/TournamentWin.tsx";
 import ButtonComponent from "../components/buttons/BorderedButtonComponent.tsx";
 import HostSpectatorScreen from "../components/lobby/HostSpectatorScreen.tsx";
+import { SpectateMatchRes } from "../../../types/requestTypes.ts";
 
 async function fetchQrCode(
   returnUrl: string,
@@ -36,6 +37,44 @@ async function postStartTournament(userID: string, tournamentCode: string) {
   return res.ok;
 }
 
+async function postSpectateMatch(
+  hostID: string,
+  tournamentCode: string,
+  playerUserID: string,
+) {
+  const res = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/spectate-match`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({ hostID, tournamentCode, playerUserID }),
+    },
+  );
+
+  return (await res.json()).body as SpectateMatchRes;
+}
+
+async function postStopSpectating(
+  hostID: string,
+  tournamentCode: string,
+  playerUserID: string,
+) {
+  const res = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/stop-spectating`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({ hostID, tournamentCode, playerUserID }),
+    },
+  );
+
+  return res.ok;
+}
+
 const TournamentLobby = () => {
   const { tournamentCode } = useLoaderData() as { tournamentCode: string };
   const [players, setPlayers] = useState<PlayerAttributes[]>([]);
@@ -45,6 +84,9 @@ const TournamentLobby = () => {
     undefined,
   );
   const [spectatingUserID, setSpectatingUserID] = useState<string | undefined>(
+    undefined,
+  );
+  const [matchData, setMatchData] = useState<SpectateMatchRes | undefined>(
     undefined,
   );
 
@@ -72,25 +114,28 @@ const TournamentLobby = () => {
     }
   };
 
-  const spectatePlayer = (player: PlayerAttributes) => {
-    setSpectatingUserID(player.userID);
-    socket.emit(
-      "SPECTATE_PLAYER",
+  const spectatePlayer = async (player: PlayerAttributes) => {
+    const spectateMatchRes = await postSpectateMatch(
       socket.userID,
       tournamentCode,
       player.userID,
     );
+    if (spectateMatchRes) {
+      setSpectatingUserID(player.userID);
+      setMatchData(spectateMatchRes);
+    }
   };
 
-  const stopSpectating = () => {
-    console.log("hello");
-    if (spectatingUserID) {
-      socket.emit(
-        "STOP_SPECTATING",
+  const stopSpectating = async () => {
+    console.log(spectatingUserID);
+    if (
+      spectatingUserID !== undefined &&
+      (await postStopSpectating(
         socket.userID,
         tournamentCode,
         spectatingUserID,
-      );
+      ))
+    ) {
       setSpectatingUserID(undefined);
     }
   };
@@ -111,9 +156,10 @@ const TournamentLobby = () => {
     };
   }, []);
 
-  return spectatingUserID !== undefined ? (
+  return spectatingUserID !== undefined && matchData !== undefined ? (
     <div>
       <HostSpectatorScreen
+        matchData={matchData}
         tournamentCode={tournamentCode}
         targetUserID={spectatingUserID}
         stopSpectating={stopSpectating}

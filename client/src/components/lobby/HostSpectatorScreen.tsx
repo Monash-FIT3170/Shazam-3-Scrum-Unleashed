@@ -9,14 +9,17 @@ import { Pong } from "../pong/Pong.tsx";
 import { RPS } from "../rps/RPS.tsx";
 import PlayerAndSpectatorsInfo from "../player-screen/match-overlay/PlayerAndSpectatorsInfo.tsx";
 import ReactionOverlay from "../reactions/ReactionsOverlay.tsx";
+import { SpectateMatchRes } from "../../../../types/requestTypes.ts";
 
 interface PlayerScreenProps {
+  matchData: SpectateMatchRes;
   tournamentCode: string;
   targetUserID: string;
   stopSpectating: () => void;
 }
 
 const HostSpectatorScreen = ({
+  matchData,
   tournamentCode,
   targetUserID,
   stopSpectating,
@@ -41,6 +44,12 @@ const HostSpectatorScreen = ({
       }
     }
   }
+
+  useEffect(() => {
+    setPlayers(matchData.players);
+    setMatchType(matchData.matchType);
+    setMatchWinnerID(matchWinnerID);
+  }, [matchData]);
 
   useEffect(() => {
     socket.on("MATCH_START", (players, matchType) => {

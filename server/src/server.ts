@@ -18,9 +18,9 @@ import { createTournamentHandler } from "./controllers/http/createTournamentHand
 import { joinTournamentHandler } from "./controllers/http/joinTournamentHandler";
 import { startTournamentHandler } from "./controllers/http/startTournamentHandler";
 import { pongPaddleMovementSocket } from "./controllers/socket/pongPaddleMovement";
-import { spectateMatchSocket } from "./controllers/socket/spectateMatch";
-import { stopSpectatingSocket } from "./controllers/socket/stopSpectating";
 import { quitTournamentSocket } from "./controllers/socket/quitTournament";
+import { spectateMatchHandler } from "./controllers/http/spectateMatchHandler";
+import { stopSpectatingHandler } from "./controllers/http/stopSpectatingHandler";
 
 const app = express();
 
@@ -50,8 +50,6 @@ io.on("connection", async (socket) => {
   await reconnectionHandler(socket, io, tournamentMap);
 
   // TODO - move listener inside pongMatch method
-  socket.on("SPECTATE_PLAYER", spectateMatchSocket(io));
-  socket.on("STOP_SPECTATING", stopSpectatingSocket(io));
   socket.on("PONG_PADDLE_MOVEMENT", pongPaddleMovementSocket);
   socket.on("RPS_CHOOSE_ACTION", chooseActionSocket(io));
   socket.on("ADD_REACTION", addReactionSocket(io));
@@ -64,6 +62,14 @@ app.post("/join-tournament", joinTournamentHandler(io));
 app.post(
   "/start-tournament",
   (req, res) => void startTournamentHandler(req, res, io),
+);
+app.post(
+  "/spectate-match",
+  (req, res) => void spectateMatchHandler(io, req, res),
+);
+app.post(
+  "/stop-spectating",
+  (req, res) => void stopSpectatingHandler(io, req, res),
 );
 
 server.listen(3010, () => {
