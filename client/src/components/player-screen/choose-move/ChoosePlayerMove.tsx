@@ -6,6 +6,7 @@ import { Action } from "../../../../../types/types.ts";
 import MoveSelection from "./MoveSelection.tsx";
 import { socket } from "../../../App.tsx";
 import WaitingForOpponent from "../waiting-screens/WaitingForOpponent.tsx";
+import { Selection } from "../../../../../types/types.ts";
 
 interface ChoosePlayerMoveProps {
   tournamentCode: string;
@@ -14,10 +15,10 @@ interface ChoosePlayerMoveProps {
 const ChoosePlayerMove = ({ tournamentCode }: ChoosePlayerMoveProps) => {
   const [selectedAction, setSelectedAction] = useState<Action | null>(null);
 
-  const handleMoveSelection = (move: Action) => {
+  const handleMoveSelection = (move: Selection) => {
     if (!selectedAction) {
-      setSelectedAction(move);
-      socket.emit("RPS_CHOOSE_ACTION", tournamentCode, socket.userID, move);
+      setSelectedAction(move as Action);
+      socket.emit("RPS_CHOOSE_ACTION", tournamentCode, socket.userID, move as Action);
     }
   };
 

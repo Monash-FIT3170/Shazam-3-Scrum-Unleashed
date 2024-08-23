@@ -7,7 +7,11 @@ export interface PlayerAttributes {
   spectatorIDs: string[];
 }
 
+export type Selection = Action | Powerup;
+
 export type Action = "ROCK" | "PAPER" | "SCISSORS" | null;
+
+export type Powerup = "SHIELD" | "MOVEKILLER" | "TIEBREAKER" | null;
 
 export type ReactionType =
   | "HEART"
