@@ -51,6 +51,12 @@ export const chooseActionSocket =
 
     const rpsMatch = match as RpsMatch;
 
+    // TODO pass in the choice which gives a random powerup
+    const totalScored = rpsMatch.players[0].score + rpsMatch.players[1].score;
+    if (totalScored === Math.ceil(rpsMatch.duelsToWin / 2)) {
+      rpsMatch.spawnPowerup();
+    }
+
     if (rpsMatch.players[0].userID === playerUserID) {
       rpsMatch.p1Action = action;
     } else {

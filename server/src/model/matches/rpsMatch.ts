@@ -14,6 +14,7 @@ export class RpsMatch implements Match {
   matchRoomID: string;
   duelsToWin: number;
   timeOutHandler: NodeJS.Timeout | null;
+  powerUp: number | null;
 
   private rulesMap: Map<Action, Action> = new Map<Action, Action>([
     ["ROCK", "SCISSORS"],
@@ -28,6 +29,7 @@ export class RpsMatch implements Match {
     this.matchRoomID = crypto.randomUUID();
     this.duelsToWin = duelsToWin;
     this.timeOutHandler = null;
+    this.powerUp = null;
   }
 
   public isDuelComplete() {
@@ -136,5 +138,9 @@ export class RpsMatch implements Match {
       clearTimeout(this.timeOutHandler);
     }
     playDuel(tournament, io)(this);
+  }
+
+  public spawnPowerup() {
+    this.powerUp = Math.floor(Math.random() * 3);
   }
 }
