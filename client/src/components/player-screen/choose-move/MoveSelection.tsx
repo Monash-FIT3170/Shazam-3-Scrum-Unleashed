@@ -1,7 +1,6 @@
 import React from "react";
 import { Selection } from "../../../../../types/types.ts";
 
-
 interface MoveSelectionProps {
   img: string;
   selection: Selection;
