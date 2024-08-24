@@ -13,6 +13,12 @@ interface ChoosePlayerMoveProps {
 
 const ChoosePlayerMove = ({ tournamentCode }: ChoosePlayerMoveProps) => {
   const [selectedAction, setSelectedAction] = useState<Action | null>(null);
+  const [powerup, setPowerupLocation] = useState<boolean[]>([false, false, false]);
+
+  socket.on("MATCH_POWERUP_SPAWN_LOCATION", (location: boolean[]) => {
+    setPowerupLocation(location);
+    console.log(location)
+  })
 
   const handleMoveSelection = (move: Action) => {
     if (!selectedAction) {
@@ -34,16 +40,19 @@ const ChoosePlayerMove = ({ tournamentCode }: ChoosePlayerMoveProps) => {
                 img={RockOption}
                 selection="ROCK"
                 onSelectMove={handleMoveSelection}
+                powerup={powerup[0]}
               />
               <MoveSelection
                 img={PaperOption}
                 selection="PAPER"
                 onSelectMove={handleMoveSelection}
+                powerup={powerup[1]}
               />
               <MoveSelection
                 img={ScissorsOption}
                 selection="SCISSORS"
                 onSelectMove={handleMoveSelection}
+                powerup={powerup[2]}
               />
             </div>
           </div>

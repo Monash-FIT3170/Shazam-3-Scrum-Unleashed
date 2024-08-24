@@ -14,7 +14,7 @@ export class RpsMatch implements Match {
   matchRoomID: string;
   duelsToWin: number;
   timeOutHandler: NodeJS.Timeout | null;
-  powerUp: number | null;
+  powerUp: boolean[] | null;
 
   private rulesMap: Map<Action, Action> = new Map<Action, Action>([
     ["ROCK", "SCISSORS"],
@@ -130,6 +130,8 @@ export class RpsMatch implements Match {
 
   startMatch(io: Server<Events>, tournament: Tournament): void {
     io.to(this.matchRoomID).emit("MATCH_START", this.players, "RPS");
+    // placing the powerup spawn here only has it spawn on the first round of the duel
+    this.spawnPowerup(io);
     this.startTimeout(playDuel(tournament, io), tournament.duelTime);
   }
 
@@ -140,7 +142,11 @@ export class RpsMatch implements Match {
     playDuel(tournament, io)(this);
   }
 
-  public spawnPowerup() {
-    this.powerUp = Math.floor(Math.random() * 3);
+  spawnPowerup(io: Server<Events>) {
+    const powerUpLocations = [false, false, false];
+    const location = Math.floor(Math.random() * 3);
+    powerUpLocations[location] = true;
+    this.powerUp = powerUpLocations;
+    io.to(this.matchRoomID).emit("MATCH_POWERUP_SPAWN_LOCATION", this.powerUp);
   }
 }

@@ -70,4 +70,6 @@ interface ServerToPlayerEvents {
   ) => void;
 
   REACTION_ADDED: (reaction: ReactionData) => void;
+
+  MATCH_POWERUP_SPAWN_LOCATION: (location: boolean[]) => void;
 }
