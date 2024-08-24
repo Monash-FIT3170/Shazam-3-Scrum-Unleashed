@@ -1,17 +1,24 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { socket } from "../../App";
 import { PongBallState, PongPaddleState } from "../../../../types/types.ts";
+import { PongButton } from "./PongButton.tsx";
+import LeftButton from "../../assets/pong-buttons/LEFT.svg";
+import LeftButtonDown from "../../assets/pong-buttons/LEFT-BUTTON-DOWN.svg";
+import RightButton from "../../assets/pong-buttons/RIGHT.svg";
+import RightButtonDown from "../../assets/pong-buttons/RIGHT-BUTTON-DOWN.svg";
 
-const GAME_WIDTH = 600;
-const GAME_HEIGHT = 600;
+const GAME_WIDTH = 375;
+const GAME_HEIGHT = 500;
 const BALL_RADIUS = 2;
 const PADDLE_HEIGHT = GAME_HEIGHT * 0.02;
-const SCALING_FACTOR = GAME_WIDTH / 100;
+const SCALING_FACTOR = GAME_HEIGHT / 100;
 
 type PongProps = {
   tournamentCode: string;
   isPlayerOne: boolean;
 };
+
+type ButtonState = "left" | "right" | null;
 
 const clampX = (number: number, gameWidth: number) =>
   Math.min(
@@ -48,6 +55,7 @@ const clampY = (
 };
 
 const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
+  const [buttonState, setButtonState] = useState<ButtonState>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ballState = useRef<PongBallState>({
     x: GAME_WIDTH / 2,
@@ -202,30 +210,36 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
     animationFrameId.current = requestAnimationFrame(drawFrame);
   };
 
+  const handlePaddleMove = (isMoving: boolean, direction: "left" | "right") => {
+    socket.emit(
+      "PONG_PADDLE_MOVEMENT",
+      tournamentCode,
+      socket.userID,
+      isMoving,
+      direction === "left",
+    );
+    setButtonState(isMoving ? direction : null);
+  };
+
+  const handleButtonDown = (direction: "left" | "right") => {
+    handlePaddleMove(true, direction);
+  };
+
+  const handleButtonUp = () => {
+    handlePaddleMove(false, buttonState as "left" | "right");
+  };
+
   useEffect(() => {
     socket.on("MATCH_PONG_STATE", updateServerBallPosition);
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-        socket.emit(
-          "PONG_PADDLE_MOVEMENT",
-          tournamentCode,
-          socket.userID,
-          true,
-          event.key === "ArrowLeft",
-        );
-      }
+      if (event.key === "ArrowLeft") handlePaddleMove(true, "left");
+      if (event.key === "ArrowRight") handlePaddleMove(true, "right");
     };
 
     const handleKeyUp = (event: KeyboardEvent) => {
       if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-        socket.emit(
-          "PONG_PADDLE_MOVEMENT",
-          tournamentCode,
-          socket.userID,
-          false,
-          event.key === "ArrowLeft",
-        );
+        handlePaddleMove(false, buttonState as "left" | "right");
       }
     };
 
@@ -237,7 +251,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
     };
-  }, [tournamentCode, isPlayerOne]);
+  }, [tournamentCode, isPlayerOne, buttonState]);
 
   useEffect(() => {
     animationFrameId.current = requestAnimationFrame(drawFrame);
@@ -249,9 +263,28 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
   }, []);
 
   return (
-    <div className="bg-white p-1">
-      <canvas ref={canvasRef} width={GAME_WIDTH} height={GAME_HEIGHT} />
-    </div>
+    <>
+      <div className="bg-white p-1">
+        <canvas ref={canvasRef} width={GAME_WIDTH} height={GAME_HEIGHT} />
+      </div>
+
+      <div className="flex flex-row gap-3">
+        <PongButton
+          onMouseDown={() => handleButtonDown("left")}
+          onMouseUp={handleButtonUp}
+          onTouchStart={() => handleButtonDown("left")}
+          onTouchEnd={handleButtonUp}
+          src={buttonState === "left" ? LeftButtonDown : LeftButton}
+        />
+        <PongButton
+          onMouseDown={() => handleButtonDown("right")}
+          onMouseUp={handleButtonUp}
+          onTouchStart={() => handleButtonDown("right")}
+          onTouchEnd={handleButtonUp}
+          src={buttonState === "right" ? RightButtonDown : RightButton}
+        />
+      </div>
+    </>
   );
 };
 
