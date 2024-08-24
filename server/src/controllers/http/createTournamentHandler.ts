@@ -13,12 +13,9 @@ interface CreateTournamentBody {
 }
 
 export function createTournamentHandler(req: Request, res: Response) {
-  const { userID, duelsToWin, duelTime, matchTime, matchType} =
+  const { userID, duelsToWin, duelTime, matchTime, matchType } =
     req.body as CreateTournamentBody;
   console.log(`Host ${userID} is creating a game`);
-
-
-
 
   // if (isNaN(Number(duelsToWin)) || isNaN(Number(duelTime)) || isNaN(Number(matchTime))){
   //     console.log("gsgdfsgdg")
@@ -31,7 +28,7 @@ export function createTournamentHandler(req: Request, res: Response) {
     Number(duelsToWin),
     Number(duelTime) * 1000,
     Number(matchTime) * 1000,
-    matchType
+    matchType,
   );
 
   let tournamentCode;

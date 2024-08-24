@@ -12,7 +12,7 @@ interface ChooseMatchTypeProps {
 }
 
 const ChooseMatchType: React.FC<ChooseMatchTypeProps> = ({ setMatchType }) => {
-    const [selectedType, setSelectedType] = useState<MatchType | null>("RPS");
+  const [selectedType, setSelectedType] = useState<MatchType | null>("RPS");
 
   const handleClick = (type: MatchType) => {
     // Handle the transformation for "MASHUP"
