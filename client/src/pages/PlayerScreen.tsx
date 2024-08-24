@@ -4,6 +4,7 @@ import { socket } from "../App";
 import { PlayerAttributes } from "../../../types/types.ts";
 import { useLoaderData } from "react-router-dom";
 import PlayerAndSpectatorsInfo from "../components/player-screen/match-overlay/PlayerAndSpectatorsInfo.tsx";
+import DuelTimer from "../components/player-screen/match-overlay/DuelTimer.tsx";
 import MatchOutcomeScreen from "../components/player-screen/outcome-screens/MatchOutcomeScreen.tsx";
 import TournamentWin from "../components/player-screen/tournament-win/TournamentWin.tsx";
 import ReactionOverlay from "../components/reactions/ReactionsOverlay.tsx";
@@ -27,6 +28,7 @@ const PlayerScreen = () => {
   const [isSpectator, setIsSpectator] = useState(false);
   const [matchType, setMatchType] = useState<MatchType>();
   const [isPlayerOne, setIsPlayerOne] = useState(false);
+  const [duelTime, setDuelTime] = useState(0);
 
   function setPlayers(players: PlayerAttributes[]) {
     for (let i = 0; i < players.length; i++) {
@@ -81,9 +83,23 @@ const PlayerScreen = () => {
       setTournamentWinner(playerName);
     });
 
+    socket.on("START_ROUND_TIMER", (duelTime) => {
+      setDuelTime(duelTime);
+      const timerInterval = setInterval(() => {
+        setDuelTime((prevTime) => {
+          if (prevTime <= 1) {
+            clearInterval(timerInterval);
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
+    });
+
     return () => {
       socket.off("MATCH_START");
       socket.off("MATCH_DATA");
+      socket.off("START_ROUND_TIMER");
       socket.off("TOURNAMENT_COMPLETE");
     };
   }, []);
