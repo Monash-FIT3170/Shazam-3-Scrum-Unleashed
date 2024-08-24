@@ -8,6 +8,7 @@ export const tournamentLobbyLoader = async ({ request }: LoaderProps) => {
   const url = new URL(request.url);
 
   const tournamentCode = url.searchParams.get("tournamentCode");
+  localStorage.setItem("tournamentCode", tournamentCode ?? "");
   return { tournamentCode };
 };
 

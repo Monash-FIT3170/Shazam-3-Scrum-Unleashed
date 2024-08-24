@@ -8,6 +8,8 @@ import TournamentLobbyBanner from "../components/lobby/TournamentLobbyBanner.tsx
 import TournamentBracketBanner from "../components/lobby/TournamentBracketBanner.tsx";
 import TournamentWin from "../components/player-screen/tournament-win/TournamentWin.tsx";
 import ButtonComponent from "../components/buttons/BorderedButtonComponent.tsx";
+import HostSpectatorScreen from "../components/lobby/HostSpectatorScreen.tsx";
+import { SpectateMatchRes } from "../../../types/requestTypes.ts";
 
 async function fetchQrCode(
   returnUrl: string,
@@ -35,12 +37,54 @@ async function postStartTournament(userID: string, tournamentCode: string) {
   return res.ok;
 }
 
+async function postSpectateMatch(
+  hostID: string,
+  tournamentCode: string,
+  playerUserID: string,
+) {
+  const res = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/spectate-match`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({ hostID, tournamentCode, playerUserID }),
+    },
+  );
+
+  return (await res.json()).body as SpectateMatchRes;
+}
+
+async function postStopSpectating(
+  hostID: string,
+  tournamentCode: string,
+  playerUserID: string,
+) {
+  const res = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/stop-spectating`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({ hostID, tournamentCode, playerUserID }),
+    },
+  );
+
+  return res.ok;
+}
+
 const TournamentLobby = () => {
   const { tournamentCode } = useLoaderData() as { tournamentCode: string };
   const [players, setPlayers] = useState<PlayerAttributes[]>([]);
   const [qrCode, setQrCode] = useState("");
-  const [tournamentStarted, setTournamentStarted] = useState(false);
+  const [inProgress, setTournamentStarted] = useState(false);
   const [tournamentWinner, setTournamentWinner] = useState<string | undefined>(
+    undefined,
+  );
+  const [isSpectating, setIsSpectating] = useState<boolean>(false);
+  const [matchData, setMatchData] = useState<SpectateMatchRes | undefined>(
     undefined,
   );
 
@@ -54,43 +98,72 @@ const TournamentLobby = () => {
   );
 
   const startTournament = async () => {
-    if (!tournamentStarted && players.length > 1) {
+    if (!inProgress && players.length > 1) {
       setTournamentStarted(
         await postStartTournament(socket.userID, tournamentCode),
       );
     }
   };
 
-  useEffect(() => {
-    socket.on("PLAYERS_UPDATE", (players) => {
-      console.log(players);
-      setPlayers(players);
-    });
-
-    socket.on("TOURNAMENT_COMPLETE", (tournamentWinner) => {
-      console.log(players);
-      setTournamentWinner(tournamentWinner);
-    });
-
-    return () => {
-      socket.off("PLAYERS_UPDATE");
-    };
-  }, []);
-
   const quitTournament = () => {
-    if (!tournamentStarted) {
+    if (!inProgress) {
       socket.emit("QUIT_TOURNAMENT", tournamentCode, socket.userID);
       window.location.href = "/"; // Navigate to the home page
     }
   };
 
-  return (
+  const spectatePlayer = async (player: PlayerAttributes) => {
+    const spectateMatchRes = await postSpectateMatch(
+      socket.userID,
+      tournamentCode,
+      player.userID,
+    );
+    if (spectateMatchRes) {
+      setIsSpectating(true);
+      setMatchData(spectateMatchRes);
+    }
+  };
+
+  const stopSpectating = async (specUserID: string) => {
+    if (
+      isSpectating &&
+      (await postStopSpectating(socket.userID, tournamentCode, specUserID))
+    ) {
+      setIsSpectating(false);
+    }
+  };
+
+  useEffect(() => {
+    socket.on("TOURNAMENT_STATE", (players, inProgress) => {
+      setPlayers(players);
+      setTournamentStarted(inProgress);
+    });
+
+    socket.on("TOURNAMENT_COMPLETE", (tournamentWinner) => {
+      setTournamentWinner(tournamentWinner);
+    });
+
+    return () => {
+      socket.off("TOURNAMENT_STATE");
+      socket.off("TOURNAMENT_COMPLETE");
+    };
+  }, []);
+
+  return isSpectating && matchData !== undefined ? (
+    <div>
+      <HostSpectatorScreen
+        matchData={matchData}
+        tournamentCode={tournamentCode}
+        stopSpectating={stopSpectating}
+      />
+    </div>
+  ) : (
     <div>
       {tournamentWinner !== undefined ? (
         <TournamentWin playerName={tournamentWinner} />
       ) : (
         <div>
-          {tournamentStarted ? (
+          {inProgress ? (
             <TournamentBracketBanner />
           ) : (
             <TournamentLobbyBanner
@@ -103,7 +176,7 @@ const TournamentLobby = () => {
             <div className="text-white text-xl uppercase ">
               Players: {players.length}
             </div>
-            {!tournamentStarted && (
+            {!inProgress && (
               <button
                 className="hover:bg-blue-700 text-white bg-primary text-xl rounded-xl h-full uppercase w-1/4"
                 onClick={startTournament}
@@ -115,7 +188,12 @@ const TournamentLobby = () => {
 
           <div className="player-list" data-testid="player-list">
             {players.map((player, index) => (
-              <PlayerCard key={player.userID} player={player} cardNum={index} />
+              <PlayerCard
+                player={player}
+                cardNum={index}
+                key={player.userID}
+                interact={() => spectatePlayer(player)}
+              />
             ))}
           </div>
         </div>

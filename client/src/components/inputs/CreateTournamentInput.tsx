@@ -6,6 +6,7 @@ type CreateGameInput = {
   callback: (value: number) => void;
   errorCallback: (bool: boolean) => void;
   transparentUnits: boolean;
+  hasMinutes?: boolean;
 };
 
 const CreateTournamentInput = ({
@@ -17,7 +18,9 @@ const CreateTournamentInput = ({
 }: CreateGameInput) => {
   return (
     <div className="flex justify-between items-center w-full">
-      <span className="text-white text-2xl uppercase">{inputText}</span>
+      <span className="text-white text-2xl uppercase font-bold">
+        {inputText}
+      </span>
       <div
         className={`flex justify-center items-center gap-2 ${transparentUnits ? "text-transparent" : "text-white"} font-bold`}
       >
@@ -26,6 +29,7 @@ const CreateTournamentInput = ({
           callback={callback}
           errorCallback={errorCallback}
         />
+
         <span>SECS</span>
       </div>
     </div>

@@ -11,71 +11,78 @@ import {MatchType} from "./eventArguments";
  * Add any new Event Categories to this
  */
 export interface Events
-  extends HostToClientEvents,
+  extends ServerToClientEvents,
   PlayerToServerEvents,
   ServerToHostEvents,
-  ServerToPlayerEvents { }
+  ServerToPlayerEvents, HostToServerEvents { }
 
-interface HostToClientEvents {
+interface ServerToClientEvents {
   SESSION_INFO: (sessionID: string, userID: string) => void;
   TOURNAMENT_COMPLETE: (playerName: string) => void;
 }
 
+interface HostToServerEvents {
+  SPECTATE_PLAYER: (    hostID : string, tournamentCode: string,
+                        playerUserID: string,) => void;
+  STOP_SPECTATING: (hostID : string, tournamentCode: string,
+                    playerUserID: string,) => void;
+}
+
 interface PlayerToServerEvents {
-  RPS_CHOOSE_ACTION: (
-    tournamentCode: string,
-    playerUserID: string,
-    action: Action
-  ) => void;
+    RPS_CHOOSE_ACTION: (
+        tournamentCode: string,
+        playerUserID: string,
+        action: Action
+    ) => void;
 
-  ADD_REACTION: (
-    tournamentCode: string,
-    reaction: ReactionData,
-    spectatorID: string
-  ) => void;
+    ADD_REACTION: (
+        tournamentCode: string,
+        reaction: ReactionData,
+        spectatorID: string
+    ) => void;
 
-  QUIT_TOURNAMENT: (
-    tournamentCode: string,
-    hostID: string
-  ) => void;
+    QUIT_TOURNAMENT: (
+        tournamentCode: string,
+        hostID: string
+    ) => void;
 
-  PONG_PADDLE_MOVEMENT: (
-    tournamentCode: string,
-    playerID: string,
-    start: boolean,
-    left: boolean
-  ) => void;
+    PONG_PADDLE_MOVEMENT: (
+        tournamentCode: string,
+        playerID: string,
+        start: boolean,
+        left: boolean
+    ) => void;
 }
 
 interface ServerToHostEvents {
-  PLAYERS_UPDATE: (players: PlayerAttributes[]) => void;
+  TOURNAMENT_STATE: (players: PlayerAttributes[], inProgress:boolean) => void;
 }
 
 interface ServerToPlayerEvents {
 
-  MATCH_START : (
-      players: PlayerAttributes[],
-      matchType:MatchType
-  )=>void;
+    MATCH_START: (
+        players: PlayerAttributes[],
+        matchType: MatchType
+    ) => void;
 
-  MATCH_DATA : (
-    players : PlayerAttributes[],
-    winnerUserID: string | undefined
-  ) => void;
+    MATCH_DATA: (
+        players: PlayerAttributes[],
+        winnerUserID: string | undefined
+    ) => void;
 
-  MATCH_RPS_DUEL_STATE : (
-      p1Action: Action,
-      p2Action: Action
-  )=> void;
+    MATCH_RPS_DUEL_STATE: (
+        p1Action: Action,
+        p2Action: Action
+    ) => void;
 
-  MATCH_PONG_STATE: (
-    ballState: PongBallState,
-    paddleStates: PongPaddleState[],
-  ) => void;
+    MATCH_PONG_STATE: (
+        ballState: PongBallState,
+        paddleStates: PongPaddleState[],
+    ) => void;
 
   START_ROUND_TIMER : (
     time: number
-  ) => void;
+    ) => void;
 
   REACTION_ADDED: (reaction: ReactionData) => void;
 }

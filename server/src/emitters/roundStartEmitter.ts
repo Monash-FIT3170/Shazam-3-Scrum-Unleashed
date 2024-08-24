@@ -1,6 +1,7 @@
 import Tournament from "src/model/tournament";
 import { Server } from "socket.io";
 import { Events } from "../../../types/socket/events";
+import { getSocket } from "../utils/socketUtils";
 
 export async function roundStartEmitter(
   tournament: Tournament,
@@ -20,6 +21,7 @@ export async function roundStartEmitter(
 
     match.startMatch(io, tournament);
   }
+  io.to(tournament.hostUID).emit("TOURNAMENT_STATE", tournament.players, true);
 }
 
 async function playerJoinMatchRoom(
@@ -27,13 +29,7 @@ async function playerJoinMatchRoom(
   matchRoomID: string,
   io: Server<Events>,
 ) {
-  const socketSetID = io.sockets.adapter.rooms.get(userID);
-  if (socketSetID === undefined || socketSetID.size !== 1) {
-    return undefined;
-  }
-
-  const playerSocketID = Array.from(socketSetID)[0];
-  const playerSocket = io.sockets.sockets.get(playerSocketID);
+  const playerSocket = getSocket(userID, io);
   if (playerSocket !== undefined) {
     await playerSocket.join(matchRoomID);
   }
