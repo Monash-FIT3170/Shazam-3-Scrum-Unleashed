@@ -7,7 +7,6 @@ import { PLAYER_SCREEN } from "./pagePaths.ts";
 import InputComponent from "../components/inputs/InputComponent.tsx";
 import FormButton from "../components/buttons/FormButton.tsx";
 import { JoinTournamentRes } from "../../../types/requestTypes.ts";
-import { JoinError } from "../../../types/socket/eventArguments.ts";
 import ButtonComponent from "../components/buttons/BorderedButtonComponent.tsx";
 import ErrorBanner from "../components/ErrorBanner.tsx";
 
@@ -38,7 +37,7 @@ const JoinTournament = () => {
 
   const [tournamentCode, setTournamentCode] = useState(urlTournamentCode);
   const [playerName, setPlayerName] = useState("");
-  const [status, setStatus] = useState<JoinError | "OK">();
+  const [status, setStatus] = useState<string | "OK">();
   const [loading, setLoading] = useState(false);
 
   const changeTournamentCode = (code: string) => {
@@ -125,12 +124,12 @@ const JoinTournament = () => {
       </div>
       {!status || status === "OK" ? null : (
         <ErrorBanner
-            message={status}
-            removeError={() => {
-              setStatus(undefined);
-            }}
+          message={status}
+          removeError={() => {
+            setStatus(undefined);
+          }}
         />
-    )}
+      )}
     </div>
   );
 };
