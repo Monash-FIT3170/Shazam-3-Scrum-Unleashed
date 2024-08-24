@@ -1,18 +1,16 @@
 import { Server } from "socket.io";
-import {
-  PlayerAttributes,
-  PongBallState,
-  PongPaddleState,
-} from "../../../../types/types";
+import { PongBallState, PongPaddleState } from "../../../../types/types";
 import { Match } from "./match";
 import Player from "../player";
 import { Events } from "../../../../types/socket/events";
 import Tournament from "../tournament";
 import { roundChecker } from "../../controllers/helper/roundHelper";
+import { MatchType } from "../../../../types/socket/eventArguments";
 import * as crypto from "node:crypto";
 
 const INITIAL_BALL_Y_SPEED = 50;
 const POLL_RATE = 10; // Hz
+const BALL_RADIUS = 2;
 const GAME_WIDTH = 75;
 const GAME_HEIGHT = 100;
 const PADDLE_WIDTH = 20;
@@ -20,7 +18,7 @@ const PADDLE_WIDTH = 20;
 export class PongMatch implements Match {
   duelsToWin: number;
   matchRoomID: string;
-  players: PlayerAttributes[];
+  players: Player[];
   paddleStates: PongPaddleState[];
   ballState: PongBallState;
   tournament: Tournament;
@@ -54,29 +52,23 @@ export class PongMatch implements Match {
     this.intervalHandler = undefined;
   }
 
-  // TODO - we don't need is duel complete for pong
-  isDuelComplete(): boolean {
-    return false;
-  }
-
-  getMatchWinner(): Player | null {
-    if (this.players[0].score >= this.duelsToWin) {
-      return this.players[0];
-    } else if (this.players[1].score >= this.duelsToWin) {
-      return this.players[1];
-    } else {
-      return null;
-    }
-  }
-
   startMatch(io: Server<Events>): void {
     io.to(this.matchRoomID).emit("MATCH_START", this.players, "PONG");
 
     setTimeout(() => {
+      this.emitMatchState(io);
       this.intervalHandler = setInterval(() => {
         this.tick(io);
       }, 1000 / POLL_RATE);
     }, 1000); // this will start the pong match after a short delay, maybe not required.
+  }
+
+  emitMatchState(io: Server<Events>): void {
+    io.to(this.matchRoomID).emit(
+      "MATCH_PONG_STATE",
+      this.ballState,
+      this.paddleStates,
+    );
   }
 
   randomXVelocity(): number {
@@ -105,7 +97,6 @@ export class PongMatch implements Match {
   }
 
   tick(io: Server<Events>): void {
-    const BALL_RADIUS = 2;
     let emitData = false;
 
     // Calculating the new ball and paddle coordinates
@@ -171,7 +162,7 @@ export class PongMatch implements Match {
       this.ballState.xVelocity = -this.ballState.xVelocity;
       emitData = true;
     } else if (newBallX - BALL_RADIUS <= 0) {
-      newBallX = 0 + BALL_RADIUS;
+      newBallX = BALL_RADIUS;
       this.ballState.xVelocity = -this.ballState.xVelocity;
       emitData = true;
     }
@@ -191,6 +182,7 @@ export class PongMatch implements Match {
           this.players,
           winner?.userID,
         );
+        emitData = true;
       }
       if (newBallY <= 0) {
         newBallY = GAME_HEIGHT / 2;
@@ -204,6 +196,7 @@ export class PongMatch implements Match {
           this.players,
           winner?.userID,
         );
+        emitData = true;
       }
     }
 
@@ -216,16 +209,28 @@ export class PongMatch implements Match {
     this.ballState.y = newBallY;
 
     if (emitData) {
-      io.to(this.matchRoomID).emit(
-        "MATCH_PONG_STATE",
-        this.ballState,
-        this.paddleStates,
-      );
+      this.emitMatchState(io);
     }
 
     if (winner != null) {
       roundChecker(this.tournament, io, this);
       clearInterval(this.intervalHandler);
+    }
+  }
+
+  type(): MatchType {
+    return "PONG";
+  }
+
+  getMatchWinner(): Player | null {
+    if (this.players[0].score >= this.duelsToWin) {
+      this.players[1].isEliminated = true;
+      return this.players[0];
+    } else if (this.players[1].score >= this.duelsToWin) {
+      this.players[0].isEliminated = true;
+      return this.players[1];
+    } else {
+      return null;
     }
   }
 }

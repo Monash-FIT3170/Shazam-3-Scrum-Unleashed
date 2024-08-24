@@ -12,6 +12,12 @@ export async function reconnectionHandler(
     if (tournament === undefined) {
       return;
     }
+
+    if (tournament.hostUID === socket.userID) {
+      io.to(socket.userID).emit("TOURNAMENT_STATE", tournament.players, true);
+      return;
+    }
+
     for (const match of tournament.matches) {
       for (const player of match.players) {
         if (
@@ -30,10 +36,10 @@ export async function reconnectionHandler(
               io.to(socket.userID).emit(
                 "MATCH_START",
                 match.players,
-                tournament.matchTypeOrder[
-                  tournament.roundCounter % tournament.matchTypeOrder.length
-                ],
+                match.type(),
               );
+
+              match.emitMatchState(io);
             }
           }
           break;

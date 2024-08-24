@@ -21,9 +21,6 @@ async function postTournament(
   matchType: MatchType[],
 ) {
   try {
-    console.log(
-      JSON.stringify({ userID, duelsToWin, duelTime, roundTime, matchType }),
-    );
     const res = await fetch(
       `${import.meta.env.VITE_API_BASE_URL}/create-tournament`,
       {

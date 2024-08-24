@@ -1,18 +1,18 @@
 import Player from "../player";
 import { Action } from "../../../../types/types";
-import { type Match } from "./match";
 import { Server } from "socket.io";
 import { Events } from "../../../../types/socket/events";
 import { playDuel } from "../../controllers/socket/chooseAction";
 import Tournament from "../tournament";
-import * as crypto from "node:crypto";
+import { Match } from "./match";
+import { MatchType } from "../../../../types/socket/eventArguments";
 
 export class RpsMatch implements Match {
   players: Player[];
-  p1Action: Action;
-  p2Action: Action;
   matchRoomID: string;
   duelsToWin: number;
+  p1Action: Action;
+  p2Action: Action;
   timeOutHandler: NodeJS.Timeout | null;
 
   private rulesMap: Map<Action, Action> = new Map<Action, Action>([
@@ -23,10 +23,10 @@ export class RpsMatch implements Match {
 
   constructor(players: Player[], duelsToWin: number) {
     this.players = players;
+    this.duelsToWin = duelsToWin;
+    this.matchRoomID = crypto.randomUUID();
     this.p1Action = null;
     this.p2Action = null;
-    this.matchRoomID = crypto.randomUUID();
-    this.duelsToWin = duelsToWin;
     this.timeOutHandler = null;
   }
 
@@ -35,15 +35,6 @@ export class RpsMatch implements Match {
       (this.p1Action !== null || this.players[0].isBot) &&
       (this.p2Action !== null || this.players[1].isBot)
     );
-  }
-
-  public getMatchWinner() {
-    for (const player of this.players) {
-      if (player.score >= this.duelsToWin) {
-        return player;
-      }
-    }
-    return null;
   }
 
   public updateScores() {
@@ -131,10 +122,31 @@ export class RpsMatch implements Match {
     this.startTimeout(playDuel(tournament, io), tournament.duelTime);
   }
 
+  emitMatchState(): void {
+    // currently not really needed, probs needed for the power version, if we have multiple stages of the game
+    // as the users will need to know what stage it is currently.
+  }
+
   completeDuel(io: Server<Events>, tournament: Tournament) {
     if (this.timeOutHandler) {
       clearTimeout(this.timeOutHandler);
     }
     playDuel(tournament, io)(this);
+  }
+
+  type(): MatchType {
+    return "RPS";
+  }
+
+  getMatchWinner(): Player | null {
+    if (this.players[0].score >= this.duelsToWin) {
+      this.players[1].isEliminated = true;
+      return this.players[0];
+    } else if (this.players[1].score >= this.duelsToWin) {
+      this.players[0].isEliminated = true;
+      return this.players[1];
+    } else {
+      return null;
+    }
   }
 }

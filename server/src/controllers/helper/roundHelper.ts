@@ -27,6 +27,9 @@ export function roundChecker(
   io: Server<Events>,
   match: Match,
 ) {
+  // At least one player has been eliminated when this function is called, therefore we can update the host
+  io.to(tournament.hostUID).emit("TOURNAMENT_STATE", tournament.players, true);
+
   if (tournament.matches.every((e) => e.getMatchWinner() !== null)) {
     setTimeout(() => {
       if (tournament.matches.length === 1) {
@@ -41,7 +44,11 @@ export function roundChecker(
         return;
       }
       roundTerminator(tournament, io);
-      io.to(tournament.hostUID).emit("PLAYERS_UPDATE", tournament.players);
+      io.to(tournament.hostUID).emit(
+        "TOURNAMENT_STATE",
+        tournament.players,
+        true,
+      );
       void roundInitialiser(tournament, io);
     }, ROUND_BUFFER_TIME);
   }

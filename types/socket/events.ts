@@ -11,15 +11,21 @@ import {MatchType} from "./eventArguments";
  * Add any new Event Categories to this
  */
 export interface Events
-    extends HostToClientEvents,
-        PlayerToServerEvents,
-        ServerToHostEvents,
-        ServerToPlayerEvents {
+  extends ServerToClientEvents,
+  PlayerToServerEvents,
+  ServerToHostEvents,
+  ServerToPlayerEvents, HostToServerEvents { }
+
+interface ServerToClientEvents {
+  SESSION_INFO: (sessionID: string, userID: string) => void;
+  TOURNAMENT_COMPLETE: (playerName: string) => void;
 }
 
-interface HostToClientEvents {
-    SESSION_INFO: (sessionID: string, userID: string) => void;
-    TOURNAMENT_COMPLETE: (playerName: string) => void;
+interface HostToServerEvents {
+  SPECTATE_PLAYER: (    hostID : string, tournamentCode: string,
+                        playerUserID: string,) => void;
+  STOP_SPECTATING: (hostID : string, tournamentCode: string,
+                    playerUserID: string,) => void;
 }
 
 interface PlayerToServerEvents {
@@ -49,7 +55,7 @@ interface PlayerToServerEvents {
 }
 
 interface ServerToHostEvents {
-    PLAYERS_UPDATE: (players: PlayerAttributes[]) => void;
+  TOURNAMENT_STATE: (players: PlayerAttributes[], inProgress:boolean) => void;
 }
 
 interface ServerToPlayerEvents {

@@ -19,6 +19,8 @@ import { joinTournamentHandler } from "./controllers/http/joinTournamentHandler"
 import { startTournamentHandler } from "./controllers/http/startTournamentHandler";
 import { pongPaddleMovementSocket } from "./controllers/socket/pongPaddleMovement";
 import { quitTournamentSocket } from "./controllers/socket/quitTournament";
+import { spectateMatchHandler } from "./controllers/http/spectateMatchHandler";
+import { stopSpectatingHandler } from "./controllers/http/stopSpectatingHandler";
 
 const app = express();
 
@@ -60,6 +62,14 @@ app.post("/join-tournament", joinTournamentHandler(io));
 app.post(
   "/start-tournament",
   (req, res) => void startTournamentHandler(req, res, io),
+);
+app.post(
+  "/spectate-match",
+  (req, res) => void spectateMatchHandler(io, req, res),
+);
+app.post(
+  "/stop-spectating",
+  (req, res) => void stopSpectatingHandler(io, req, res),
 );
 
 server.listen(3010, () => {
