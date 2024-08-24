@@ -13,14 +13,15 @@ interface CreateTournamentBody {
 }
 
 export function createTournamentHandler(req: Request, res: Response) {
-  const { userID, duelsToWin, duelTime, matchTime, matchType } =
+  const { userID, duelsToWin, duelTime, roundTime, matchType } =
     req.body as CreateTournamentBody;
 
   if (
     userID === undefined ||
     duelsToWin === undefined ||
     duelTime === undefined ||
-    roundTime === undefined
+    roundTime === undefined ||
+    matchType === undefined
   ) {
     console.log("Invalid Host or Game Data sent");
     res.sendStatus(422);
@@ -34,7 +35,6 @@ export function createTournamentHandler(req: Request, res: Response) {
     Number(duelsToWin),
     Number(duelTime) * 1000,
     Number(roundTime) * 1000,
-    Number(matchTime) * 1000,
     matchType,
   );
 
