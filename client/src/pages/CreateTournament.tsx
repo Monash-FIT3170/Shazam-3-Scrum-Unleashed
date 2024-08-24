@@ -18,9 +18,10 @@ async function postTournament(
   duelsToWin: number,
   duelTime: number,
   roundTime: number,
+  matchType: MatchType[]
 ) {
   try {
-    console.log(JSON.stringify({ userID, duelsToWin, duelTime, roundTime }));
+    console.log(JSON.stringify({ userID, duelsToWin, duelTime, roundTime, matchType }));
     const res = await fetch(
       `${import.meta.env.VITE_API_BASE_URL}/create-tournament`,
       {
@@ -28,7 +29,7 @@ async function postTournament(
           "Content-Type": "application/json",
         },
         method: "POST",
-        body: JSON.stringify({ userID, duelsToWin, duelTime, roundTime }),
+        body: JSON.stringify({ userID, duelsToWin, duelTime, roundTime, matchType }),
       },
     );
     return (await res.json()).body as CreateTournamentRes;
@@ -43,6 +44,8 @@ const CreateTournament = () => {
   const [duelTime, setDuelTime] = useState(defaultDuelTime);
   const [roundTime, setRoundTime] = useState(defaultRoundTime);
   const [inputErrors, setInputError] = useState([false, false, false]);
+  const [matchType, setMatchType] = useState<MatchType[]>(["RPS"]);
+
 
   const changeInputError = (index: number) => (bool: boolean) => {
     const newInputErrors = inputErrors.map((val, i) =>
@@ -50,9 +53,8 @@ const CreateTournament = () => {
     );
     setInputError(newInputErrors);
   };
-
+  
   const [loading, setLoading] = useState(false);
-  const [matchType, setMatchType] = useState<MatchType>("RPS");
   const [tournamentCode, setTournamentCode] = useState("");
 
   useEffect(() => {
@@ -108,7 +110,8 @@ const CreateTournament = () => {
               socket.userID,
               duelsToWin,
               duelTime,
-              roundTime
+              roundTime,
+              matchType
             );
             if (code) {
               setTournamentCode(code.tournamentCode);

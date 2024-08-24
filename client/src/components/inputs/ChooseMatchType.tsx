@@ -8,16 +8,20 @@ import ChooseMashupBlue from "../../assets/gamesetup/ChooseMashupBlue.svg";
 import { MatchType } from "../../../../types/socket/eventArguments.ts";
 
 interface ChooseMatchTypeProps {
-  setMatchType: (matchType: MatchType) => void;
+  setMatchType: (matchType: MatchType[]) => void;
 }
 
 const ChooseMatchType: React.FC<ChooseMatchTypeProps> = ({ setMatchType }) => {
-  const [selectedType, setSelectedType] = useState<MatchType | null>(null);
+    const [selectedType, setSelectedType] = useState<MatchType | null>("RPS");
 
   const handleClick = (type: MatchType) => {
-    setMatchType(type);
+    // Handle the transformation for "MASHUP"
+    if (type === "MASHUP") {
+      setMatchType(["RPS", "PONG"]); // Will it always be this order?
+    } else {
+      setMatchType([type]); // Wrap other types in an array
+    }
     setSelectedType(type);
-    console.log(type);
   };
 
   return (
