@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import WaitingForMatchStart from "../components/player-screen/waiting-screens/WaitingForMatchStart.tsx";
 import { socket } from "../App";
 import { PlayerAttributes } from "../../../types/types.ts";
@@ -29,6 +29,7 @@ const PlayerScreen = () => {
   const [matchType, setMatchType] = useState<MatchType>();
   const [isPlayerOne, setIsPlayerOne] = useState(false);
   const [duelTime, setDuelTime] = useState(0);
+  const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   function setPlayers(players: PlayerAttributes[]) {
     for (let i = 0; i < players.length; i++) {
@@ -55,6 +56,12 @@ const PlayerScreen = () => {
           setOpponent(player);
         }
       }
+    }
+  }
+
+  function stopTimer() {
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
     }
   }
 
@@ -85,26 +92,30 @@ const PlayerScreen = () => {
 
     socket.on("START_ROUND_TIMER", (duelTime) => {
       setDuelTime(duelTime);
-      const timerInterval = setInterval(() => {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+      }
+      timerIntervalRef.current = setInterval(() => {
         setDuelTime((prevTime) => {
           if (prevTime <= 1) {
-            clearInterval(timerInterval);
+            stopTimer();
             return 0;
           }
           return prevTime - 1;
         });
-      }, 1000);
+      }, 1000)
     });
 
     return () => {
       socket.off("MATCH_START");
       socket.off("MATCH_DATA");
-      socket.off("START_ROUND_TIMER");
+      socket.off("START_ROUND_TIMER"); stopTimer();
       socket.off("TOURNAMENT_COMPLETE");
     };
   }, []);
 
   let content = null;
+  let duelTimerDisplay = null;
 
   // FIXME would like to make this simpler
   if (tournamentWinner !== undefined) {
@@ -145,6 +156,9 @@ const PlayerScreen = () => {
             isPlayerOne={isPlayerOne}
           />
         );
+        duelTimerDisplay = (
+        <DuelTimer time={duelTime} />
+        )
         break;
       }
     }
@@ -160,6 +174,9 @@ const PlayerScreen = () => {
       }
       <div className="overflow-hidden h-screen relative">
         <div className="pt-12">
+        <div className="flex flex-col items-left justify-left mt-10">
+          {duelTimerDisplay != null && duelTimerDisplay}
+        </div>
           <div className="flex flex-col items-center justify-center mt-10">
             {userPlayer !== undefined && opponent !== undefined && (
               <PlayerAndSpectatorsInfo
