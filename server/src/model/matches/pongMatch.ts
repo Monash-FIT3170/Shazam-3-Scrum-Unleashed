@@ -13,6 +13,7 @@ const POLL_RATE = 10; // Hz
 const BALL_RADIUS = 2;
 const GAME_WIDTH = 75;
 const GAME_HEIGHT = 100;
+const PADDLE_WIDTH = 20;
 
 export class PongMatch implements Match {
   duelsToWin: number;
@@ -27,14 +28,24 @@ export class PongMatch implements Match {
     this.players = players;
     this.tournament = tournament;
     this.paddleStates = [
-      { x: GAME_WIDTH / 2, y: 5, direction: 0, width: 20 },
-      { x: GAME_WIDTH / 2, y: 95, direction: 0, width: 20 },
+      {
+        x: (GAME_WIDTH - PADDLE_WIDTH) / 2,
+        y: 5,
+        direction: 0,
+        width: PADDLE_WIDTH,
+      },
+      {
+        x: (GAME_WIDTH - PADDLE_WIDTH) / 2,
+        y: 95,
+        direction: 0,
+        width: PADDLE_WIDTH,
+      },
     ];
     this.matchRoomID = crypto.randomUUID();
     this.duelsToWin = duelsToWin;
     this.ballState = {
-      x: 50,
-      y: 50,
+      x: GAME_WIDTH / 2,
+      y: GAME_WIDTH / 2,
       xVelocity: this.randomXVelocity(),
       yVelocity: INITIAL_BALL_Y_SPEED,
     };
