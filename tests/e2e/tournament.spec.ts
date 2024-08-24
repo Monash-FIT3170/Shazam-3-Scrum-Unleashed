@@ -111,7 +111,7 @@ test.describe("Tournament Game Automation", () => {
 
     const existingNames = new Set<string>();
     const joinPromises: Promise<Page>[] = [];
-    const numPlayers = process.env.CI ? 8 : 8;
+    const numPlayers = process.env.CI ? 8 : 10;
     for (let i = 0; i < numPlayers; i++) {
       joinPromises.push(
         joinGame(gameCode as string, browser, existingNames, i + 1),

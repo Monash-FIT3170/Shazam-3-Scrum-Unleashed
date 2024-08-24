@@ -59,19 +59,6 @@ const HostSpectatorScreen = ({
     }
   }
 
-  //
-  // function setPlayers(players: PlayerAttributes[]) {
-  //   for (let i = 0; i < players.length; i++) {
-  //     const player = players[i];
-  //     if (player.userID === spectatingUserID) {
-  //       setUserPlayer(player);
-  //       setIsPlayerOne(i + 1 === 1);
-  //     } else {
-  //       setOpponent(player);
-  //     }
-  //   }
-  // }
-
   useEffect(() => {
     console.log(matchData);
     console.log(socket.userID);
