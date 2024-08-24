@@ -103,13 +103,14 @@ const PlayerScreen = () => {
           }
           return prevTime - 1000;
         });
-      }, 1000)
+      }, 1000);
     });
 
     return () => {
       socket.off("MATCH_START");
       socket.off("MATCH_DATA");
-      socket.off("START_ROUND_TIMER"); stopTimer();
+      socket.off("START_ROUND_TIMER");
+      stopTimer();
       socket.off("TOURNAMENT_COMPLETE");
     };
   }, []);
@@ -156,9 +157,7 @@ const PlayerScreen = () => {
             isPlayerOne={isPlayerOne}
           />
         );
-        duelTimerDisplay = (
-        <DuelTimer time={duelTime / 1000} />
-        )
+        duelTimerDisplay = <DuelTimer time={duelTime / 1000} />;
         break;
       }
     }
@@ -174,11 +173,11 @@ const PlayerScreen = () => {
       }
       <div className="overflow-hidden h-screen relative">
         <div className="pt-12">
-        <div className="flex flex-col items-center justify-center h-full">
-          <div className="flex items-center justify-start w-full">
-            {duelTimerDisplay != null && duelTimerDisplay}
+          <div className="flex flex-col items-center justify-center h-full">
+            <div className="flex items-center justify-start w-full">
+              {duelTimerDisplay != null && duelTimerDisplay}
+            </div>
           </div>
-        </div>
           <div className="flex flex-col items-center justify-center mt-10">
             {userPlayer !== undefined && opponent !== undefined && (
               <PlayerAndSpectatorsInfo
