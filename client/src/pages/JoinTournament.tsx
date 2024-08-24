@@ -9,6 +9,7 @@ import FormButton from "../components/buttons/FormButton.tsx";
 import { JoinTournamentRes } from "../../../types/requestTypes.ts";
 import { JoinError } from "../../../types/socket/eventArguments.ts";
 import ButtonComponent from "../components/buttons/BorderedButtonComponent.tsx";
+import ErrorBanner from "../components/ErrorBanner.tsx";
 
 async function postJoinTournament(
   userID: string,
@@ -43,11 +44,13 @@ const JoinTournament = () => {
   const changeTournamentCode = (code: string) => {
     if (/^\d*$/.test(code) && code.length <= 6) {
       setTournamentCode(code);
+      setStatus(undefined);
     }
   };
 
   const changePlayerName = (name: string) => {
     setPlayerName(name);
+    setStatus(undefined);
   };
 
   const tournamentCodeValidation = () => {
@@ -77,6 +80,7 @@ const JoinTournament = () => {
     );
 
     setStatus(status);
+    console.log(status);
     setLoading(false);
   };
 
@@ -115,11 +119,18 @@ const JoinTournament = () => {
 
         <FormButton
           text={"Join Game"}
-          status={status ?? "OK"}
           loading={loading}
           callback={joinTournament}
         />
       </div>
+      {!status || status === "OK" ? null : (
+        <ErrorBanner
+            message={status}
+            removeError={() => {
+              setStatus(undefined);
+            }}
+        />
+    )}
     </div>
   );
 };
