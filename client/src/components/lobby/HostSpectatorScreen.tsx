@@ -155,6 +155,7 @@ const HostSpectatorScreen = ({
               <PlayerAndSpectatorsInfo
                 userPlayer={userPlayer}
                 opponent={opponent}
+                isSpectator={true}
               />
               // TODO probably only want to display during a match and not after a match
             )}

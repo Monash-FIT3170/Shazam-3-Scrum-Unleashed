@@ -165,7 +165,7 @@ const PlayerScreen = () => {
       />
       <div
         className={`overflow-hidden h-screen relative ${
-          isSpectator ? "border-4 border-green-500" : ""
+          isSpectator ? "border-8 border-spectator-bg" : ""
         }`}
       >
         <div className="pt-12">
@@ -174,6 +174,7 @@ const PlayerScreen = () => {
               <PlayerAndSpectatorsInfo
                 userPlayer={userPlayer}
                 opponent={opponent}
+                isSpectator={isSpectator}
               />
             )}
             {content}
