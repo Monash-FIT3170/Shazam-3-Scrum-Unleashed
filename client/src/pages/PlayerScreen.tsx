@@ -174,8 +174,10 @@ const PlayerScreen = () => {
       }
       <div className="overflow-hidden h-screen relative">
         <div className="pt-12">
-        <div className="flex flex-col items-left justify-left mt-10">
-          {duelTimerDisplay != null && duelTimerDisplay}
+        <div className="flex flex-col items-center justify-center h-full">
+          <div className="flex items-center justify-start w-full">
+            {duelTimerDisplay != null && duelTimerDisplay}
+          </div>
         </div>
           <div className="flex flex-col items-center justify-center mt-10">
             {userPlayer !== undefined && opponent !== undefined && (
