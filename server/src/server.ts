@@ -33,6 +33,9 @@ const io = new Server<Events>(server, {
     origin: "*",
     methods: ["GET", "POST"],
   },
+  connectionStateRecovery: {
+    maxDisconnectionDuration: 2 * 60 * 1000,
+  },
 });
 
 io.use((socket, next) => {
