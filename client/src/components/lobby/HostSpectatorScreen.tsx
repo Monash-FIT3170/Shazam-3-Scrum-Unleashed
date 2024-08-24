@@ -60,9 +60,6 @@ const HostSpectatorScreen = ({
   }
 
   useEffect(() => {
-    console.log(matchData);
-    console.log(socket.userID);
-
     setPlayers(matchData.players);
     setMatchType(matchData.matchType);
     setMatchWinnerID(matchWinnerID);
@@ -70,13 +67,11 @@ const HostSpectatorScreen = ({
 
   useEffect(() => {
     socket.on("MATCH_START", (players, matchType) => {
-      console.log(players);
       setPlayers(players);
       setMatchType(matchType);
     });
 
     socket.on("MATCH_DATA", (players, winnerUserID) => {
-      console.log(players);
       setMatchWinnerID(winnerUserID);
       setPlayers(players);
     });

@@ -17,7 +17,6 @@ const RPS = ({ tournamentCode, player, opponent, isPlayerOne }: RPSProps) => {
 
   useEffect(() => {
     socket.on("MATCH_RPS_DUEL_STATE", (p1Action, p2Action) => {
-      console.log(p1Action, p2Action);
       setUserAction(isPlayerOne ? p1Action : p2Action);
       setOpponentAction(isPlayerOne ? p2Action : p1Action);
     });

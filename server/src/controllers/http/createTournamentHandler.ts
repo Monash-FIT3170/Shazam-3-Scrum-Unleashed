@@ -14,7 +14,6 @@ export function createTournamentHandler(req: Request, res: Response) {
   const { userID, duelsToWin, duelTime, roundTime } =
     req.body as CreateTournamentBody;
 
-  console.log(req.body);
   if (
     userID === undefined ||
     duelsToWin === undefined ||

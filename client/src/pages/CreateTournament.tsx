@@ -19,7 +19,6 @@ async function postTournament(
   roundTime: number,
 ) {
   try {
-    console.log(JSON.stringify({ userID, duelsToWin, duelTime, roundTime }));
     const res = await fetch(
       `${import.meta.env.VITE_API_BASE_URL}/create-tournament`,
       {

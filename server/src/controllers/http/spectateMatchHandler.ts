@@ -23,7 +23,6 @@ export const spectateMatchHandler = async (
     tournamentCode === undefined ||
     playerUserID === undefined
   ) {
-    console.log("hello");
     res.sendStatus(400);
     return;
   }
