@@ -119,6 +119,7 @@ const PlayerScreen = () => {
         player={userPlayer}
         opponent={opponent}
         isWin={matchWinnerID === userPlayer.userID}
+        isSpectator={isSpectator}
       />
     );
     setTimeout(() => {
@@ -142,6 +143,7 @@ const PlayerScreen = () => {
             player={userPlayer}
             opponent={opponent}
             isPlayerOne={isPlayerOne}
+            isSpectator={isSpectator}
           />
         );
         break;
@@ -161,7 +163,11 @@ const PlayerScreen = () => {
         gameCode={tournamentCode}
         spectatingID={isSpectator ? userPlayer!.userID : null}
       />
-      <div className="overflow-hidden h-screen relative">
+      <div
+        className={`overflow-hidden h-screen relative ${
+          isSpectator ? "border-4 border-green-500" : ""
+        }`}
+      >
         <div className="pt-12">
           <div className="flex flex-col items-center justify-center mt-10">
             {userPlayer !== undefined && opponent !== undefined && (

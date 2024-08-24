@@ -104,6 +104,7 @@ const HostSpectatorScreen = ({
         player={userPlayer}
         opponent={opponent}
         isWin={matchWinnerID === userPlayer.userID}
+        isSpectator={true}
       />
     );
     setTimeout(() => {
@@ -125,6 +126,7 @@ const HostSpectatorScreen = ({
             player={userPlayer}
             opponent={opponent}
             isPlayerOne={isPlayerOne}
+            isSpectator={true}
           />
         );
         break;
