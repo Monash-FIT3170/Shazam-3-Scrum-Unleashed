@@ -6,6 +6,7 @@ import { socket } from "../App.tsx";
 import CreateTournamentInput from "../components/inputs/CreateTournamentInput";
 import { CreateTournamentRes } from "../../../types/requestTypes.ts";
 import Line2 from "../assets/gamesetup/Line.svg";
+import Lightning from "../assets/logo/Lightning.svg"
 import ChooseMatchType from "../components/inputs/ChooseMatchType.tsx";
 import { MatchType } from "../../../types/socket/eventArguments.ts";
 
@@ -69,19 +70,21 @@ const CreateTournament = () => {
 
   return (
     <div className="relative h-screen overflow-hidden">
-      <div className="absolute top-0 w-full text-center">
-        <div className="uppercase text-white text-6xl font-bold w-full pt-5">
+      <div className="absolute top-0 w-full text-center my-3">
+        <div className="uppercase text-white text-6xl w-full justify-center items-top font-bold pt-5 flex">
+          <img src={Lightning} className="w-10"></img>
           GAME SETUP
+          <img src={Lightning} className="w-10"></img>
         </div>
         <div className="flex justify-center mt-4">
           <img src={Line2} alt="Line Decoration" className="w-1/3" />
         </div>
       </div>
-      <div className="pt-32 flex justify-center">
+      <div className="pt-36 flex justify-center">
         <ChooseMatchType setMatchType={setMatchType} />
       </div>
-      <div className="flex justify-center mt-10 md:mt-16 lg:mt-16">
-        <div className="w-11/12 md:w-3/4 flex flex-col gap-5">
+      <div className="flex justify-center mt-10 md:mt-16 lg:mt-16 w-full">
+        <div className="w-full md:w-3/4 lg:ml-96 flex flex-col gap-4">
           <CreateTournamentInput
             inputText={"duels per match"}
             placeholder={duelsToWin}
