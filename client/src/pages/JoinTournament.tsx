@@ -34,7 +34,6 @@ async function postJoinTournament(
 const JoinTournament = () => {
   const urlTournamentCode = useLoaderData() as string;
   const navigate = useNavigate();
-
   const [tournamentCode, setTournamentCode] = useState(urlTournamentCode);
   const [playerName, setPlayerName] = useState("");
   const [status, setStatus] = useState<string | "OK">();
@@ -79,7 +78,6 @@ const JoinTournament = () => {
     );
 
     setStatus(status);
-    console.log(status);
     setLoading(false);
   };
 

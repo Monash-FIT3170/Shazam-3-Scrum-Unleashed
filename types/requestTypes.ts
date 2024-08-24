@@ -1,7 +1,7 @@
 export interface CreateTournamentRes {
-    tournamentCode:string;
+    tournamentCode: string;
 }
 
 export interface JoinTournamentRes {
-    message:string|"OK";
+    message: string | "OK";
 }
