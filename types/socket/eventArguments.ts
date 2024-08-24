@@ -8,4 +8,4 @@ export type JoinError =
 
 
 
-export type MatchType = "PONG" | "RPS";
+export type MatchType = "PONG" | "RPS" | "MASHUP";
