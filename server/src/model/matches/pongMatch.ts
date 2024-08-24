@@ -14,6 +14,7 @@ const BALL_RADIUS = 2;
 const GAME_WIDTH = 75;
 const GAME_HEIGHT = 100;
 const PADDLE_WIDTH = 20;
+const PADDLE_HITBOX_INCREASE = 1.1;
 
 export class PongMatch implements Match {
   duelsToWin: number;
@@ -115,8 +116,9 @@ export class PongMatch implements Match {
     let paddleCollision = false;
     if (newBallY - BALL_RADIUS <= this.paddleStates[0].y) {
       if (
-        newBallX >= paddle0 &&
-        newBallX <= paddle0 + this.paddleStates[0].width
+        newBallX >= paddle0 * PADDLE_HITBOX_INCREASE &&
+        newBallX <=
+          paddle0 * PADDLE_HITBOX_INCREASE + this.paddleStates[0].width
       ) {
         this.ballPaddleCollision(paddle0, this.paddleStates[0].width, newBallX);
         newBallY = this.paddleStates[0].y + BALL_RADIUS;
@@ -126,8 +128,9 @@ export class PongMatch implements Match {
 
     if (newBallY + BALL_RADIUS >= this.paddleStates[1].y) {
       if (
-        newBallX >= paddle1 &&
-        newBallX <= paddle1 + this.paddleStates[1].width
+        newBallX >= paddle1 * PADDLE_HITBOX_INCREASE &&
+        newBallX <=
+          paddle1 * PADDLE_HITBOX_INCREASE + this.paddleStates[1].width
       ) {
         this.ballPaddleCollision(paddle1, this.paddleStates[1].width, newBallX);
         newBallY = this.paddleStates[1].y - BALL_RADIUS;
