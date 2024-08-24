@@ -2,16 +2,18 @@ import { Request, Response } from "express";
 import Tournament from "../../model/tournament";
 import { tournamentMap } from "../../store";
 import { CreateTournamentRes } from "../../../../types/requestTypes";
+import { MatchType } from "../../../../types/socket/eventArguments";
 
 interface CreateTournamentBody {
   userID: string;
   duelsToWin: number;
   duelTime: number;
   matchTime: number;
+  matchType: MatchType[];
 }
 
 export function createTournamentHandler(req: Request, res: Response) {
-  const { userID, duelsToWin, duelTime, matchTime } =
+  const { userID, duelsToWin, duelTime, matchTime, matchType } =
     req.body as CreateTournamentBody;
   console.log(`Host ${userID} is creating a game`);
 
@@ -26,8 +28,7 @@ export function createTournamentHandler(req: Request, res: Response) {
     Number(duelsToWin),
     Number(duelTime) * 1000,
     Number(matchTime) * 1000,
-    // ["RPS", "PONG"] // TODO make it so the client can send data, which decides this
-    ["PONG"],
+    matchType,
   );
 
   let tournamentCode;
