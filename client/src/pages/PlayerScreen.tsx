@@ -101,7 +101,7 @@ const PlayerScreen = () => {
             stopTimer();
             return 0;
           }
-          return prevTime - 1;
+          return prevTime - 1000;
         });
       }, 1000)
     });
@@ -157,7 +157,7 @@ const PlayerScreen = () => {
           />
         );
         duelTimerDisplay = (
-        <DuelTimer time={duelTime} />
+        <DuelTimer time={duelTime / 1000} />
         )
         break;
       }
