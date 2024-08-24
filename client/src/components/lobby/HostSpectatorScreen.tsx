@@ -14,18 +14,17 @@ import { SpectateMatchRes } from "../../../../types/requestTypes.ts";
 interface PlayerScreenProps {
   matchData: SpectateMatchRes;
   tournamentCode: string;
-  targetUserID: string;
-  stopSpectating: () => void;
+  stopSpectating: (spectatingUserID: string) => void;
 }
 
 const HostSpectatorScreen = ({
   matchData,
   tournamentCode,
-  targetUserID,
   stopSpectating,
 }: PlayerScreenProps) => {
   const MATCH_COMPLETION_TIME = 4000;
   const [playerName] = useState("HOST");
+
   const [userPlayer, setUserPlayer] = useState<PlayerAttributes>(); // spectating player
   const [opponent, setOpponent] = useState<PlayerAttributes>();
   const [matchWinnerID, setMatchWinnerID] = useState<string>();
@@ -36,16 +35,47 @@ const HostSpectatorScreen = ({
   function setPlayers(players: PlayerAttributes[]) {
     for (let i = 0; i < players.length; i++) {
       const player = players[i];
-      if (player.userID === targetUserID) {
-        setUserPlayer(player);
+      if (player.userID === socket.userID) {
         setIsPlayerOne(i + 1 === 1);
-      } else {
-        setOpponent(player);
+      }
+
+      let canSetPlayer = true;
+      for (const spectatingID of player.spectatorIDs) {
+        if (socket.userID === spectatingID) {
+          setIsPlayerOne(i + 1 === 1);
+          setUserPlayer(player);
+          canSetPlayer = false;
+          break;
+        }
+      }
+
+      if (canSetPlayer) {
+        if (player.userID === socket.userID) {
+          setUserPlayer(player);
+        } else {
+          setOpponent(player);
+        }
       }
     }
   }
 
+  //
+  // function setPlayers(players: PlayerAttributes[]) {
+  //   for (let i = 0; i < players.length; i++) {
+  //     const player = players[i];
+  //     if (player.userID === spectatingUserID) {
+  //       setUserPlayer(player);
+  //       setIsPlayerOne(i + 1 === 1);
+  //     } else {
+  //       setOpponent(player);
+  //     }
+  //   }
+  // }
+
   useEffect(() => {
+    console.log(matchData);
+    console.log(socket.userID);
+
     setPlayers(matchData.players);
     setMatchType(matchData.matchType);
     setMatchWinnerID(matchWinnerID);
@@ -53,11 +83,13 @@ const HostSpectatorScreen = ({
 
   useEffect(() => {
     socket.on("MATCH_START", (players, matchType) => {
+      console.log(players);
       setPlayers(players);
       setMatchType(matchType);
     });
 
     socket.on("MATCH_DATA", (players, winnerUserID) => {
+      console.log(players);
       setMatchWinnerID(winnerUserID);
       setPlayers(players);
     });
@@ -123,13 +155,13 @@ const HostSpectatorScreen = ({
       {
         <ReactionOverlay
           gameCode={tournamentCode}
-          spectatingID={targetUserID}
+          spectatingID={userPlayer !== undefined ? userPlayer!.userID : null}
         />
       }
       <div className="overflow-hidden h-screen relative">
         <button
           className={`h-12 text-white fixed top-5 left-5 bg-primary text-2xl font-bold w-1/6 rounded-xl z-50`}
-          onClick={stopSpectating}
+          onClick={() => stopSpectating(userPlayer!.userID)}
         >
           RETURN
         </button>

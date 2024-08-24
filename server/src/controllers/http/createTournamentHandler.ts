@@ -34,7 +34,7 @@ export function createTournamentHandler(req: Request, res: Response) {
     Number(duelTime) * 1000,
     Number(roundTime) * 1000,
     // ["RPS", "PONG"] // TODO make it so the client can send data, which decides this
-    ["RPS", "PONG"],
+    ["RPS"],
   );
 
   let tournamentCode;

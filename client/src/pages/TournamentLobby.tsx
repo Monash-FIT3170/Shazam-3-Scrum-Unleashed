@@ -83,9 +83,7 @@ const TournamentLobby = () => {
   const [tournamentWinner, setTournamentWinner] = useState<string | undefined>(
     undefined,
   );
-  const [spectatingUserID, setSpectatingUserID] = useState<string | undefined>(
-    undefined,
-  );
+  const [isSpectating, setIsSpectating] = useState<boolean>(false);
   const [matchData, setMatchData] = useState<SpectateMatchRes | undefined>(
     undefined,
   );
@@ -121,22 +119,17 @@ const TournamentLobby = () => {
       player.userID,
     );
     if (spectateMatchRes) {
-      setSpectatingUserID(player.userID);
+      setIsSpectating(true);
       setMatchData(spectateMatchRes);
     }
   };
 
-  const stopSpectating = async () => {
-    console.log(spectatingUserID);
+  const stopSpectating = async (specUserID: string) => {
     if (
-      spectatingUserID !== undefined &&
-      (await postStopSpectating(
-        socket.userID,
-        tournamentCode,
-        spectatingUserID,
-      ))
+      isSpectating &&
+      (await postStopSpectating(socket.userID, tournamentCode, specUserID))
     ) {
-      setSpectatingUserID(undefined);
+      setIsSpectating(false);
     }
   };
 
@@ -156,12 +149,11 @@ const TournamentLobby = () => {
     };
   }, []);
 
-  return spectatingUserID !== undefined && matchData !== undefined ? (
+  return isSpectating && matchData !== undefined ? (
     <div>
       <HostSpectatorScreen
         matchData={matchData}
         tournamentCode={tournamentCode}
-        targetUserID={spectatingUserID}
         stopSpectating={stopSpectating}
       />
     </div>
