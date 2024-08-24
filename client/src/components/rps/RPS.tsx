@@ -9,10 +9,16 @@ type RPSProps = {
   player: PlayerAttributes;
   opponent: PlayerAttributes;
   isPlayerOne: boolean;
-  isSpectator: boolean; 
+  isSpectator: boolean;
 };
 
-const RPS = ({ tournamentCode, player, opponent, isPlayerOne, isSpectator }: RPSProps) => {
+const RPS = ({
+  tournamentCode,
+  player,
+  opponent,
+  isPlayerOne,
+  isSpectator,
+}: RPSProps) => {
   const [userAction, setUserAction] = useState<Action>();
   const [opponentAction, setOpponentAction] = useState<Action>();
 
