@@ -9,7 +9,7 @@ import { MatchType } from "../../../../types/socket/eventArguments";
 import * as crypto from "node:crypto";
 
 const INITIAL_BALL_Y_SPEED = 50;
-const POLL_RATE = 10; // Hz
+const POLL_RATE = 3; // Hz
 const BALL_RADIUS = 2;
 const GAME_WIDTH = 75;
 const GAME_HEIGHT = 100;
@@ -97,15 +97,9 @@ export class PongMatch implements Match {
   }
 
   tick(io: Server<Events>): void {
-    let emitData = false;
-
     // Calculating the new ball and paddle coordinates
     let newBallX = this.ballState.x + this.ballState.xVelocity / POLL_RATE;
     let newBallY = this.ballState.y + this.ballState.yVelocity / POLL_RATE;
-
-    if (this.paddleStates[0].direction || this.paddleStates[1].direction) {
-      emitData = true;
-    }
 
     let paddle0 =
       this.paddleStates[0].x +
@@ -127,7 +121,6 @@ export class PongMatch implements Match {
         this.ballPaddleCollision(paddle0, this.paddleStates[0].width, newBallX);
         newBallY = this.paddleStates[0].y + BALL_RADIUS;
         paddleCollision = true;
-        emitData = true;
       }
     }
 
@@ -139,7 +132,6 @@ export class PongMatch implements Match {
         this.ballPaddleCollision(paddle1, this.paddleStates[1].width, newBallX);
         newBallY = this.paddleStates[1].y - BALL_RADIUS;
         paddleCollision = true;
-        emitData = true;
       }
     }
 
@@ -160,11 +152,9 @@ export class PongMatch implements Match {
     if (newBallX + BALL_RADIUS >= GAME_WIDTH) {
       newBallX = GAME_WIDTH - BALL_RADIUS;
       this.ballState.xVelocity = -this.ballState.xVelocity;
-      emitData = true;
     } else if (newBallX - BALL_RADIUS <= 0) {
       newBallX = BALL_RADIUS;
       this.ballState.xVelocity = -this.ballState.xVelocity;
-      emitData = true;
     }
 
     // Score (can only happen when paddle did not collide)
@@ -182,7 +172,6 @@ export class PongMatch implements Match {
           this.players,
           winner?.userID,
         );
-        emitData = true;
       }
       if (newBallY <= 0) {
         newBallY = GAME_HEIGHT / 2;
@@ -196,7 +185,6 @@ export class PongMatch implements Match {
           this.players,
           winner?.userID,
         );
-        emitData = true;
       }
     }
 
@@ -208,9 +196,7 @@ export class PongMatch implements Match {
     this.ballState.x = newBallX;
     this.ballState.y = newBallY;
 
-    if (emitData) {
-      this.emitMatchState(io);
-    }
+    this.emitMatchState(io);
 
     if (winner != null) {
       roundChecker(this.tournament, io, this);
