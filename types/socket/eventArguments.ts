@@ -1,1 +1,1 @@
-export type MatchType = "PONG" | "RPS";
+export type MatchType = "PONG" | "RPS" | "MASHUP";

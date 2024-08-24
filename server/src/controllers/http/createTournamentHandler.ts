@@ -2,16 +2,18 @@ import { Request, Response } from "express";
 import Tournament from "../../model/tournament";
 import { tournamentMap } from "../../store";
 import { CreateTournamentRes } from "../../../../types/requestTypes";
+import { MatchType } from "../../../../types/socket/eventArguments";
 
 interface CreateTournamentBody {
   userID: string | undefined;
   duelsToWin: number | undefined;
   duelTime: number | undefined;
   roundTime: number | undefined;
+  matchType: MatchType[] | undefined;
 }
 
 export function createTournamentHandler(req: Request, res: Response) {
-  const { userID, duelsToWin, duelTime, roundTime } =
+  const { userID, duelsToWin, duelTime, matchTime, matchType } =
     req.body as CreateTournamentBody;
 
   if (
@@ -22,7 +24,7 @@ export function createTournamentHandler(req: Request, res: Response) {
   ) {
     console.log("Invalid Host or Game Data sent");
     res.sendStatus(422);
-    return; //
+    return;
   }
 
   console.log(`Host ${userID} is creating a game`);
@@ -32,8 +34,8 @@ export function createTournamentHandler(req: Request, res: Response) {
     Number(duelsToWin),
     Number(duelTime) * 1000,
     Number(roundTime) * 1000,
-    // ["RPS", "PONG"] // TODO make it so the client can send data, which decides this
-    ["RPS"],
+    Number(matchTime) * 1000,
+    matchType,
   );
 
   let tournamentCode;
