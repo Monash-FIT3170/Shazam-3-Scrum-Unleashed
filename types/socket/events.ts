@@ -29,29 +29,29 @@ interface HostToServerEvents {
 }
 
 interface PlayerToServerEvents {
-  RPS_CHOOSE_ACTION: (
-    tournamentCode: string,
-    playerUserID: string,
-    action: Action
-  ) => void;
+    RPS_CHOOSE_ACTION: (
+        tournamentCode: string,
+        playerUserID: string,
+        action: Action
+    ) => void;
 
-  ADD_REACTION: (
-    tournamentCode: string,
-    reaction: ReactionData,
-    spectatorID: string
-  ) => void;
+    ADD_REACTION: (
+        tournamentCode: string,
+        reaction: ReactionData,
+        spectatorID: string
+    ) => void;
 
-  QUIT_TOURNAMENT: (
-    tournamentCode: string,
-    hostID: string
-  ) => void;
+    QUIT_TOURNAMENT: (
+        tournamentCode: string,
+        hostID: string
+    ) => void;
 
-  PONG_PADDLE_MOVEMENT: (
-    tournamentCode: string,
-    playerID: string,
-    start: boolean,
-    left: boolean
-  ) => void;
+    PONG_PADDLE_MOVEMENT: (
+        tournamentCode: string,
+        playerID: string,
+        start: boolean,
+        left: boolean
+    ) => void;
 }
 
 interface ServerToHostEvents {
@@ -60,25 +60,25 @@ interface ServerToHostEvents {
 
 interface ServerToPlayerEvents {
 
-  MATCH_START : (
-      players: PlayerAttributes[],
-      matchType:MatchType
-  )=>void;
+    MATCH_START: (
+        players: PlayerAttributes[],
+        matchType: MatchType
+    ) => void;
 
-  MATCH_DATA : (
-    players : PlayerAttributes[],
-    winnerUserID: string | undefined
-  ) => void;
+    MATCH_DATA: (
+        players: PlayerAttributes[],
+        winnerUserID: string | undefined
+    ) => void;
 
-  MATCH_RPS_DUEL_STATE : (
-      p1Action: Action,
-      p2Action: Action
-  )=> void;
+    MATCH_RPS_DUEL_STATE: (
+        p1Action: Action,
+        p2Action: Action
+    ) => void;
 
-  MATCH_PONG_STATE: (
-    ballState: PongBallState,
-    paddleStates: PongPaddleState[],
-  ) => void;
+    MATCH_PONG_STATE: (
+        ballState: PongBallState,
+        paddleStates: PongPaddleState[],
+    ) => void;
 
-  REACTION_ADDED: (reaction: ReactionData) => void;
+    REACTION_ADDED: (reaction: ReactionData) => void;
 }

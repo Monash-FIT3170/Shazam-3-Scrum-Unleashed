@@ -40,7 +40,7 @@ export const joinTournamentHandler =
       console.error(
         `Player : ${userID} has already connected to Tournament : ${tournamentCode}`,
       );
-      res.status(422).json({ body: { message: "Socket Already Connected" } });
+      res.status(422).json({ body: { message: "Browser Already In Use" } });
       return;
     }
 
@@ -51,7 +51,7 @@ export const joinTournamentHandler =
     }
 
     if (!tournament.isPlayerNameFree(playerName)) {
-      console.log(`Player : ${playerName} is already taken`);
+      console.error(`Player : ${playerName} is already taken`);
       res.status(422).json({ body: { message: "Player Name Taken" } });
       return;
     }
