@@ -90,7 +90,7 @@ const PlayerScreen = () => {
       setTournamentWinner(playerName);
     });
 
-    socket.on("START_ROUND_TIMER", (duelTime) => {
+    socket.on("START_DUEL_TIMER", (duelTime) => {
       setDuelTime(duelTime);
       if (timerIntervalRef.current) {
         clearInterval(timerIntervalRef.current);
@@ -109,7 +109,7 @@ const PlayerScreen = () => {
     return () => {
       socket.off("MATCH_START");
       socket.off("MATCH_DATA");
-      socket.off("START_ROUND_TIMER");
+      socket.off("START_DUEL_TIMER");
       stopTimer();
       socket.off("TOURNAMENT_COMPLETE");
     };

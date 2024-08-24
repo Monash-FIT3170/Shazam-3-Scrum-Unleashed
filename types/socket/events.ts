@@ -80,7 +80,7 @@ interface ServerToPlayerEvents {
         paddleStates: PongPaddleState[],
     ) => void;
 
-  START_ROUND_TIMER : (
+  START_DUEL_TIMER : (
     time: number
     ) => void;
 
