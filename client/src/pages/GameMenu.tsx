@@ -6,6 +6,9 @@ import LogoForMenu from "../assets/logo/LogoForMenu.svg";
 const GameMenu = () => {
   return (
     <div className="px-8">
+      <div className="mt-20">
+        <BorderedButtonComponent linkPath="/" text={"BACK"}/>
+      </div>
       <div className="flex justify-center mt-28 space-x-20">
         <LargeButton linkPath="/create-tournament" image={RockPaperPong} />
         <LargeButton linkPath="/create-tournament" image={LogoForMenu} />
