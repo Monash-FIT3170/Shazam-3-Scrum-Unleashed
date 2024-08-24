@@ -1,10 +1,10 @@
 import React from "react";
-import { Action } from "../../../../../types/types.ts";
+import { Selection } from "../../../../../types/types.ts";
 
 interface MoveSelectionProps {
   img: string;
-  selection: Action;
-  onSelectMove: (move: Action) => void;
+  selection: Selection;
+  onSelectMove: (move: Selection) => void;
 }
 
 const MoveSelection: React.FC<MoveSelectionProps> = ({
