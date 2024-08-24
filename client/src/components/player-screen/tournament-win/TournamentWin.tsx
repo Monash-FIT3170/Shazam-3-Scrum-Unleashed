@@ -40,7 +40,7 @@ const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
           className="md:w-60 hidden  md:visible"
         />
       </div>
-      <div className="absolute inset-x-0 bottom-10">
+      <div className="absolute inset-x-0 bottom-10 z-60">
         <button
           className="text-white bg-primary text-3xl w-80 md:w-96 lg:w-122 font-bold rounded-xl h-full border-white"
           onClick={() => navigate("/")}
