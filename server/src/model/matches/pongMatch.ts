@@ -54,7 +54,12 @@ export class PongMatch implements Match {
   }
 
   startMatch(io: Server<Events>): void {
-    io.to(this.matchRoomID).emit("MATCH_START", this.players, "PONG");
+    io.to(this.matchRoomID).emit(
+      "MATCH_START",
+      this.players,
+      "PONG",
+      this.tournament.duelTime / 1000,
+    );
 
     setTimeout(() => {
       this.emitMatchState(io);
