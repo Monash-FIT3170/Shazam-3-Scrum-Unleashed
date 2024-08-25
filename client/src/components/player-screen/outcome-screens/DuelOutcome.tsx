@@ -8,7 +8,6 @@ interface PlayerProps {
   opponent: PlayerAttributes;
   userAction: Action;
   opponentAction: Action;
-  isSpectator: boolean;
 }
 
 const rulesMap: Map<Action, Action> = new Map<Action, Action>([
@@ -23,7 +22,6 @@ const DuelOutcome = ({
   opponent,
   userAction,
   opponentAction,
-  isSpectator,
 }: PlayerProps) => {
   let duelResult: DuelResult = "DRAW";
   let userPlayerHandType: HandImgType = "FILLED";
@@ -55,8 +53,6 @@ const DuelOutcome = ({
           duelResult={duelResult}
           score1={userPlayer.score}
           score2={opponent.score}
-          playerName={userPlayer.name}
-          isSpectator={isSpectator}
         />
       </div>
     </div>

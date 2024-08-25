@@ -80,5 +80,9 @@ interface ServerToPlayerEvents {
         paddleStates: PongPaddleState[],
     ) => void;
 
-    REACTION_ADDED: (reaction: ReactionData) => void;
+  START_DUEL_TIMER : (
+    time: number
+    ) => void;
+
+  REACTION_ADDED: (reaction: ReactionData) => void;
 }

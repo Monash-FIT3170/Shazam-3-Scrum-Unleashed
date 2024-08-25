@@ -6,14 +6,12 @@ type MatchOutcomeScreenProps = {
   player: PlayerAttributes;
   opponent: PlayerAttributes;
   isWin: boolean;
-  isSpectator: boolean;
 };
 
 const MatchOutcomeScreen = ({
   player,
   opponent,
   isWin,
-  isSpectator,
 }: MatchOutcomeScreenProps) => {
   return (
     <div>
@@ -30,15 +28,7 @@ const MatchOutcomeScreen = ({
       </div>
 
       <div className="text-white font-bold text-6xl fixed top-[39%] mx-auto max-w-max inset-x-0">
-        <h1>
-          {isSpectator
-            ? isWin
-              ? `${player.name} WON!`
-              : `${player.name} LOST!`
-            : isWin
-              ? "YOU WON!"
-              : "YOU LOST!"}
-        </h1>
+        <h1>{isWin ? "YOU WON!" : "YOU LOST!"}</h1>
       </div>
       <div className="text-white font-bold text-6xl fixed top-[51%] mx-auto max-w-max inset-x-0">
         <h1>
@@ -54,12 +44,11 @@ const MatchOutcomeScreen = ({
         {isWin ? (
           <p>
             <span className="text-[#FFC700]">{opponent.name}</span> AND THEIR
-            FOLLOWERS WILL NOW FOLLOW {isSpectator ? `${player.name}!` : "YOU!"}
+            FOLLOWERS WILL NOW FOLLOW YOU!
           </p>
         ) : (
           <p>
-            {isSpectator ? `${player.name}` : "YOU"} AND{" "}
-            {isSpectator ? "THEIR" : "YOUR"} FOLLOWERS WILL NOW FOLLOW{" "}
+            YOU AND YOUR FOLLOWERS WILL NOW FOLLOW{" "}
             <span className="text-[#FFC700]">{opponent.name}</span>!
           </p>
         )}

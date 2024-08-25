@@ -25,6 +25,7 @@ export const playDuel =
     );
 
     if (matchWinnerUserID === undefined) {
+      io.to(match.matchRoomID).emit("START_DUEL_TIMER", tournament.duelTime);
       match.startTimeout(playDuel(tournament, io), tournament.duelTime);
       return;
     }
