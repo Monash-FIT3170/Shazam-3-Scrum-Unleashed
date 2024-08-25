@@ -6,7 +6,7 @@ import { socket } from "../App.tsx";
 import CreateTournamentInput from "../components/inputs/CreateTournamentInput";
 import { CreateTournamentRes } from "../../../types/requestTypes.ts";
 import Line2 from "../assets/gamesetup/Line.svg";
-import Lightning from "../assets/logo/Lightning.svg"
+import Lightning from "../assets/logo/Lightning.svg";
 import ChooseMatchType from "../components/inputs/ChooseMatchType.tsx";
 import { MatchType } from "../../../types/socket/eventArguments.ts";
 
