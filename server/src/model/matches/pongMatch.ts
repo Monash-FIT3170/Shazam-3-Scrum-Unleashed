@@ -47,7 +47,7 @@ export class PongMatch implements Match {
     this.ballState = {
       x: GAME_WIDTH / 2,
       y: GAME_WIDTH / 2,
-      xVelocity: this.randomXVelocity(),
+      xVelocity: 1,
       yVelocity: INITIAL_BALL_Y_SPEED,
     };
     this.intervalHandler = undefined;
@@ -75,10 +75,6 @@ export class PongMatch implements Match {
       this.ballState,
       this.paddleStates,
     );
-  }
-
-  randomXVelocity(): number {
-    return (Math.random() - 0.5) * INITIAL_BALL_Y_SPEED;
   }
 
   ballPaddleCollision(
@@ -172,7 +168,7 @@ export class PongMatch implements Match {
         newBallY = GAME_HEIGHT / 2;
         newBallX = GAME_WIDTH / 2;
         this.ballState.yVelocity = INITIAL_BALL_Y_SPEED;
-        this.ballState.xVelocity = this.randomXVelocity();
+        this.ballState.xVelocity = 1;
         this.players[0].score += 1;
         winner = this.getMatchWinner();
         io.to(this.matchRoomID).emit(
@@ -185,7 +181,7 @@ export class PongMatch implements Match {
         newBallY = GAME_HEIGHT / 2;
         newBallX = GAME_WIDTH / 2;
         this.ballState.yVelocity = -INITIAL_BALL_Y_SPEED;
-        this.ballState.xVelocity = this.randomXVelocity();
+        this.ballState.xVelocity = 1;
         this.players[1].score += 1;
         winner = this.getMatchWinner();
         io.to(this.matchRoomID).emit(
