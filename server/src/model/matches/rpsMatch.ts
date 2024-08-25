@@ -124,7 +124,7 @@ export class RpsMatch implements Match {
       "RPS",
       tournament.duelTime / 1000,
     );
-    this.startTimeout(playDuel(tournament, io), tournament.duelTime + 1000);
+    this.startTimeout(playDuel(tournament, io), tournament.duelTime + 4000);
   }
 
   emitMatchState(): void {

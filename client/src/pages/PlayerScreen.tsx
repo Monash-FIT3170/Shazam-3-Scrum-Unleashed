@@ -10,6 +10,7 @@ import ReactionOverlay from "../components/reactions/ReactionsOverlay.tsx";
 import { Pong } from "../components/pong/Pong.tsx";
 import { MatchType } from "../../../types/socket/eventArguments.ts";
 import { RPS } from "../components/rps/RPS.tsx";
+import DuelInProgressAnimation from "../components/player-screen/DuelInProgressAnimation.tsx";
 
 const DEFAULT_DUEL_TIME = 15; // seconds
 
@@ -30,6 +31,7 @@ const PlayerScreen = () => {
   const [matchType, setMatchType] = useState<MatchType>();
   const [isPlayerOne, setIsPlayerOne] = useState(false);
   const [duelTime, setDuelTime] = useState(DEFAULT_DUEL_TIME);
+  const [showAnimation, setShowAnimation] = useState(false);
 
   function setPlayers(players: PlayerAttributes[]) {
     for (let i = 0; i < players.length; i++) {
@@ -74,6 +76,11 @@ const PlayerScreen = () => {
       setMatchType(matchType);
       setIsSpectator(getIsSpectator(players));
       setDuelTime(duelTime);
+
+      if (matchType === "RPS") {
+        // Only have RPS animation atm, dont show for PONG
+        setShowAnimation(true);
+      }
     });
 
     socket.on("MATCH_DATA", (players, winnerUserID) => {
@@ -116,7 +123,7 @@ const PlayerScreen = () => {
       setMatchWinnerID(undefined);
       setOpponent(undefined);
     }, MATCH_COMPLETION_TIME);
-  } else {
+  } else if (!showAnimation) {
     switch (matchType) {
       case "PONG": {
         content = (
@@ -138,6 +145,12 @@ const PlayerScreen = () => {
         break;
       }
     }
+  } else {
+    // Show animation
+    content = <DuelInProgressAnimation />;
+    setTimeout(() => {
+      setShowAnimation(false);
+    }, 3000);
   }
 
   return (
