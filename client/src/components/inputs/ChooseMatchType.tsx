@@ -42,6 +42,7 @@ const ChooseMatchType: React.FC<ChooseMatchTypeProps> = ({ setMatchType }) => {
         src={selectedType === "MASHUP" ? ChooseMashupBlue : ChooseMashupWhite}
         alt="Choose Mashup"
         className="w-3/12 cursor-pointer"
+        data-testid="mashup"
         onClick={() => handleClick("MASHUP")}
       />
     </div>

@@ -28,7 +28,11 @@ export function roundChecker(
   match: Match,
 ) {
   // At least one player has been eliminated when this function is called, therefore we can update the host
-  io.to(tournament.hostUID).emit("TOURNAMENT_STATE", tournament.players, true);
+  io.to(tournament.hostUID).emit(
+    "TOURNAMENT_STATE",
+    tournament.players,
+    tournament.inProgress,
+  );
 
   if (tournament.matches.every((e) => e.getMatchWinner() !== null)) {
     setTimeout(() => {
@@ -47,7 +51,7 @@ export function roundChecker(
       io.to(tournament.hostUID).emit(
         "TOURNAMENT_STATE",
         tournament.players,
-        true,
+        tournament.inProgress,
       );
       void roundInitialiser(tournament, io);
     }, ROUND_BUFFER_TIME);
@@ -94,6 +98,8 @@ function createMatch(players: Player[], tournament: Tournament) {
       return new RpsMatch(players, tournament.duelsToWin);
     case "PONG":
       return new PongMatch(players, tournament.duelsToWin, tournament);
+    default:
+      return new RpsMatch(players, tournament.duelsToWin);
   }
 }
 

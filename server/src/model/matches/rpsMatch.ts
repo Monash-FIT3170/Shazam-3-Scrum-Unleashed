@@ -119,6 +119,7 @@ export class RpsMatch implements Match {
 
   startMatch(io: Server<Events>, tournament: Tournament): void {
     io.to(this.matchRoomID).emit("MATCH_START", this.players, "RPS");
+    io.to(this.matchRoomID).emit("START_DUEL_TIMER", tournament.duelTime);
     this.startTimeout(playDuel(tournament, io), tournament.duelTime);
   }
 
