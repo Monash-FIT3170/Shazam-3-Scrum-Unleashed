@@ -18,6 +18,7 @@ Team Members:
     - Jovan Vales (jval0006student.monash.edu)
     - Fathy Abdelshahid (fabd0009@student.monash.edu)
     - Rory Tobin-Underwood (rtob0002@student.monash.edu)
+    - Thomas Rumble (trum0001@student.monash.edu)
 
 # Repo Structure
 - [client](client) : contains all the front end components required for the web client.
@@ -32,6 +33,7 @@ Team Members:
 4. Install dependencies in both [client](client) and [server](server) by running `npm install` in both terminals.
 5. Run both the [client](client) and [server](server) by running `npm run dev` in both terminals.
 
+
 # Recommended steps (not strictly required)
 
 1. Use vscode as your code editor.
@@ -39,6 +41,7 @@ Team Members:
    - Prettier - Code formatter
    - ESLint
    - Typescript
+3. Refer to our handover video for a walkthrough of the architecture as well as a deep dive into the code and how the application works. The link can be found at: https://drive.google.com/file/d/1BLmVeHUXfNqvcXFwk-ovQhECkiHtJxus/view
 
 # Before committing/merge request
 Remember to run the 2 following commands to ensure the code passes the automated linting test
