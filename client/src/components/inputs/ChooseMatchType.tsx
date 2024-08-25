@@ -29,19 +29,19 @@ const ChooseMatchType: React.FC<ChooseMatchTypeProps> = ({ setMatchType }) => {
       <img
         src={selectedType === "RPS" ? ChooseRPSBlue : ChooseRPSWhite}
         alt="Choose RPS"
-        className="w-2/12 cursor-pointer"
+        className="w-3/12 cursor-pointer"
         onClick={() => handleClick("RPS")}
       />
       <img
         src={selectedType === "PONG" ? ChoosePongBlue : ChoosePongWhite}
         alt="Choose Pong"
-        className="w-2/12 cursor-pointer"
+        className="w-3/12 cursor-pointer"
         onClick={() => handleClick("PONG")}
       />
       <img
         src={selectedType === "MASHUP" ? ChooseMashupBlue : ChooseMashupWhite}
         alt="Choose Mashup"
-        className="w-2/12 cursor-pointer"
+        className="w-3/12 cursor-pointer"
         data-testid="mashup"
         onClick={() => handleClick("MASHUP")}
       />
