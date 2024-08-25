@@ -1,4 +1,3 @@
-import ButtonComponent from "../../buttons/BorderedButtonComponent.tsx";
 import DisplayLogo from "../../DisplayLogo.tsx";
 import LoadingEffect from "./LoadingEffect.tsx";
 
@@ -13,9 +12,9 @@ const WaitingForMatchStart = ({
 }: WaitingToStartProps) => {
   return (
     <>
-      <div className="fixed top-0 md:right-20 ">
+      {/*      <div className="fixed top-0 md:right-20 ">
         <ButtonComponent linkPath="/" text={"Quit Tournament"} />
-      </div>
+      </div>*/}
       <div className=" items-center size-60 w-full">
         <DisplayLogo />
       </div>

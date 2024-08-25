@@ -7,7 +7,6 @@ import PlayerCard from "../components/lobby/PlayerCard.tsx";
 import TournamentLobbyBanner from "../components/lobby/TournamentLobbyBanner.tsx";
 import TournamentBracketBanner from "../components/lobby/TournamentBracketBanner.tsx";
 import TournamentWin from "../components/player-screen/tournament-win/TournamentWin.tsx";
-import ButtonComponent from "../components/buttons/BorderedButtonComponent.tsx";
 import HostSpectatorScreen from "../components/lobby/HostSpectatorScreen.tsx";
 import { SpectateMatchRes } from "../../../types/requestTypes.ts";
 
@@ -105,12 +104,12 @@ const TournamentLobby = () => {
     }
   };
 
-  const quitTournament = () => {
+  /*  const quitTournament = () => {
     if (!inProgress) {
       socket.emit("QUIT_TOURNAMENT", tournamentCode, socket.userID);
       window.location.href = "/"; // Navigate to the home page
     }
-  };
+  };*/
 
   const spectatePlayer = async (player: PlayerAttributes) => {
     const spectateMatchRes = await postSpectateMatch(
@@ -198,13 +197,13 @@ const TournamentLobby = () => {
           </div>
         </div>
       )}
-      <div className="fixed bottom-10 md:left-20 left-5">
-        <ButtonComponent
-          linkPath="/"
-          text={"Quit Tournament"}
-          onClick={quitTournament}
-        />
-      </div>
+      {/*<div className="fixed bottom-10 md:left-20 left-5">*/}
+      {/*  <ButtonComponent*/}
+      {/*    linkPath="/"*/}
+      {/*    text={"Quit Tournament"}*/}
+      {/*    onClick={quitTournament}*/}
+      {/*  />*/}
+      {/*</div>*/}
     </div>
   );
 };
