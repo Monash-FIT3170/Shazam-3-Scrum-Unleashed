@@ -1,6 +1,6 @@
 import DisplayLogo from "../DisplayLogo.tsx";
 import lightning from "../../assets/logo/Lightning.svg";
-import {JOIN_GAME_PATH} from "../../pages/pagePaths.ts";
+import { JOIN_GAME_PATH } from "../../pages/pagePaths.ts";
 
 type TournamentLobbyBannerProps = {
   tournamentCode: string;
