@@ -108,3 +108,24 @@ body {
   text-align: center;
   display: inline-block;
 }
+
+/* mobile device stuff*/
+@media screen and (max-width: 400px) {
+  .large-input {
+    width: 80%;
+  }
+
+  .large-button {
+    width: 80%;
+  }
+}
+
+@media screen and (min-width: 401px) {
+  .large-input {
+    width: 320px;
+  }
+
+  .large-button {
+    width: 320px;
+  }
+}
