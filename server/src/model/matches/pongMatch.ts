@@ -73,7 +73,7 @@ export class PongMatch implements Match {
   }
 
   randomXVelocity(): number {
-    return (Math.random() - 0.5) * 2 * INITIAL_BALL_Y_SPEED;
+    return (Math.random() - 0.5) * INITIAL_BALL_Y_SPEED;
   }
 
   ballPaddleCollision(
@@ -153,10 +153,10 @@ export class PongMatch implements Match {
 
     // Bounce ball off walls
     if (newBallX + BALL_RADIUS >= GAME_WIDTH) {
-      newBallX = GAME_WIDTH - BALL_RADIUS;
+      newBallX = GAME_WIDTH - 2 * BALL_RADIUS - (newBallX - GAME_WIDTH);
       this.ballState.xVelocity = -this.ballState.xVelocity;
     } else if (newBallX - BALL_RADIUS <= 0) {
-      newBallX = BALL_RADIUS;
+      newBallX = 2 * BALL_RADIUS - newBallX;
       this.ballState.xVelocity = -this.ballState.xVelocity;
     }
 
