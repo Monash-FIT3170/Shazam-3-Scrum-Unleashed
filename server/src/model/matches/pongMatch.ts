@@ -9,7 +9,7 @@ import { MatchType } from "../../../../types/socket/eventArguments";
 import * as crypto from "node:crypto";
 
 const INITIAL_BALL_Y_SPEED = 50;
-const POLL_RATE = 3; // Hz
+const POLL_RATE = 24; // Hz
 const BALL_RADIUS = 2;
 const GAME_WIDTH = 75;
 const GAME_HEIGHT = 100;
