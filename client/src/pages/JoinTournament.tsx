@@ -105,6 +105,7 @@ const JoinTournament = () => {
           placeholder={"6 DIGIT ROOM CODE"}
           disabled={loading}
           data-testid={"tournament-code-input"}
+          additionalClass={"large-input"}
         />
         <InputComponent
           value={playerName}
@@ -112,12 +113,14 @@ const JoinTournament = () => {
           placeholder={"NAME"}
           disabled={loading}
           data-testid={"player-name-input"}
+          additionalClass={"large-input"}
         />
 
         <FormButton
           text={"Join Game"}
           loading={loading}
           callback={joinTournament}
+          additionalClass={"large-btn"}
         />
       </div>
       {!status || status === "OK" ? null : (
