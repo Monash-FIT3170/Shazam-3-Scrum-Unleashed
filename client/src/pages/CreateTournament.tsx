@@ -108,7 +108,7 @@ const CreateTournament = () => {
 
       <div className="h-14 absolute bottom-30 lg:bottom-10 xl:bottom-30 w-full flex justify-center">
         <button
-          className={`w-1/5 text-white ${inputErrors.includes(true) ? "bg-bright-red" : "bg-primary"} text-xl sm:text-2xl font-bold px-7 rounded-xl h-full uppercase`}
+          className={`button-large text-white ${inputErrors.includes(true) ? "bg-bright-red" : "bg-primary"} text-xl sm:text-2xl font-bold px-7 rounded-xl h-full uppercase`}
           onClick={async () => {
             const code = await postTournament(
               socket.userID,
