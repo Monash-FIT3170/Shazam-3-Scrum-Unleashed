@@ -13,20 +13,20 @@ export async function roundStartEmitter(
       for (const spectatorID of player.spectatorIDs) {
         await playerJoinMatchRoom(spectatorID, match.matchRoomID, io);
         io.to(spectatorID).emit(
-            "MATCH_START",
-            match.players,
-            match.type(),
-            tournament.duelTime / 1000,
+          "MATCH_START",
+          match.players,
+          match.type(),
+          tournament.duelTime / 1000,
         );
       }
 
       if (!player.isBot) {
         await playerJoinMatchRoom(player.userID, match.matchRoomID, io);
         io.to(player.userID).emit(
-            "MATCH_START",
-            match.players,
-            match.type(),
-            tournament.duelTime / 1000,
+          "MATCH_START",
+          match.players,
+          match.type(),
+          tournament.duelTime / 1000,
         );
       }
     }
