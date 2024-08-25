@@ -104,6 +104,7 @@ const HostSpectatorScreen = ({
         player={userPlayer}
         opponent={opponent}
         isWin={matchWinnerID === userPlayer.userID}
+        isSpectator={true}
       />
     );
     setTimeout(() => {
@@ -125,6 +126,7 @@ const HostSpectatorScreen = ({
             player={userPlayer}
             opponent={opponent}
             isPlayerOne={isPlayerOne}
+            isSpectator={true}
           />
         );
         break;
@@ -140,7 +142,11 @@ const HostSpectatorScreen = ({
           spectatingID={userPlayer !== undefined ? userPlayer!.userID : null}
         />
       }
-      <div className="overflow-hidden h-screen relative">
+      <div
+        className={
+          "overflow-hidden h-screen relative border-8 border-spectator-bg"
+        }
+      >
         <button
           className={`h-12 text-white fixed top-5 left-5 bg-primary text-2xl font-bold w-1/6 rounded-xl z-50`}
           onClick={() => stopSpectating(userPlayer!.userID)}
@@ -153,6 +159,7 @@ const HostSpectatorScreen = ({
               <PlayerAndSpectatorsInfo
                 userPlayer={userPlayer}
                 opponent={opponent}
+                isSpectator={true}
               />
               // TODO probably only want to display during a match and not after a match
             )}

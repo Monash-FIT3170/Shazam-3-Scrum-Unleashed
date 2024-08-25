@@ -14,7 +14,7 @@ const BALL_RADIUS = 2;
 const GAME_WIDTH = 75;
 const GAME_HEIGHT = 100;
 const PADDLE_WIDTH = 20;
-const PADDLE_HITBOX_INCREASE = 1.1;
+const PADDLE_HITBOX_INCREASE = 0.1;
 
 export class PongMatch implements Match {
   duelsToWin: number;
@@ -116,9 +116,9 @@ export class PongMatch implements Match {
     let paddleCollision = false;
     if (newBallY - BALL_RADIUS <= this.paddleStates[0].y) {
       if (
-        newBallX >= paddle0 * PADDLE_HITBOX_INCREASE &&
+        newBallX >= paddle0 * (1 - PADDLE_HITBOX_INCREASE) &&
         newBallX <=
-          paddle0 * PADDLE_HITBOX_INCREASE + this.paddleStates[0].width
+          paddle0 * (1 + PADDLE_HITBOX_INCREASE) + this.paddleStates[0].width
       ) {
         this.ballPaddleCollision(paddle0, this.paddleStates[0].width, newBallX);
         newBallY = this.paddleStates[0].y + BALL_RADIUS;
@@ -128,9 +128,9 @@ export class PongMatch implements Match {
 
     if (newBallY + BALL_RADIUS >= this.paddleStates[1].y) {
       if (
-        newBallX >= paddle1 * PADDLE_HITBOX_INCREASE &&
+        newBallX >= paddle1 * (1 - PADDLE_HITBOX_INCREASE) &&
         newBallX <=
-          paddle1 * PADDLE_HITBOX_INCREASE + this.paddleStates[1].width
+          paddle1 * (1 + PADDLE_HITBOX_INCREASE) + this.paddleStates[1].width
       ) {
         this.ballPaddleCollision(paddle1, this.paddleStates[1].width, newBallX);
         newBallY = this.paddleStates[1].y - BALL_RADIUS;
@@ -202,7 +202,7 @@ export class PongMatch implements Match {
     this.emitMatchState(io);
 
     if (winner != null) {
-      roundChecker(this.tournament, io, this);
+      roundChecker(this.tournament, io);
       clearInterval(this.intervalHandler);
     }
   }
@@ -212,14 +212,26 @@ export class PongMatch implements Match {
   }
 
   getMatchWinner(): Player | null {
-    if (this.players[0].score >= this.duelsToWin) {
+    if (
+      this.players[0].score >= this.duelsToWin ||
+      this.players[1].isEliminated
+    ) {
       this.players[1].isEliminated = true;
       return this.players[0];
-    } else if (this.players[1].score >= this.duelsToWin) {
+    } else if (
+      this.players[1].score >= this.duelsToWin ||
+      this.players[0].isEliminated
+    ) {
       this.players[0].isEliminated = true;
       return this.players[1];
     } else {
       return null;
+    }
+  }
+
+  clearTimeouts(): void {
+    if (this.intervalHandler) {
+      clearInterval(this.intervalHandler);
     }
   }
 }
