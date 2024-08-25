@@ -21,7 +21,11 @@ export async function roundStartEmitter(
 
     match.startMatch(io, tournament);
   }
-  io.to(tournament.hostUID).emit("TOURNAMENT_STATE", tournament.players, true);
+  io.to(tournament.hostUID).emit(
+    "TOURNAMENT_STATE",
+    tournament.players,
+    tournament.inProgress,
+  );
 }
 
 async function playerJoinMatchRoom(
