@@ -30,7 +30,7 @@ const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
         />
         <div className="text-center mt-52 lg:mt-10">
           <h2 className="text-white lg:text-8xl text-4xl font-bold">
-            {playerName}
+            {playerName.slice(0, 15)}
           </h2>
           <h2 className="text-white md:text-7xl text-5xl font-bold">Winner</h2>
         </div>

@@ -33,8 +33,8 @@ const MatchOutcomeScreen = ({
         <h1>
           {isSpectator
             ? isWin
-              ? `${player.name} WON!`
-              : `${player.name} LOST!`
+              ? `${player.name.slice(0, 15)} WON!`
+              : `${player.name.slice(0, 15)} LOST!`
             : isWin
               ? "YOU WON!"
               : "YOU LOST!"}
@@ -53,14 +53,16 @@ const MatchOutcomeScreen = ({
       <div className="text-white font-bold text-2xl md:text-3xl fixed top-[66%] mx-auto max-w-max inset-x-0">
         {isWin ? (
           <p>
-            <span className="text-[#FFC700]">{opponent.name}</span> AND THEIR
-            FOLLOWERS WILL NOW FOLLOW {isSpectator ? `${player.name}!` : "YOU!"}
+            <span className="text-[#FFC700]">{opponent.name.slice(0, 15)}</span>{" "}
+            AND THEIR FOLLOWERS WILL NOW FOLLOW{" "}
+            {isSpectator ? `${player.name.slice(0, 15)}!` : "YOU!"}
           </p>
         ) : (
           <p>
-            {isSpectator ? `${player.name}` : "YOU"} AND{" "}
+            {isSpectator ? `${player.name.slice(0, 15)}` : "YOU"} AND{" "}
             {isSpectator ? "THEIR" : "YOUR"} FOLLOWERS WILL NOW FOLLOW{" "}
-            <span className="text-[#FFC700]">{opponent.name}</span>!
+            <span className="text-[#FFC700]">{opponent.name.slice(0, 15)}</span>
+            !
           </p>
         )}
       </div>
