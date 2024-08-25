@@ -32,9 +32,10 @@ function roundTerminator(tournament: Tournament, io: Server<Events>) {
   for (const match of tournament.matches) {
     if (match.getMatchWinner() === null) {
       match.clearTimeouts();
-      const sortedPlayers = match.players.toSorted(
-        (p1, p2) => p2.score - p1.score,
-      );
+      const sortedPlayers = match.players
+        .filter((player) => !player.isBot)
+        .toSorted((p1, p2) => p2.score - p1.score);
+
       const topScore = sortedPlayers[0].score;
 
       const winningPlayers = sortedPlayers.filter(
@@ -102,7 +103,10 @@ export function roundChecker(tournament: Tournament, io: Server<Events>) {
 }
 
 export function roundCloser(tournament: Tournament, io: Server<Events>) {
-  tournament.roundTimeoutHandler = null;
+  if (tournament.roundTimeoutHandler) {
+    clearTimeout(tournament.roundTimeoutHandler);
+    tournament.roundTimeoutHandler = null;
+  }
   tournament.roundCounter++;
   for (const match of tournament.matches) {
     handleSpectators(match);
