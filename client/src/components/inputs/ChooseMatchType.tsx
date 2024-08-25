@@ -25,23 +25,23 @@ const ChooseMatchType: React.FC<ChooseMatchTypeProps> = ({ setMatchType }) => {
   };
 
   return (
-    <div className="flex justify-center items-center mt-4 space-x-48">
+    <div className="flex justify-center items-center mt-8 space-x-8 lg:mt-4 lg:space-x-48 ">
       <img
         src={selectedType === "RPS" ? ChooseRPSBlue : ChooseRPSWhite}
         alt="Choose RPS"
-        className="w-3/12 cursor-pointer"
+        className="w-3/12 lg:w-2/12 cursor-pointer"
         onClick={() => handleClick("RPS")}
       />
       <img
         src={selectedType === "PONG" ? ChoosePongBlue : ChoosePongWhite}
         alt="Choose Pong"
-        className="w-3/12 cursor-pointer"
+        className="w-3/12 lg:w-2/12  cursor-pointer"
         onClick={() => handleClick("PONG")}
       />
       <img
         src={selectedType === "MASHUP" ? ChooseMashupBlue : ChooseMashupWhite}
         alt="Choose Mashup"
-        className="w-3/12 cursor-pointer"
+        className="w-3/12 lg:w-2/12 cursor-pointer"
         data-testid="mashup"
         onClick={() => handleClick("MASHUP")}
       />

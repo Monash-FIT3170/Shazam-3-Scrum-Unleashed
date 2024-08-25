@@ -71,7 +71,7 @@ const CreateTournament = () => {
   return (
     <div className="relative h-screen overflow-hidden">
       <div className="absolute top-0 w-full text-center my-3">
-        <div className="uppercase text-white text-6xl w-full justify-center items-top font-bold pt-5 flex">
+        <div className="uppercase text-white text-4xl md:text-5x lg:text-6xl w-full justify-center items-top font-bold pt-5 flex">
           <img src={Lightning} className="w-10"></img>
           GAME SETUP
           <img src={Lightning} className="w-10"></img>
@@ -109,9 +109,9 @@ const CreateTournament = () => {
         </div>
       </div>
 
-      <div className="h-14 absolute bottom-30 lg:bottom-10 xl:bottom-30 w-full flex justify-center">
+      <div className="h-14 absolute bottom-10  xl:bottom-5 w-full flex justify-center">
         <button
-          className={`w-1/5 text-white ${inputErrors.includes(true) ? "bg-bright-red" : "bg-primary"} text-xl sm:text-2xl font-bold px-7 rounded-xl h-full uppercase`}
+          className={`w-1/2 lg:w-1/5 text-white ${inputErrors.includes(true) ? "bg-bright-red" : "bg-primary"} text-xl sm:text-2xl font-bold px-7 rounded-xl h-full uppercase`}
           onClick={async () => {
             const code = await postTournament(
               socket.userID,
