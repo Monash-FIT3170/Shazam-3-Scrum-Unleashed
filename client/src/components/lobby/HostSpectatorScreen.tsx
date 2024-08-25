@@ -104,7 +104,6 @@ const HostSpectatorScreen = ({
         player={userPlayer}
         opponent={opponent}
         isWin={matchWinnerID === userPlayer.userID}
-        isSpectator={true}
       />
     );
     setTimeout(() => {
@@ -126,7 +125,6 @@ const HostSpectatorScreen = ({
             player={userPlayer}
             opponent={opponent}
             isPlayerOne={isPlayerOne}
-            isSpectator={true}
           />
         );
         break;
@@ -155,7 +153,6 @@ const HostSpectatorScreen = ({
               <PlayerAndSpectatorsInfo
                 userPlayer={userPlayer}
                 opponent={opponent}
-                isSpectator={true}
               />
               // TODO probably only want to display during a match and not after a match
             )}

@@ -95,7 +95,7 @@ const JoinTournament = () => {
         <ButtonComponent linkPath="/" text={"Back"} />
       </div>
       <div className="flex flex-col items-center justify-center h-screen overflow-hidden">
-        <div className="size-60 w-full">
+        <div className=" items-center size-60 w-full">
           <DisplayLogo />
         </div>
 
