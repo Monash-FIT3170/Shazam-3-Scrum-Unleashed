@@ -119,7 +119,9 @@ export class RpsMatch implements Match {
 
   startMatch(io: Server<Events>, tournament: Tournament): void {
     io.to(this.matchRoomID).emit("MATCH_START", this.players, "RPS");
-    this.startTimeout(playDuel(tournament, io), tournament.duelTime);
+    setTimeout(() => {
+      this.startTimeout(playDuel(tournament, io), tournament.duelTime);
+    }, 3500); // Account for animation time.
   }
 
   emitMatchState(): void {
