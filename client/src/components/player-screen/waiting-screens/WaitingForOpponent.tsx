@@ -11,7 +11,7 @@ const WaitingForOpponent = ({ moveAction }: WaitingForOpponentProps) => {
     <div>
       <LoadingEffect isOpponent={true} />
 
-      <div className="text-white font-bold text-4xl md:text-6xl fixed top-[45%] mx-auto max-w-max inset-x-0">
+      <div className="text-white font-bold text-4xl md:text-6xl fixed top-[35%] mx-auto max-w-max inset-x-0">
         <h1>WAITING FOR OPPONENT</h1>
       </div>
 

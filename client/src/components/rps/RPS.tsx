@@ -10,6 +10,7 @@ type RPSProps = {
   opponent: PlayerAttributes;
   isPlayerOne: boolean;
   isSpectator: boolean;
+  duelTime: number;
 };
 
 const RPS = ({
@@ -18,6 +19,7 @@ const RPS = ({
   opponent,
   isPlayerOne,
   isSpectator,
+  duelTime,
 }: RPSProps) => {
   const [userAction, setUserAction] = useState<Action>();
   const [opponentAction, setOpponentAction] = useState<Action>();
@@ -49,7 +51,9 @@ const RPS = ({
       />
     );
   } else {
-    return <ChoosePlayerMove tournamentCode={tournamentCode} />;
+    return (
+      <ChoosePlayerMove tournamentCode={tournamentCode} duelTime={duelTime} />
+    );
   }
 };
 

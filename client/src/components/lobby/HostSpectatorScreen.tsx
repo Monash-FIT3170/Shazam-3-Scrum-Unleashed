@@ -31,6 +31,7 @@ const HostSpectatorScreen = ({
   const [tournamentWinner, setTournamentWinner] = useState<string>();
   const [matchType, setMatchType] = useState<MatchType>();
   const [isPlayerOne, setIsPlayerOne] = useState(false);
+  const [duelTime, setDuelTime] = useState(15);
 
   function setPlayers(players: PlayerAttributes[]) {
     for (let i = 0; i < players.length; i++) {
@@ -66,9 +67,10 @@ const HostSpectatorScreen = ({
   }, [matchData]);
 
   useEffect(() => {
-    socket.on("MATCH_START", (players, matchType) => {
+    socket.on("MATCH_START", (players, matchType, duelTime) => {
       setPlayers(players);
       setMatchType(matchType);
+      setDuelTime(duelTime);
     });
 
     socket.on("MATCH_DATA", (players, winnerUserID) => {
@@ -127,6 +129,7 @@ const HostSpectatorScreen = ({
             opponent={opponent}
             isPlayerOne={isPlayerOne}
             isSpectator={true}
+            duelTime={duelTime}
           />
         );
         break;

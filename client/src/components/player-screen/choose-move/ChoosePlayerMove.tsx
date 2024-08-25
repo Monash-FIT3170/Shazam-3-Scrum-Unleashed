@@ -6,12 +6,17 @@ import { Action } from "../../../../../types/types.ts";
 import MoveSelection from "./MoveSelection.tsx";
 import { socket } from "../../../App.tsx";
 import WaitingForOpponent from "../waiting-screens/WaitingForOpponent.tsx";
+import CountDownTimer from "../match-overlay/CountDownTimer.tsx";
 
 interface ChoosePlayerMoveProps {
   tournamentCode: string;
+  duelTime: number;
 }
 
-const ChoosePlayerMove = ({ tournamentCode }: ChoosePlayerMoveProps) => {
+const ChoosePlayerMove = ({
+  tournamentCode,
+  duelTime,
+}: ChoosePlayerMoveProps) => {
   const [selectedAction, setSelectedAction] = useState<Action | null>(null);
 
   const handleMoveSelection = (move: Action) => {
@@ -23,6 +28,7 @@ const ChoosePlayerMove = ({ tournamentCode }: ChoosePlayerMoveProps) => {
 
   return (
     <>
+      <CountDownTimer time={duelTime} />
       {selectedAction !== null ? (
         <WaitingForOpponent moveAction={selectedAction} />
       ) : (
