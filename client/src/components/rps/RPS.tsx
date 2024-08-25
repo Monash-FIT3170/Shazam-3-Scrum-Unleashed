@@ -26,14 +26,19 @@ const RPS = ({
     socket.on("MATCH_RPS_DUEL_STATE", (p1Action, p2Action) => {
       setUserAction(isPlayerOne ? p1Action : p2Action);
       setOpponentAction(isPlayerOne ? p2Action : p1Action);
+
+      setTimeout(() => {
+        setUserAction(undefined);
+        setOpponentAction(undefined);
+      }, 3000);
     });
+
+    return () => {
+      socket.off("MATCH_RPS_DUEL_STATE");
+    };
   }, []);
 
   if (userAction && opponentAction) {
-    setTimeout(() => {
-      setUserAction(undefined);
-      setOpponentAction(undefined);
-    }, 3000);
     return (
       <DuelOutcome
         userPlayer={player}
