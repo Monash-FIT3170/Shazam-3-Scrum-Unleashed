@@ -85,7 +85,9 @@ const PlayerScreen = () => {
 
     socket.on("MATCH_DATA", (players, winnerUserID) => {
       setPlayers(players);
-      setTimeout(()=>{setMatchWinnerID(winnerUserID);}, 1500); // to delay match outcome screen
+      setTimeout(() => {
+        setMatchWinnerID(winnerUserID);
+      }, 1500); // to delay match outcome screen
     });
 
     socket.on("TOURNAMENT_COMPLETE", (playerName) => {
