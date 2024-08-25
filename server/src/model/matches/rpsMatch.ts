@@ -140,14 +140,26 @@ export class RpsMatch implements Match {
   }
 
   getMatchWinner(): Player | null {
-    if (this.players[0].score >= this.duelsToWin) {
+    if (
+      this.players[0].score >= this.duelsToWin ||
+      this.players[1].isEliminated
+    ) {
       this.players[1].isEliminated = true;
       return this.players[0];
-    } else if (this.players[1].score >= this.duelsToWin) {
+    } else if (
+      this.players[1].score >= this.duelsToWin ||
+      this.players[0].isEliminated
+    ) {
       this.players[0].isEliminated = true;
       return this.players[1];
     } else {
       return null;
+    }
+  }
+
+  clearTimeouts() {
+    if (this.timeOutHandler) {
+      clearTimeout(this.timeOutHandler);
     }
   }
 }
