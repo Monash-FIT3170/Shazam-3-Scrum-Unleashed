@@ -25,7 +25,8 @@ function clampX(ballState: PongBallState, gameWidth: number) {
     ballState.x = 2 * BALL_RADIUS * SCALING_FACTOR - ballState.x;
     ballState.xVelocity *= -1;
   } else if (ballState.x > gameWidth - BALL_RADIUS * SCALING_FACTOR) {
-    ballState.x = gameWidth - 2 * BALL_RADIUS * SCALING_FACTOR - (ballState.x - GAME_WIDTH);
+    ballState.x =
+      gameWidth - 2 * BALL_RADIUS * SCALING_FACTOR - (ballState.x - GAME_WIDTH);
     ballState.xVelocity *= -1;
   }
 }
