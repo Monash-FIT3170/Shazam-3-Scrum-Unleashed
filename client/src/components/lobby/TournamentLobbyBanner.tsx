@@ -1,5 +1,6 @@
 import DisplayLogo from "../DisplayLogo.tsx";
 import lightning from "../../assets/logo/Lightning.svg";
+import { JOIN_GAME_PATH } from "../../pages/pagePaths.ts";
 
 type TournamentLobbyBannerProps = {
   tournamentCode: string;
@@ -22,7 +23,7 @@ const TournamentLobbyBanner = ({
             JOIN THE TOURNAMENT AT
           </div>
           <div className="text-red text-xl font-bold uppercase">
-            {window.location.href}
+            {`${window.location.origin}/${JOIN_GAME_PATH}?tournamentCode=${tournamentCode}`}
           </div>
         </div>
         <img src={lightning} alt="Lightning Bolt" />

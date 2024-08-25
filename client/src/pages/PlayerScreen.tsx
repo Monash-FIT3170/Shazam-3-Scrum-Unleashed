@@ -10,6 +10,7 @@ import ReactionOverlay from "../components/reactions/ReactionsOverlay.tsx";
 import { Pong } from "../components/pong/Pong.tsx";
 import { MatchType } from "../../../types/socket/eventArguments.ts";
 import { RPS } from "../components/rps/RPS.tsx";
+import DuelInProgressAnimation from "../components/player-screen/DuelInProgressAnimation.tsx";
 
 const PlayerScreen = () => {
   const { loadedTournamentCode, loadedPlayerName } = useLoaderData() as {
@@ -27,6 +28,37 @@ const PlayerScreen = () => {
   const [isSpectator, setIsSpectator] = useState(false);
   const [matchType, setMatchType] = useState<MatchType>();
   const [isPlayerOne, setIsPlayerOne] = useState(false);
+  const [isAnimationComplete, setIsAnimationComplete] = useState(false);
+
+  useEffect(() => {
+    const storedMatchState = localStorage.getItem("matchStarted");
+    if (storedMatchState === "true") {
+      setIsAnimationComplete(true);
+    }
+
+    socket.on("MATCH_START", (players, matchType) => {
+      setPlayers(players);
+      setMatchType(matchType);
+      setIsSpectator(getIsSpectator(players));
+      localStorage.setItem("matchStarted", "true"); // Store match started state
+    });
+
+    socket.on("MATCH_DATA", (players, winnerUserID) => {
+      setMatchWinnerID(winnerUserID);
+      setPlayers(players);
+    });
+
+    socket.on("TOURNAMENT_COMPLETE", (playerName) => {
+      setTournamentWinner(playerName);
+      localStorage.removeItem("matchStarted");
+    });
+
+    return () => {
+      socket.off("MATCH_START");
+      socket.off("MATCH_DATA");
+      socket.off("TOURNAMENT_COMPLETE");
+    };
+  }, []);
 
   function setPlayers(players: PlayerAttributes[]) {
     for (let i = 0; i < players.length; i++) {
@@ -65,54 +97,38 @@ const PlayerScreen = () => {
     return true;
   }
 
-  useEffect(() => {
-    socket.on("MATCH_START", (players, matchType) => {
-      setPlayers(players);
-      setMatchType(matchType);
-      setIsSpectator(getIsSpectator(players));
-    });
-
-    socket.on("MATCH_DATA", (players, winnerUserID) => {
-      setMatchWinnerID(winnerUserID);
-      setPlayers(players);
-    });
-
-    socket.on("TOURNAMENT_COMPLETE", (playerName) => {
-      setTournamentWinner(playerName);
-    });
-
-    return () => {
-      socket.off("MATCH_START");
-      socket.off("MATCH_DATA");
-      socket.off("TOURNAMENT_COMPLETE");
-    };
-  }, []);
-
   let content = null;
 
-  // FIXME would like to make this simpler
+  // If the tournament has completed, show the winner screen
   if (tournamentWinner !== undefined) {
     content = <TournamentWin playerName={tournamentWinner} />;
-  } else if (userPlayer === undefined || opponent === undefined) {
+  }
+  // If the user player or opponent are not defined, wait for match to start
+  else if (userPlayer === undefined || opponent === undefined) {
     content = (
       <WaitingForMatchStart
         tournamentCode={tournamentCode}
         playerName={playerName}
       />
     );
-  } else if (matchWinnerID != undefined) {
+  }
+  // If the match has a winner, show the match outcome screen
+  else if (matchWinnerID != undefined) {
     content = (
       <MatchOutcomeScreen
         player={userPlayer}
         opponent={opponent}
         isWin={matchWinnerID === userPlayer.userID}
+        isSpectator={isSpectator}
       />
     );
     setTimeout(() => {
       setMatchWinnerID(undefined);
       setOpponent(undefined);
     }, MATCH_COMPLETION_TIME);
-  } else {
+  }
+  // Otherwise, show the animation or the match content
+  else if (isAnimationComplete) {
     switch (matchType) {
       case "PONG": {
         content = (
@@ -127,30 +143,39 @@ const PlayerScreen = () => {
             player={userPlayer}
             opponent={opponent}
             isPlayerOne={isPlayerOne}
+            isSpectator={isSpectator}
           />
         );
         break;
       }
     }
+  } else {
+    // Show animation
+    content = <DuelInProgressAnimation />;
+    setTimeout(() => {
+      setIsAnimationComplete(true);
+    }, 3000);
   }
 
   return (
     <>
-      {
-        <ReactionOverlay
-          gameCode={tournamentCode}
-          spectatingID={isSpectator ? userPlayer!.userID : null}
-        />
-      }
-      <div className="overflow-hidden h-screen relative">
+      <ReactionOverlay
+        gameCode={tournamentCode}
+        spectatingID={isSpectator ? userPlayer!.userID : null}
+      />
+      <div
+        className={`overflow-hidden h-screen relative ${
+          isSpectator ? "border-8 border-spectator-bg" : ""
+        }`}
+      >
         <div className="pt-12">
           <div className="flex flex-col items-center justify-center mt-10">
             {userPlayer !== undefined && opponent !== undefined && (
               <PlayerAndSpectatorsInfo
                 userPlayer={userPlayer}
                 opponent={opponent}
+                isSpectator={isSpectator}
               />
-              // TODO probably only want to display during a match and not after a match
             )}
             {content}
           </div>
