@@ -20,11 +20,15 @@ type PongProps = {
 
 type ButtonState = "left" | "right" | null;
 
-const clampX = (number: number, gameWidth: number) =>
-  Math.min(
-    Math.max(number, 0 + BALL_RADIUS * SCALING_FACTOR),
-    gameWidth - BALL_RADIUS * SCALING_FACTOR,
-  );
+function clampX(ballState: PongBallState, gameWidth: number) {
+  if (ballState.x < 0 + BALL_RADIUS * SCALING_FACTOR) {
+    ballState.x = 2 * BALL_RADIUS * SCALING_FACTOR - ballState.x;
+    ballState.xVelocity *= -1;
+  } else if (ballState.x > gameWidth - BALL_RADIUS * SCALING_FACTOR) {
+    ballState.x = gameWidth - 2 * BALL_RADIUS * SCALING_FACTOR - (ballState.x - GAME_WIDTH);
+    ballState.xVelocity *= -1;
+  }
+}
 
 const clampY = (
   number: number,
@@ -114,7 +118,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
     ctx.setLineDash([]);
 
     // Ball
-    const xClamped = clampX(ballState.current.x, GAME_WIDTH);
+    clampX(ballState.current, GAME_WIDTH);
     const closestPaddle =
       ballState.current.y > 50 * SCALING_FACTOR
         ? paddle2Position
@@ -130,7 +134,7 @@ const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
 
     ctx.fillStyle = "#ff00ff";
     ctx.beginPath();
-    ctx.arc(xClamped, yClamped, adjustedRadius, 0, Math.PI * 2);
+    ctx.arc(ballState.current.x, yClamped, adjustedRadius, 0, Math.PI * 2);
     ctx.fill();
     ctx.strokeStyle = "white";
     ctx.lineWidth = strokeWidth;
