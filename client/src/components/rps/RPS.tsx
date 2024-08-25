@@ -22,7 +22,6 @@ const RPS = ({
   const [userAction, setUserAction] = useState<Action>();
   const [opponentAction, setOpponentAction] = useState<Action>();
 
-
   useEffect(() => {
     socket.on("MATCH_RPS_DUEL_STATE", (p1Action, p2Action) => {
       setUserAction(isPlayerOne ? p1Action : p2Action);
