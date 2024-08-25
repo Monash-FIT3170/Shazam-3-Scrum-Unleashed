@@ -17,7 +17,7 @@ const CreateTournamentInput = ({
   errorCallback,
 }: CreateGameInput) => {
   return (
-    <div className="flex justify-between items-center w-full">
+    <div className="flex justify-between items-center w-2/3">
       <span className="text-white text-2xl uppercase font-bold">
         {inputText}
       </span>
