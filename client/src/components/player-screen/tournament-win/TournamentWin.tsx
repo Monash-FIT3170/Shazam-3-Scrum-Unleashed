@@ -19,7 +19,7 @@ const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
         <img
           src={goldenWinnerCup}
           alt="goldenWinnerCup"
-          className="w-60 opacity-30"
+          className="lg:w-60 w-32 opacity-30"
         />
       </div>
       <div className="flex justify-center transform">
@@ -28,8 +28,8 @@ const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
           alt="goldenWinnerCup"
           className="md:w-60 hidden  md:visible"
         />
-        <div className="text-center mt-10">
-          <h2 className="text-white md:text-8xl text-6xl font-bold">
+        <div className="text-center mt-52 lg:mt-10">
+          <h2 className="text-white lg:text-8xl text-4xl font-bold">
             {playerName}
           </h2>
           <h2 className="text-white md:text-7xl text-5xl font-bold">Winner</h2>
