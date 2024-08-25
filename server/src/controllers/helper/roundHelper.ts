@@ -94,6 +94,8 @@ function createMatch(players: Player[], tournament: Tournament) {
       return new RpsMatch(players, tournament.duelsToWin);
     case "PONG":
       return new PongMatch(players, tournament.duelsToWin, tournament);
+    default:
+      return new RpsMatch(players, tournament.duelsToWin);
   }
 }
 

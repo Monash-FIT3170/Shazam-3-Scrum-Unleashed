@@ -6,6 +6,7 @@ type AdverseUserInteraction = "refresh" | "leave" | "slow";
 async function createTournament(page: Page) {
   await page.goto("/");
   await page.getByText("CREATE GAME").click();
+  await page.getByTestId("mashup").click();
   await page.getByText("CREATE GAME").click();
   const gameCode = await page.getByTestId("tournament-code").textContent();
   return { gameCode, page };
