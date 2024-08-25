@@ -134,6 +134,7 @@ const PlayerScreen = () => {
         player={userPlayer}
         opponent={opponent}
         isWin={matchWinnerID === userPlayer.userID}
+        isSpectator={isSpectator}
       />
     );
     setTimeout(() => {
@@ -155,6 +156,7 @@ const PlayerScreen = () => {
             player={userPlayer}
             opponent={opponent}
             isPlayerOne={isPlayerOne}
+            isSpectator={isSpectator}
           />
         );
         duelTimerDisplay = <DuelTimer time={duelTime / 1000} />;
@@ -171,7 +173,11 @@ const PlayerScreen = () => {
           spectatingID={isSpectator ? userPlayer!.userID : null}
         />
       }
-      <div className="overflow-hidden h-screen relative">
+      <div
+        className={`overflow-hidden h-screen relative ${
+          isSpectator ? "border-8 border-spectator-bg" : ""
+        }`}
+      >
         <div className="pt-12">
           <div className="flex flex-col items-center justify-center h-full">
             <div className="flex items-center justify-start w-full">
@@ -183,8 +189,8 @@ const PlayerScreen = () => {
               <PlayerAndSpectatorsInfo
                 userPlayer={userPlayer}
                 opponent={opponent}
+                isSpectator={isSpectator}
               />
-              // TODO probably only want to display during a match and not after a match
             )}
             {content}
           </div>
