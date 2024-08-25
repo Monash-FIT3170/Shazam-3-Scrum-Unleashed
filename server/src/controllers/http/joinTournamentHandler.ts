@@ -36,6 +36,13 @@ export const joinTournamentHandler =
       return;
     }
 
+    if (tournament.inProgress) {
+      res
+        .status(422)
+        .json({ body: { message: "Tournament Has Already Started" } });
+      return;
+    }
+
     if (!tournament.canSocketJoin(userID)) {
       console.error(
         `Player : ${userID} has already connected to Tournament : ${tournamentCode}`,
@@ -61,6 +68,10 @@ export const joinTournamentHandler =
 
     console.log(`Player : ${playerName} has joined Game : ${tournamentCode}`);
 
-    io.to(tournament.hostUID).emit("TOURNAMENT_STATE", tournament.players);
+    io.to(tournament.hostUID).emit(
+      "TOURNAMENT_STATE",
+      tournament.players,
+      tournament.inProgress,
+    );
     res.sendStatus(200);
   };

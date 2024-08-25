@@ -14,7 +14,11 @@ export async function reconnectionHandler(
     }
 
     if (tournament.hostUID === socket.userID) {
-      io.to(socket.userID).emit("TOURNAMENT_STATE", tournament.players, true);
+      io.to(socket.userID).emit(
+        "TOURNAMENT_STATE",
+        tournament.players,
+        tournament.inProgress,
+      );
       return;
     }
 
