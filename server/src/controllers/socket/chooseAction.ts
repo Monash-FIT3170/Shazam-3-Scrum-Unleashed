@@ -29,7 +29,7 @@ export const playDuel =
       return;
     }
 
-    roundChecker(tournament, io, match);
+    roundChecker(tournament, io);
   };
 
 export const chooseActionSocket =

@@ -12,5 +12,6 @@ export interface Match {
   getMatchWinner(): Player | null;
   startMatch(io: Server<Events>, tournament: Tournament): void;
   emitMatchState(io: Server<Events>): void;
+  clearTimeouts(): void;
   type(): MatchType;
 }

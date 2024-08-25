@@ -7,6 +7,7 @@ import Tournament from "../tournament";
 import { roundChecker } from "../../controllers/helper/roundHelper";
 import { MatchType } from "../../../../types/socket/eventArguments";
 import * as crypto from "node:crypto";
+import * as crypto from "node:crypto";
 
 const INITIAL_BALL_Y_SPEED = 50;
 const POLL_RATE = 3; // Hz
@@ -199,7 +200,7 @@ export class PongMatch implements Match {
     this.emitMatchState(io);
 
     if (winner != null) {
-      roundChecker(this.tournament, io, this);
+      roundChecker(this.tournament, io);
       clearInterval(this.intervalHandler);
     }
   }
@@ -209,14 +210,26 @@ export class PongMatch implements Match {
   }
 
   getMatchWinner(): Player | null {
-    if (this.players[0].score >= this.duelsToWin) {
+    if (
+      this.players[0].score >= this.duelsToWin ||
+      this.players[1].isEliminated
+    ) {
       this.players[1].isEliminated = true;
       return this.players[0];
-    } else if (this.players[1].score >= this.duelsToWin) {
+    } else if (
+      this.players[1].score >= this.duelsToWin ||
+      this.players[0].isEliminated
+    ) {
       this.players[0].isEliminated = true;
       return this.players[1];
     } else {
       return null;
+    }
+  }
+
+  clearTimeouts(): void {
+    if (this.intervalHandler) {
+      clearInterval(this.intervalHandler);
     }
   }
 }
