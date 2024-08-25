@@ -64,9 +64,6 @@ const MatchOutcomeScreen = ({
           </p>
         )}
       </div>
-      <div className="text-white font-bold text-2xl md:text-3xl fixed top-[77%] mx-auto max-w-max inset-x-0">
-        <p>WAITING FOR THE NEXT ROUND...</p>
-      </div>
     </div>
   );
 };
