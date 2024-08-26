@@ -9,6 +9,7 @@ import Line2 from "../assets/gamesetup/Line.svg";
 import Lightning from "../assets/logo/Lightning.svg";
 import ChooseMatchType from "../components/inputs/ChooseMatchType.tsx";
 import { MatchType } from "../../../types/socket/eventArguments.ts";
+import ButtonComponent from "../components/buttons/BorderedButtonComponent.tsx";
 
 const defaultDuelsToWin: number = 3;
 const defaultDuelTime: number = 15;
@@ -71,6 +72,9 @@ const CreateTournament = () => {
   return (
     <div className="relative h-screen overflow-hidden">
       <div className="absolute top-0 w-full text-center my-3">
+      <div className="fixed top-0 md:right-20 right-5">
+        <ButtonComponent linkPath="/" text={"Back"} />
+      </div>
         <div className="uppercase text-white text-4xl md:text-5x lg:text-6xl w-full justify-center items-top font-bold pt-5 flex">
           <img src={Lightning} className="w-10"></img>
           GAME SETUP
