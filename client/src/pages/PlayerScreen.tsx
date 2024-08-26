@@ -76,10 +76,11 @@ const PlayerScreen = () => {
       setMatchType(matchType);
       setIsSpectator(getIsSpectator(players));
       setDuelTime(duelTime);
-
-      if (matchType === "RPS") {
+      const storedMatchState = localStorage.getItem("matchStarted");
+      if (matchType === "RPS" && storedMatchState !== "true") {
         // Only have RPS animation atm, dont show for PONG
         setShowAnimation(true);
+        setTimeout(() => localStorage.setItem("matchStarted", "true"), 3000);
       }
     });
 
@@ -87,6 +88,9 @@ const PlayerScreen = () => {
       setPlayers(players);
       setTimeout(() => {
         setMatchWinnerID(winnerUserID);
+        if (winnerUserID) {
+          localStorage.setItem("matchStarted", "false");
+        }
       }, 1500); // to delay match outcome screen
     });
 
