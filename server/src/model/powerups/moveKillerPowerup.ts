@@ -1,12 +1,12 @@
 import { RpsMatch } from "../matches/rpsMatch";
 import Powerup from "./powerup";
 
-export default class ShieldPowerup extends Powerup {
+export default class MovekillerPowerup extends Powerup {
   constructor() {
-    const name = "Shield Powerup";
+    const name = "Movekiller Powerup";
     const descr =
-      "This powerup prevents the player to lose the round";
-    super(name, descr, true, false);
+      "This powerup disables an opponent's move";
+    super(name, descr, false, false);
   }
 
   usePowerup(rpsMatch: RpsMatch): void {

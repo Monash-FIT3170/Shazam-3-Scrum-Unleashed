@@ -1,11 +1,11 @@
 import { RpsMatch } from "../matches/rpsMatch";
 import Powerup from "./powerup";
 
-export default class ShieldPowerup extends Powerup {
+export default class TiebreakerPowerup extends Powerup {
   constructor() {
-    const name = "Shield Powerup";
+    const name = "Tiebreaker Powerup";
     const descr =
-      "This powerup prevents the player to lose the round";
+      "This powerup enables the player to win the round if it is a tie";
     super(name, descr, true, false);
   }
 
