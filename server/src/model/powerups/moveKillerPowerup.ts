@@ -6,7 +6,7 @@ export default class MovekillerPowerup extends Powerup {
     const name = "Movekiller Powerup";
     const descr =
       "This powerup disables an opponent's move";
-    super(name, descr, false, false);
+    super(name, descr, false, true);
   }
 
   usePowerup(rpsMatch: RpsMatch): void {

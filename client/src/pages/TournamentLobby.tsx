@@ -98,11 +98,18 @@ const TournamentLobby = () => {
 
   const startTournament = async () => {
     if (!inProgress && players.length > 1) {
-      setTournamentStarted(
-        await postStartTournament(socket.userID, tournamentCode),
+      const userConfirmed = window.confirm(
+        "Are you sure you want to start the tournament?"
       );
+  
+      if (userConfirmed) {
+        setTournamentStarted(
+          await postStartTournament(socket.userID, tournamentCode)
+        );
+      }
     }
   };
+  
 
   /*  const quitTournament = () => {
     if (!inProgress) {
