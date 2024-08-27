@@ -4,8 +4,7 @@ import Powerup from "./powerup";
 export default class MovekillerPowerup extends Powerup {
   constructor() {
     const name = "Movekiller Powerup";
-    const descr =
-      "This powerup disables an opponent's move";
+    const descr = "This powerup disables an opponent's move";
     super(name, descr, false, true);
   }
 

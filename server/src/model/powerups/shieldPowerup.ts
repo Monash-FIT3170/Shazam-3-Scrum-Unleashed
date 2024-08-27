@@ -4,8 +4,7 @@ import Powerup from "./powerup";
 export default class ShieldPowerup extends Powerup {
   constructor() {
     const name = "Shield Powerup";
-    const descr =
-      "This powerup prevents the player to lose the round";
+    const descr = "This powerup prevents the player to lose the round";
     super(name, descr, true, false);
   }
 
