@@ -28,7 +28,7 @@ export class PongMatch implements Match {
 
   constructor(players: Player[], duelsToWin: number, tournament: Tournament) {
     this.players = players;
-    this.gameScore = ({ player1: 0, player2: 0 });
+    this.gameScore = ({ player1: 0, player2: 0 , Player1name: players[0].name, Player2name: players[1].name });
     this.tournament = tournament;
     this.paddleStates = [
       {

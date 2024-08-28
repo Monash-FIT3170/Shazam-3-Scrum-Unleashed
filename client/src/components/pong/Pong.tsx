@@ -66,8 +66,8 @@ const clampY = (
 
 const ScoreDisplay: React.FC<{ scores: PongGameScore }> = ({ scores }) => (
   <div style={{ position: 'absolute', top: 10, left: 10, color: 'white', fontSize: '24px' }}>
-    <div>Player 1: {scores.player1}</div>
-    <div>Player 2: {scores.player2}</div>
+    <div>{scores.Player1name} {scores.player1}</div>
+    <div>{scores.Player2name} {scores.player2}</div>
   </div>
 );
 
@@ -75,7 +75,7 @@ const Pong: React.FC<PongProps> = React.memo(
   ({ tournamentCode, isPlayerOne }) => {
     const [buttonState, setButtonState] = useState<ButtonState>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [scores, setScores] = useState<PongGameScore>({ player1: 0, player2: 0 });
+    const [scores, setScores] = useState<PongGameScore>({ player1: 0, player2: 0});
     const gameState = useRef({
       ball: {
         x: GAME_WIDTH / 2,

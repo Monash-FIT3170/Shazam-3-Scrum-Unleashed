@@ -39,4 +39,6 @@ export interface PongPaddleState {
 export interface PongGameScore {
     player1: number;
     player2: number;
+    Player1name?: string;
+    Player2name?: string;
 }
