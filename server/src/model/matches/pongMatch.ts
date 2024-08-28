@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import { PongBallState, PongPaddleState } from "../../../../types/types";
+import { PongBallState, PongPaddleState, PongGameScore } from "../../../../types/types";
 import { Match } from "./match";
 import Player from "../player";
 import { Events } from "../../../../types/socket/events";
@@ -22,11 +22,13 @@ export class PongMatch implements Match {
   players: Player[];
   paddleStates: PongPaddleState[];
   ballState: PongBallState;
+  gameScore: PongGameScore;
   tournament: Tournament;
   intervalHandler: NodeJS.Timeout | undefined;
 
   constructor(players: Player[], duelsToWin: number, tournament: Tournament) {
     this.players = players;
+    this.gameScore = ({ player1: 0, player2: 0 });
     this.tournament = tournament;
     this.paddleStates = [
       {
@@ -74,6 +76,7 @@ export class PongMatch implements Match {
       "MATCH_PONG_STATE",
       this.ballState,
       this.paddleStates,
+      this.gameScore,
     );
   }
 
@@ -170,6 +173,7 @@ export class PongMatch implements Match {
         this.ballState.yVelocity = INITIAL_BALL_Y_SPEED;
         this.ballState.xVelocity = 1;
         this.players[0].score += 1;
+        this.gameScore.player1 +=1;
         winner = this.getMatchWinner();
         io.to(this.matchRoomID).emit(
           "MATCH_DATA",
@@ -183,6 +187,7 @@ export class PongMatch implements Match {
         this.ballState.yVelocity = -INITIAL_BALL_Y_SPEED;
         this.ballState.xVelocity = 1;
         this.players[1].score += 1;
+        this.gameScore.player2 +=1;
         winner = this.getMatchWinner();
         io.to(this.matchRoomID).emit(
           "MATCH_DATA",
