@@ -36,3 +36,7 @@ export interface PongPaddleState {
     width: number;
 }
 
+export interface PongGameScore {
+    player1: number;
+    player2: number;
+}
