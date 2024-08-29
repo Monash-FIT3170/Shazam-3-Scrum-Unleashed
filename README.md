@@ -48,7 +48,7 @@ Remember to run the 2 following commands to ensure the code passes the automated
 2. `npm run lint`
 
 ## Testing
-To run the E2E tests locally, complete the following commands.
+To run the E2E tests locally, complete the following instructions.
 
 1. Start the server and client, as outlined in [Prepare for development](#Prepare-for-development)
 2. Move into the [tests](tests) directory of the project by typing the command `cd tests`.
