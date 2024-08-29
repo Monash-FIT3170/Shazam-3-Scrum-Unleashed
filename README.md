@@ -3,7 +3,7 @@
 ### Project 3 - FIT3170 - 2024
 
 ## Team Members
-- Aaron Abbott (aabb0010@student.monash.edu) Repo Admin
+- Aaron Abbott (aabb0010@student.monash.edu)
 - Patrick (pedw0004@student.monash.edu)
 - James Chea (jche0346@student.monash.edu)
 - Levi Kogan (lkog0002@student.monash.edu)
@@ -57,6 +57,9 @@ To run the E2E tests locally, complete the following commands.
 - Occasionally the test will stall when a client browser fails to join, this can be fixed by manually clicking the join button.
 - Occasionally a client browser will not be updated on a match start, refreshing will connect the client.
 
+
+## Developed Application
+The developed application is currently available [here](https://3170.fit/) to be enjoyed.
 
 
 
