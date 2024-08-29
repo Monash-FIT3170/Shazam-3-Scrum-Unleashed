@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { useNavigate } from "react-router-dom";
 import { GAME_LOBBY_PATH } from "./pagePaths.ts";
 import { socket } from "../App.tsx";
@@ -10,6 +9,7 @@ import Lightning from "../assets/logo/Lightning.svg";
 import ChooseMatchType from "../components/inputs/ChooseMatchType.tsx";
 import { MatchType } from "../../../types/socket/eventArguments.ts";
 import ButtonComponent from "../components/buttons/BorderedButtonComponent.tsx";
+import TournamentPopup from '../components/popups/TournamentPopup'; // Import the popup component
 
 const defaultDuelsToWin: number = 3;
 const defaultDuelTime: number = 15;
@@ -42,6 +42,7 @@ async function postTournament(
     return (await res.json()).body as CreateTournamentRes;
   } catch (error) {
     console.error(error);
+    return null;
   }
 }
 
@@ -52,6 +53,9 @@ const CreateTournament = () => {
   const [roundTime, setRoundTime] = useState(defaultRoundTime);
   const [inputErrors, setInputError] = useState([false, false, false]);
   const [matchType, setMatchType] = useState<MatchType[]>(["RPS"]);
+  const [loading, setLoading] = useState(false);
+  const [tournamentCode, setTournamentCode] = useState("");
+  const [showPopup, setShowPopup] = useState(false); // State for controlling the popup visibility
 
   const changeInputError = (index: number) => (bool: boolean) => {
     const newInputErrors = inputErrors.map((val, i) =>
@@ -60,14 +64,35 @@ const CreateTournament = () => {
     setInputError(newInputErrors);
   };
 
-  const [loading, setLoading] = useState(false);
-  const [tournamentCode, setTournamentCode] = useState("");
-
   useEffect(() => {
-    if (loading) {
+    if (tournamentCode) {
       navigate(`../${GAME_LOBBY_PATH}?tournamentCode=${tournamentCode}`);
     }
-  }, [tournamentCode]);
+  }, [tournamentCode, navigate]);
+
+  const handleCreateGameClick = () => {
+    if (!loading && !inputErrors.includes(true)) {
+      setShowPopup(true);
+    }
+  };
+
+  const handleStartTournament = async () => {
+    setShowPopup(false);
+    setLoading(true);
+    const code = await postTournament(
+      socket.userID,
+      duelsToWin,
+      duelTime,
+      roundTime,
+      matchType,
+    );
+    if (code) {
+      setTournamentCode(code.tournamentCode);
+    } else {
+      setLoading(false); // If something went wrong, stop the loading state
+      console.error("Failed to create the tournament.");
+    }
+  };
 
   return (
     <div className="relative h-screen overflow-hidden">
@@ -75,10 +100,10 @@ const CreateTournament = () => {
         <div className="fixed top-0 md:right-20 right-5">
           <ButtonComponent linkPath="/" text={"Back"} />
         </div>
-        <div className="uppercase text-white text-4xl md:text-5x lg:text-6xl w-full justify-center items-top font-bold pt-5 flex">
-          <img src={Lightning} className="w-10"></img>
+        <div className="uppercase text-white text-4xl md:text-5xl lg:text-6xl w-full justify-center items-top font-bold pt-5 flex">
+          <img src={Lightning} className="w-10" alt="Lightning Icon"></img>
           GAME SETUP
-          <img src={Lightning} className="w-10"></img>
+          <img src={Lightning} className="w-10" alt="Lightning Icon"></img>
         </div>
         <div className="flex justify-center mt-4">
           <img src={Line2} alt="Line Decoration" className="w-1/3" />
@@ -91,21 +116,21 @@ const CreateTournament = () => {
         <div className="w-full md:w-3/4 lg:ml-96 flex flex-col gap-4">
           <CreateTournamentInput
             inputText={"duels per match"}
-            placeholder={duelsToWin}
+            placeholder={duelsToWin}  // Pass number directly
             callback={setDuelsToWin}
             transparentUnits={true}
             errorCallback={changeInputError(0)}
           />
           <CreateTournamentInput
             inputText={"duel timer"}
-            placeholder={duelTime}
+            placeholder={duelTime}  // Pass number directly
             callback={setDuelTime}
             transparentUnits={false}
             errorCallback={changeInputError(1)}
           />
           <CreateTournamentInput
             inputText={"round timer"}
-            placeholder={roundTime}
+            placeholder={roundTime}  // Pass number directly
             callback={setRoundTime}
             transparentUnits={false}
             errorCallback={changeInputError(2)}
@@ -113,22 +138,14 @@ const CreateTournament = () => {
         </div>
       </div>
 
-      <div className="h-14 absolute bottom-10  xl:bottom-5 w-full flex justify-center">
+      <div className="h-14 absolute bottom-10 xl:bottom-5 w-full flex justify-center">
         <button
-          className={`w-1/2 lg:w-1/5 text-white ${inputErrors.includes(true) ? "bg-bright-red" : "bg-primary"} text-xl sm:text-2xl font-bold px-7 rounded-xl h-full uppercase`}
-          onClick={async () => {
-            const code = await postTournament(
-              socket.userID,
-              duelsToWin,
-              duelTime,
-              roundTime,
-              matchType,
-            );
-            if (code) {
-              setTournamentCode(code.tournamentCode);
-              setLoading(true);
-            }
-          }}
+          className={`w-1/2 lg:w-1/5 text-white text-xl sm:text-2xl font-bold px-7 rounded-xl h-full uppercase ${
+            inputErrors.includes(true)
+              ? "bg-bright-red"
+              : "bg-primary"
+          }`}
+          onClick={handleCreateGameClick} // Show popup on button click
           disabled={loading || inputErrors.includes(true)}
         >
           {inputErrors.includes(true)
@@ -138,6 +155,13 @@ const CreateTournament = () => {
               : "CREATE GAME"}
         </button>
       </div>
+
+      {/* Popup for confirmation */}
+      <TournamentPopup
+        show={showPopup}
+        onClose={() => setShowPopup(false)}
+        onConfirm={handleStartTournament}
+      />
     </div>
   );
 };
