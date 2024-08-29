@@ -9,7 +9,7 @@ import Lightning from "../assets/logo/Lightning.svg";
 import ChooseMatchType from "../components/inputs/ChooseMatchType.tsx";
 import { MatchType } from "../../../types/socket/eventArguments.ts";
 import ButtonComponent from "../components/buttons/BorderedButtonComponent.tsx";
-import TournamentPopup from '../components/popups/TournamentPopup'; // Import the popup component
+import TournamentPopup from "../components/popups/TournamentPopup"; // Import the popup component
 
 const defaultDuelsToWin: number = 3;
 const defaultDuelTime: number = 15;
@@ -116,21 +116,21 @@ const CreateTournament = () => {
         <div className="w-full md:w-3/4 lg:ml-96 flex flex-col gap-4">
           <CreateTournamentInput
             inputText={"duels per match"}
-            placeholder={duelsToWin}  // Pass number directly
+            placeholder={duelsToWin} // Pass number directly
             callback={setDuelsToWin}
             transparentUnits={true}
             errorCallback={changeInputError(0)}
           />
           <CreateTournamentInput
             inputText={"duel timer"}
-            placeholder={duelTime}  // Pass number directly
+            placeholder={duelTime} // Pass number directly
             callback={setDuelTime}
             transparentUnits={false}
             errorCallback={changeInputError(1)}
           />
           <CreateTournamentInput
             inputText={"round timer"}
-            placeholder={roundTime}  // Pass number directly
+            placeholder={roundTime} // Pass number directly
             callback={setRoundTime}
             transparentUnits={false}
             errorCallback={changeInputError(2)}
@@ -141,9 +141,7 @@ const CreateTournament = () => {
       <div className="h-14 absolute bottom-10 xl:bottom-5 w-full flex justify-center">
         <button
           className={`w-1/2 lg:w-1/5 text-white text-xl sm:text-2xl font-bold px-7 rounded-xl h-full uppercase ${
-            inputErrors.includes(true)
-              ? "bg-bright-red"
-              : "bg-primary"
+            inputErrors.includes(true) ? "bg-bright-red" : "bg-primary"
           }`}
           onClick={handleCreateGameClick} // Show popup on button click
           disabled={loading || inputErrors.includes(true)}
