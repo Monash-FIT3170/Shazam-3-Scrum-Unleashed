@@ -98,7 +98,7 @@ async function autoClickMoves(
       // If error is thrown, stop making moves
       break;
     }
-    // Make sure the buttons disappear after you click them
+    // Make sure the buttons disspear after you click them
     await expect(page.getByTestId(move)).toBeHidden();
   }
 }
@@ -122,11 +122,6 @@ test.describe("Tournament Game Automation", () => {
     await expect(hostPage.getByTestId("lobby-player-item")).toHaveCount(
       playerPages.length,
     );
-
-    // Handle the dialog event before clicking the "Start Tournament" button
-    hostPage.once('dialog', async (dialog) => {
-      await dialog.accept();  // Accepts the confirmation dialog
-    });
 
     await hostPage.getByText("Start Tournament").click();
 

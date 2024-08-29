@@ -98,15 +98,9 @@ const TournamentLobby = () => {
 
   const startTournament = async () => {
     if (!inProgress && players.length > 1) {
-      const userConfirmed = window.confirm(
-        "Are you sure you want to start the tournament?",
+      setTournamentStarted(
+        await postStartTournament(socket.userID, tournamentCode),
       );
-
-      if (userConfirmed) {
-        setTournamentStarted(
-          await postStartTournament(socket.userID, tournamentCode),
-        );
-      }
     }
   };
 
