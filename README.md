@@ -18,6 +18,9 @@
 - Fathy Abdelshahid (fabd0009@student.monash.edu)
 - Rory Tobin-Underwood (rtob0002@student.monash.edu)
 
+## Developed Application
+The developed application is currently available [here](https://3170.fit/) to be enjoyed.
+
 ## Repo Structure
 - [client](client) : contains all the front end components required for the web client.
 - [server](server)  : contains all the backend (networking, storage and game logic) for the server.
@@ -56,10 +59,6 @@ To run the E2E tests locally, complete the following commands.
 - Running `npm run test -- --headed` will create and display the tabs on the local device.
 - Occasionally the test will stall when a client browser fails to join, this can be fixed by manually clicking the join button.
 - Occasionally a client browser will not be updated on a match start, refreshing will connect the client.
-
-
-## Developed Application
-The developed application is currently available [here](https://3170.fit/) to be enjoyed.
 
 
 
