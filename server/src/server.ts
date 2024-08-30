@@ -18,7 +18,6 @@ import { createTournamentHandler } from "./controllers/http/createTournamentHand
 import { joinTournamentHandler } from "./controllers/http/joinTournamentHandler";
 import { startTournamentHandler } from "./controllers/http/startTournamentHandler";
 import { pongPaddleMovementSocket } from "./controllers/socket/pongPaddleMovement";
-import { quitTournamentSocket } from "./controllers/socket/quitTournament";
 import { spectateMatchHandler } from "./controllers/http/spectateMatchHandler";
 import { stopSpectatingHandler } from "./controllers/http/stopSpectatingHandler";
 
@@ -53,7 +52,7 @@ io.on("connection", async (socket) => {
   socket.on("PONG_PADDLE_MOVEMENT", pongPaddleMovementSocket);
   socket.on("RPS_CHOOSE_ACTION", chooseActionSocket(io));
   socket.on("ADD_REACTION", addReactionSocket(io));
-  socket.on("QUIT_TOURNAMENT", quitTournamentSocket());
+  //socket.on("QUIT_TOURNAMENT", quitTournamentSocket());
 });
 
 app.get("/qr-code/:url", qrCode);

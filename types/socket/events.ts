@@ -11,21 +11,22 @@ import {MatchType} from "./eventArguments";
  * Add any new Event Categories to this
  */
 export interface Events
-  extends ServerToClientEvents,
-  PlayerToServerEvents,
-  ServerToHostEvents,
-  ServerToPlayerEvents, HostToServerEvents { }
+    extends ServerToClientEvents,
+        PlayerToServerEvents,
+        ServerToHostEvents,
+        ServerToPlayerEvents, HostToServerEvents {
+}
 
 interface ServerToClientEvents {
-  SESSION_INFO: (sessionID: string, userID: string) => void;
-  TOURNAMENT_COMPLETE: (playerName: string) => void;
+    SESSION_INFO: (sessionID: string, userID: string) => void;
+    TOURNAMENT_COMPLETE: (playerName: string) => void;
 }
 
 interface HostToServerEvents {
-  SPECTATE_PLAYER: (    hostID : string, tournamentCode: string,
-                        playerUserID: string,) => void;
-  STOP_SPECTATING: (hostID : string, tournamentCode: string,
-                    playerUserID: string,) => void;
+    SPECTATE_PLAYER: (hostID: string, tournamentCode: string,
+                      playerUserID: string,) => void;
+    STOP_SPECTATING: (hostID: string, tournamentCode: string,
+                      playerUserID: string,) => void;
 }
 
 interface PlayerToServerEvents {
@@ -55,14 +56,15 @@ interface PlayerToServerEvents {
 }
 
 interface ServerToHostEvents {
-  TOURNAMENT_STATE: (players: PlayerAttributes[], inProgress:boolean) => void;
+    TOURNAMENT_STATE: (players: PlayerAttributes[], inProgress: boolean) => void;
 }
 
 interface ServerToPlayerEvents {
 
     MATCH_START: (
         players: PlayerAttributes[],
-        matchType: MatchType
+        matchType: MatchType,
+        duelTime: number
     ) => void;
 
     MATCH_DATA: (
@@ -80,9 +82,5 @@ interface ServerToPlayerEvents {
         paddleStates: PongPaddleState[],
     ) => void;
 
-  START_DUEL_TIMER : (
-    time: number
-    ) => void;
-
-  REACTION_ADDED: (reaction: ReactionData) => void;
+    REACTION_ADDED: (reaction: ReactionData) => void;
 }

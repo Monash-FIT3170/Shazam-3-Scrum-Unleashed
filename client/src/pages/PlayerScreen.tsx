@@ -1,16 +1,18 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import WaitingForMatchStart from "../components/player-screen/waiting-screens/WaitingForMatchStart.tsx";
 import { socket } from "../App";
 import { PlayerAttributes } from "../../../types/types.ts";
 import { useLoaderData } from "react-router-dom";
 import PlayerAndSpectatorsInfo from "../components/player-screen/match-overlay/PlayerAndSpectatorsInfo.tsx";
-import DuelTimer from "../components/player-screen/match-overlay/DuelTimer.tsx";
 import MatchOutcomeScreen from "../components/player-screen/outcome-screens/MatchOutcomeScreen.tsx";
 import TournamentWin from "../components/player-screen/tournament-win/TournamentWin.tsx";
 import ReactionOverlay from "../components/reactions/ReactionsOverlay.tsx";
 import { Pong } from "../components/pong/Pong.tsx";
 import { MatchType } from "../../../types/socket/eventArguments.ts";
 import { RPS } from "../components/rps/RPS.tsx";
+import DuelInProgressAnimation from "../components/player-screen/DuelInProgressAnimation.tsx";
+
+const DEFAULT_DUEL_TIME = 15; // seconds
 
 const PlayerScreen = () => {
   const { loadedTournamentCode, loadedPlayerName } = useLoaderData() as {
@@ -28,8 +30,8 @@ const PlayerScreen = () => {
   const [isSpectator, setIsSpectator] = useState(false);
   const [matchType, setMatchType] = useState<MatchType>();
   const [isPlayerOne, setIsPlayerOne] = useState(false);
-  const [duelTime, setDuelTime] = useState(0);
-  const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [duelTime, setDuelTime] = useState(DEFAULT_DUEL_TIME);
+  const [showAnimation, setShowAnimation] = useState(false);
 
   function setPlayers(players: PlayerAttributes[]) {
     for (let i = 0; i < players.length; i++) {
@@ -59,12 +61,6 @@ const PlayerScreen = () => {
     }
   }
 
-  function stopTimer() {
-    if (timerIntervalRef.current) {
-      clearInterval(timerIntervalRef.current);
-    }
-  }
-
   function getIsSpectator(players: PlayerAttributes[]) {
     for (const player of players) {
       if (player.userID === socket.userID) {
@@ -75,49 +71,41 @@ const PlayerScreen = () => {
   }
 
   useEffect(() => {
-    socket.on("MATCH_START", (players, matchType) => {
+    socket.on("MATCH_START", (players, matchType, duelTime) => {
       setPlayers(players);
       setMatchType(matchType);
       setIsSpectator(getIsSpectator(players));
+      setDuelTime(duelTime);
+      const storedMatchState = localStorage.getItem("matchStarted");
+      if (matchType === "RPS" && storedMatchState !== "true") {
+        // Only have RPS animation atm, dont show for PONG
+        setShowAnimation(true);
+        setTimeout(() => localStorage.setItem("matchStarted", "true"), 3000);
+      }
     });
 
     socket.on("MATCH_DATA", (players, winnerUserID) => {
-      setMatchWinnerID(winnerUserID);
       setPlayers(players);
+      setTimeout(() => {
+        setMatchWinnerID(winnerUserID);
+        if (winnerUserID) {
+          localStorage.setItem("matchStarted", "false");
+        }
+      }, 1500); // to delay match outcome screen
     });
 
     socket.on("TOURNAMENT_COMPLETE", (playerName) => {
       setTournamentWinner(playerName);
     });
 
-    socket.on("START_DUEL_TIMER", (duelTime) => {
-      setDuelTime(duelTime);
-      if (timerIntervalRef.current) {
-        clearInterval(timerIntervalRef.current);
-      }
-      timerIntervalRef.current = setInterval(() => {
-        setDuelTime((prevTime) => {
-          if (prevTime <= 1) {
-            stopTimer();
-            return 0;
-          }
-          return prevTime - 1000;
-        });
-      }, 1000);
-    });
-
     return () => {
       socket.off("MATCH_START");
       socket.off("MATCH_DATA");
-      socket.off("START_DUEL_TIMER");
-      stopTimer();
       socket.off("TOURNAMENT_COMPLETE");
     };
   }, []);
 
   let content = null;
-  let duelTimerDisplay = null;
-
   // FIXME would like to make this simpler
   if (tournamentWinner !== undefined) {
     content = <TournamentWin playerName={tournamentWinner} />;
@@ -141,7 +129,7 @@ const PlayerScreen = () => {
       setMatchWinnerID(undefined);
       setOpponent(undefined);
     }, MATCH_COMPLETION_TIME);
-  } else {
+  } else if (!showAnimation) {
     switch (matchType) {
       case "PONG": {
         content = (
@@ -157,12 +145,18 @@ const PlayerScreen = () => {
             opponent={opponent}
             isPlayerOne={isPlayerOne}
             isSpectator={isSpectator}
+            duelTime={duelTime}
           />
         );
-        duelTimerDisplay = <DuelTimer time={duelTime / 1000} />;
         break;
       }
     }
+  } else {
+    // Show animation
+    content = <DuelInProgressAnimation />;
+    setTimeout(() => {
+      setShowAnimation(false);
+    }, 3000);
   }
 
   return (
@@ -179,11 +173,6 @@ const PlayerScreen = () => {
         }`}
       >
         <div className="pt-12">
-          <div className="flex flex-col items-center justify-center h-full">
-            <div className="flex items-center justify-start w-full">
-              {duelTimerDisplay != null && duelTimerDisplay}
-            </div>
-          </div>
           <div className="flex flex-col items-center justify-center mt-10">
             {userPlayer !== undefined && opponent !== undefined && (
               <PlayerAndSpectatorsInfo

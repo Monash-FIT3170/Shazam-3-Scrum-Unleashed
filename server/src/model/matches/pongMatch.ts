@@ -9,7 +9,7 @@ import { MatchType } from "../../../../types/socket/eventArguments";
 import * as crypto from "node:crypto";
 
 const INITIAL_BALL_Y_SPEED = 50;
-const POLL_RATE = 3; // Hz
+const POLL_RATE = 24; // Hz
 const BALL_RADIUS = 2;
 const GAME_WIDTH = 75;
 const GAME_HEIGHT = 100;
@@ -47,21 +47,26 @@ export class PongMatch implements Match {
     this.ballState = {
       x: GAME_WIDTH / 2,
       y: GAME_WIDTH / 2,
-      xVelocity: this.randomXVelocity(),
+      xVelocity: 1,
       yVelocity: INITIAL_BALL_Y_SPEED,
     };
     this.intervalHandler = undefined;
   }
 
   startMatch(io: Server<Events>): void {
-    io.to(this.matchRoomID).emit("MATCH_START", this.players, "PONG");
+    io.to(this.matchRoomID).emit(
+      "MATCH_START",
+      this.players,
+      "PONG",
+      this.tournament.duelTime / 1000,
+    );
 
     setTimeout(() => {
       this.emitMatchState(io);
       this.intervalHandler = setInterval(() => {
         this.tick(io);
       }, 1000 / POLL_RATE);
-    }, 1000); // this will start the pong match after a short delay, maybe not required.
+    }, 1000); // This will start the pong match after a short delay.
   }
 
   emitMatchState(io: Server<Events>): void {
@@ -70,10 +75,6 @@ export class PongMatch implements Match {
       this.ballState,
       this.paddleStates,
     );
-  }
-
-  randomXVelocity(): number {
-    return (Math.random() - 0.5) * INITIAL_BALL_Y_SPEED;
   }
 
   ballPaddleCollision(
@@ -167,7 +168,7 @@ export class PongMatch implements Match {
         newBallY = GAME_HEIGHT / 2;
         newBallX = GAME_WIDTH / 2;
         this.ballState.yVelocity = INITIAL_BALL_Y_SPEED;
-        this.ballState.xVelocity = this.randomXVelocity();
+        this.ballState.xVelocity = 1;
         this.players[0].score += 1;
         winner = this.getMatchWinner();
         io.to(this.matchRoomID).emit(
@@ -180,7 +181,7 @@ export class PongMatch implements Match {
         newBallY = GAME_HEIGHT / 2;
         newBallX = GAME_WIDTH / 2;
         this.ballState.yVelocity = -INITIAL_BALL_Y_SPEED;
-        this.ballState.xVelocity = this.randomXVelocity();
+        this.ballState.xVelocity = 1;
         this.players[1].score += 1;
         winner = this.getMatchWinner();
         io.to(this.matchRoomID).emit(

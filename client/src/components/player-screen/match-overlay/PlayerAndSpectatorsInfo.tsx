@@ -16,10 +16,10 @@ const PlayerAndSpectatorsInfo = ({
 }: PlayerAndSpectatorsInfoProps) => {
   return (
     <div>
-      <div className="block md:hidden">
+      <div className="hidden">
         <PlayerName name={opponent.name} isOpponent={true} />
       </div>
-      <div className="hidden md:block">
+      <div className="block">
         <StarsInfo
           playerName={opponent.name}
           score={opponent.score}
@@ -28,10 +28,10 @@ const PlayerAndSpectatorsInfo = ({
         />
       </div>
 
-      <div className="block md:hidden">
+      <div className="hidden">
         <PlayerName name={userPlayer.name} isOpponent={false} />
       </div>
-      <div className="hidden md:block">
+      <div className="block">
         <StarsInfo
           playerName={userPlayer.name}
           score={userPlayer.score}
