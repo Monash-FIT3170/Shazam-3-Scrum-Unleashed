@@ -1,6 +1,10 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { socket } from "../../App";
-import { PongBallState, PongPaddleState, PongGameScore } from "../../../../types/types";
+import {
+  PongBallState,
+  PongPaddleState,
+  PongGameScore,
+} from "../../../../types/types";
 import { PongButton } from "./PongButton";
 import LeftButton from "../../assets/pong-buttons/LEFT.svg";
 import LeftButtonDown from "../../assets/pong-buttons/LEFT-BUTTON-DOWN.svg";
@@ -33,8 +37,6 @@ const clampX = (ballState: PongBallState, gameWidth: number) => {
   }
 };
 
-
-
 const clampY = (
   number: number,
   paddlePosition: PongPaddleState | undefined,
@@ -65,9 +67,21 @@ const clampY = (
 };
 
 const ScoreDisplay: React.FC<{ scores: PongGameScore }> = ({ scores }) => (
-  <div style={{ position: 'absolute', top: 10, left: 10, color: 'white', fontSize: '24px' }}>
-    <div>{scores.Player1name} {scores.player1}</div>
-    <div>{scores.Player2name} {scores.player2}</div>
+  <div
+    style={{
+      position: "absolute",
+      top: 10,
+      left: 10,
+      color: "white",
+      fontSize: "24px",
+    }}
+  >
+    <div>
+      {scores.Player1name} {scores.player1}
+    </div>
+    <div>
+      {scores.Player2name} {scores.player2}
+    </div>
   </div>
 );
 
@@ -75,7 +89,10 @@ const Pong: React.FC<PongProps> = React.memo(
   ({ tournamentCode, isPlayerOne }) => {
     const [buttonState, setButtonState] = useState<ButtonState>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [scores, setScores] = useState<PongGameScore>({ player1: 0, player2: 0});
+    const [scores, setScores] = useState<PongGameScore>({
+      player1: 0,
+      player2: 0,
+    });
     const gameState = useRef({
       ball: {
         x: GAME_WIDTH / 2,
@@ -89,7 +106,11 @@ const Pong: React.FC<PongProps> = React.memo(
     });
 
     const updateGameState = useCallback(
-      (ballState: PongBallState, paddleStates: PongPaddleState[], newScores: PongGameScore) => {
+      (
+        ballState: PongBallState,
+        paddleStates: PongPaddleState[],
+        newScores: PongGameScore,
+      ) => {
         gameState.current = {
           ball: {
             x: ballState.x * SCALING_FACTOR,
@@ -258,7 +279,7 @@ const Pong: React.FC<PongProps> = React.memo(
           <canvas ref={canvasRef} width={GAME_WIDTH} height={GAME_HEIGHT} />
         </div>
         <div className="flex flex-row gap-3">
-        <ScoreDisplay scores={scores} />
+          <ScoreDisplay scores={scores} />
           <PongButton {...buttonProps.left} />
           <PongButton {...buttonProps.right} />
         </div>
