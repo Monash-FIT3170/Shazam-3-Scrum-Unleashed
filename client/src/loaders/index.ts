@@ -1,3 +1,4 @@
+import { JOIN_GAME_PATH, PATH_NOT_FOUND_PATH } from "../pages/pagePaths";
 import { ReactRouterRequest } from "../types";
 
 export interface LoaderProps {
@@ -20,6 +21,22 @@ export const joinTournamentLoader = async ({ request }: LoaderProps) => {
     return "";
   }
   return tournamentCode;
+};
+
+export const joinTournamentRedirectLoader = async ({
+  request,
+}: LoaderProps) => {
+  const url = new URL(request.url);
+  const path = url.pathname.replace(/\//, "");
+  const codeMatch = path.match(/(^\d{6}$)/);
+
+  if (codeMatch) {
+    window.location.href = `/${JOIN_GAME_PATH}?tournamentCode=${codeMatch[1]}`;
+  } else {
+    window.location.href = `${PATH_NOT_FOUND_PATH}`;
+  }
+
+  return {};
 };
 
 export const playerScreenLoader = async ({ request }: LoaderProps) => {
