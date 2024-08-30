@@ -15,6 +15,7 @@ import {
   JOIN_GAME_PATH,
   GAME_LOBBY_PATH,
   PLAYER_SCREEN,
+  PATH_NOT_FOUND_PATH,
 
   // TOURNAMENT_SCREEN,
 } from "./pages/pagePaths.ts";
@@ -23,9 +24,11 @@ import {
   joinTournamentLoader,
   tournamentLobbyLoader,
   playerScreenLoader,
+  joinTournamentRedirectLoader,
 } from "./loaders";
 import PlayerScreen from "./pages/PlayerScreen.tsx";
 import Home from "./pages/Home.tsx";
+import PathNotFound from "./pages/PathNotFound.tsx";
 
 declare module "socket.io-client" {
   interface Socket {
@@ -61,9 +64,27 @@ const router = createBrowserRouter(
         element={<PlayerScreen />}
         loader={playerScreenLoader}
       />
-    </Route>,
+      <Route
+        path={PLAYER_SCREEN}
+        element={<PlayerScreen />}
+        loader={playerScreenLoader}
+      />
+      <Route
+        path={":code"}
+        element={<Home />}
+        loader={joinTournamentRedirectLoader}
+      />
+      <Route
+        path={PATH_NOT_FOUND_PATH}
+        element={<PathNotFound />}
+      />
+    </Route>
+    ,
   ),
 );
+
+
+
 
 function App() {
   const sessionID = localStorage.getItem("sessionID") ?? "";
