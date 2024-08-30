@@ -4,7 +4,7 @@ interface PopupProps {
   show: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  children: React.ReactNode; // Accept children to pass custom content
+  children: React.ReactNode; 
 }
 
 const Popup: React.FC<PopupProps> = ({
@@ -13,7 +13,7 @@ const Popup: React.FC<PopupProps> = ({
   onConfirm,
   children,
 }) => {
-  if (!show) return null; // Return null if the popup should not be shown
+  if (!show) return null; 
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50 p-4">
@@ -23,7 +23,7 @@ const Popup: React.FC<PopupProps> = ({
 
         {/* Button Container */}
         <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4">
-          {/* Confirm Button with White Outline */}
+          {/* Confirm Button */}
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl border-white border-4 text-3xl w-80 md:w-48 lg:w-56 py-2 px-4"
             onClick={onConfirm}

@@ -9,7 +9,7 @@ import Lightning from "../assets/logo/Lightning.svg";
 import ChooseMatchType from "../components/inputs/ChooseMatchType.tsx";
 import { MatchType } from "../../../types/socket/eventArguments.ts";
 import ButtonComponent from "../components/buttons/BorderedButtonComponent.tsx";
-import Popup from "../components/popups/Popup"; // Import the new reusable Popup component
+import Popup from "../components/popups/Popup";
 
 const defaultDuelsToWin: number = 3;
 const defaultDuelTime: number = 15;
@@ -55,7 +55,7 @@ const CreateTournament = () => {
   const [matchType, setMatchType] = useState<MatchType[]>(["RPS"]);
   const [loading, setLoading] = useState(false);
   const [tournamentCode, setTournamentCode] = useState("");
-  const [showPopup, setShowPopup] = useState(false); // State for controlling the popup visibility
+  const [showPopup, setShowPopup] = useState(false);
 
   const changeInputError = (index: number) => (bool: boolean) => {
     const newInputErrors = inputErrors.map((val, i) =>
@@ -143,7 +143,7 @@ const CreateTournament = () => {
           className={`w-1/2 lg:w-1/5 text-white text-xl sm:text-2xl font-bold px-7 rounded-xl h-full uppercase ${
             inputErrors.includes(true) ? "bg-bright-red" : "bg-primary"
           }`}
-          onClick={handleCreateGameClick} // Show popup on button click
+          onClick={handleCreateGameClick} 
           disabled={loading || inputErrors.includes(true)}
         >
           {inputErrors.includes(true)
