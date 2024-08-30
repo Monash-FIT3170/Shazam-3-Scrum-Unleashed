@@ -9,7 +9,7 @@ import Lightning from "../assets/logo/Lightning.svg";
 import ChooseMatchType from "../components/inputs/ChooseMatchType.tsx";
 import { MatchType } from "../../../types/socket/eventArguments.ts";
 import ButtonComponent from "../components/buttons/BorderedButtonComponent.tsx";
-import TournamentPopup from "../components/popups/TournamentPopup"; // Import the popup component
+import Popup from "../components/popups/Popup"; // Import the new reusable Popup component
 
 const defaultDuelsToWin: number = 3;
 const defaultDuelTime: number = 15;
@@ -154,12 +154,16 @@ const CreateTournament = () => {
         </button>
       </div>
 
-      {/* Popup for confirmation */}
-      <TournamentPopup
+      <Popup
         show={showPopup}
         onClose={() => setShowPopup(false)}
         onConfirm={handleStartTournament}
-      />
+      >
+        <h2 className="text-2xl font-bold mb-4">START TOURNAMENT</h2>
+        <p className="text-lg mb-6">
+          ARE YOU SURE YOU WANT TO START THE TOURNAMENT?
+        </p>
+      </Popup>
     </div>
   );
 };
