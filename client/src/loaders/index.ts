@@ -23,20 +23,21 @@ export const joinTournamentLoader = async ({ request }: LoaderProps) => {
   return tournamentCode;
 };
 
-export const joinTournamentRedirectLoader = async ({ request }: LoaderProps) => {
+export const joinTournamentRedirectLoader = async ({
+  request,
+}: LoaderProps) => {
   const url = new URL(request.url);
-  const path = url.pathname.replace(/\//,"");
+  const path = url.pathname.replace(/\//, "");
   const codeMatch = path.match(/(^\d{6}$)/);
 
   if (codeMatch) {
     window.location.href = `/${JOIN_GAME_PATH}?tournamentCode=${codeMatch[1]}`;
-  }
-  else {
-    window.location.href = `${PATH_NOT_FOUND_PATH}`
+  } else {
+    window.location.href = `${PATH_NOT_FOUND_PATH}`;
   }
 
-  return { };
-}
+  return {};
+};
 
 export const playerScreenLoader = async ({ request }: LoaderProps) => {
   const url = new URL(request.url);

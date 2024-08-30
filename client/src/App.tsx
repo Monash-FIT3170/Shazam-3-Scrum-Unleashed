@@ -74,17 +74,10 @@ const router = createBrowserRouter(
         element={<Home />}
         loader={joinTournamentRedirectLoader}
       />
-      <Route
-        path={PATH_NOT_FOUND_PATH}
-        element={<PathNotFound />}
-      />
-    </Route>
-    ,
+      <Route path={PATH_NOT_FOUND_PATH} element={<PathNotFound />} />
+    </Route>,
   ),
 );
-
-
-
 
 function App() {
   const sessionID = localStorage.getItem("sessionID") ?? "";

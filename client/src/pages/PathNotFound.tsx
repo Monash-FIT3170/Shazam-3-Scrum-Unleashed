@@ -10,12 +10,12 @@ const PathNotFound = () => {
         <DisplayLogo />
       </div>
       <div className="text-white p-8">
-      <h1 className="text-3xl font-bold pb-4">404 - Page Not Found</h1>
-      <p className="text-xl">Did you try to join a game?</p>
-    </div>
+        <h1 className="text-3xl font-bold pb-4">404 - Page Not Found</h1>
+        <p className="text-xl">Did you try to join a game?</p>
+      </div>
       <div className="mt-20">
         <ButtonComponent
-          linkPath={"/"+JOIN_GAME_PATH}
+          linkPath={"/" + JOIN_GAME_PATH}
           text={"JOIN GAME"}
         ></ButtonComponent>
         <BorderedButtonComponent
