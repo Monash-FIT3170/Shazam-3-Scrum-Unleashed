@@ -4,7 +4,7 @@ interface PopupProps {
   show: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  children: React.ReactNode; 
+  children: React.ReactNode;
 }
 
 const Popup: React.FC<PopupProps> = ({
@@ -13,7 +13,7 @@ const Popup: React.FC<PopupProps> = ({
   onConfirm,
   children,
 }) => {
-  if (!show) return null; 
+  if (!show) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50 p-4">

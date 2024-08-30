@@ -143,7 +143,7 @@ const CreateTournament = () => {
           className={`w-1/2 lg:w-1/5 text-white text-xl sm:text-2xl font-bold px-7 rounded-xl h-full uppercase ${
             inputErrors.includes(true) ? "bg-bright-red" : "bg-primary"
           }`}
-          onClick={handleCreateGameClick} 
+          onClick={handleCreateGameClick}
           disabled={loading || inputErrors.includes(true)}
         >
           {inputErrors.includes(true)
