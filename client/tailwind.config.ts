@@ -158,7 +158,8 @@ export default {
           "translateinbottom 0.5s ease-out var(--translateinbottom-delay, 0) forwards",
         translateintop:
           "translateintop 1s ease-out var(--translateintop-delay, 0) forwards",
-        flyIn: "flyIn 0.25s ease-in forwards, shake 0.5s ease-in 0.25s forwards 1",
+        flyIn:
+          "flyIn 0.25s ease-in forwards, shake 0.5s ease-in 0.25s forwards 1",
         elimcross:
           "flyIn 0.25s ease-in forwards, fade50 0.5s ease-in 1.2s forwards 1",
         elimbox:
