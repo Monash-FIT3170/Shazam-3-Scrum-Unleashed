@@ -161,7 +161,7 @@ export default {
         flyIn:
           "flyIn 0.25s ease-in forwards, shake 0.5s ease-in 0.25s forwards 1",
         elimcross:
-          "flyIn 0.25s ease-in forwards, fade50 0.5s ease-in 1.2s forwards 1",
+          "flyIn 0.25s ease-in forwards, shake 0.5s ease-in 0.25s forwards 1, fade50 0.5s ease-in 1.2s forwards 1",
         elimbox:
           "elimbox 0.5s ease-in 0.2s forwards 1, shake 0.5s ease-in 0.2s forwards 1",
         shake: "shake 0.5s ease-in var(--shake-delay, 0) forwards 1",

@@ -12,7 +12,7 @@ const PlayerCard = ({ player, cardNum, interact }: PlayerCardProps) => {
   const cardName = "player-card-" + (cardNum % 4);
   return (
     <div
-      className={`${cardName} relative ${player.isEliminated ? "animate-elimbox" : "animate-flyIn"} hover:brightness-75`}
+      className={`${cardName} relative ${!player.isEliminated ? "animate-flyIn" : ""} animate-elimbox hover:brightness-75`}
       data-testid="lobby-player-item"
       onClick={interact}
     >
