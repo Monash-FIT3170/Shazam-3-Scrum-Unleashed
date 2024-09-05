@@ -186,7 +186,7 @@ const TournamentLobby = () => {
           </div>
 
           <div
-            className="player-list rounded-b-2xl transition-all duration-1000"
+            className="player-list rounded-b-2xl transition-all duration-1000 min-h-24"
             data-testid="player-list"
           >
             {players.map((player, index) => (
