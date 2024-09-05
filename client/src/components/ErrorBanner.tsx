@@ -10,7 +10,7 @@ const ErrorBanner = ({ message, removeError }: BannerProps) => {
   return (
     <div
       id="bottom-banner"
-      className="fixed bottom-0 start-0 z-50 flex justify-between w-full h-32 p-4 bg-bright-red"
+      className="fixed bottom-0 start-0 z-50 flex justify-between w-full h-32 p-4 bg-saturated-red"
     >
       <div className="flex items-center mx-auto">
         <img src={errorSymbol} alt={"Error"} />
@@ -20,7 +20,7 @@ const ErrorBanner = ({ message, removeError }: BannerProps) => {
         <button
           data-dismiss-target="#bottom-banner"
           type="button"
-          className="text-red hover:bg-gray-400 rounded-lg"
+          className="text-white hover:bg-red rounded-lg"
           onClick={() => removeError()}
         >
           <img src={closeSymbol} alt={"Close Error Banner"} />
