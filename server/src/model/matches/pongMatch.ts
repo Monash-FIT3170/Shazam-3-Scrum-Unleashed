@@ -1,9 +1,5 @@
 import { Server } from "socket.io";
-import {
-  PongBallState,
-  PongPaddleState,
-  PongPowerupSpawn,
-} from "../../../../types/types";
+import { PongBallState, PongPaddleState } from "../../../../types/types";
 import { Match } from "./match";
 import Player from "../player";
 import { Events } from "../../../../types/socket/events";
@@ -12,6 +8,7 @@ import { roundChecker } from "../../controllers/helper/roundHelper";
 import { MatchType } from "../../../../types/socket/eventArguments";
 import * as crypto from "node:crypto";
 import { BiggerPaddle } from "../powerups/pongPowerups/biggerPaddle";
+import { PongPowerup } from "../powerups/pongPowerups/pongPowerup";
 
 const INITIAL_BALL_Y_SPEED = 50;
 const POLL_RATE = 24; // Hz
@@ -21,6 +18,12 @@ const GAME_HEIGHT = 100;
 const PADDLE_WIDTH = 20;
 const PADDLE_HITBOX_INCREASE = 0.1;
 const POWERUP_SIZE = 5;
+
+export interface PongPowerupSpawn {
+  powerup: PongPowerup;
+  x: number;
+  y: number;
+}
 
 export class PongMatch implements Match {
   duelsToWin: number;

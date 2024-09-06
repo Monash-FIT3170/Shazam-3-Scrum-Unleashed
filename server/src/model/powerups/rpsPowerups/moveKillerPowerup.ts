@@ -1,4 +1,4 @@
-import { RpsMatch } from "../matches/rpsMatch";
+import { RpsMatch } from "../../matches/rpsMatch";
 import Powerup from "./powerup";
 
 export default class MovekillerPowerup extends Powerup {
