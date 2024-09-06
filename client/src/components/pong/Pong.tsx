@@ -3,7 +3,7 @@ import { socket } from "../../App";
 import {
   PongBallState,
   PongPaddleState,
-  PongPowerup,
+  PongPowerupSprite,
 } from "../../../../types/types";
 import { PongButton } from "./PongButton";
 import LeftButton from "../../assets/pong-buttons/LEFT.svg";
@@ -18,6 +18,7 @@ const BALL_RADIUS = 2;
 const PADDLE_HEIGHT = GAME_HEIGHT * 0.02;
 const SCALING_FACTOR = GAME_HEIGHT / 100;
 const STROKE_WIDTH = 2;
+const POWERUP_SIZE = 5;
 
 type PongProps = {
   tournamentCode: string;
@@ -40,7 +41,7 @@ const clampX = (ballState: PongBallState, gameWidth: number) => {
 const clampY = (
   number: number,
   paddlePosition: PongPaddleState | undefined,
-  ballState: PongBallState
+  ballState: PongBallState,
 ) => {
   if (!paddlePosition) return number;
 
@@ -79,7 +80,7 @@ const Pong: React.FC<PongProps> = React.memo(
       },
       paddle1: undefined as PongPaddleState | undefined,
       paddle2: undefined as PongPaddleState | undefined,
-      uncollectedPowerups: [] as PongPowerup[],
+      uncollectedPowerups: [] as PongPowerupSprite[],
       lastUpdateTime: performance.now(),
     });
 
@@ -87,7 +88,7 @@ const Pong: React.FC<PongProps> = React.memo(
       (
         ballState: PongBallState,
         paddleStates: PongPaddleState[],
-        uncollectedPowerups: PongPowerup[]
+        uncollectedPowerups: PongPowerupSprite[],
       ) => {
         gameState.current = {
           ball: {
@@ -108,16 +109,22 @@ const Pong: React.FC<PongProps> = React.memo(
             x: paddleStates[1].x * SCALING_FACTOR,
             y: paddleStates[1].y * SCALING_FACTOR,
           },
-          uncollectedPowerups: uncollectedPowerups,
+          uncollectedPowerups: uncollectedPowerups.map((uncollectedPowerup) => {
+            return {
+              name: uncollectedPowerup.name,
+              x: uncollectedPowerup.x * SCALING_FACTOR,
+              y: uncollectedPowerup.y * SCALING_FACTOR,
+            };
+          }),
           lastUpdateTime: performance.now(),
         };
       },
-      []
+      [],
     );
 
     const drawGame = useCallback(
       (ctx: CanvasRenderingContext2D) => {
-        console.log(gameState.current)
+        console.log(gameState.current);
         const { ball, paddle1, paddle2, uncollectedPowerups } =
           gameState.current;
 
@@ -158,7 +165,7 @@ const Pong: React.FC<PongProps> = React.memo(
         const drawPaddle = (
           paddle: PongPaddleState,
           color: string,
-          isTop = false
+          isTop = false,
         ) => {
           const { x, y, width } = paddle;
           const adjustedX = x + STROKE_WIDTH / 2;
@@ -175,7 +182,7 @@ const Pong: React.FC<PongProps> = React.memo(
             adjustedX,
             adjustedY + topOffset,
             adjustedWidth,
-            adjustedHeight
+            adjustedHeight,
           );
         };
 
@@ -183,7 +190,13 @@ const Pong: React.FC<PongProps> = React.memo(
         uncollectedPowerups.map((powerup) => {
           ctx.fillStyle = "#ffffff";
           ctx.beginPath();
-          ctx.arc(powerup.x, powerup.y, 5, 0, Math.PI * 2);
+          ctx.arc(
+            powerup.x,
+            powerup.y,
+            POWERUP_SIZE * SCALING_FACTOR,
+            0,
+            Math.PI * 2,
+          );
           ctx.fill();
           ctx.strokeStyle = "white";
           ctx.lineWidth = STROKE_WIDTH;
@@ -197,7 +210,7 @@ const Pong: React.FC<PongProps> = React.memo(
           ctx.restore();
         }
       },
-      [isPlayerOne]
+      [isPlayerOne],
     );
 
     const animateGame = useCallback(() => {
@@ -222,11 +235,11 @@ const Pong: React.FC<PongProps> = React.memo(
           tournamentCode,
           socket.userID,
           isMoving,
-          direction === "left"
+          direction === "left",
         );
         setButtonState(isMoving ? direction : null);
       },
-      [tournamentCode]
+      [tournamentCode],
     );
 
     useEffect(() => {
@@ -275,7 +288,7 @@ const Pong: React.FC<PongProps> = React.memo(
         </div>
       </>
     );
-  }
+  },
 );
 Pong.propTypes = {
   tournamentCode: PropTypes.string.isRequired,

@@ -1,3 +1,5 @@
+import { PongPowerup } from "src/model/powerups/pongPowerups/pongPowerup";
+
 export interface PlayerAttributes {
     name: string;
     userID: string;
@@ -36,8 +38,14 @@ export interface PongPaddleState {
     width: number;
 }
 
-export interface PongPowerup {
-    name: string;
+export interface PongPowerupSpawn {
+    powerup: PongPowerup;
     x: number;
     y: number;
-  }
+}
+
+export interface PongPowerupSprite {
+    x: number;
+    y: number;
+    name: string;
+}

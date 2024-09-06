@@ -4,7 +4,7 @@
  * Please add any new events, data or fix any formatting
  */
 
-import {Action, PlayerAttributes, PongBallState, PongPaddleState, PongPowerup, ReactionData} from "../types";
+import {Action, PlayerAttributes, PongBallState, PongPaddleState, PongPowerupSprite, ReactionData} from "../types";
 import {MatchType} from "./eventArguments";
 
 /**
@@ -80,7 +80,7 @@ interface ServerToPlayerEvents {
     MATCH_PONG_STATE: (
         ballState: PongBallState,
         paddleStates: PongPaddleState[],
-        uncollectedPowerups: PongPowerup[]
+        uncollectedPowerups: PongPowerupSprite[]
     ) => void;
 
     REACTION_ADDED: (reaction: ReactionData) => void;
