@@ -1,6 +1,10 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { socket } from "../../App";
-import { PongBallState, PongPaddleState } from "../../../../types/types";
+import {
+  PongBallState,
+  PongPaddleState,
+  PongPowerupSprite,
+} from "../../../../types/types";
 import { PongButton } from "./PongButton";
 import LeftButton from "../../assets/pong-buttons/LEFT.svg";
 import LeftButtonDown from "../../assets/pong-buttons/LEFT-BUTTON-DOWN.svg";
@@ -14,6 +18,7 @@ const BALL_RADIUS = 2;
 const PADDLE_HEIGHT = GAME_HEIGHT * 0.02;
 const SCALING_FACTOR = GAME_HEIGHT / 100;
 const STROKE_WIDTH = 2;
+const POWERUP_SIZE = 5;
 
 type PongProps = {
   tournamentCode: string;
@@ -75,11 +80,16 @@ const Pong: React.FC<PongProps> = React.memo(
       },
       paddle1: undefined as PongPaddleState | undefined,
       paddle2: undefined as PongPaddleState | undefined,
+      uncollectedPowerups: [] as PongPowerupSprite[],
       lastUpdateTime: performance.now(),
     });
 
     const updateGameState = useCallback(
-      (ballState: PongBallState, paddleStates: PongPaddleState[]) => {
+      (
+        ballState: PongBallState,
+        paddleStates: PongPaddleState[],
+        uncollectedPowerups: PongPowerupSprite[],
+      ) => {
         gameState.current = {
           ball: {
             x: ballState.x * SCALING_FACTOR,
@@ -99,6 +109,13 @@ const Pong: React.FC<PongProps> = React.memo(
             x: paddleStates[1].x * SCALING_FACTOR,
             y: paddleStates[1].y * SCALING_FACTOR,
           },
+          uncollectedPowerups: uncollectedPowerups.map((uncollectedPowerup) => {
+            return {
+              name: uncollectedPowerup.name,
+              x: uncollectedPowerup.x * SCALING_FACTOR,
+              y: uncollectedPowerup.y * SCALING_FACTOR,
+            };
+          }),
           lastUpdateTime: performance.now(),
         };
       },
@@ -107,7 +124,9 @@ const Pong: React.FC<PongProps> = React.memo(
 
     const drawGame = useCallback(
       (ctx: CanvasRenderingContext2D) => {
-        const { ball, paddle1, paddle2 } = gameState.current;
+        console.log(gameState.current);
+        const { ball, paddle1, paddle2, uncollectedPowerups } =
+          gameState.current;
 
         if (isPlayerOne) {
           ctx.save();
@@ -166,6 +185,23 @@ const Pong: React.FC<PongProps> = React.memo(
             adjustedHeight,
           );
         };
+
+        // Power up
+        uncollectedPowerups.map((powerup) => {
+          ctx.fillStyle = "#ffffff";
+          ctx.beginPath();
+          ctx.arc(
+            powerup.x,
+            powerup.y,
+            POWERUP_SIZE * SCALING_FACTOR,
+            0,
+            Math.PI * 2,
+          );
+          ctx.fill();
+          ctx.strokeStyle = "white";
+          ctx.lineWidth = STROKE_WIDTH;
+          ctx.stroke();
+        });
 
         if (paddle1) drawPaddle(paddle1, "#ff4757", true);
         if (paddle2) drawPaddle(paddle2, "#2ed573");

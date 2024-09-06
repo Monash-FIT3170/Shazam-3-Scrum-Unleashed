@@ -7,6 +7,8 @@ import Tournament from "../tournament";
 import { roundChecker } from "../../controllers/helper/roundHelper";
 import { MatchType } from "../../../../types/socket/eventArguments";
 import * as crypto from "node:crypto";
+import { BiggerPaddle } from "../powerups/pongPowerups/biggerPaddle";
+import { PongPowerup } from "../powerups/pongPowerups/pongPowerup";
 
 const INITIAL_BALL_Y_SPEED = 50;
 const POLL_RATE = 24; // Hz
@@ -15,6 +17,13 @@ const GAME_WIDTH = 75;
 const GAME_HEIGHT = 100;
 const PADDLE_WIDTH = 20;
 const PADDLE_HITBOX_INCREASE = 0.1;
+const POWERUP_SIZE = 5;
+
+export interface PongPowerupSpawn {
+  powerup: PongPowerup;
+  x: number;
+  y: number;
+}
 
 export class PongMatch implements Match {
   duelsToWin: number;
@@ -24,6 +33,8 @@ export class PongMatch implements Match {
   ballState: PongBallState;
   tournament: Tournament;
   intervalHandler: NodeJS.Timeout | undefined;
+  uncollectedPowerups: PongPowerupSpawn[];
+  tickCounter: number;
 
   constructor(players: Player[], duelsToWin: number, tournament: Tournament) {
     this.players = players;
@@ -51,13 +62,15 @@ export class PongMatch implements Match {
       yVelocity: INITIAL_BALL_Y_SPEED,
     };
     this.intervalHandler = undefined;
+    this.uncollectedPowerups = [];
+    this.tickCounter = 0;
   }
 
   startMatch(io: Server<Events>): void {
     io.to(this.matchRoomID).emit(
       "MATCH_START",
       this.players,
-      "PONG",
+      this.type(),
       this.tournament.duelTime / 1000,
     );
 
@@ -74,6 +87,13 @@ export class PongMatch implements Match {
       "MATCH_PONG_STATE",
       this.ballState,
       this.paddleStates,
+      this.uncollectedPowerups.map((uncollectedPowerup) => {
+        return {
+          x: uncollectedPowerup.x,
+          y: uncollectedPowerup.y,
+          name: uncollectedPowerup.powerup.name,
+        };
+      }),
     );
   }
 
@@ -99,9 +119,27 @@ export class PongMatch implements Match {
   }
 
   tick(io: Server<Events>): void {
+    this.tickCounter += 1;
+    if (this.tickCounter % (POLL_RATE * 5) == 0) {
+      this.spawnPowerup();
+    }
+
     // Calculating the new ball and paddle coordinates
     let newBallX = this.ballState.x + this.ballState.xVelocity / POLL_RATE;
     let newBallY = this.ballState.y + this.ballState.yVelocity / POLL_RATE;
+
+    this.uncollectedPowerups = this.uncollectedPowerups.filter(
+      (uncollectedPowerup) => {
+        if (
+          Math.abs(uncollectedPowerup.x - newBallX) < POWERUP_SIZE &&
+          Math.abs(uncollectedPowerup.y - newBallY) < POWERUP_SIZE
+        ) {
+          uncollectedPowerup.powerup.activate(this);
+          return false;
+        }
+        return true;
+      },
+    );
 
     let paddle0 =
       this.paddleStates[0].x +
@@ -206,6 +244,16 @@ export class PongMatch implements Match {
       roundChecker(this.tournament, io);
       clearInterval(this.intervalHandler);
     }
+  }
+
+  private spawnPowerup() {
+    const x = Math.random() * GAME_WIDTH;
+    const y = Math.random() * GAME_HEIGHT;
+    this.uncollectedPowerups.push({
+      powerup: new BiggerPaddle(),
+      x,
+      y,
+    });
   }
 
   type(): MatchType {
