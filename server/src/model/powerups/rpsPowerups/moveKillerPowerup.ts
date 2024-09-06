@@ -1,12 +1,11 @@
-import { RpsMatch } from "../matches/rpsMatch";
+import { RpsMatch } from "../../matches/rpsMatch";
 import Powerup from "./powerup";
 
-export default class TiebreakerPowerup extends Powerup {
+export default class MovekillerPowerup extends Powerup {
   constructor() {
-    const name = "Tiebreaker Powerup";
-    const descr =
-      "This powerup enables the player to win the round if it is a tie";
-    super(name, descr, true, false);
+    const name = "Movekiller Powerup";
+    const descr = "This powerup disables an opponent's move";
+    super(name, descr, false, true);
   }
 
   usePowerup(rpsMatch: RpsMatch): void {

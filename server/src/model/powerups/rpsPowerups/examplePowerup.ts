@@ -1,6 +1,6 @@
 //just an example powerup to show how to create a new powerup
 
-import { RpsMatch } from "../matches/rpsMatch";
+import { RpsMatch } from "../../matches/rpsMatch";
 import Powerup from "./powerup";
 
 export default class ExamplePowerup extends Powerup {

@@ -36,3 +36,8 @@ export interface PongPaddleState {
     width: number;
 }
 
+export interface PongPowerupSprite {
+    x: number;
+    y: number;
+    name: string;
+}
