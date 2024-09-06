@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import { PongBallState, PongPaddleState } from "../../../../types/types";
+import { PongBallState, PongPaddleState, PongPowerup } from "../../../../types/types";
 import { Match } from "./match";
 import Player from "../player";
 import { Events } from "../../../../types/socket/events";
@@ -24,6 +24,7 @@ export class PongMatch implements Match {
   ballState: PongBallState;
   tournament: Tournament;
   intervalHandler: NodeJS.Timeout | undefined;
+  uncollectedPowerups: PongPowerup[];
 
   constructor(players: Player[], duelsToWin: number, tournament: Tournament) {
     this.players = players;
@@ -51,6 +52,7 @@ export class PongMatch implements Match {
       yVelocity: INITIAL_BALL_Y_SPEED,
     };
     this.intervalHandler = undefined;
+    this.uncollectedPowerups = [];
   }
 
   startMatch(io: Server<Events>): void {
@@ -58,7 +60,7 @@ export class PongMatch implements Match {
       "MATCH_START",
       this.players,
       "PONG",
-      this.tournament.duelTime / 1000,
+      this.tournament.duelTime / 1000
     );
 
     setTimeout(() => {
@@ -67,6 +69,19 @@ export class PongMatch implements Match {
         this.tick(io);
       }, 1000 / POLL_RATE);
     }, 1000); // This will start the pong match after a short delay.
+
+    setInterval(this.spawnPowerup, 10000);
+  }
+
+  spawnPowerup() {
+    const powerups = ["invertedPaddle"];
+    const x = Math.random() * GAME_HEIGHT;
+    const y = Math.random() * GAME_WIDTH;
+    this.uncollectedPowerups.push({
+      name: powerups[Math.floor(Math.random() * powerups.length)],
+      x,
+      y,
+    });
   }
 
   emitMatchState(io: Server<Events>): void {
@@ -74,13 +89,14 @@ export class PongMatch implements Match {
       "MATCH_PONG_STATE",
       this.ballState,
       this.paddleStates,
+      this.uncollectedPowerups,
     );
   }
 
   ballPaddleCollision(
     paddleX: number,
     paddleWidth: number,
-    ballX: number,
+    ballX: number
   ): void {
     if (this.ballState.yVelocity < 0) {
       this.ballState.yVelocity -= 5;
@@ -174,7 +190,7 @@ export class PongMatch implements Match {
         io.to(this.matchRoomID).emit(
           "MATCH_DATA",
           this.players,
-          winner?.userID,
+          winner?.userID
         );
       }
       if (newBallY <= 0) {
@@ -187,7 +203,7 @@ export class PongMatch implements Match {
         io.to(this.matchRoomID).emit(
           "MATCH_DATA",
           this.players,
-          winner?.userID,
+          winner?.userID
         );
       }
     }
