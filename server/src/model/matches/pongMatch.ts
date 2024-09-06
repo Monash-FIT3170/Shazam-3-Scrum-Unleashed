@@ -57,7 +57,7 @@ export class PongMatch implements Match {
     io.to(this.matchRoomID).emit(
       "MATCH_START",
       this.players,
-      "PONG",
+      this.type(),
       this.tournament.duelTime / 1000,
     );
 
