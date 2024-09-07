@@ -8,6 +8,7 @@ import { roundChecker } from "../../controllers/helper/roundHelper";
 import { MatchType } from "../../../../types/socket/eventArguments";
 import * as crypto from "node:crypto";
 import { BiggerPaddle } from "../powerups/pongPowerups/biggerPaddle";
+import { ShrinkPaddle } from "../powerups/pongPowerups/shrinkPaddle";
 import { PongPowerup } from "../powerups/pongPowerups/pongPowerup";
 
 const INITIAL_BALL_Y_SPEED = 50;
@@ -251,6 +252,13 @@ export class PongMatch implements Match {
     const y = Math.random() * GAME_HEIGHT;
     this.uncollectedPowerups.push({
       powerup: new BiggerPaddle(),
+      x,
+      y,
+    });
+
+    // we add shrinkpaddle powerup to the list:
+    this.uncollectedPowerups.push({
+      powerup: new ShrinkPaddle(),
       x,
       y,
     });
