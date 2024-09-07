@@ -6,33 +6,37 @@ import { PlayerAttributes } from "../../../../../types/types.ts";
 type PlayerAndSpectatorsInfoProps = {
   userPlayer: PlayerAttributes;
   opponent: PlayerAttributes;
+  isSpectator: boolean;
 };
 
 const PlayerAndSpectatorsInfo = ({
   userPlayer,
   opponent,
+  isSpectator,
 }: PlayerAndSpectatorsInfoProps) => {
   return (
     <div>
-      <div className="block md:hidden">
+      <div className="hidden">
         <PlayerName name={opponent.name} isOpponent={true} />
       </div>
-      <div className="hidden md:block">
+      <div className="block">
         <StarsInfo
           playerName={opponent.name}
           score={opponent.score}
           isOpponent={true}
+          isSpectator={isSpectator}
         />
       </div>
 
-      <div className="block md:hidden">
+      <div className="hidden">
         <PlayerName name={userPlayer.name} isOpponent={false} />
       </div>
-      <div className="hidden md:block">
+      <div className="block">
         <StarsInfo
           playerName={userPlayer.name}
           score={userPlayer.score}
           isOpponent={false}
+          isSpectator={isSpectator}
         />
       </div>
 

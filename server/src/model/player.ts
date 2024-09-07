@@ -1,5 +1,5 @@
 import { PlayerAttributes } from "../../../types/types";
-import Powerup from "./powerups/powerup";
+import Powerup from "./powerups/rpsPowerups/powerup";
 
 export default class Player implements PlayerAttributes {
   public userID: string;

@@ -64,7 +64,7 @@ function ReactionOverlay({
   return (
     <div
       className={
-        "w-screen h-screen top-0 left-0 fixed z-50 " +
+        "w-screen h-screen top-0 left-0 fixed z-40 " +
         (!spectatingID ? "pointer-events-none" : "")
       }
       onClick={(e) => {

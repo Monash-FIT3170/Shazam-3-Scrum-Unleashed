@@ -11,6 +11,8 @@ export default class Tournament {
   matches: Match[];
   matchTypeOrder: MatchType[];
   roundCounter: number;
+  roundTimeoutHandler: NodeJS.Timeout | null;
+  inProgress: boolean;
 
   constructor(
     hostID: string,
@@ -27,6 +29,8 @@ export default class Tournament {
     this.matches = [];
     this.matchTypeOrder = matchTypesOrder;
     this.roundCounter = 0;
+    this.roundTimeoutHandler = null;
+    this.inProgress = false;
   }
 
   public addPlayer(player: Player) {

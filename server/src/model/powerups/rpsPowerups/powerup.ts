@@ -1,4 +1,4 @@
-import { RpsMatch } from "../matches/rpsMatch";
+import { RpsMatch } from "../../matches/rpsMatch";
 export default abstract class Powerup {
   name: string;
   description: string;

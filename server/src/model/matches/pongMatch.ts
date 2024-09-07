@@ -1,30 +1,40 @@
 import { Server } from "socket.io";
-import {
-  PlayerAttributes,
-  PongBallState,
-  PongPaddleState,
-} from "../../../../types/types";
+import { PongBallState, PongPaddleState } from "../../../../types/types";
 import { Match } from "./match";
 import Player from "../player";
 import { Events } from "../../../../types/socket/events";
 import Tournament from "../tournament";
 import { roundChecker } from "../../controllers/helper/roundHelper";
+import { MatchType } from "../../../../types/socket/eventArguments";
 import * as crypto from "node:crypto";
+import { BiggerPaddle } from "../powerups/pongPowerups/biggerPaddle";
+import { PongPowerup } from "../powerups/pongPowerups/pongPowerup";
 
 const INITIAL_BALL_Y_SPEED = 50;
-const POLL_RATE = 10; // Hz
+const POLL_RATE = 24; // Hz
+const BALL_RADIUS = 2;
 const GAME_WIDTH = 75;
 const GAME_HEIGHT = 100;
 const PADDLE_WIDTH = 20;
+const PADDLE_HITBOX_INCREASE = 0.1;
+const POWERUP_SIZE = 5;
+
+export interface PongPowerupSpawn {
+  powerup: PongPowerup;
+  x: number;
+  y: number;
+}
 
 export class PongMatch implements Match {
   duelsToWin: number;
   matchRoomID: string;
-  players: PlayerAttributes[];
+  players: Player[];
   paddleStates: PongPaddleState[];
   ballState: PongBallState;
   tournament: Tournament;
   intervalHandler: NodeJS.Timeout | undefined;
+  uncollectedPowerups: PongPowerupSpawn[];
+  tickCounter: number;
 
   constructor(players: Player[], duelsToWin: number, tournament: Tournament) {
     this.players = players;
@@ -48,39 +58,43 @@ export class PongMatch implements Match {
     this.ballState = {
       x: GAME_WIDTH / 2,
       y: GAME_WIDTH / 2,
-      xVelocity: this.randomXVelocity(),
+      xVelocity: 1,
       yVelocity: INITIAL_BALL_Y_SPEED,
     };
     this.intervalHandler = undefined;
-  }
-
-  // TODO - we don't need is duel complete for pong
-  isDuelComplete(): boolean {
-    return false;
-  }
-
-  getMatchWinner(): Player | null {
-    if (this.players[0].score >= this.duelsToWin) {
-      return this.players[0];
-    } else if (this.players[1].score >= this.duelsToWin) {
-      return this.players[1];
-    } else {
-      return null;
-    }
+    this.uncollectedPowerups = [];
+    this.tickCounter = 0;
   }
 
   startMatch(io: Server<Events>): void {
-    io.to(this.matchRoomID).emit("MATCH_START", this.players, "PONG");
+    io.to(this.matchRoomID).emit(
+      "MATCH_START",
+      this.players,
+      this.type(),
+      this.tournament.duelTime / 1000,
+    );
 
     setTimeout(() => {
+      this.emitMatchState(io);
       this.intervalHandler = setInterval(() => {
         this.tick(io);
       }, 1000 / POLL_RATE);
-    }, 1000); // this will start the pong match after a short delay, maybe not required.
+    }, 1000); // This will start the pong match after a short delay.
   }
 
-  randomXVelocity(): number {
-    return (Math.random() - 0.5) * 2 * INITIAL_BALL_Y_SPEED;
+  emitMatchState(io: Server<Events>): void {
+    io.to(this.matchRoomID).emit(
+      "MATCH_PONG_STATE",
+      this.ballState,
+      this.paddleStates,
+      this.uncollectedPowerups.map((uncollectedPowerup) => {
+        return {
+          x: uncollectedPowerup.x,
+          y: uncollectedPowerup.y,
+          name: uncollectedPowerup.powerup.name,
+        };
+      }),
+    );
   }
 
   ballPaddleCollision(
@@ -105,16 +119,27 @@ export class PongMatch implements Match {
   }
 
   tick(io: Server<Events>): void {
-    const BALL_RADIUS = 2;
-    let emitData = false;
+    this.tickCounter += 1;
+    if (this.tickCounter % (POLL_RATE * 5) == 0) {
+      this.spawnPowerup();
+    }
 
     // Calculating the new ball and paddle coordinates
     let newBallX = this.ballState.x + this.ballState.xVelocity / POLL_RATE;
     let newBallY = this.ballState.y + this.ballState.yVelocity / POLL_RATE;
 
-    if (this.paddleStates[0].direction || this.paddleStates[1].direction) {
-      emitData = true;
-    }
+    this.uncollectedPowerups = this.uncollectedPowerups.filter(
+      (uncollectedPowerup) => {
+        if (
+          Math.abs(uncollectedPowerup.x - newBallX) < POWERUP_SIZE &&
+          Math.abs(uncollectedPowerup.y - newBallY) < POWERUP_SIZE
+        ) {
+          uncollectedPowerup.powerup.activate(this);
+          return false;
+        }
+        return true;
+      },
+    );
 
     let paddle0 =
       this.paddleStates[0].x +
@@ -130,25 +155,25 @@ export class PongMatch implements Match {
     let paddleCollision = false;
     if (newBallY - BALL_RADIUS <= this.paddleStates[0].y) {
       if (
-        newBallX >= paddle0 &&
-        newBallX <= paddle0 + this.paddleStates[0].width
+        newBallX >= paddle0 * (1 - PADDLE_HITBOX_INCREASE) &&
+        newBallX <=
+          paddle0 * (1 + PADDLE_HITBOX_INCREASE) + this.paddleStates[0].width
       ) {
         this.ballPaddleCollision(paddle0, this.paddleStates[0].width, newBallX);
         newBallY = this.paddleStates[0].y + BALL_RADIUS;
         paddleCollision = true;
-        emitData = true;
       }
     }
 
     if (newBallY + BALL_RADIUS >= this.paddleStates[1].y) {
       if (
-        newBallX >= paddle1 &&
-        newBallX <= paddle1 + this.paddleStates[1].width
+        newBallX >= paddle1 * (1 - PADDLE_HITBOX_INCREASE) &&
+        newBallX <=
+          paddle1 * (1 + PADDLE_HITBOX_INCREASE) + this.paddleStates[1].width
       ) {
         this.ballPaddleCollision(paddle1, this.paddleStates[1].width, newBallX);
         newBallY = this.paddleStates[1].y - BALL_RADIUS;
         paddleCollision = true;
-        emitData = true;
       }
     }
 
@@ -167,13 +192,11 @@ export class PongMatch implements Match {
 
     // Bounce ball off walls
     if (newBallX + BALL_RADIUS >= GAME_WIDTH) {
-      newBallX = GAME_WIDTH - BALL_RADIUS;
+      newBallX = GAME_WIDTH - 2 * BALL_RADIUS - (newBallX - GAME_WIDTH);
       this.ballState.xVelocity = -this.ballState.xVelocity;
-      emitData = true;
     } else if (newBallX - BALL_RADIUS <= 0) {
-      newBallX = 0 + BALL_RADIUS;
+      newBallX = 2 * BALL_RADIUS - newBallX;
       this.ballState.xVelocity = -this.ballState.xVelocity;
-      emitData = true;
     }
 
     // Score (can only happen when paddle did not collide)
@@ -183,7 +206,7 @@ export class PongMatch implements Match {
         newBallY = GAME_HEIGHT / 2;
         newBallX = GAME_WIDTH / 2;
         this.ballState.yVelocity = INITIAL_BALL_Y_SPEED;
-        this.ballState.xVelocity = this.randomXVelocity();
+        this.ballState.xVelocity = 1;
         this.players[0].score += 1;
         winner = this.getMatchWinner();
         io.to(this.matchRoomID).emit(
@@ -196,7 +219,7 @@ export class PongMatch implements Match {
         newBallY = GAME_HEIGHT / 2;
         newBallX = GAME_WIDTH / 2;
         this.ballState.yVelocity = -INITIAL_BALL_Y_SPEED;
-        this.ballState.xVelocity = this.randomXVelocity();
+        this.ballState.xVelocity = 1;
         this.players[1].score += 1;
         winner = this.getMatchWinner();
         io.to(this.matchRoomID).emit(
@@ -215,16 +238,48 @@ export class PongMatch implements Match {
     this.ballState.x = newBallX;
     this.ballState.y = newBallY;
 
-    if (emitData) {
-      io.to(this.matchRoomID).emit(
-        "MATCH_PONG_STATE",
-        this.ballState,
-        this.paddleStates,
-      );
-    }
+    this.emitMatchState(io);
 
     if (winner != null) {
-      roundChecker(this.tournament, io, this);
+      roundChecker(this.tournament, io);
+      clearInterval(this.intervalHandler);
+    }
+  }
+
+  private spawnPowerup() {
+    const x = Math.random() * GAME_WIDTH;
+    const y = Math.random() * GAME_HEIGHT;
+    this.uncollectedPowerups.push({
+      powerup: new BiggerPaddle(),
+      x,
+      y,
+    });
+  }
+
+  type(): MatchType {
+    return "PONG";
+  }
+
+  getMatchWinner(): Player | null {
+    if (
+      this.players[0].score >= this.duelsToWin ||
+      this.players[1].isEliminated
+    ) {
+      this.players[1].isEliminated = true;
+      return this.players[0];
+    } else if (
+      this.players[1].score >= this.duelsToWin ||
+      this.players[0].isEliminated
+    ) {
+      this.players[0].isEliminated = true;
+      return this.players[1];
+    } else {
+      return null;
+    }
+  }
+
+  clearTimeouts(): void {
+    if (this.intervalHandler) {
       clearInterval(this.intervalHandler);
     }
   }
