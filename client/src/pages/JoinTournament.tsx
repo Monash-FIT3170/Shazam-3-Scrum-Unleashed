@@ -7,8 +7,8 @@ import { PLAYER_SCREEN } from "./pagePaths.ts";
 import InputComponent from "../components/inputs/InputComponent.tsx";
 import FormButton from "../components/buttons/FormButton.tsx";
 import { JoinTournamentRes } from "../../../types/requestTypes.ts";
-import { JoinError } from "../../../types/socket/eventArguments.ts";
 import ButtonComponent from "../components/buttons/BorderedButtonComponent.tsx";
+import ErrorBanner from "../components/ErrorBanner.tsx";
 
 async function postJoinTournament(
   userID: string,
@@ -34,20 +34,21 @@ async function postJoinTournament(
 const JoinTournament = () => {
   const urlTournamentCode = useLoaderData() as string;
   const navigate = useNavigate();
-
   const [tournamentCode, setTournamentCode] = useState(urlTournamentCode);
   const [playerName, setPlayerName] = useState("");
-  const [status, setStatus] = useState<JoinError | "OK">();
+  const [status, setStatus] = useState<string | "OK">();
   const [loading, setLoading] = useState(false);
 
   const changeTournamentCode = (code: string) => {
     if (/^\d*$/.test(code) && code.length <= 6) {
       setTournamentCode(code);
+      setStatus(undefined);
     }
   };
 
   const changePlayerName = (name: string) => {
     setPlayerName(name);
+    setStatus(undefined);
   };
 
   const tournamentCodeValidation = () => {
@@ -104,6 +105,7 @@ const JoinTournament = () => {
           placeholder={"6 DIGIT ROOM CODE"}
           disabled={loading}
           data-testid={"tournament-code-input"}
+          additionalClass={"large-input"}
         />
         <InputComponent
           value={playerName}
@@ -111,15 +113,24 @@ const JoinTournament = () => {
           placeholder={"NAME"}
           disabled={loading}
           data-testid={"player-name-input"}
+          additionalClass={"large-input"}
         />
 
         <FormButton
           text={"Join Game"}
-          status={status ?? "OK"}
           loading={loading}
           callback={joinTournament}
+          additionalClass={"large-btn"}
         />
       </div>
+      {!status || status === "OK" ? null : (
+        <ErrorBanner
+          message={status}
+          removeError={() => {
+            setStatus(undefined);
+          }}
+        />
+      )}
     </div>
   );
 };

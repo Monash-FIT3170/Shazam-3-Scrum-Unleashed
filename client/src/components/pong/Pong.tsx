@@ -1,17 +1,24 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { socket } from "../../App";
-import { PongBallState, PongPaddleState } from "../../../../types/types.ts";
-import { PongButton } from "./PongButton.tsx";
+import {
+  PongBallState,
+  PongPaddleState,
+  PongPowerupSprite,
+} from "../../../../types/types";
+import { PongButton } from "./PongButton";
 import LeftButton from "../../assets/pong-buttons/LEFT.svg";
 import LeftButtonDown from "../../assets/pong-buttons/LEFT-BUTTON-DOWN.svg";
 import RightButton from "../../assets/pong-buttons/RIGHT.svg";
 import RightButtonDown from "../../assets/pong-buttons/RIGHT-BUTTON-DOWN.svg";
+import PropTypes from "prop-types";
 
 const GAME_WIDTH = 375;
 const GAME_HEIGHT = 500;
 const BALL_RADIUS = 2;
 const PADDLE_HEIGHT = GAME_HEIGHT * 0.02;
 const SCALING_FACTOR = GAME_HEIGHT / 100;
+const STROKE_WIDTH = 2;
+const POWERUP_SIZE = 5;
 
 type PongProps = {
   tournamentCode: string;
@@ -20,272 +27,272 @@ type PongProps = {
 
 type ButtonState = "left" | "right" | null;
 
-const clampX = (number: number, gameWidth: number) =>
-  Math.min(
-    Math.max(number, 0 + BALL_RADIUS * SCALING_FACTOR),
-    gameWidth - BALL_RADIUS * SCALING_FACTOR,
-  );
+const clampX = (ballState: PongBallState, gameWidth: number) => {
+  const scaledRadius = BALL_RADIUS * SCALING_FACTOR;
+  if (ballState.x < scaledRadius) {
+    ballState.x = 2 * scaledRadius - ballState.x;
+    ballState.xVelocity *= -1;
+  } else if (ballState.x > gameWidth - scaledRadius) {
+    ballState.x = gameWidth - 2 * scaledRadius - (ballState.x - gameWidth);
+    ballState.xVelocity *= -1;
+  }
+};
 
 const clampY = (
   number: number,
   paddlePosition: PongPaddleState | undefined,
   ballState: PongBallState,
 ) => {
-  if (!paddlePosition) {
-    return number;
-  }
+  if (!paddlePosition) return number;
+
+  const scaledRadius = BALL_RADIUS * SCALING_FACTOR;
+  const halfHeight = 50 * SCALING_FACTOR;
 
   if (
-    number < paddlePosition.y + BALL_RADIUS * SCALING_FACTOR &&
-    ballState.y < 50 * SCALING_FACTOR &&
+    number < paddlePosition.y + scaledRadius &&
+    ballState.y < halfHeight &&
     ballState.x > paddlePosition.x &&
     ballState.x < paddlePosition.x + paddlePosition.width
   ) {
-    return paddlePosition.y + BALL_RADIUS * SCALING_FACTOR;
+    return paddlePosition.y + scaledRadius;
   } else if (
-    number > paddlePosition.y - BALL_RADIUS * SCALING_FACTOR &&
-    ballState.y > 50 * SCALING_FACTOR &&
+    number > paddlePosition.y - scaledRadius &&
+    ballState.y > halfHeight &&
     ballState.x > paddlePosition.x &&
     ballState.x < paddlePosition.x + paddlePosition.width
   ) {
-    return paddlePosition.y - BALL_RADIUS * SCALING_FACTOR;
+    return paddlePosition.y - scaledRadius;
   }
 
   return number;
 };
 
-const Pong = ({ tournamentCode, isPlayerOne }: PongProps) => {
-  const [buttonState, setButtonState] = useState<ButtonState>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const ballState = useRef<PongBallState>({
-    x: GAME_WIDTH / 2,
-    y: GAME_HEIGHT / 2,
-    xVelocity: 0,
-    yVelocity: 0,
-  });
-  const paddle1Position = useRef<PongPaddleState>();
-  const paddle2Position = useRef<PongPaddleState>();
-  const lastUpdateTime = useRef(performance.now());
-  const animationFrameId = useRef<number>();
+const Pong: React.FC<PongProps> = React.memo(
+  ({ tournamentCode, isPlayerOne }) => {
+    const [buttonState, setButtonState] = useState<ButtonState>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const gameState = useRef({
+      ball: {
+        x: GAME_WIDTH / 2,
+        y: GAME_HEIGHT / 2,
+        xVelocity: 0,
+        yVelocity: 0,
+      },
+      paddle1: undefined as PongPaddleState | undefined,
+      paddle2: undefined as PongPaddleState | undefined,
+      uncollectedPowerups: [] as PongPowerupSprite[],
+      lastUpdateTime: performance.now(),
+    });
 
-  const updateServerBallPosition = (
-    serverBallState: PongBallState,
-    serverPaddleStates: PongPaddleState[],
-  ) => {
-    ballState.current = {
-      x: serverBallState.x * SCALING_FACTOR,
-      y: serverBallState.y * SCALING_FACTOR,
-      xVelocity: serverBallState.xVelocity * SCALING_FACTOR,
-      yVelocity: serverBallState.yVelocity * SCALING_FACTOR,
-    };
-    paddle1Position.current = {
-      ...serverPaddleStates[0],
-      width: serverPaddleStates[0].width * SCALING_FACTOR,
-      x: serverPaddleStates[0].x * SCALING_FACTOR,
-      y: serverPaddleStates[0].y * SCALING_FACTOR,
-    };
-    paddle2Position.current = {
-      ...serverPaddleStates[1],
-      width: serverPaddleStates[1].width * SCALING_FACTOR,
-      x: serverPaddleStates[1].x * SCALING_FACTOR,
-      y: serverPaddleStates[1].y * SCALING_FACTOR,
-    };
-    lastUpdateTime.current = performance.now();
-  };
-
-  const drawGame = (ctx: CanvasRenderingContext2D) => {
-    if (isPlayerOne) {
-      ctx.save();
-      ctx.scale(1, -1);
-      ctx.translate(0, -GAME_HEIGHT);
-    }
-
-    // Background
-    ctx.fillStyle = "#22026c";
-    ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-
-    // Center line
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
-    ctx.setLineDash([5, 5]);
-    ctx.beginPath();
-    ctx.moveTo(0, GAME_HEIGHT / 2);
-    ctx.lineTo(GAME_WIDTH, GAME_HEIGHT / 2);
-    ctx.stroke();
-    ctx.setLineDash([]);
-
-    // Ball
-    const xClamped = clampX(ballState.current.x, GAME_WIDTH);
-    const closestPaddle =
-      ballState.current.y > 50 * SCALING_FACTOR
-        ? paddle2Position
-        : paddle1Position;
-    const yClamped = clampY(
-      ballState.current.y,
-      closestPaddle.current,
-      ballState.current,
+    const updateGameState = useCallback(
+      (
+        ballState: PongBallState,
+        paddleStates: PongPaddleState[],
+        uncollectedPowerups: PongPowerupSprite[],
+      ) => {
+        gameState.current = {
+          ball: {
+            x: ballState.x * SCALING_FACTOR,
+            y: ballState.y * SCALING_FACTOR,
+            xVelocity: ballState.xVelocity * SCALING_FACTOR,
+            yVelocity: ballState.yVelocity * SCALING_FACTOR,
+          },
+          paddle1: {
+            ...paddleStates[0],
+            width: paddleStates[0].width * SCALING_FACTOR,
+            x: paddleStates[0].x * SCALING_FACTOR,
+            y: paddleStates[0].y * SCALING_FACTOR,
+          },
+          paddle2: {
+            ...paddleStates[1],
+            width: paddleStates[1].width * SCALING_FACTOR,
+            x: paddleStates[1].x * SCALING_FACTOR,
+            y: paddleStates[1].y * SCALING_FACTOR,
+          },
+          uncollectedPowerups: uncollectedPowerups.map((uncollectedPowerup) => {
+            return {
+              name: uncollectedPowerup.name,
+              x: uncollectedPowerup.x * SCALING_FACTOR,
+              y: uncollectedPowerup.y * SCALING_FACTOR,
+            };
+          }),
+          lastUpdateTime: performance.now(),
+        };
+      },
+      [],
     );
 
-    const strokeWidth = 2;
-    const adjustedRadius = BALL_RADIUS * SCALING_FACTOR - strokeWidth;
+    const drawGame = useCallback(
+      (ctx: CanvasRenderingContext2D) => {
+        console.log(gameState.current);
+        const { ball, paddle1, paddle2, uncollectedPowerups } =
+          gameState.current;
 
-    ctx.fillStyle = "#ff00ff";
-    ctx.beginPath();
-    ctx.arc(xClamped, yClamped, adjustedRadius, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "white";
-    ctx.lineWidth = strokeWidth;
-    ctx.stroke();
+        if (isPlayerOne) {
+          ctx.save();
+          ctx.scale(1, -1);
+          ctx.translate(0, -GAME_HEIGHT);
+        }
 
-    // Paddles
-    const drawPaddle = (
-      x: number,
-      y: number,
-      width: number,
-      height: number,
-      color: string,
-      isTop = false,
-    ) => {
-      const strokeWidth = 2;
-      const adjustedX = x + strokeWidth / 2;
-      const adjustedY = y + strokeWidth / 2;
-      const adjustedWidth = width - strokeWidth;
-      const adjustedHeight = height - strokeWidth;
-      const topOffset = isTop ? -PADDLE_HEIGHT : 0;
+        // Background
+        ctx.fillStyle = "#22026c";
+        ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
-      ctx.fillStyle = color;
-      ctx.fillRect(x, y + topOffset, width, height);
-      ctx.strokeStyle = "white";
-      ctx.lineWidth = strokeWidth;
-      ctx.strokeRect(
-        adjustedX,
-        adjustedY + topOffset,
-        adjustedWidth,
-        adjustedHeight,
-      );
-    };
+        // Center line
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(0, GAME_HEIGHT / 2);
+        ctx.lineTo(GAME_WIDTH, GAME_HEIGHT / 2);
+        ctx.stroke();
+        ctx.setLineDash([]);
 
-    // TODO - Have paddles drawn in middle at the start by default
-    if (paddle1Position.current) {
-      drawPaddle(
-        paddle1Position.current.x,
-        paddle1Position.current.y,
-        paddle1Position.current.width,
-        PADDLE_HEIGHT,
-        "#ff4757",
-        true,
-      );
-    }
+        // Ball
+        clampX(ball, GAME_WIDTH);
+        const closestPaddle = ball.y > 50 * SCALING_FACTOR ? paddle2 : paddle1;
+        const yClamped = clampY(ball.y, closestPaddle, ball);
 
-    if (paddle2Position.current) {
-      drawPaddle(
-        paddle2Position.current.x,
-        paddle2Position.current.y,
-        paddle2Position.current.width,
-        PADDLE_HEIGHT,
-        "#2ed573",
-      );
-    }
+        const adjustedRadius = BALL_RADIUS * SCALING_FACTOR - STROKE_WIDTH;
+        ctx.fillStyle = "#ff00ff";
+        ctx.beginPath();
+        ctx.arc(ball.x, yClamped, adjustedRadius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = STROKE_WIDTH;
+        ctx.stroke();
 
-    if (isPlayerOne) {
-      ctx.restore();
-    }
-  };
+        // Paddles
+        const drawPaddle = (
+          paddle: PongPaddleState,
+          color: string,
+          isTop = false,
+        ) => {
+          const { x, y, width } = paddle;
+          const adjustedX = x + STROKE_WIDTH / 2;
+          const adjustedY = y + STROKE_WIDTH / 2;
+          const adjustedWidth = width - STROKE_WIDTH;
+          const adjustedHeight = PADDLE_HEIGHT - STROKE_WIDTH;
+          const topOffset = isTop ? -PADDLE_HEIGHT : 0;
 
-  const drawFrame = () => {
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d");
-    if (!ctx) return;
+          ctx.fillStyle = color;
+          ctx.fillRect(x, y + topOffset, width, PADDLE_HEIGHT);
+          ctx.strokeStyle = "white";
+          ctx.lineWidth = STROKE_WIDTH;
+          ctx.strokeRect(
+            adjustedX,
+            adjustedY + topOffset,
+            adjustedWidth,
+            adjustedHeight,
+          );
+        };
 
-    const now = performance.now();
-    const deltaTime = (now - lastUpdateTime.current) / 1000;
-    lastUpdateTime.current = now;
+        // Power up
+        uncollectedPowerups.map((powerup) => {
+          ctx.fillStyle = "#ffffff";
+          ctx.beginPath();
+          ctx.arc(
+            powerup.x,
+            powerup.y,
+            POWERUP_SIZE * SCALING_FACTOR,
+            0,
+            Math.PI * 2,
+          );
+          ctx.fill();
+          ctx.strokeStyle = "white";
+          ctx.lineWidth = STROKE_WIDTH;
+          ctx.stroke();
+        });
 
-    ballState.current = {
-      ...ballState.current,
-      x: ballState.current.x + ballState.current.xVelocity * deltaTime,
-      y: ballState.current.y + ballState.current.yVelocity * deltaTime,
-    };
+        if (paddle1) drawPaddle(paddle1, "#ff4757", true);
+        if (paddle2) drawPaddle(paddle2, "#2ed573");
 
-    drawGame(ctx);
-    animationFrameId.current = requestAnimationFrame(drawFrame);
-  };
-
-  const handlePaddleMove = (isMoving: boolean, direction: "left" | "right") => {
-    socket.emit(
-      "PONG_PADDLE_MOVEMENT",
-      tournamentCode,
-      socket.userID,
-      isMoving,
-      direction === "left",
+        if (isPlayerOne) {
+          ctx.restore();
+        }
+      },
+      [isPlayerOne],
     );
-    setButtonState(isMoving ? direction : null);
-  };
 
-  const handleButtonDown = (direction: "left" | "right") => {
-    handlePaddleMove(true, direction);
-  };
+    const animateGame = useCallback(() => {
+      const ctx = canvasRef.current?.getContext("2d");
+      if (!ctx) return;
 
-  const handleButtonUp = () => {
-    handlePaddleMove(false, buttonState as "left" | "right");
-  };
+      const now = performance.now();
+      const deltaTime = (now - gameState.current.lastUpdateTime) / 1000;
+      gameState.current.lastUpdateTime = now;
 
-  useEffect(() => {
-    socket.on("MATCH_PONG_STATE", updateServerBallPosition);
+      gameState.current.ball.x += gameState.current.ball.xVelocity * deltaTime;
+      gameState.current.ball.y += gameState.current.ball.yVelocity * deltaTime;
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "ArrowLeft") handlePaddleMove(true, "left");
-      if (event.key === "ArrowRight") handlePaddleMove(true, "right");
+      drawGame(ctx);
+      requestAnimationFrame(animateGame);
+    }, [drawGame]);
+
+    const handlePaddleMove = useCallback(
+      (isMoving: boolean, direction: "left" | "right") => {
+        socket.emit(
+          "PONG_PADDLE_MOVEMENT",
+          tournamentCode,
+          socket.userID,
+          isMoving,
+          direction === "left",
+        );
+        setButtonState(isMoving ? direction : null);
+      },
+      [tournamentCode],
+    );
+
+    useEffect(() => {
+      socket.on("MATCH_PONG_STATE", updateGameState);
+      const keyHandler = (event: KeyboardEvent, isKeyDown: boolean) => {
+        if (event.key === "ArrowLeft") handlePaddleMove(isKeyDown, "left");
+        if (event.key === "ArrowRight") handlePaddleMove(isKeyDown, "right");
+      };
+
+      document.addEventListener("keydown", (e) => keyHandler(e, true));
+      document.addEventListener("keyup", (e) => keyHandler(e, false));
+      requestAnimationFrame(animateGame);
+
+      return () => {
+        socket.off("MATCH_PONG_STATE", updateGameState);
+        document.removeEventListener("keydown", (e) => keyHandler(e, true));
+        document.removeEventListener("keyup", (e) => keyHandler(e, false));
+      };
+    }, [updateGameState, handlePaddleMove, animateGame]);
+
+    const buttonProps = {
+      left: {
+        onMouseDown: () => handlePaddleMove(true, "left"),
+        onMouseUp: () => handlePaddleMove(false, "left"),
+        onTouchStart: () => handlePaddleMove(true, "left"),
+        onTouchEnd: () => handlePaddleMove(false, "left"),
+        src: buttonState === "left" ? LeftButtonDown : LeftButton,
+      },
+      right: {
+        onMouseDown: () => handlePaddleMove(true, "right"),
+        onMouseUp: () => handlePaddleMove(false, "right"),
+        onTouchStart: () => handlePaddleMove(true, "right"),
+        onTouchEnd: () => handlePaddleMove(false, "right"),
+        src: buttonState === "right" ? RightButtonDown : RightButton,
+      },
     };
 
-    const handleKeyUp = (event: KeyboardEvent) => {
-      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-        handlePaddleMove(false, buttonState as "left" | "right");
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("keyup", handleKeyUp);
-
-    return () => {
-      socket.off("MATCH_PONG_STATE", updateServerBallPosition);
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("keyup", handleKeyUp);
-    };
-  }, [tournamentCode, isPlayerOne, buttonState]);
-
-  useEffect(() => {
-    animationFrameId.current = requestAnimationFrame(drawFrame);
-    return () => {
-      if (animationFrameId.current) {
-        cancelAnimationFrame(animationFrameId.current);
-      }
-    };
-  }, []);
-
-  return (
-    <>
-      <div className="bg-white p-1">
-        <canvas ref={canvasRef} width={GAME_WIDTH} height={GAME_HEIGHT} />
-      </div>
-
-      <div className="flex flex-row gap-3">
-        <PongButton
-          onMouseDown={() => handleButtonDown("left")}
-          onMouseUp={handleButtonUp}
-          onTouchStart={() => handleButtonDown("left")}
-          onTouchEnd={handleButtonUp}
-          src={buttonState === "left" ? LeftButtonDown : LeftButton}
-        />
-        <PongButton
-          onMouseDown={() => handleButtonDown("right")}
-          onMouseUp={handleButtonUp}
-          onTouchStart={() => handleButtonDown("right")}
-          onTouchEnd={handleButtonUp}
-          src={buttonState === "right" ? RightButtonDown : RightButton}
-        />
-      </div>
-    </>
-  );
+    return (
+      <>
+        <div className="bg-white p-1">
+          <canvas ref={canvasRef} width={GAME_WIDTH} height={GAME_HEIGHT} />
+        </div>
+        <div className="flex flex-row gap-3">
+          <PongButton {...buttonProps.left} />
+          <PongButton {...buttonProps.right} />
+        </div>
+      </>
+    );
+  },
+);
+Pong.propTypes = {
+  tournamentCode: PropTypes.string.isRequired,
+  isPlayerOne: PropTypes.bool.isRequired,
 };
-
+Pong.displayName = "Pong";
 export { Pong };

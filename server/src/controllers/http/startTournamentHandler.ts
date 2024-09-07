@@ -27,6 +27,12 @@ export async function startTournamentHandler(
     return;
   }
 
+  if (tournament.inProgress) {
+    res.sendStatus(400);
+    return;
+  }
+
+  tournament.inProgress = true;
   await roundInitialiser(tournament, io);
   res.sendStatus(200);
 }

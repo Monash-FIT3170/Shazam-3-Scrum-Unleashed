@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
-
 import { useNavigate } from "react-router-dom";
 import { GAME_LOBBY_PATH } from "./pagePaths.ts";
 import { socket } from "../App.tsx";
-import DisplayLogo from "../components/DisplayLogo.tsx";
 import CreateTournamentInput from "../components/inputs/CreateTournamentInput";
 import { CreateTournamentRes } from "../../../types/requestTypes.ts";
+import Line2 from "../assets/gamesetup/Line.svg";
+import Lightning from "../assets/logo/Lightning.svg";
+import ChooseMatchType from "../components/inputs/ChooseMatchType.tsx";
+import { MatchType } from "../../../types/socket/eventArguments.ts";
 import ButtonComponent from "../components/buttons/BorderedButtonComponent.tsx";
+import Popup from "../components/popups/Popup";
 
 const defaultDuelsToWin: number = 3;
 const defaultDuelTime: number = 15;
@@ -17,9 +20,9 @@ async function postTournament(
   duelsToWin: number,
   duelTime: number,
   roundTime: number,
+  matchType: MatchType[],
 ) {
   try {
-    console.log(JSON.stringify({ userID, duelsToWin, duelTime, roundTime }));
     const res = await fetch(
       `${import.meta.env.VITE_API_BASE_URL}/create-tournament`,
       {
@@ -27,12 +30,19 @@ async function postTournament(
           "Content-Type": "application/json",
         },
         method: "POST",
-        body: JSON.stringify({ userID, duelsToWin, duelTime, roundTime }),
+        body: JSON.stringify({
+          userID,
+          duelsToWin,
+          duelTime,
+          roundTime,
+          matchType,
+        }),
       },
     );
     return (await res.json()).body as CreateTournamentRes;
   } catch (error) {
     console.error(error);
+    return null;
   }
 }
 
@@ -42,6 +52,10 @@ const CreateTournament = () => {
   const [duelTime, setDuelTime] = useState(defaultDuelTime);
   const [roundTime, setRoundTime] = useState(defaultRoundTime);
   const [inputErrors, setInputError] = useState([false, false, false]);
+  const [matchType, setMatchType] = useState<MatchType[]>(["RPS"]);
+  const [loading, setLoading] = useState(false);
+  const [tournamentCode, setTournamentCode] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
 
   const changeInputError = (index: number) => (bool: boolean) => {
     const newInputErrors = inputErrors.map((val, i) =>
@@ -50,50 +64,73 @@ const CreateTournament = () => {
     setInputError(newInputErrors);
   };
 
-  const [loading, setLoading] = useState(false);
-
-  const [tournamentCode, setTournamentCode] = useState("");
-
   useEffect(() => {
-    if (loading) {
+    if (tournamentCode) {
       navigate(`../${GAME_LOBBY_PATH}?tournamentCode=${tournamentCode}`);
     }
-  }, [tournamentCode]);
+  }, [tournamentCode, navigate]);
+
+  const handleCreateGameClick = () => {
+    if (!loading && !inputErrors.includes(true)) {
+      setShowPopup(true);
+    }
+  };
+
+  const handleStartTournament = async () => {
+    setShowPopup(false);
+    setLoading(true);
+    const code = await postTournament(
+      socket.userID,
+      duelsToWin,
+      duelTime,
+      roundTime,
+      matchType,
+    );
+    if (code) {
+      setTournamentCode(code.tournamentCode);
+    } else {
+      setLoading(false); // If something went wrong, stop the loading state
+      console.error("Failed to create the tournament.");
+    }
+  };
 
   return (
-    <div>
-      <div className="fixed top-0 md:right-20 right-5">
-        <ButtonComponent linkPath="/" text={"Back"} />
-      </div>
-      <div className="w-full flex flex-row justify-start items-center py-10 px-10 gap-10">
-        <div className="w-32">
-          <DisplayLogo />
+    <div className="relative h-screen overflow-hidden">
+      <div className="absolute top-0 w-full text-center my-3">
+        <div className="fixed top-0 md:right-20 right-5">
+          <ButtonComponent linkPath="/" text={"Back"} />
+        </div>
+        <div className="uppercase text-white text-4xl md:text-5xl lg:text-6xl w-full justify-center items-top font-bold pt-5 flex">
+          <img src={Lightning} className="w-10" alt="Lightning Icon"></img>
+          GAME SETUP
+          <img src={Lightning} className="w-10" alt="Lightning Icon"></img>
+        </div>
+        <div className="flex justify-center mt-4">
+          <img src={Line2} alt="Line Decoration" className="w-1/3" />
         </div>
       </div>
-
-      <div className="uppercase bg-[#1B074A] py-3 px-3 text-white text-3xl w-full">
-        Tournament setup
+      <div className="pt-36 flex justify-center">
+        <ChooseMatchType setMatchType={setMatchType} />
       </div>
-
-      <div className="pt-5 flex justify-center">
-        <div className="w-11/12 md:w-3/4 flex justify-center flex-col gap-3">
+      <div className="flex justify-center mt-10 md:mt-16 lg:mt-16 w-full">
+        <div className="w-full md:w-3/4 lg:ml-96 flex flex-col gap-4">
           <CreateTournamentInput
-            inputText={"duels to win"}
-            placeholder={duelsToWin}
+            inputText={"duels per match"}
+            placeholder={duelsToWin} // Pass number directly
             callback={setDuelsToWin}
             transparentUnits={true}
             errorCallback={changeInputError(0)}
           />
           <CreateTournamentInput
             inputText={"duel timer"}
-            placeholder={duelTime}
+            placeholder={duelTime} // Pass number directly
             callback={setDuelTime}
             transparentUnits={false}
             errorCallback={changeInputError(1)}
           />
           <CreateTournamentInput
             inputText={"round timer"}
-            placeholder={roundTime}
+            placeholder={roundTime} // Pass number directly
             callback={setRoundTime}
             transparentUnits={false}
             errorCallback={changeInputError(2)}
@@ -101,30 +138,32 @@ const CreateTournament = () => {
         </div>
       </div>
 
-      <div className="h-14 mt-16">
+      <div className="h-14 absolute bottom-10 xl:bottom-5 w-full flex justify-center">
         <button
-          className={`w-1/4 text-white ${inputErrors.includes(true) ? "bg-bright-red" : "bg-primary"} text-2xl font-bold px-7 rounded-xl h-full uppercase`}
-          onClick={async () => {
-            const code = await postTournament(
-              socket.userID,
-              duelsToWin,
-              duelTime,
-              roundTime,
-            );
-            if (code) {
-              setTournamentCode(code.tournamentCode);
-              setLoading(true);
-            }
-          }}
+          className={`w-1/2 lg:w-1/5 text-white text-xl sm:text-2xl font-bold px-7 rounded-xl h-full uppercase ${
+            inputErrors.includes(true) ? "bg-bright-red" : "bg-primary"
+          }`}
+          onClick={handleCreateGameClick}
           disabled={loading || inputErrors.includes(true)}
         >
           {inputErrors.includes(true)
             ? "Invalid inputs"
             : loading
               ? "Loading..."
-              : "Create Tournament"}
+              : "CREATE GAME"}
         </button>
       </div>
+
+      <Popup
+        show={showPopup}
+        onClose={() => setShowPopup(false)}
+        onConfirm={handleStartTournament}
+      >
+        <h2 className="text-2xl font-bold mb-4">START TOURNAMENT</h2>
+        <p className="text-lg mb-6">
+          ARE YOU SURE YOU WANT TO START THE TOURNAMENT?
+        </p>
+      </Popup>
     </div>
   );
 };

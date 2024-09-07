@@ -20,34 +20,93 @@ export async function roundInitialiser(
   tournament.players = [...tournament.players, ...bots];
   tournament.matches = matches;
   await roundStartEmitter(tournament, io);
+
+  // start timeout
+  tournament.roundTimeoutHandler = setTimeout(() => {
+    roundTerminator(tournament, io);
+  }, tournament.matchTime);
 }
 
-export function roundChecker(
-  tournament: Tournament,
-  io: Server<Events>,
-  match: Match,
-) {
-  if (tournament.matches.every((e) => e.getMatchWinner() !== null)) {
-    setTimeout(() => {
-      if (tournament.matches.length === 1) {
-        io.to(match.matchRoomID)
-          .to(tournament.hostUID)
-          .emit("TOURNAMENT_COMPLETE", match.getMatchWinner()?.name ?? "");
+function roundTerminator(tournament: Tournament, io: Server<Events>) {
+  // might want to lock the tournament to prevent any moves or actions being sent in, idk
+  for (const match of tournament.matches) {
+    if (match.getMatchWinner() === null) {
+      match.clearTimeouts();
+      const sortedPlayers = match.players
+        .filter((player) => !player.isBot)
+        .toSorted((p1, p2) => p2.score - p1.score);
 
-        setTimeout(() => {
-          io.in(match.matchRoomID).socketsLeave(match.matchRoomID);
-          tournamentMap.delete(tournament.hostUID);
-        }, LIFE_AFTER_COMPLETION);
-        return;
+      const topScore = sortedPlayers[0].score;
+
+      const winningPlayers = sortedPlayers.filter(
+        (player) => player.score === topScore,
+      );
+
+      const randomIndex = Math.floor(Math.random() * winningPlayers.length);
+
+      const winner = winningPlayers[randomIndex];
+
+      for (const player of match.players) {
+        if (player !== winner) {
+          player.isEliminated = true;
+        }
       }
-      roundTerminator(tournament, io);
-      io.to(tournament.hostUID).emit("PLAYERS_UPDATE", tournament.players);
-      void roundInitialiser(tournament, io);
-    }, ROUND_BUFFER_TIME);
+
+      io.to(match.matchRoomID).emit("MATCH_DATA", match.players, winner.userID);
+    }
+  }
+
+  io.to(tournament.hostUID).emit("TOURNAMENT_STATE", tournament.players, true);
+
+  nextRoundStart(tournament, io);
+}
+
+function nextRoundStart(tournament: Tournament, io: Server) {
+  setTimeout(() => {
+    if (tournament.matches.length === 1) {
+      io.to(tournament.matches[0].matchRoomID)
+        .to(tournament.hostUID)
+        .emit(
+          "TOURNAMENT_COMPLETE",
+          tournament.matches[0].getMatchWinner()?.name ?? "",
+        );
+
+      setTimeout(() => {
+        io.in(tournament.matches[0].matchRoomID).socketsLeave(
+          tournament.matches[0].matchRoomID,
+        );
+        tournamentMap.delete(tournament.hostUID);
+      }, LIFE_AFTER_COMPLETION);
+      return;
+    }
+    roundCloser(tournament, io);
+    io.to(tournament.hostUID).emit(
+      "TOURNAMENT_STATE",
+      tournament.players,
+      tournament.inProgress,
+    );
+    void roundInitialiser(tournament, io);
+  }, ROUND_BUFFER_TIME);
+}
+
+export function roundChecker(tournament: Tournament, io: Server<Events>) {
+  // At least one player has been eliminated when this function is called, therefore we can update the host
+  io.to(tournament.hostUID).emit(
+    "TOURNAMENT_STATE",
+    tournament.players,
+    tournament.inProgress,
+  );
+
+  if (tournament.matches.every((e) => e.getMatchWinner() !== null)) {
+    nextRoundStart(tournament, io);
   }
 }
 
-export function roundTerminator(tournament: Tournament, io: Server<Events>) {
+export function roundCloser(tournament: Tournament, io: Server<Events>) {
+  if (tournament.roundTimeoutHandler) {
+    clearTimeout(tournament.roundTimeoutHandler);
+    tournament.roundTimeoutHandler = null;
+  }
   tournament.roundCounter++;
   for (const match of tournament.matches) {
     handleSpectators(match);
@@ -60,14 +119,17 @@ export function roundTerminator(tournament: Tournament, io: Server<Events>) {
 }
 
 function handleSpectators(match: Match) {
-  const matchWinner = match.getMatchWinner();
-  if (matchWinner === null) {
-    console.error("No match winner found.");
+  const matchWinners = match.players.filter((player) => !player.isEliminated);
+
+  if (matchWinners.length != 1) {
+    console.error("No Match Winner Found or Multiple Found");
     return;
   }
 
+  const matchWinner = matchWinners[0];
+
   for (const player of match.players) {
-    if (player.userID !== matchWinner.userID) {
+    if (player.userID !== matchWinner.userID || player.isEliminated) {
       matchWinner.spectatorIDs.push(player.userID);
       matchWinner.spectatorIDs = matchWinner.spectatorIDs.concat(
         player.spectatorIDs,
@@ -87,6 +149,8 @@ function createMatch(players: Player[], tournament: Tournament) {
       return new RpsMatch(players, tournament.duelsToWin);
     case "PONG":
       return new PongMatch(players, tournament.duelsToWin, tournament);
+    default:
+      return new RpsMatch(players, tournament.duelsToWin);
   }
 }
 

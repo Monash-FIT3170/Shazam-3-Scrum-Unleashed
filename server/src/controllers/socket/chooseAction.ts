@@ -25,11 +25,11 @@ export const playDuel =
     );
 
     if (matchWinnerUserID === undefined) {
-      match.startTimeout(playDuel(tournament, io), tournament.duelTime);
+      match.startTimeout(playDuel(tournament, io), tournament.duelTime + 4000);
       return;
     }
 
-    roundChecker(tournament, io, match);
+    roundChecker(tournament, io);
   };
 
 export const chooseActionSocket =

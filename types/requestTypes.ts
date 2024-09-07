@@ -1,9 +1,16 @@
-import {JoinError} from "./socket/eventArguments";
+import {MatchType} from "./socket/eventArguments";
+import {PlayerAttributes} from "./types";
 
 export interface CreateTournamentRes {
-    tournamentCode:string;
+    tournamentCode: string;
 }
 
 export interface JoinTournamentRes {
-    message:JoinError|"OK";
+    message: string | "OK";
+}
+
+export interface SpectateMatchRes {
+    players: PlayerAttributes[],
+    matchType: MatchType,
+    winnerUserID: string | undefined
 }

@@ -21,8 +21,8 @@ const TournamentLobbyBanner = ({
           <div className="text-white text-2xl font-bold uppercase">
             JOIN THE TOURNAMENT AT
           </div>
-          <div className="text-red text-xl font-bold uppercase">
-            {window.location.href}
+          <div className="text-red text-4xl font-bold uppercase">
+            {`${window.location.host}/${tournamentCode}`}
           </div>
         </div>
         <img src={lightning} alt="Lightning Bolt" />

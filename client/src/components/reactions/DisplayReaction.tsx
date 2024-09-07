@@ -25,7 +25,7 @@ export function DisplayReaction({
       {!isRemoved && (
         <motion.span
           exit={{ opacity: 0 }}
-          className="absolute opacity-85 select-none -translate-x-1/2 -translate-y-1/2"
+          className="absolute opacity-60 select-none -translate-x-1/2 -translate-y-1/2"
           style={{
             top: `${y}%`,
             left: `${x}%`,

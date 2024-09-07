@@ -108,3 +108,15 @@ body {
   text-align: center;
   display: inline-block;
 }
+
+.large-input,
+.large-btn {
+  max-width: 415px;
+}
+
+@media screen and (max-width: 700px) {
+  .large-input,
+  .large-btn {
+    width: 90% !important;
+  }
+}
