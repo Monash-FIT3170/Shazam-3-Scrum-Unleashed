@@ -17,6 +17,8 @@ const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
     height: window.innerHeight,
   });
 
+  const [showConfetti, setShowConfetti] = useState(true);
+
   function windowSizeHandler() {
     setWindowSize({
       width: window.innerWidth,
@@ -26,11 +28,17 @@ const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
 
   useEffect(() => {
     window.onresize = () => windowSizeHandler();
+
+    setTimeout(() => {
+      setShowConfetti(false);
+    }, 30000); // 30s
   });
 
   return (
     <div>
-      <Confetti width={windowSize.width} height={windowSize.height} />
+      {showConfetti && (
+        <Confetti width={windowSize.width} height={windowSize.height} />
+      )}
       <div className="h-60">
         <DisplayLogo />
       </div>
