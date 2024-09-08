@@ -6,6 +6,10 @@ import { playDuel } from "../../controllers/socket/chooseAction";
 import Tournament from "../tournament";
 import { Match } from "./match";
 import { MatchType } from "../../../../types/socket/eventArguments";
+import Powerup from "../powerups/rpsPowerups/powerup";
+import MovekillerPowerup from "../powerups/rpsPowerups/moveKillerPowerup";
+import ShieldPowerup from "../powerups/rpsPowerups/shieldPowerup";
+import TiebreakerPowerup from "../powerups/rpsPowerups/tiebreakerPowerup";
 
 export class RpsMatch implements Match {
   players: Player[];
@@ -14,13 +18,16 @@ export class RpsMatch implements Match {
   p1Action: Action;
   p2Action: Action;
   timeOutHandler: NodeJS.Timeout | null;
-  powerUp: boolean[] | null;
+  powerupLocation: boolean[] | null;
+  powerup: Powerup | null;
 
   private rulesMap: Map<Action, Action> = new Map<Action, Action>([
     ["ROCK", "SCISSORS"],
     ["PAPER", "ROCK"],
     ["SCISSORS", "PAPER"],
   ]);
+
+  private powerupList: Powerup[] = [new MovekillerPowerup(), new ShieldPowerup(), new TiebreakerPowerup()];
 
   constructor(players: Player[], duelsToWin: number) {
     this.players = players;
@@ -29,7 +36,8 @@ export class RpsMatch implements Match {
     this.p1Action = null;
     this.p2Action = null;
     this.timeOutHandler = null;
-    this.powerUp = null;
+    this.powerupLocation = null;
+    this.powerup = null;
   }
 
   public isDuelComplete() {
@@ -40,6 +48,7 @@ export class RpsMatch implements Match {
   }
 
   public updateScores() {
+    const actions = ["ROCK", "PAPER", "SCISSORS"];
     const player1 = this.players[0];
     const player2 = this.players[1];
 
@@ -58,6 +67,18 @@ export class RpsMatch implements Match {
       } else {
         player2.score++;
       }
+
+      if (this.powerupLocation) {
+        const p1Index = actions.findIndex((action) => action === this.p1Action);
+        const p2Index = actions.findIndex((action) => action === this.p2Action);
+        if (this.powerupLocation[p1Index]) {
+          player1.powerup = this.powerup;
+        } else if (this.powerupLocation[p2Index]) {
+          player2.powerup = this.powerup;
+        }
+      }
+      console.log(player1.powerup);
+      console.log(player2.powerup);
     }
   }
 
@@ -142,11 +163,12 @@ export class RpsMatch implements Match {
   }
 
   spawnPowerup(io: Server<Events>) {
-    const powerUpLocations = [false, false, false];
+    const powerupLocations = [false, false, false];
     const location = Math.floor(Math.random() * 3);
-    powerUpLocations[location] = true;
-    this.powerUp = powerUpLocations;
-    io.to(this.matchRoomID).emit("MATCH_POWERUP_SPAWN_LOCATION", this.powerUp);
+    powerupLocations[location] = true;
+    this.powerupLocation = powerupLocations;
+    this.powerupList[Math.floor(Math.random() * this.powerupList.length)]
+    io.to(this.matchRoomID).emit("MATCH_POWERUP_SPAWN_LOCATION", this.powerupLocation);
   }
   
   type(): MatchType {
