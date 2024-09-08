@@ -147,6 +147,9 @@ export class RpsMatch implements Match {
       this.type(),
       tournament.duelTime / 1000,
     );
+    // removing the player's previous powerups
+    this.players[0].powerup = null;
+    this.players[1].powerup = null;
     this.startTimeout(playDuel(tournament, io), tournament.duelTime + 4000);
   }
 
