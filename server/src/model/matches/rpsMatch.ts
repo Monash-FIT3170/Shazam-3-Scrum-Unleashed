@@ -15,6 +15,7 @@ export class RpsMatch implements Match {
   players: Player[];
   matchRoomID: string;
   duelsToWin: number;
+  roundCounter: number;
   p1Action: Action;
   p2Action: Action;
   timeOutHandler: NodeJS.Timeout | null;
@@ -38,6 +39,7 @@ export class RpsMatch implements Match {
     this.timeOutHandler = null;
     this.powerupLocation = null;
     this.powerup = null;
+    this.roundCounter = 0;
   }
 
   public isDuelComplete() {
@@ -77,6 +79,7 @@ export class RpsMatch implements Match {
           player2.powerup = this.powerup;
         }
       }
+      // checking whether the powerup has been allocated to a player
       console.log(player1.powerup);
       console.log(player2.powerup);
     }
@@ -162,6 +165,12 @@ export class RpsMatch implements Match {
     if (this.timeOutHandler) {
       clearTimeout(this.timeOutHandler);
     }
+    // spawn a powerup halfway through the match
+    // if (this.roundCounter === this.duelsToWin) {
+    //   this.spawnPowerup(io);
+    // }
+    // for testing purposes spawn a powerup every round after first
+    this.spawnPowerup(io);
     playDuel(tournament, io)(this);
   }
 

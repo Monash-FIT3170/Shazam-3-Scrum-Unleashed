@@ -11,19 +11,16 @@ import CountDownTimer from "../match-overlay/CountDownTimer.tsx";
 interface ChoosePlayerMoveProps {
   tournamentCode: string;
   duelTime: number;
+  powerup: boolean[];
 }
 
 const ChoosePlayerMove = ({
   tournamentCode,
   duelTime,
+  powerup,
 }: ChoosePlayerMoveProps) => {
   const [selectedAction, setSelectedAction] = useState<Action | null>(null);
-  const [powerup, setPowerupLocation] = useState<boolean[]>([false, false, false]);
-
-  socket.on("MATCH_POWERUP_SPAWN_LOCATION", (location: boolean[]) => {
-    setPowerupLocation(location);
-    console.log(location)
-  })
+  
 
   const handleMoveSelection = (move: Action) => {
     if (!selectedAction) {
