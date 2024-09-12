@@ -9,13 +9,13 @@ export default {
         "spectator-bg": "#1A88AB",
         "spectator-text": "#43DFE9",
         rock: "#E943E9",
-        paper: "#E943E9",
-        scissors: "#E943E9",
-        shazam: "#E943E9",
-        green: "#E943E9",
-        "green-bg": "#E943E9",
-        red: "#E943E9",
-        "saturated-red": "#E943E9",
+        paper: "#2DC89E",
+        scissors: "#377AE3",
+        shazam: "#FFC700",
+        green: "#65DB71",
+        "green-bg": "#45BD67",
+        red: "#FF5959",
+        "saturated-red": "#F01010",
         "bright-red": "#FF0000",
       },
       keyframes: {
@@ -97,6 +97,54 @@ export default {
             transform: "scaleY(-1) translate(0, 20%)",
           },
         },
+        flyIn: {
+          "0%": {
+            opacity: "0",
+            scale: "1000%",
+          },
+          "100%": {
+            opacity: "1",
+            scale: "100%",
+          },
+        },
+        fade50: {
+          "0%": {
+            opacity: "1",
+          },
+          "100%": {
+            opacity: "0.5",
+          },
+        },
+        elimbox: {
+          "0%": { backgroundColor: "rgba(255,0,0,0.4)", overflow: "clip" },
+          "10%": { backgroundColor: "#22026c" },
+          "20%": { backgroundColor: "rgba(255,0,0,0.4)" },
+          "30%": { backgroundColor: "#22026c" },
+          "40%": { backgroundColor: "rgba(255,0,0,0.4)" },
+          "50%": { backgroundColor: "#22026c" },
+          "60%": { backgroundColor: "rgba(255,0,0,0.4)" },
+          "70%": { backgroundColor: "#22026c" },
+          "80%": { backgroundColor: "rgba(255,0,0,0.4)" },
+          "90%": { backgroundColor: "#22026c" },
+          "100%": {
+            backgroundColor: "rgba(255,0,0,0.4)",
+            borderColor: "#FF5959",
+            overflow: "clip",
+          },
+        },
+        shake: {
+          "0%": { transform: "translate(1px, 1px) rotate(0deg)" },
+          "10%": { transform: "translate(-1px, -2px) rotate(-1deg)" },
+          "20%": { transform: "translate(-3px, 0px) rotate(1deg)" },
+          "30%": { transform: "translate(3px, 2px) rotate(0deg)" },
+          "40%": { transform: "translate(1px, -1px) rotate(1deg)" },
+          "50%": { transform: "translate(-1px, 2px) rotate(-1deg)" },
+          "60%": { transform: "translate(-3px, 1px) rotate(0deg)" },
+          "70%": { transform: "translate(3px, 1px) rotate(-1deg)" },
+          "80%": { transform: "translate(-1px, -1px) rotate(1deg)" },
+          "90%": { transform: "translate(1px, 2px) rotate(0deg)" },
+          "100%": { transform: "translate(-1px,-1px) rotate(0)" },
+        },
       },
       animation: {
         textanim: "textanim 1s ease-out var(--textanim-delay, 0) forwards",
@@ -109,7 +157,14 @@ export default {
         translateinbottom:
           "translateinbottom 0.5s ease-out var(--translateinbottom-delay, 0) forwards",
         translateintop:
-          "translateintop 0.5s ease-out var(--translateintop-delay, 0) forwards",
+          "translateintop 1s ease-out var(--translateintop-delay, 0) forwards",
+        flyIn:
+          "flyIn 0.25s ease-in forwards, shake 0.5s ease-in 0.25s forwards 1",
+        elimcross:
+          "flyIn 0.25s ease-in forwards, shake 0.5s ease-in 0.25s forwards 1, fade50 0.5s ease-in 1.2s forwards 1",
+        elimbox:
+          "elimbox 0.5s ease-in 0.2s forwards 1, shake 0.5s ease-in 0.2s forwards 1",
+        shake: "shake 0.5s ease-in var(--shake-delay, 0) forwards 1",
       },
     },
   },

@@ -10,23 +10,20 @@ interface PlayerCardProps {
 const PlayerCard = ({ player, cardNum, interact }: PlayerCardProps) => {
   // card name of varying borders
   const cardName = "player-card-" + (cardNum % 4);
-  // checking if the player's name can fit onto the card
-  const playerName =
-    player.name.length > 8 ? player.name.substring(0, 5) + "..." : player.name;
   return (
     <div
-      className={`${cardName} relative`}
+      className={`${cardName} relative ${!player.isEliminated ? "animate-flyIn" : ""} animate-elimbox hover:brightness-75`}
       data-testid="lobby-player-item"
       onClick={interact}
     >
-      <div>
+      <div className="flex justify-center items-center max-w-full font-bold px-2">
         {" "}
-        {playerName}
+        <span className="text-ellipsis overflow-hidden">{player.name}</span>
         {player.isEliminated ? (
           <img
             src={cross}
-            alt={"Player Eliminated"}
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-40 scale-50 opacity-50"
+            alt="Player Eliminated"
+            className="absolute w-40 scale-75 animate-elimcross opacity-50 select-none overflow-visible"
           />
         ) : (
           ""
