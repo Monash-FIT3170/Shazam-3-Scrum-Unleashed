@@ -8,8 +8,8 @@ export class ShrinkPaddle implements PongPowerup {
       this.name = "smallerPaddle";
     }
     activate(match: PongMatch): void {
-      const isPlayerTwo = match.ballState.yVelocity < 0;
-      match.paddleStates[Number(isPlayerTwo)].width = 10;
+      const isPlayerOne = match.ballState.yVelocity > 0;
+      match.paddleStates[Number(isPlayerOne)].width = 10;
     }
   }
   

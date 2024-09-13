@@ -6,6 +6,7 @@ export const pongPaddleMovementSocket = (
   playerID: string,
   start: boolean,
   left: boolean,
+  // is reverse attribute
 ) => {
   const match = tournamentMap.get(tournamentCode)?.getMatch(playerID);
 
@@ -22,7 +23,7 @@ export const pongPaddleMovementSocket = (
       break;
     }
   }
-
+  // if powerup reverse the number:
   if (start) {
     if (left) {
       pongMatch.paddleStates[i].direction = -1;
