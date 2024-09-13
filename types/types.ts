@@ -34,7 +34,6 @@ export interface PongPaddleState {
     y: number;
     direction: number; // 0 = no movement, 1 = right, -1 = left
     width: number;
-    isReversedContols: boolean;
 }
 
 export interface PongPowerupSprite {
