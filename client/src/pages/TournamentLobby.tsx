@@ -177,10 +177,10 @@ const TournamentLobby = () => {
             </div>
             {!inProgress && (
               <button
-                className="hover:bg-blue-700 text-white bg-primary text-xl rounded-xl h-full uppercase w-1/4 font-bold "
+                className={`hover:bg-blue-700 text-white bg-primary text-xl rounded-xl h-full uppercase w-1/4 font-bold ${players.length > 1 ? "animate-radiate" : "opacity-50 pointer-events-none"}`}
                 onClick={startTournament}
               >
-                Start Tournament
+                {`${players.length > 1 ? "START TOURNAMENT" : "NOT ENOUGH PLAYERS!"}`}
               </button>
             )}
           </div>
@@ -195,6 +195,7 @@ const TournamentLobby = () => {
                 cardNum={index}
                 key={player.userID}
                 interact={() => spectatePlayer(player)}
+                inProgress={inProgress}
               />
             ))}
           </div>

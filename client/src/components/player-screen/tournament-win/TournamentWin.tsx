@@ -4,6 +4,7 @@ import star from "../../../assets/misc/PlainStar.svg";
 import { useNavigate } from "react-router-dom";
 import Confetti from "react-confetti";
 import { useEffect, useState } from "react";
+import ButtonComponent from "../../buttons/ButtonComponent.tsx";
 
 interface TournamentWinScreenProps {
   playerName: string;
@@ -71,12 +72,7 @@ const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
         />
       </div>
       <div className="absolute inset-x-0 bottom-10 z-50">
-        <button
-          className="text-white bg-primary text-3xl w-80 md:w-96 lg:w-122 font-bold rounded-xl h-full border-white"
-          onClick={() => navigate("/")}
-        >
-          Home Screen
-        </button>
+      <ButtonComponent linkPath="/" text={"Home Screen"} />
       </div>
     </div>
   );

@@ -5,14 +5,20 @@ interface PlayerCardProps {
   player: PlayerAttributes;
   cardNum: number;
   interact: () => void;
+  inProgress: boolean;
 }
 
-const PlayerCard = ({ player, cardNum, interact }: PlayerCardProps) => {
+const PlayerCard = ({
+  player,
+  cardNum,
+  interact,
+  inProgress,
+}: PlayerCardProps) => {
   // card name of varying borders
   const cardName = "player-card-" + (cardNum % 4);
   return (
     <div
-      className={`${cardName} relative ${!player.isEliminated ? "animate-flyIn" : ""} animate-elimbox hover:brightness-75`}
+      className={`${cardName} relative ${!inProgress ? "animate-enterAndShake" : ""} ${player.isEliminated ? "animate-elimbox hover:brightness-75" : ""}`}
       data-testid="lobby-player-item"
       onClick={interact}
     >
