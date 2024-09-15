@@ -9,6 +9,7 @@ import { MatchType } from "../../../../types/socket/eventArguments";
 import * as crypto from "node:crypto";
 import { BiggerPaddle } from "../powerups/pongPowerups/biggerPaddle";
 import { PongPowerup } from "../powerups/pongPowerups/pongPowerup";
+import { ReversedPaddleControls } from "../powerups/pongPowerups/reversedPaddleControls";
 
 const INITIAL_BALL_Y_SPEED = 50;
 const POLL_RATE = 24; // Hz
@@ -145,6 +146,9 @@ export class PongMatch implements Match {
       this.paddleStates[0].x +
       (this.paddleStates[0].direction * Math.abs(this.ballState.yVelocity)) /
         POLL_RATE;
+      
+        console.log('Paddle 0 direction:', this.paddleStates[0].direction);
+        console.log('Paddle 0 position:', paddle0);
 
     let paddle1 =
       this.paddleStates[1].x +
@@ -249,8 +253,13 @@ export class PongMatch implements Match {
   private spawnPowerup() {
     const x = Math.random() * GAME_WIDTH;
     const y = Math.random() * GAME_HEIGHT;
+    // this.uncollectedPowerups.push({
+    //   powerup: new BiggerPaddle(),
+    //   x,
+    //   y,
+    // });
     this.uncollectedPowerups.push({
-      powerup: new BiggerPaddle(),
+      powerup: new ReversedPaddleControls(),
       x,
       y,
     });

@@ -6,6 +6,7 @@ export const pongPaddleMovementSocket = (
   playerID: string,
   start: boolean,
   left: boolean,
+  reversedPaddleControls: boolean
 ) => {
   const match = tournamentMap.get(tournamentCode)?.getMatch(playerID);
 
@@ -22,18 +23,35 @@ export const pongPaddleMovementSocket = (
       break;
     }
   }
-
-  if (start) {
-    if (left) {
-      pongMatch.paddleStates[i].direction = -1;
+  if(reversedPaddleControls){
+    if (start) {
+      if (left) {
+        pongMatch.paddleStates[i].direction = -1*(-1);
+      } else {
+        pongMatch.paddleStates[i].direction = 1*(-1);
+      }
     } else {
-      pongMatch.paddleStates[i].direction = 1;
-    }
-  } else {
-    if (left && pongMatch.paddleStates[i].direction == -1) {
-      pongMatch.paddleStates[i].direction = 0;
-    } else if (!left && pongMatch.paddleStates[i].direction == 1) {
-      pongMatch.paddleStates[i].direction = 0;
+      if (left && pongMatch.paddleStates[i].direction == -1) {
+        pongMatch.paddleStates[i].direction = 0;
+      } else if (!left && pongMatch.paddleStates[i].direction == 1) {
+        pongMatch.paddleStates[i].direction = 0;
+      }
     }
   }
+  else{
+    if (start) {
+      if (left) {
+        pongMatch.paddleStates[i].direction = -1;
+      } else {
+        pongMatch.paddleStates[i].direction = 1;
+      }
+    } else {
+      if (left && pongMatch.paddleStates[i].direction == -1) {
+        pongMatch.paddleStates[i].direction = 0;
+      } else if (!left && pongMatch.paddleStates[i].direction == 1) {
+        pongMatch.paddleStates[i].direction = 0;
+      }
+    }
+  }
+  
 };

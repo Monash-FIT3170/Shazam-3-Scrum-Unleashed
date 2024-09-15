@@ -236,6 +236,7 @@ const Pong: React.FC<PongProps> = React.memo(
           socket.userID,
           isMoving,
           direction === "left",
+          false,
         );
         setButtonState(isMoving ? direction : null);
       },
