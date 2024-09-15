@@ -34,7 +34,7 @@ const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
 
   return (
     <div>
-      <div className="fixed top-0 left-0 w-screen h-screen z-50">
+      <div className="fixed top-0 left-0 w-screen h-screen">
         {showConfetti && (
           <Confetti width={windowSize.width} height={windowSize.height} />
         )}
@@ -43,14 +43,14 @@ const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
         <DisplayLogo />
       </div>
       <br></br>
-      <div className="flex justify-center transform -mb-80">
+      <div className="flex justify-center transform -mb-80 pointer-events-none select-none">
         <img
           src={goldenWinnerCup}
           alt="golden winner cup"
           className="lg:w-60 w-32 opacity-30"
         />
       </div>
-      <div className="flex justify-center transform">
+      <div className="flex justify-center transform pointer-events-none select-none">
         <img
           src={star}
           alt="star"
