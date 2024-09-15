@@ -1,7 +1,6 @@
 import DisplayLogo from "../../DisplayLogo.tsx";
 import goldenWinnerCup from "../../../assets/trophies/GoldenWinnerCup.svg";
 import star from "../../../assets/misc/PlainStar.svg";
-import { useNavigate } from "react-router-dom";
 import Confetti from "react-confetti";
 import { useEffect, useState } from "react";
 import ButtonComponent from "../../buttons/ButtonComponent.tsx";
@@ -11,8 +10,6 @@ interface TournamentWinScreenProps {
 }
 
 const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
-  const navigate = useNavigate();
-
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -37,9 +34,11 @@ const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
 
   return (
     <div>
-      {showConfetti && (
-        <Confetti width={windowSize.width} height={windowSize.height} />
-      )}
+      <div className="fixed top-0 left-0 w-screen h-screen z-50">
+        {showConfetti && (
+          <Confetti width={windowSize.width} height={windowSize.height} />
+        )}
+      </div>
       <div className="h-60">
         <DisplayLogo />
       </div>
@@ -72,7 +71,7 @@ const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
         />
       </div>
       <div className="absolute inset-x-0 bottom-10 z-50">
-      <ButtonComponent linkPath="/" text={"Home Screen"} />
+        <ButtonComponent linkPath="/" text={"Home Screen"} />
       </div>
     </div>
   );

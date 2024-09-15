@@ -18,7 +18,7 @@ const PlayerCard = ({
   const cardName = "player-card-" + (cardNum % 4);
   return (
     <div
-      className={`${cardName} relative ${!inProgress ? "animate-enterAndShake" : ""} ${player.isEliminated ? "animate-elimbox hover:brightness-75" : ""}`}
+      className={`${cardName} relative hover:brightness-75 ${!inProgress ? "animate-enterAndShake" : ""} ${player.isEliminated ? "animate-elimbox" : ""}`}
       data-testid="lobby-player-item"
       onClick={interact}
     >
