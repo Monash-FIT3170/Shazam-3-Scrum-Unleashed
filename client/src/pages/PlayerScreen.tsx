@@ -167,11 +167,15 @@ const PlayerScreen = () => {
           spectatingID={isSpectator ? userPlayer!.userID : null}
         />
       }
-      <div
-        className={`overflow-hidden h-screen relative ${
-          isSpectator ? "border-8 border-spectator-bg" : ""
-        }`}
-      >
+      {/* TODO: Extract below... reused for player spectators... */}
+      {isSpectator && (
+        <div
+          className={
+            "fixed border-8 top-0 left-0 w-screen h-screen border-spectator-bg shadow-[inset_0_0_50px_0px_theme(colors.spectator-bg)]"
+          }
+        />
+      )}
+      <div className={`h-screen relative`}>
         <div className="pt-12">
           <div className="flex flex-col items-center justify-center mt-10">
             {userPlayer !== undefined && opponent !== undefined && (

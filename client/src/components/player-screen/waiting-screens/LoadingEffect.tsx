@@ -10,7 +10,7 @@ const LoadingEffect = ({ isOpponent }: LoadingEffectProps) => {
   return (
     <div
       className={
-        "fixed mx-auto max-w-max inset-x-0 scale-[0.78] md:scale-100" +
+        "fixed mx-auto max-w-max inset-x-0 scale-[0.78] md:scale-100 pointer-events-none select-none" +
         ` ${isOpponent ? "top-[6.5%] md:top-[5%]" : "bottom-[6.5%] md:bottom-[5%]"}`
       }
     >

@@ -139,35 +139,36 @@ const HostSpectatorScreen = ({
 
   return (
     <>
+      {" "}
+      <button
+        className={`h-12 text-white fixed top-4 left-4 bg-primary text-3xl font-bold px-4 rounded-xl z-50 shadow-[0_0_10px_2px_rgba(0,0,0,0.5)]`}
+        onClick={() => stopSpectating(userPlayer!.userID)}
+      >
+        RETURN
+      </button>
+      {/* TODO: Extract below... reused for player spectators... */}
+      <div
+        className={
+          "fixed border-8 top-0 left-0 w-screen h-screen border-spectator-bg shadow-[inset_0_0_50px_0px_theme(colors.spectator-bg)]"
+        }
+      />
       {
         <ReactionOverlay
           gameCode={tournamentCode}
           spectatingID={userPlayer !== undefined ? userPlayer!.userID : null}
         />
       }
-      <div
-        className={
-          "overflow-hidden h-screen relative border-8 border-spectator-bg"
-        }
-      >
-        <button
-          className={`h-12 text-white fixed top-5 left-5 bg-primary text-2xl font-bold w-1/6 rounded-xl z-50`}
-          onClick={() => stopSpectating(userPlayer!.userID)}
-        >
-          RETURN
-        </button>
-        <div className="pt-12">
-          <div className="flex flex-col items-center justify-center mt-10">
-            {userPlayer !== undefined && opponent !== undefined && (
-              <PlayerAndSpectatorsInfo
-                userPlayer={userPlayer}
-                opponent={opponent}
-                isSpectator={true}
-              />
-              // TODO probably only want to display during a match and not after a match
-            )}
-            {content}
-          </div>
+      <div className="pt-12">
+        <div className="flex flex-col items-center justify-center mt-10 z-0">
+          {userPlayer !== undefined && opponent !== undefined && (
+            <PlayerAndSpectatorsInfo
+              userPlayer={userPlayer}
+              opponent={opponent}
+              isSpectator={true}
+            />
+            // TODO probably only want to display during a match and not after a match
+          )}
+          {content}
         </div>
       </div>
     </>

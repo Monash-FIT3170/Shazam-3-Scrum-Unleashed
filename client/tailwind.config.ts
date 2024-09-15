@@ -5,6 +5,7 @@ export default {
     extend: {
       colors: {
         primary: "#377AE3",
+        back: "#22026c",
         "primary-dark": "#14171D",
         "spectator-bg": "#1A88AB",
         "spectator-text": "#43DFE9",
@@ -145,6 +146,14 @@ export default {
           "90%": { transform: "translate(1px, 2px) rotate(0deg)" },
           "100%": { transform: "translate(-1px,-1px) rotate(0)" },
         },
+        radiate: {
+          "0%": {
+            boxShadow: "0 0 2px -2px rgba(255, 255, 255, 0.5)",
+          },
+          "100%": {
+            boxShadow: "0 0 2px 20px rgba(0, 0, 0, 0)",
+          },
+        },
       },
       animation: {
         textanim: "textanim 1s ease-out var(--textanim-delay, 0) forwards",
@@ -158,13 +167,14 @@ export default {
           "translateinbottom 0.5s ease-out var(--translateinbottom-delay, 0) forwards",
         translateintop:
           "translateintop 1s ease-out var(--translateintop-delay, 0) forwards",
-        flyIn:
-          "flyIn 0.25s ease-in forwards, shake 0.5s ease-in 0.25s forwards 1",
+        enterAndShake:
+          "flyIn 0.15s ease-in forwards, shake 0.5s ease-in var(--shake-delay, 0.25s) forwards 1",
         elimcross:
-          "flyIn 0.25s ease-in forwards, shake 0.5s ease-in 0.25s forwards 1, fade50 0.5s ease-in 1.2s forwards 1",
+          "flyIn 0.15s ease-in forwards, shake 0.5s ease-in 0.25s forwards 1, fade50 0.5s ease-in 1.2s forwards 1",
         elimbox:
           "elimbox 0.5s ease-in 0.2s forwards 1, shake 0.5s ease-in 0.2s forwards 1",
         shake: "shake 0.5s ease-in var(--shake-delay, 0) forwards 1",
+        radiate: "radiate 1s cubic-bezier(0, 0, 0.2, 1) infinite",
       },
     },
   },

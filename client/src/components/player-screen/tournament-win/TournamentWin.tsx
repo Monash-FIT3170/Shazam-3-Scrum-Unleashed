@@ -1,17 +1,15 @@
 import DisplayLogo from "../../DisplayLogo.tsx";
 import goldenWinnerCup from "../../../assets/trophies/GoldenWinnerCup.svg";
 import star from "../../../assets/misc/PlainStar.svg";
-import { useNavigate } from "react-router-dom";
 import Confetti from "react-confetti";
 import { useEffect, useState } from "react";
+import ButtonComponent from "../../buttons/ButtonComponent.tsx";
 
 interface TournamentWinScreenProps {
   playerName: string;
 }
 
 const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
-  const navigate = useNavigate();
-
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -36,21 +34,23 @@ const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
 
   return (
     <div>
-      {showConfetti && (
-        <Confetti width={windowSize.width} height={windowSize.height} />
-      )}
+      <div className="fixed top-0 left-0 w-screen h-screen">
+        {showConfetti && (
+          <Confetti width={windowSize.width} height={windowSize.height} />
+        )}
+      </div>
       <div className="h-60">
         <DisplayLogo />
       </div>
       <br></br>
-      <div className="flex justify-center transform -mb-80">
+      <div className="flex justify-center transform -mb-80 pointer-events-none select-none">
         <img
           src={goldenWinnerCup}
           alt="golden winner cup"
           className="lg:w-60 w-32 opacity-30"
         />
       </div>
-      <div className="flex justify-center transform">
+      <div className="flex justify-center transform pointer-events-none select-none">
         <img
           src={star}
           alt="star"
@@ -71,12 +71,7 @@ const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
         />
       </div>
       <div className="absolute inset-x-0 bottom-10 z-50">
-        <button
-          className="text-white bg-primary text-3xl w-80 md:w-96 lg:w-122 font-bold rounded-xl h-full border-white"
-          onClick={() => navigate("/")}
-        >
-          Home Screen
-        </button>
+        <ButtonComponent linkPath="/" text={"Home Screen"} />
       </div>
     </div>
   );
