@@ -19,8 +19,10 @@ export class RpsMatch implements Match {
   p1Action: Action;
   p2Action: Action;
   timeOutHandler: NodeJS.Timeout | null;
+  powerupEnabled: boolean;
   powerupLocation: boolean[] | null;
   powerup: Powerup | null;
+  playerPowerups: (Powerup | null)[];
 
   private rulesMap: Map<Action, Action> = new Map<Action, Action>([
     ["ROCK", "SCISSORS"],
@@ -30,7 +32,7 @@ export class RpsMatch implements Match {
 
   private powerupList: Powerup[] = [new MovekillerPowerup(), new ShieldPowerup(), new TiebreakerPowerup()];
 
-  constructor(players: Player[], duelsToWin: number) {
+  constructor(players: Player[], duelsToWin: number, powerupEnabled = false) {
     this.players = players;
     this.duelsToWin = duelsToWin;
     this.matchRoomID = crypto.randomUUID();
@@ -39,6 +41,8 @@ export class RpsMatch implements Match {
     this.timeOutHandler = null;
     this.powerupLocation = null;
     this.powerup = null;
+    this.powerupEnabled = powerupEnabled;
+    this.playerPowerups = [null, null];
     this.roundCounter = 0;
   }
 
@@ -74,14 +78,16 @@ export class RpsMatch implements Match {
         const p1Index = actions.findIndex((action) => action === this.p1Action);
         const p2Index = actions.findIndex((action) => action === this.p2Action);
         if (this.powerupLocation[p1Index]) {
-          player1.powerup = this.powerup;
+          const player2Powerup = this.playerPowerups[1];
+          this.playerPowerups = [this.powerup, player2Powerup];
         } else if (this.powerupLocation[p2Index]) {
-          player2.powerup = this.powerup;
+          const player1Powerup = this.playerPowerups[0];
+          this.playerPowerups = [player1Powerup, this.powerup];
         }
       }
       // checking whether the powerup has been allocated to a player
-      console.log(player1.powerup);
-      console.log(player2.powerup);
+      console.log(this.playerPowerups[0]);
+      console.log(this.playerPowerups[1]);
     }
   }
 
@@ -161,16 +167,20 @@ export class RpsMatch implements Match {
     // as the users will need to know what stage it is currently.
   }
 
+  // change the value of the powerupEnabled to true to enable powerups
+  // this is only for testing purposes and should be a user input in the final version
   completeDuel(io: Server<Events>, tournament: Tournament) {
     if (this.timeOutHandler) {
       clearTimeout(this.timeOutHandler);
     }
     // spawn a powerup halfway through the match
-    // if (this.roundCounter === this.duelsToWin) {
-    //   this.spawnPowerup(io);
-    // }
+    if (this.roundCounter === this.duelsToWin && this.powerupEnabled) {
+      this.spawnPowerup(io);
+    }
     // for testing purposes spawn a powerup every round after first
-    this.spawnPowerup(io);
+    if (this.powerupEnabled) {
+      this.spawnPowerup(io);
+    }
     playDuel(tournament, io)(this);
   }
 
