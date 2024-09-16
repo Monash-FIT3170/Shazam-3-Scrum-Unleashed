@@ -30,7 +30,11 @@ export class RpsMatch implements Match {
     ["SCISSORS", "PAPER"],
   ]);
 
-  private powerupList: Powerup[] = [new MovekillerPowerup(), new ShieldPowerup(), new TiebreakerPowerup()];
+  private powerupList: Powerup[] = [
+    new MovekillerPowerup(),
+    new ShieldPowerup(),
+    new TiebreakerPowerup(),
+  ];
 
   constructor(players: Player[], duelsToWin: number, powerupEnabled = false) {
     this.players = players;
@@ -189,10 +193,13 @@ export class RpsMatch implements Match {
     const location = Math.floor(Math.random() * 3);
     powerupLocations[location] = true;
     this.powerupLocation = powerupLocations;
-    this.powerupList[Math.floor(Math.random() * this.powerupList.length)]
-    io.to(this.matchRoomID).emit("MATCH_POWERUP_SPAWN_LOCATION", this.powerupLocation);
+    this.powerupList[Math.floor(Math.random() * this.powerupList.length)];
+    io.to(this.matchRoomID).emit(
+      "MATCH_POWERUP_SPAWN_LOCATION",
+      this.powerupLocation,
+    );
   }
-  
+
   type(): MatchType {
     return "RPS";
   }

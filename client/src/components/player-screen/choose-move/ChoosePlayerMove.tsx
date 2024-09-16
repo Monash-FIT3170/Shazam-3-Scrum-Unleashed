@@ -20,7 +20,6 @@ const ChoosePlayerMove = ({
   powerup,
 }: ChoosePlayerMoveProps) => {
   const [selectedAction, setSelectedAction] = useState<Action | null>(null);
-  
 
   const handleMoveSelection = (move: Action) => {
     if (!selectedAction) {
