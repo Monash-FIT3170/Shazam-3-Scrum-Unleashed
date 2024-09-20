@@ -5,7 +5,7 @@ export const pongPaddleMovementSocket = (
   tournamentCode: string,
   playerID: string,
   start: boolean,
-  left: boolean
+  left: boolean,
 ) => {
   const match = tournamentMap.get(tournamentCode)?.getMatch(playerID);
 

@@ -250,15 +250,15 @@ export class PongMatch implements Match {
   private spawnPowerup() {
     this.uncollectedPowerups.push({
       powerup: new BiggerPaddle(),
-      x:Math.random()*GAME_WIDTH,
-      y:Math.random()*GAME_HEIGHT,
+      x: Math.random() * GAME_WIDTH,
+      y: Math.random() * GAME_HEIGHT,
     });
 
     // we add shrinkpaddle powerup to the list:
     this.uncollectedPowerups.push({
       powerup: new ShrinkPaddle(),
-      x:Math.random()*GAME_WIDTH,
-      y:Math.random()*GAME_HEIGHT,
+      x: Math.random() * GAME_WIDTH,
+      y: Math.random() * GAME_HEIGHT,
     });
   }
 
