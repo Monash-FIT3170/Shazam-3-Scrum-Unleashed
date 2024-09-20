@@ -51,8 +51,7 @@ interface PlayerToServerEvents {
         tournamentCode: string,
         playerID: string,
         start: boolean,
-        left: boolean,
-        reversedPaddleControls: boolean
+        left: boolean
     ) => void;
 }
 

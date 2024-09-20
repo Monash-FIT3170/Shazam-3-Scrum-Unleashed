@@ -7,7 +7,6 @@ import Tournament from "../tournament";
 import { roundChecker } from "../../controllers/helper/roundHelper";
 import { MatchType } from "../../../../types/socket/eventArguments";
 import * as crypto from "node:crypto";
-import { BiggerPaddle } from "../powerups/pongPowerups/biggerPaddle";
 import { PongPowerup } from "../powerups/pongPowerups/pongPowerup";
 import { ReversedPaddleControls } from "../powerups/pongPowerups/reversedPaddleControls";
 
@@ -46,12 +45,14 @@ export class PongMatch implements Match {
         y: 5,
         direction: 0,
         width: PADDLE_WIDTH,
+        isReversedControl: false,
       },
       {
         x: (GAME_WIDTH - PADDLE_WIDTH) / 2,
         y: 95,
         direction: 0,
         width: PADDLE_WIDTH,
+        isReversedControl: false,
       },
     ];
     this.matchRoomID = crypto.randomUUID();
@@ -142,18 +143,43 @@ export class PongMatch implements Match {
       },
     );
 
-    let paddle0 =
-      this.paddleStates[0].x +
-      (this.paddleStates[0].direction * Math.abs(this.ballState.yVelocity)) /
-        POLL_RATE;
-      
-        console.log('Paddle 0 direction:', this.paddleStates[0].direction);
-        console.log('Paddle 0 position:', paddle0);
+    let paddle0;
 
-    let paddle1 =
-      this.paddleStates[1].x +
-      (this.paddleStates[1].direction * Math.abs(this.ballState.yVelocity)) /
-        POLL_RATE;
+    if (!this.paddleStates[0].isReversedControl) {
+      paddle0 =
+        this.paddleStates[0].x +
+        (this.paddleStates[0].direction * Math.abs(this.ballState.yVelocity)) /
+          POLL_RATE;
+
+      console.log("Paddle 0 direction:", this.paddleStates[0].direction);
+      console.log("Paddle 0 position:", paddle0);
+    } else {
+      paddle0 =
+        this.paddleStates[0].x +
+        (this.paddleStates[0].direction *
+          Math.abs(this.ballState.yVelocity) *
+          -1) /
+          POLL_RATE;
+
+      console.log("Paddle 0 direction:", this.paddleStates[0].direction);
+      console.log("Paddle 0 position:", paddle0);
+    }
+
+    let paddle1;
+
+    if (!this.paddleStates[1].isReversedControl) {
+      paddle1 =
+        this.paddleStates[1].x +
+        (this.paddleStates[1].direction * Math.abs(this.ballState.yVelocity)) /
+          POLL_RATE;
+    } else {
+      paddle1 =
+        this.paddleStates[1].x +
+        (this.paddleStates[1].direction *
+          Math.abs(this.ballState.yVelocity) *
+          -1) /
+          POLL_RATE;
+    }
 
     // ball collision with paddles
     let paddleCollision = false;
