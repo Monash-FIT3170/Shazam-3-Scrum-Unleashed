@@ -284,7 +284,7 @@ export class PongMatch implements Match {
       x: Math.random() * GAME_WIDTH,
       y: Math.random() * GAME_HEIGHT,
     });
-    
+
     this.uncollectedPowerups.push({
       powerup: new BiggerPaddle(),
       x: Math.random() * GAME_WIDTH,
