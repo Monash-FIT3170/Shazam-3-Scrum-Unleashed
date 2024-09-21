@@ -16,6 +16,7 @@
     "prettier": "^3.2.5",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
+    "react-confetti": "^6.1.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.0",
     "socket.io": "^4.7.5",

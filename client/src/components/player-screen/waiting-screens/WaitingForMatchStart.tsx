@@ -15,13 +15,13 @@ const WaitingForMatchStart = ({
       {/*      <div className="fixed top-0 md:right-20 ">
         <ButtonComponent linkPath="/" text={"Quit Tournament"} />
       </div>*/}
-      <div className=" items-center size-60 w-full">
+      <div className=" items-center size-60 w-full -mt-5">
         <DisplayLogo />
       </div>
 
       <LoadingEffect isOpponent={false} />
       <div className="flex flex-col items-center justify-center">
-        <h1 className="text-white md:text-5xl text-4xl font-bold ">
+        <h1 className="text-white md:text-5xl text-4xl font-bold mt-10">
           WAITING FOR MATCH...
         </h1>
 
