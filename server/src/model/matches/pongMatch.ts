@@ -145,43 +145,21 @@ export class PongMatch implements Match {
       },
     );
 
-    let paddle0;
+    let directionModifier0 = this.paddleStates[0].isReversedControl ? -1: 1;
 
-    if (!this.paddleStates[0].isReversedControl) {
-      paddle0 =
-        this.paddleStates[0].x +
-        (this.paddleStates[0].direction * Math.abs(this.ballState.yVelocity)) /
-          POLL_RATE;
+    let paddle0 = this.paddleStates[0].x + 
+                  (this.paddleStates[0].direction * Math.abs(this.ballState.yVelocity)*directionModifier0) / POLL_RATE;
 
       console.log("Paddle 0 direction:", this.paddleStates[0].direction);
       console.log("Paddle 0 position:", paddle0);
-    } else {
-      paddle0 =
-        this.paddleStates[0].x +
-        (this.paddleStates[0].direction *
-          Math.abs(this.ballState.yVelocity) *
-          -1) /
-          POLL_RATE;
 
-      console.log("Paddle 0 direction:", this.paddleStates[0].direction);
-      console.log("Paddle 0 position:", paddle0);
-    }
-
-    let paddle1;
-
-    if (!this.paddleStates[1].isReversedControl) {
-      paddle1 =
+    let directionModifier1 = this.paddleStates[1].isReversedControl ? -1: 1;     
+      
+    let paddle1 =
         this.paddleStates[1].x +
-        (this.paddleStates[1].direction * Math.abs(this.ballState.yVelocity)) /
+        (this.paddleStates[1].direction * Math.abs(this.ballState.yVelocity)*directionModifier1) /
           POLL_RATE;
-    } else {
-      paddle1 =
-        this.paddleStates[1].x +
-        (this.paddleStates[1].direction *
-          Math.abs(this.ballState.yVelocity) *
-          -1) /
-          POLL_RATE;
-    }
+    
 
     // ball collision with paddles
     let paddleCollision = false;
