@@ -10,6 +10,7 @@ import * as crypto from "node:crypto";
 import { BiggerPaddle } from "../powerups/pongPowerups/biggerPaddle";
 import { ShrinkPaddle } from "../powerups/pongPowerups/shrinkPaddle";
 import { PongPowerup } from "../powerups/pongPowerups/pongPowerup";
+import { ReversedPaddleControls } from "../powerups/pongPowerups/reversedPaddleControls";
 
 const INITIAL_BALL_Y_SPEED = 50;
 const POLL_RATE = 60; // Hz
@@ -46,12 +47,14 @@ export class PongMatch implements Match {
         y: 5,
         direction: 0,
         width: PADDLE_WIDTH,
+        isReversedControl: false,
       },
       {
         x: (GAME_WIDTH - PADDLE_WIDTH) / 2,
         y: 95,
         direction: 0,
         width: PADDLE_WIDTH,
+        isReversedControl: false,
       },
     ];
     this.matchRoomID = crypto.randomUUID();
@@ -150,14 +153,25 @@ export class PongMatch implements Match {
       },
     );
 
+    const directionModifier0 = this.paddleStates[0].isReversedControl ? -1 : 1;
+
     let paddle0 =
       this.paddleStates[0].x +
-      (this.paddleStates[0].direction * Math.abs(this.ballState.yVelocity)) /
+      (this.paddleStates[0].direction *
+        Math.abs(this.ballState.yVelocity) *
+        directionModifier0) /
         POLL_RATE;
+
+    console.log("Paddle 0 direction:", this.paddleStates[0].direction);
+    console.log("Paddle 0 position:", paddle0);
+
+    const directionModifier1 = this.paddleStates[1].isReversedControl ? -1 : 1;
 
     let paddle1 =
       this.paddleStates[1].x +
-      (this.paddleStates[1].direction * Math.abs(this.ballState.yVelocity)) /
+      (this.paddleStates[1].direction *
+        Math.abs(this.ballState.yVelocity) *
+        directionModifier1) /
         POLL_RATE;
 
     // ball collision with paddles
@@ -268,6 +282,12 @@ export class PongMatch implements Match {
   }
 
   private spawnPowerup() {
+    this.uncollectedPowerups.push({
+      powerup: new ReversedPaddleControls(),
+      x: Math.random() * GAME_WIDTH,
+      y: Math.random() * GAME_HEIGHT,
+    });
+
     this.uncollectedPowerups.push({
       powerup: new BiggerPaddle(),
       x: Math.random() * GAME_WIDTH,
