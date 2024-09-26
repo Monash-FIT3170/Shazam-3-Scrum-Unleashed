@@ -82,9 +82,11 @@ interface ServerToPlayerEvents {
         uncollectedPowerups: PongPowerupSprite[]
     ) => void;
 
+    REACTION_ADDED: (reaction: ReactionData) => void;
+
+    MATCH_POWERUP_SPAWN_LOCATION: (location: boolean[]) => void;
+  
     MATCH_PONG_PADDLE_STATE: (
         paddleStates: PongPaddleState[],
     ) => void;
-
-    REACTION_ADDED: (reaction: ReactionData) => void;
 }

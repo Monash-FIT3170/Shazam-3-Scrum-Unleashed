@@ -6,14 +6,23 @@ import { playDuel } from "../../controllers/socket/chooseAction";
 import Tournament from "../tournament";
 import { Match } from "./match";
 import { MatchType } from "../../../../types/socket/eventArguments";
+import Powerup from "../powerups/rpsPowerups/powerup";
+import MovekillerPowerup from "../powerups/rpsPowerups/moveKillerPowerup";
+import ShieldPowerup from "../powerups/rpsPowerups/shieldPowerup";
+import TiebreakerPowerup from "../powerups/rpsPowerups/tiebreakerPowerup";
 
 export class RpsMatch implements Match {
   players: Player[];
   matchRoomID: string;
   duelsToWin: number;
+  roundCounter: number;
   p1Action: Action;
   p2Action: Action;
   timeOutHandler: NodeJS.Timeout | null;
+  powerupEnabled: boolean;
+  powerupLocation: boolean[] | null;
+  powerup: Powerup | null;
+  playerPowerups: (Powerup | null)[];
 
   private rulesMap: Map<Action, Action> = new Map<Action, Action>([
     ["ROCK", "SCISSORS"],
@@ -21,13 +30,24 @@ export class RpsMatch implements Match {
     ["SCISSORS", "PAPER"],
   ]);
 
-  constructor(players: Player[], duelsToWin: number) {
+  private powerupList: Powerup[] = [
+    new MovekillerPowerup(),
+    new ShieldPowerup(),
+    new TiebreakerPowerup(),
+  ];
+
+  constructor(players: Player[], duelsToWin: number, powerupEnabled = false) {
     this.players = players;
     this.duelsToWin = duelsToWin;
     this.matchRoomID = crypto.randomUUID();
     this.p1Action = null;
     this.p2Action = null;
     this.timeOutHandler = null;
+    this.powerupLocation = null;
+    this.powerup = null;
+    this.powerupEnabled = powerupEnabled;
+    this.playerPowerups = [null, null];
+    this.roundCounter = 0;
   }
 
   public isDuelComplete() {
@@ -38,6 +58,7 @@ export class RpsMatch implements Match {
   }
 
   public updateScores() {
+    const actions = ["ROCK", "PAPER", "SCISSORS"];
     const player1 = this.players[0];
     const player2 = this.players[1];
 
@@ -56,6 +77,21 @@ export class RpsMatch implements Match {
       } else {
         player2.score++;
       }
+
+      if (this.powerupLocation) {
+        const p1Index = actions.findIndex((action) => action === this.p1Action);
+        const p2Index = actions.findIndex((action) => action === this.p2Action);
+        if (this.powerupLocation[p1Index]) {
+          const player2Powerup = this.playerPowerups[1];
+          this.playerPowerups = [this.powerup, player2Powerup];
+        } else if (this.powerupLocation[p2Index]) {
+          const player1Powerup = this.playerPowerups[0];
+          this.playerPowerups = [player1Powerup, this.powerup];
+        }
+      }
+      // checking whether the powerup has been allocated to a player
+      console.log(this.playerPowerups[0]);
+      console.log(this.playerPowerups[1]);
     }
   }
 
@@ -124,6 +160,9 @@ export class RpsMatch implements Match {
       this.type(),
       tournament.duelTime / 1000,
     );
+    // removing the player's previous powerups
+    this.players[0].powerup = null;
+    this.players[1].powerup = null;
     this.startTimeout(playDuel(tournament, io), tournament.duelTime + 4000);
   }
 
@@ -132,11 +171,33 @@ export class RpsMatch implements Match {
     // as the users will need to know what stage it is currently.
   }
 
+  // change the value of the powerupEnabled to true to enable powerups
+  // this is only for testing purposes and should be a user input in the final version
   completeDuel(io: Server<Events>, tournament: Tournament) {
     if (this.timeOutHandler) {
       clearTimeout(this.timeOutHandler);
     }
+    // spawn a powerup halfway through the match
+    if (this.roundCounter === this.duelsToWin && this.powerupEnabled) {
+      this.spawnPowerup(io);
+    }
+    // for testing purposes spawn a powerup every round after first
+    if (this.powerupEnabled) {
+      this.spawnPowerup(io);
+    }
     playDuel(tournament, io)(this);
+  }
+
+  spawnPowerup(io: Server<Events>) {
+    const powerupLocations = [false, false, false];
+    const location = Math.floor(Math.random() * 3);
+    powerupLocations[location] = true;
+    this.powerupLocation = powerupLocations;
+    this.powerupList[Math.floor(Math.random() * this.powerupList.length)];
+    io.to(this.matchRoomID).emit(
+      "MATCH_POWERUP_SPAWN_LOCATION",
+      this.powerupLocation,
+    );
   }
 
   type(): MatchType {

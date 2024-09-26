@@ -23,6 +23,16 @@ const RPS = ({
 }: RPSProps) => {
   const [userAction, setUserAction] = useState<Action>();
   const [opponentAction, setOpponentAction] = useState<Action>();
+  const [powerup, setPowerupLocation] = useState<boolean[]>([
+    false,
+    false,
+    false,
+  ]);
+
+  socket.on("MATCH_POWERUP_SPAWN_LOCATION", (location: boolean[]) => {
+    setPowerupLocation(location);
+    console.log(location);
+  });
 
   useEffect(() => {
     socket.on("MATCH_RPS_DUEL_STATE", (p1Action, p2Action) => {
@@ -52,7 +62,11 @@ const RPS = ({
     );
   } else {
     return (
-      <ChoosePlayerMove tournamentCode={tournamentCode} duelTime={duelTime} />
+      <ChoosePlayerMove
+        tournamentCode={tournamentCode}
+        duelTime={duelTime}
+        powerup={powerup}
+      />
     );
   }
 };
