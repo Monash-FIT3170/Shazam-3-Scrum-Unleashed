@@ -145,7 +145,7 @@ export class PongMatch implements Match {
       },
     );
 
-    let directionModifier0 = this.paddleStates[0].isReversedControl ? -1 : 1;
+    const directionModifier0 = this.paddleStates[0].isReversedControl ? -1 : 1;
 
     let paddle0 =
       this.paddleStates[0].x +
@@ -157,7 +157,7 @@ export class PongMatch implements Match {
     console.log("Paddle 0 direction:", this.paddleStates[0].direction);
     console.log("Paddle 0 position:", paddle0);
 
-    let directionModifier1 = this.paddleStates[1].isReversedControl ? -1 : 1;
+    const directionModifier1 = this.paddleStates[1].isReversedControl ? -1 : 1;
 
     let paddle1 =
       this.paddleStates[1].x +
