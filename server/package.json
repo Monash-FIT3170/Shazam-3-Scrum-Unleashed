@@ -17,7 +17,6 @@
     "obscenity": "^0.2.1",
     "prettier": "^3.2.5",
     "qrcode": "^1.5.3",
-    "server": "file:",
     "socket.io": "^4.7.5",
     "tsx": "^4.7.3"
   },
