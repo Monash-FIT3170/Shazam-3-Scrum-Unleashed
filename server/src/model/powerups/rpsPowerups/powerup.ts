@@ -11,7 +11,7 @@ export default abstract class Powerup {
     description: string,
     targetSelf: boolean,
     instantUse: boolean,
-    priority: number
+    priority: number,
   ) {
     this.name = name;
     this.description = description;

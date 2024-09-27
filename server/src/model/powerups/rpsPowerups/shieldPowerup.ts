@@ -12,7 +12,6 @@ export default class ShieldPowerup extends Powerup {
     //check who activated. check the opponent. if the opponent would win, set the win to false.
     if (p1Activate) {
       if (rpsMatch.p2wins) rpsMatch.p2wins = false;
-    }
-    else if (rpsMatch.p1wins) rpsMatch.p1wins = false;
+    } else if (rpsMatch.p1wins) rpsMatch.p1wins = false;
   }
 }

@@ -87,21 +87,42 @@ export class RpsMatch implements Match {
 
       //now check the list of powerups and apply them, using the lower priority powerup first. check not null, and if they are not instant use
       //check the priority of each powerup, check if the powerup is not null, and check if the powerup is not instant use. put the priority of the powerup in the array to track
-      if (this.playerPowerups[0] !== null && !this.playerPowerups[0].instantUse) {
+      if (
+        this.playerPowerups[0] !== null &&
+        !this.playerPowerups[0].instantUse
+      ) {
         scorePowerupPrio[0] = this.playerPowerups[0].priority;
       }
-      if (this.playerPowerups[1] !== null && !this.playerPowerups[1].instantUse) {
+      if (
+        this.playerPowerups[1] !== null &&
+        !this.playerPowerups[1].instantUse
+      ) {
         scorePowerupPrio[1] = this.playerPowerups[1].priority;
       }
       //if the first powerup has a lower priority and is not -1, use it. then use the next powerup.
       if (scorePowerupPrio[0] <= scorePowerupPrio[1]) {
         //this long if statement first checks it isnt null. and then checks if it is not an instant use (meaning it is used at the end of the round)
-        if (this.playerPowerups[0] !== null && !this.playerPowerups[0].instantUse) this.playerPowerups[0].usePowerup(this, true);
-        if (this.playerPowerups[1] !== null && !this.playerPowerups[1].instantUse) this.playerPowerups[1].usePowerup(this, false);
-
+        if (
+          this.playerPowerups[0] !== null &&
+          !this.playerPowerups[0].instantUse
+        )
+          this.playerPowerups[0].usePowerup(this, true);
+        if (
+          this.playerPowerups[1] !== null &&
+          !this.playerPowerups[1].instantUse
+        )
+          this.playerPowerups[1].usePowerup(this, false);
       } else if (scorePowerupPrio[1] < scorePowerupPrio[0]) {
-        if (this.playerPowerups[1] !== null && !this.playerPowerups[1].instantUse) this.playerPowerups[1].usePowerup(this, false);
-        if (this.playerPowerups[0] !== null && !this.playerPowerups[0].instantUse) this.playerPowerups[0].usePowerup(this, true);
+        if (
+          this.playerPowerups[1] !== null &&
+          !this.playerPowerups[1].instantUse
+        )
+          this.playerPowerups[1].usePowerup(this, false);
+        if (
+          this.playerPowerups[0] !== null &&
+          !this.playerPowerups[0].instantUse
+        )
+          this.playerPowerups[0].usePowerup(this, true);
       }
 
       //now depending on what the final state of p1wins and p2wins are, we can add the score
@@ -111,8 +132,6 @@ export class RpsMatch implements Match {
       if (this.p2wins) {
         player2.score++;
       }
-
-
 
       if (this.powerupLocation) {
         const p1Index = actions.findIndex((action) => action === this.p1Action);
@@ -130,7 +149,6 @@ export class RpsMatch implements Match {
       console.log(this.playerPowerups[1]);
     }
   }
-
 
   public resetActions() {
     this.p1Action = null;
