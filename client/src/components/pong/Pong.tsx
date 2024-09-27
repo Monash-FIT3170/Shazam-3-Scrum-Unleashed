@@ -98,6 +98,8 @@ const Pong: React.FC<PongProps> = React.memo(
         y: GAME_HEIGHT / 2,
         xVelocity: 0,
         yVelocity: 0,
+        dx: 0,
+        dy: 0,
       },
       paddle1: undefined as PongPaddleState | undefined,
       paddle2: undefined as PongPaddleState | undefined,
@@ -128,10 +130,11 @@ const Pong: React.FC<PongProps> = React.memo(
         gameState.current = {
           ...gameState.current,
           ball: {
-            x: ballState.x * SCALING_FACTOR,
-            y: ballState.y * SCALING_FACTOR,
+            ...gameState.current.ball,
             xVelocity: ballState.xVelocity * SCALING_FACTOR,
             yVelocity: ballState.yVelocity * SCALING_FACTOR,
+            dx: ballState.x * SCALING_FACTOR - gameState.current.ball.x,
+            dy: ballState.y * SCALING_FACTOR - gameState.current.ball.y,
           },
           uncollectedPowerups: uncollectedPowerups.map((uncollectedPowerup) => {
             return {
@@ -242,6 +245,20 @@ const Pong: React.FC<PongProps> = React.memo(
 
       gameState.current.ball.x += gameState.current.ball.xVelocity * deltaTime;
       gameState.current.ball.y += gameState.current.ball.yVelocity * deltaTime;
+
+      let lerp = 0.01;
+      if (
+        gameState.current.ball.dy / SCALING_FACTOR > 10 ||
+        gameState.current.ball.dx / SCALING_FACTOR > 10
+      ) {
+        lerp = 1;
+      }
+
+      gameState.current.ball.y += gameState.current.ball.dy * lerp;
+      gameState.current.ball.x += gameState.current.ball.dx * lerp;
+
+      gameState.current.ball.dy -= gameState.current.ball.dy * lerp;
+      gameState.current.ball.dx -= gameState.current.ball.dx * lerp;
 
       // Ball
       clampX(gameState.current.ball, GAME_WIDTH);
