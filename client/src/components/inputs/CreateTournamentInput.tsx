@@ -3,6 +3,8 @@ import IntegerInputComponent from "./IntegerInputComponent.tsx";
 type CreateGameInput = {
   inputText: string;
   placeholder: number;
+  min: number;
+  max: number;
   callback: (value: number) => void;
   errorCallback: (bool: boolean) => void;
   transparentUnits: boolean;
@@ -12,6 +14,8 @@ type CreateGameInput = {
 const CreateTournamentInput = ({
   inputText,
   placeholder,
+  min,
+  max,
   callback,
   transparentUnits,
   errorCallback,
@@ -26,6 +30,8 @@ const CreateTournamentInput = ({
       >
         <IntegerInputComponent
           placeholder={placeholder}
+          min={min}
+          max={max}
           callback={callback}
           errorCallback={errorCallback}
         />

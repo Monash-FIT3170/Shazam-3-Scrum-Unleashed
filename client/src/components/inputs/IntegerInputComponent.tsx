@@ -2,12 +2,16 @@ import { useState } from "react";
 
 type IntegerInputComponentProps = {
   placeholder: number;
+  min: number;
+  max: number;
   callback: (value: number) => void;
   errorCallback: (bool: boolean) => void;
 };
 
 const IntegerInputComponent = ({
   placeholder,
+  min,
+  max,
   callback,
   errorCallback,
 }: IntegerInputComponentProps) => {
@@ -28,10 +32,19 @@ const IntegerInputComponent = ({
           errorCallback(true);
           setValue("");
         } else if (/^[1-9][0-9]*$/.test(event.target.value)) {
-          setHasError(false);
-          errorCallback(false);
-          setValue(parseInt(event.target.value));
-          callback(parseInt(event.target.value));
+          if (
+            Number(event.target.value) > max ||
+            Number(event.target.value) < min
+          ) {
+            setHasError(true);
+            errorCallback(true);
+            setValue(event.target.value);
+          } else {
+            setHasError(false);
+            errorCallback(false);
+            setValue(parseInt(event.target.value));
+            callback(parseInt(event.target.value));
+          }
         }
       }}
     />
