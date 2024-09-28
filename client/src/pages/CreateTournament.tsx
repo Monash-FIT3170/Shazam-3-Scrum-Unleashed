@@ -100,13 +100,10 @@ const CreateTournament = () => {
         <div className="fixed top-0 md:right-20 right-5">
           <ButtonComponent linkPath="/" text={"Back"} />
         </div>
-        <div className="uppercase text-white text-4xl md:text-5xl lg:text-6xl w-full justify-center items-top font-bold pt-5 flex">
+        <div className="uppercase text-white text-4xl md:text-5xl lg:text-6xl w-full justify-center items-top font-bold pt-5 flex gap-4">
           <img src={Lightning} className="w-10" alt="Lightning Icon"></img>
           GAME SETUP
           <img src={Lightning} className="w-10" alt="Lightning Icon"></img>
-        </div>
-        <div className="flex justify-center mt-4">
-          <img src={Line2} alt="Line Decoration" className="w-1/3" />
         </div>
       </div>
       <div className="pt-36 flex justify-center">
@@ -117,6 +114,8 @@ const CreateTournament = () => {
           <CreateTournamentInput
             inputText={"duels per match"}
             placeholder={duelsToWin} // Pass number directly
+            min={1}
+            max={100}
             callback={setDuelsToWin}
             transparentUnits={true}
             errorCallback={changeInputError(0)}
@@ -124,6 +123,8 @@ const CreateTournament = () => {
           <CreateTournamentInput
             inputText={"duel timer"}
             placeholder={duelTime} // Pass number directly
+            min={1}
+            max={120}
             callback={setDuelTime}
             transparentUnits={false}
             errorCallback={changeInputError(1)}
@@ -131,6 +132,8 @@ const CreateTournament = () => {
           <CreateTournamentInput
             inputText={"round timer"}
             placeholder={roundTime} // Pass number directly
+            min={1}
+            max={300}
             callback={setRoundTime}
             transparentUnits={false}
             errorCallback={changeInputError(2)}
@@ -140,7 +143,7 @@ const CreateTournament = () => {
 
       <div className="h-14 absolute bottom-10 xl:bottom-5 w-full flex justify-center">
         <button
-          className={`w-1/2 lg:w-1/5 text-white text-xl sm:text-2xl font-bold px-7 rounded-xl h-full uppercase ${
+          className={`w-1/2 lg:w-1/5 text-white text-xl sm:text-2xl font-bold px-7 rounded-2xl h-full uppercase ${
             inputErrors.includes(true) ? "bg-bright-red" : "bg-primary"
           }`}
           onClick={handleCreateGameClick}
@@ -159,9 +162,9 @@ const CreateTournament = () => {
         onClose={() => setShowPopup(false)}
         onConfirm={handleStartTournament}
       >
-        <h2 className="text-2xl font-bold mb-4">START TOURNAMENT</h2>
-        <p className="text-lg mb-6">
-          ARE YOU SURE YOU WANT TO START THE TOURNAMENT?
+        <h2 className="text-4xl font-bold mb-4">START TOURNAMENT</h2>
+        <p className="text-xl mb-6">
+          ARE YOU SURE YOU WANT TO START?
         </p>
       </Popup>
     </div>
