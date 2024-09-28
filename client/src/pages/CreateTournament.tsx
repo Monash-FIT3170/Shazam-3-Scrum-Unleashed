@@ -4,7 +4,6 @@ import { GAME_LOBBY_PATH } from "./pagePaths.ts";
 import { socket } from "../App.tsx";
 import CreateTournamentInput from "../components/inputs/CreateTournamentInput";
 import { CreateTournamentRes } from "../../../types/requestTypes.ts";
-import Line2 from "../assets/gamesetup/Line.svg";
 import Lightning from "../assets/logo/Lightning.svg";
 import ChooseMatchType from "../components/inputs/ChooseMatchType.tsx";
 import { MatchType } from "../../../types/socket/eventArguments.ts";
@@ -163,9 +162,7 @@ const CreateTournament = () => {
         onConfirm={handleStartTournament}
       >
         <h2 className="text-4xl font-bold mb-4">START TOURNAMENT</h2>
-        <p className="text-xl mb-6">
-          ARE YOU SURE YOU WANT TO START?
-        </p>
+        <p className="text-xl mb-6">ARE YOU SURE YOU WANT TO START?</p>
       </Popup>
     </div>
   );
