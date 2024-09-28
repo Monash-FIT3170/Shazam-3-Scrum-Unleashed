@@ -283,10 +283,10 @@ const Pong: React.FC<PongProps> = React.memo(
             ctx.fillStyle = "#ff4757";
             ctx.fillText("YOU LOST THE POINT", 60, GAME_HEIGHT / 2 + 10);
           }
-            ctx.strokeStyle = "#FFFFFF";
-            ctx.lineWidth = 3;
-            ctx.strokeRect(55, GAME_HEIGHT / 2 - 15, 300, 30)
-            ctx.lineWidth = STROKE_WIDTH;
+          ctx.strokeStyle = "#FFFFFF";
+          ctx.lineWidth = 3;
+          ctx.strokeRect(55, GAME_HEIGHT / 2 - 15, 300, 30);
+          ctx.lineWidth = STROKE_WIDTH;
         }
 
         // Score
