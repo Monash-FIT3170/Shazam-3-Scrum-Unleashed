@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { socket } from "../../App";
 import {
+  PlayerAttributes,
   PongBallState,
   PongPaddleState,
   PongPowerupSprite,
@@ -19,6 +20,7 @@ const PADDLE_HEIGHT = GAME_HEIGHT * 0.02;
 const SCALING_FACTOR = GAME_HEIGHT / 100;
 const STROKE_WIDTH = 2;
 const POWERUP_SIZE = 5;
+const POINT_WINNER_TIMEOUT = 3000;
 
 type PongProps = {
   tournamentCode: string;
@@ -105,7 +107,40 @@ const Pong: React.FC<PongProps> = React.memo(
       paddle2: undefined as PongPaddleState | undefined,
       uncollectedPowerups: [] as PongPowerupSprite[],
       lastUpdateTime: performance.now(),
+      playerScore: 0,
+      opponentScore: 0,
+      pointWinner: undefined as number | undefined,
     });
+
+    const updateScores = useCallback((players: PlayerAttributes[]) => {
+      let pointWinner;
+      if (isPlayerOne) {
+        if (players[0].score > gameState.current.playerScore) {
+          pointWinner = 0;
+        } else if (players[1].score > gameState.current.opponentScore) {
+          pointWinner = 1;
+        }
+      } else {
+        if (players[1].score > gameState.current.playerScore) {
+          pointWinner = 1;
+        } else if (players[0].score > gameState.current.opponentScore) {
+          pointWinner = 0;
+        }
+      }
+
+      setTimeout(() => {
+        gameState.current.pointWinner = undefined;
+      }, POINT_WINNER_TIMEOUT);
+
+      console.log(gameState);
+      gameState.current = {
+        ...gameState.current,
+        playerScore: players[Number(!isPlayerOne)].score,
+        opponentScore: players[Number(isPlayerOne)].score,
+        pointWinner: pointWinner,
+      };
+      console.log(gameState);
+    }, []);
 
     const updatePaddleState = useCallback((paddleStates: PongPaddleState[]) => {
       gameState.current = {
@@ -151,7 +186,6 @@ const Pong: React.FC<PongProps> = React.memo(
 
     const drawGame = useCallback(
       (ctx: CanvasRenderingContext2D) => {
-        console.log(gameState.current);
         const { ball, paddle1, paddle2, uncollectedPowerups } =
           gameState.current;
 
@@ -231,6 +265,45 @@ const Pong: React.FC<PongProps> = React.memo(
         if (isPlayerOne) {
           ctx.restore();
         }
+
+        if (gameState.current.pointWinner != undefined) {
+          ctx.font = "28px serif";
+          if (
+            (isPlayerOne && gameState.current.pointWinner == 0) ||
+            (!isPlayerOne && gameState.current.pointWinner == 1)
+          ) {
+            ctx.fillStyle = "#2ed573";
+            ctx.fillText("YOU WON THE POINT", 60, GAME_HEIGHT / 2 + 10);
+          }
+
+          if (
+            (!isPlayerOne && gameState.current.pointWinner == 0) ||
+            (isPlayerOne && gameState.current.pointWinner == 1)
+          ) {
+            ctx.fillStyle = "#ff4757";
+            ctx.fillText("YOU LOST THE POINT", 60, GAME_HEIGHT / 2 + 10);
+          }
+            ctx.strokeStyle = "#FFFFFF";
+            ctx.lineWidth = 3;
+            ctx.strokeRect(55, GAME_HEIGHT / 2 - 15, 300, 30)
+            ctx.lineWidth = STROKE_WIDTH;
+        }
+
+        // Score
+        ctx.fillStyle = "#ff4757";
+        ctx.font = "40px serif";
+        ctx.fillText(
+          gameState.current.opponentScore.toString(),
+          5,
+          GAME_HEIGHT / 2 - 15,
+        );
+
+        ctx.fillStyle = "#2ed573";
+        ctx.fillText(
+          gameState.current.playerScore.toString(),
+          5,
+          GAME_HEIGHT / 2 + 35,
+        );
       },
       [isPlayerOne],
     );
@@ -287,6 +360,7 @@ const Pong: React.FC<PongProps> = React.memo(
     );
 
     useEffect(() => {
+      socket.on("MATCH_DATA", updateScores);
       socket.on("MATCH_PONG_BALL_STATE", updateBallState);
       socket.on("MATCH_PONG_PADDLE_STATE", updatePaddleState);
       const keyHandler = (event: KeyboardEvent, isKeyDown: boolean) => {
@@ -299,6 +373,7 @@ const Pong: React.FC<PongProps> = React.memo(
       requestAnimationFrame(animateGame);
 
       return () => {
+        socket.off("MATCH_DATA", updateScores);
         socket.off("MATCH_PONG_BALL_STATE", updateBallState);
         socket.off("MATCH_PONG_PADDLE_STATE", updatePaddleState);
         document.removeEventListener("keydown", (e) => keyHandler(e, true));
@@ -336,6 +411,7 @@ const Pong: React.FC<PongProps> = React.memo(
     );
   },
 );
+
 Pong.propTypes = {
   tournamentCode: PropTypes.string.isRequired,
   isPlayerOne: PropTypes.bool.isRequired,
