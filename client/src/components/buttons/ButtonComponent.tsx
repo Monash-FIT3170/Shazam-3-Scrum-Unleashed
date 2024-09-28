@@ -11,7 +11,7 @@ const ButtonComponent = ({ linkPath, text, onClick }: ButtonInputs) => {
     <div className="h-14">
       <Link to={linkPath}>
         <button
-          className="text-white bg-primary text-3xl w-80 md:w-96 lg:w-122 font-bold rounded-xl h-full border-white"
+          className="text-white bg-primary text-3xl min-w-2 w-80 md:w-96 lg:w-122 font-bold rounded-xl h-full border-white"
           onClick={onClick}
         >
           {text}
