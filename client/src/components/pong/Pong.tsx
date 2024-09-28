@@ -38,6 +38,26 @@ const clampX = (ballState: PongBallState, gameWidth: number) => {
   }
 };
 
+function ballPaddleCollision(
+  paddleX: number,
+  paddleWidth: number,
+  ballState: PongBallState,
+): void {
+  if (ballState.yVelocity < 0) {
+    ballState.yVelocity -= 5;
+  } else {
+    ballState.yVelocity += 5;
+  }
+  ballState.yVelocity *= -1;
+
+  const relativeIntersectX = paddleX + paddleWidth / 2 - ballState.x;
+  const normalizedRelativeIntersectionY =
+    relativeIntersectX / (paddleWidth / 2);
+  const bounceAngle = (normalizedRelativeIntersectionY * 5 * Math.PI) / 12;
+
+  ballState.xVelocity = Math.abs(ballState.yVelocity) * -Math.sin(bounceAngle);
+}
+
 const clampY = (
   number: number,
   paddlePosition: PongPaddleState | undefined,
@@ -54,16 +74,17 @@ const clampY = (
     ballState.x > paddlePosition.x &&
     ballState.x < paddlePosition.x + paddlePosition.width
   ) {
-    return paddlePosition.y + scaledRadius;
+    ballPaddleCollision(paddlePosition.x, paddlePosition.width, ballState);
+    ballState.y = paddlePosition.y + scaledRadius;
   } else if (
     number > paddlePosition.y - scaledRadius &&
     ballState.y > halfHeight &&
     ballState.x > paddlePosition.x &&
     ballState.x < paddlePosition.x + paddlePosition.width
   ) {
-    return paddlePosition.y - scaledRadius;
+    ballPaddleCollision(paddlePosition.x, paddlePosition.width, ballState);
+    ballState.y = paddlePosition.y - scaledRadius;
   }
-
   return number;
 };
 
@@ -77,6 +98,8 @@ const Pong: React.FC<PongProps> = React.memo(
         y: GAME_HEIGHT / 2,
         xVelocity: 0,
         yVelocity: 0,
+        dx: 0,
+        dy: 0,
       },
       paddle1: undefined as PongPaddleState | undefined,
       paddle2: undefined as PongPaddleState | undefined,
@@ -84,30 +107,34 @@ const Pong: React.FC<PongProps> = React.memo(
       lastUpdateTime: performance.now(),
     });
 
-    const updateGameState = useCallback(
-      (
-        ballState: PongBallState,
-        paddleStates: PongPaddleState[],
-        uncollectedPowerups: PongPowerupSprite[],
-      ) => {
+    const updatePaddleState = useCallback((paddleStates: PongPaddleState[]) => {
+      gameState.current = {
+        ...gameState.current,
+        paddle1: {
+          ...paddleStates[0],
+          width: paddleStates[0].width * SCALING_FACTOR,
+          x: paddleStates[0].x * SCALING_FACTOR,
+          y: paddleStates[0].y * SCALING_FACTOR,
+        },
+        paddle2: {
+          ...paddleStates[1],
+          width: paddleStates[1].width * SCALING_FACTOR,
+          x: paddleStates[1].x * SCALING_FACTOR,
+          y: paddleStates[1].y * SCALING_FACTOR,
+        },
+      };
+    }, []);
+
+    const updateBallState = useCallback(
+      (ballState: PongBallState, uncollectedPowerups: PongPowerupSprite[]) => {
         gameState.current = {
+          ...gameState.current,
           ball: {
-            x: ballState.x * SCALING_FACTOR,
-            y: ballState.y * SCALING_FACTOR,
+            ...gameState.current.ball,
             xVelocity: ballState.xVelocity * SCALING_FACTOR,
             yVelocity: ballState.yVelocity * SCALING_FACTOR,
-          },
-          paddle1: {
-            ...paddleStates[0],
-            width: paddleStates[0].width * SCALING_FACTOR,
-            x: paddleStates[0].x * SCALING_FACTOR,
-            y: paddleStates[0].y * SCALING_FACTOR,
-          },
-          paddle2: {
-            ...paddleStates[1],
-            width: paddleStates[1].width * SCALING_FACTOR,
-            x: paddleStates[1].x * SCALING_FACTOR,
-            y: paddleStates[1].y * SCALING_FACTOR,
+            dx: ballState.x * SCALING_FACTOR - gameState.current.ball.x,
+            dy: ballState.y * SCALING_FACTOR - gameState.current.ball.y,
           },
           uncollectedPowerups: uncollectedPowerups.map((uncollectedPowerup) => {
             return {
@@ -147,15 +174,10 @@ const Pong: React.FC<PongProps> = React.memo(
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Ball
-        clampX(ball, GAME_WIDTH);
-        const closestPaddle = ball.y > 50 * SCALING_FACTOR ? paddle2 : paddle1;
-        const yClamped = clampY(ball.y, closestPaddle, ball);
-
         const adjustedRadius = BALL_RADIUS * SCALING_FACTOR - STROKE_WIDTH;
         ctx.fillStyle = "#ff00ff";
         ctx.beginPath();
-        ctx.arc(ball.x, yClamped, adjustedRadius, 0, Math.PI * 2);
+        ctx.arc(ball.x, ball.y, adjustedRadius, 0, Math.PI * 2);
         ctx.fill();
         ctx.strokeStyle = "white";
         ctx.lineWidth = STROKE_WIDTH;
@@ -224,6 +246,28 @@ const Pong: React.FC<PongProps> = React.memo(
       gameState.current.ball.x += gameState.current.ball.xVelocity * deltaTime;
       gameState.current.ball.y += gameState.current.ball.yVelocity * deltaTime;
 
+      let lerp = 0.01;
+      if (
+        gameState.current.ball.dy / SCALING_FACTOR > 10 ||
+        gameState.current.ball.dx / SCALING_FACTOR > 10
+      ) {
+        lerp = 1;
+      }
+
+      gameState.current.ball.y += gameState.current.ball.dy * lerp;
+      gameState.current.ball.x += gameState.current.ball.dx * lerp;
+
+      gameState.current.ball.dy -= gameState.current.ball.dy * lerp;
+      gameState.current.ball.dx -= gameState.current.ball.dx * lerp;
+
+      // Ball
+      clampX(gameState.current.ball, GAME_WIDTH);
+      const closestPaddle =
+        gameState.current.ball.y > 50 * SCALING_FACTOR
+          ? gameState.current.paddle2
+          : gameState.current.paddle1;
+      clampY(gameState.current.ball.y, closestPaddle, gameState.current.ball);
+
       drawGame(ctx);
       requestAnimationFrame(animateGame);
     }, [drawGame]);
@@ -243,7 +287,8 @@ const Pong: React.FC<PongProps> = React.memo(
     );
 
     useEffect(() => {
-      socket.on("MATCH_PONG_STATE", updateGameState);
+      socket.on("MATCH_PONG_BALL_STATE", updateBallState);
+      socket.on("MATCH_PONG_PADDLE_STATE", updatePaddleState);
       const keyHandler = (event: KeyboardEvent, isKeyDown: boolean) => {
         if (event.key === "ArrowLeft") handlePaddleMove(isKeyDown, "left");
         if (event.key === "ArrowRight") handlePaddleMove(isKeyDown, "right");
@@ -254,11 +299,12 @@ const Pong: React.FC<PongProps> = React.memo(
       requestAnimationFrame(animateGame);
 
       return () => {
-        socket.off("MATCH_PONG_STATE", updateGameState);
+        socket.off("MATCH_PONG_BALL_STATE", updateBallState);
+        socket.off("MATCH_PONG_PADDLE_STATE", updatePaddleState);
         document.removeEventListener("keydown", (e) => keyHandler(e, true));
         document.removeEventListener("keyup", (e) => keyHandler(e, false));
       };
-    }, [updateGameState, handlePaddleMove, animateGame]);
+    }, [updateBallState, handlePaddleMove, animateGame]);
 
     const buttonProps = {
       left: {

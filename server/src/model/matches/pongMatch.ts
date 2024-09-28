@@ -8,10 +8,12 @@ import { roundChecker } from "../../controllers/helper/roundHelper";
 import { MatchType } from "../../../../types/socket/eventArguments";
 import * as crypto from "node:crypto";
 import { BiggerPaddle } from "../powerups/pongPowerups/biggerPaddle";
+import { ShrinkPaddle } from "../powerups/pongPowerups/shrinkPaddle";
 import { PongPowerup } from "../powerups/pongPowerups/pongPowerup";
+import { ReversedPaddleControls } from "../powerups/pongPowerups/reversedPaddleControls";
 
 const INITIAL_BALL_Y_SPEED = 50;
-const POLL_RATE = 24; // Hz
+const POLL_RATE = 60; // Hz
 const BALL_RADIUS = 2;
 const GAME_WIDTH = 75;
 const GAME_HEIGHT = 100;
@@ -45,12 +47,14 @@ export class PongMatch implements Match {
         y: 5,
         direction: 0,
         width: PADDLE_WIDTH,
+        isReversedControl: false,
       },
       {
         x: (GAME_WIDTH - PADDLE_WIDTH) / 2,
         y: 95,
         direction: 0,
         width: PADDLE_WIDTH,
+        isReversedControl: false,
       },
     ];
     this.matchRoomID = crypto.randomUUID();
@@ -83,10 +87,18 @@ export class PongMatch implements Match {
   }
 
   emitMatchState(io: Server<Events>): void {
+    this.emitPaddleState(io);
+    this.emitPongState(io);
+  }
+
+  emitPaddleState(io: Server<Events>): void {
+    io.to(this.matchRoomID).emit("MATCH_PONG_PADDLE_STATE", this.paddleStates);
+  }
+
+  emitPongState(io: Server<Events>): void {
     io.to(this.matchRoomID).emit(
-      "MATCH_PONG_STATE",
+      "MATCH_PONG_BALL_STATE",
       this.ballState,
-      this.paddleStates,
       this.uncollectedPowerups.map((uncollectedPowerup) => {
         return {
           x: uncollectedPowerup.x,
@@ -100,22 +112,22 @@ export class PongMatch implements Match {
   ballPaddleCollision(
     paddleX: number,
     paddleWidth: number,
-    ballX: number,
+    ballState: PongBallState,
   ): void {
-    if (this.ballState.yVelocity < 0) {
-      this.ballState.yVelocity -= 5;
+    if (ballState.yVelocity < 0) {
+      ballState.yVelocity -= 5;
     } else {
-      this.ballState.yVelocity += 5;
+      ballState.yVelocity += 5;
     }
-    this.ballState.yVelocity *= -1;
+    ballState.yVelocity *= -1;
 
-    const relativeIntersectX = paddleX + paddleWidth / 2 - ballX;
+    const relativeIntersectX = paddleX + paddleWidth / 2 - ballState.x;
     const normalizedRelativeIntersectionY =
       relativeIntersectX / (paddleWidth / 2);
     const bounceAngle = (normalizedRelativeIntersectionY * 5 * Math.PI) / 12;
 
-    this.ballState.xVelocity =
-      Math.abs(this.ballState.yVelocity) * -Math.sin(bounceAngle);
+    ballState.xVelocity =
+      Math.abs(ballState.yVelocity) * -Math.sin(bounceAngle);
   }
 
   tick(io: Server<Events>): void {
@@ -141,14 +153,25 @@ export class PongMatch implements Match {
       },
     );
 
+    const directionModifier0 = this.paddleStates[0].isReversedControl ? -1 : 1;
+
     let paddle0 =
       this.paddleStates[0].x +
-      (this.paddleStates[0].direction * Math.abs(this.ballState.yVelocity)) /
+      (this.paddleStates[0].direction *
+        Math.abs(this.ballState.yVelocity) *
+        directionModifier0) /
         POLL_RATE;
+
+    console.log("Paddle 0 direction:", this.paddleStates[0].direction);
+    console.log("Paddle 0 position:", paddle0);
+
+    const directionModifier1 = this.paddleStates[1].isReversedControl ? -1 : 1;
 
     let paddle1 =
       this.paddleStates[1].x +
-      (this.paddleStates[1].direction * Math.abs(this.ballState.yVelocity)) /
+      (this.paddleStates[1].direction *
+        Math.abs(this.ballState.yVelocity) *
+        directionModifier1) /
         POLL_RATE;
 
     // ball collision with paddles
@@ -159,7 +182,11 @@ export class PongMatch implements Match {
         newBallX <=
           paddle0 * (1 + PADDLE_HITBOX_INCREASE) + this.paddleStates[0].width
       ) {
-        this.ballPaddleCollision(paddle0, this.paddleStates[0].width, newBallX);
+        this.ballPaddleCollision(
+          paddle0,
+          this.paddleStates[0].width,
+          this.ballState,
+        );
         newBallY = this.paddleStates[0].y + BALL_RADIUS;
         paddleCollision = true;
       }
@@ -171,7 +198,11 @@ export class PongMatch implements Match {
         newBallX <=
           paddle1 * (1 + PADDLE_HITBOX_INCREASE) + this.paddleStates[1].width
       ) {
-        this.ballPaddleCollision(paddle1, this.paddleStates[1].width, newBallX);
+        this.ballPaddleCollision(
+          paddle1,
+          this.paddleStates[1].width,
+          this.ballState,
+        );
         newBallY = this.paddleStates[1].y - BALL_RADIUS;
         paddleCollision = true;
       }
@@ -238,7 +269,11 @@ export class PongMatch implements Match {
     this.ballState.x = newBallX;
     this.ballState.y = newBallY;
 
-    this.emitMatchState(io);
+    io.to(this.matchRoomID).emit("MATCH_PONG_PADDLE_STATE", this.paddleStates);
+
+    if (this.tickCounter % (POLL_RATE / 2) === 0) {
+      this.emitPongState(io);
+    }
 
     if (winner != null) {
       roundChecker(this.tournament, io);
@@ -247,12 +282,23 @@ export class PongMatch implements Match {
   }
 
   private spawnPowerup() {
-    const x = Math.random() * GAME_WIDTH;
-    const y = Math.random() * GAME_HEIGHT;
+    this.uncollectedPowerups.push({
+      powerup: new ReversedPaddleControls(),
+      x: Math.random() * GAME_WIDTH,
+      y: Math.random() * GAME_HEIGHT,
+    });
+
     this.uncollectedPowerups.push({
       powerup: new BiggerPaddle(),
-      x,
-      y,
+      x: Math.random() * GAME_WIDTH,
+      y: Math.random() * GAME_HEIGHT,
+    });
+
+    // we add shrinkpaddle powerup to the list:
+    this.uncollectedPowerups.push({
+      powerup: new ShrinkPaddle(),
+      x: Math.random() * GAME_WIDTH,
+      y: Math.random() * GAME_HEIGHT,
     });
   }
 

@@ -171,27 +171,31 @@ const TournamentLobby = () => {
             />
           )}
 
-          <div className="player-bar flex flex-row justify-between items-center px-10 h-16">
-            <div className="text-white text-xl uppercase ">
-              Players: {players.length}
+          <div className="player-bar flex flex-row justify-between items-center p-2 h-16 rounded-t-2xl">
+            <div className="text-white text-xl uppercase pl-4">
+              <b>Players:</b> {players.length}
             </div>
             {!inProgress && (
               <button
-                className="hover:bg-blue-700 text-white bg-primary text-xl rounded-xl h-full uppercase w-1/4"
+                className={`hover:bg-blue-700 text-white bg-primary text-xl rounded-xl h-full uppercase w-1/4 font-bold ${players.length > 1 ? "animate-radiate" : "opacity-50 pointer-events-none"}`}
                 onClick={startTournament}
               >
-                Start Tournament
+                {`${players.length > 1 ? "START TOURNAMENT" : "NOT ENOUGH PLAYERS!"}`}
               </button>
             )}
           </div>
 
-          <div className="player-list" data-testid="player-list">
+          <div
+            className="player-list rounded-b-2xl transition-all duration-1000 min-h-20"
+            data-testid="player-list"
+          >
             {players.map((player, index) => (
               <PlayerCard
                 player={player}
                 cardNum={index}
                 key={player.userID}
                 interact={() => spectatePlayer(player)}
+                inProgress={inProgress}
               />
             ))}
           </div>

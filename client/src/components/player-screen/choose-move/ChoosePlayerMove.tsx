@@ -11,11 +11,13 @@ import CountDownTimer from "../match-overlay/CountDownTimer.tsx";
 interface ChoosePlayerMoveProps {
   tournamentCode: string;
   duelTime: number;
+  powerup: boolean[];
 }
 
 const ChoosePlayerMove = ({
   tournamentCode,
   duelTime,
+  powerup,
 }: ChoosePlayerMoveProps) => {
   const [selectedAction, setSelectedAction] = useState<Action | null>(null);
 
@@ -40,16 +42,19 @@ const ChoosePlayerMove = ({
                 img={RockOption}
                 selection="ROCK"
                 onSelectMove={handleMoveSelection}
+                powerup={powerup[0]}
               />
               <MoveSelection
                 img={PaperOption}
                 selection="PAPER"
                 onSelectMove={handleMoveSelection}
+                powerup={powerup[1]}
               />
               <MoveSelection
                 img={ScissorsOption}
                 selection="SCISSORS"
                 onSelectMove={handleMoveSelection}
+                powerup={powerup[2]}
               />
             </div>
           </div>

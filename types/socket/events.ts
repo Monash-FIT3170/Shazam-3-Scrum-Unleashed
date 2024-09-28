@@ -77,11 +77,16 @@ interface ServerToPlayerEvents {
         p2Action: Action
     ) => void;
 
-    MATCH_PONG_STATE: (
+    MATCH_PONG_BALL_STATE: (
         ballState: PongBallState,
-        paddleStates: PongPaddleState[],
         uncollectedPowerups: PongPowerupSprite[]
     ) => void;
 
     REACTION_ADDED: (reaction: ReactionData) => void;
+
+    MATCH_POWERUP_SPAWN_LOCATION: (location: boolean[]) => void;
+  
+    MATCH_PONG_PADDLE_STATE: (
+        paddleStates: PongPaddleState[],
+    ) => void;
 }
