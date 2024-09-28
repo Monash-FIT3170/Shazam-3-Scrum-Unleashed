@@ -22,7 +22,6 @@ const TournamentLobbyBanner = ({
             JOIN THE TOURNAMENT AT
           </div>
           <div className="text-5xl font-bold uppercase select-text">
-
             <span className="text-rock">{window.location.host}</span>
             <span className="text-shazam">/</span>
             <span className="text-paper">{tournamentCode}</span>
