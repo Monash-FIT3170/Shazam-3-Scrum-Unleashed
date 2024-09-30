@@ -21,7 +21,7 @@ const TournamentLobbyBanner = ({
           <div className="text-white text-2xl font-bold uppercase">
             JOIN THE TOURNAMENT AT
           </div>
-          <div className="text-5xl font-bold uppercase">
+          <div className="text-5xl font-bold uppercase select-text">
             <span className="text-rock">{window.location.host}</span>
             <span className="text-shazam">/</span>
             <span className="text-paper">{tournamentCode}</span>
@@ -37,7 +37,7 @@ const TournamentLobbyBanner = ({
             Tournament Code:
           </div>
           <div
-            className="text-paper text-7xl font-bold uppercase "
+            className="text-paper text-7xl font-bold uppercase select-text"
             data-testid="tournament-code"
           >
             {tournamentCode}
