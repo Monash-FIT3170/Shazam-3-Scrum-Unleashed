@@ -13,4 +13,12 @@ export class ReversedPaddleControls implements PongPowerup {
 
     match.paddleStates[Number(isPlayerOne)].isReversedControl = true;
   }
+
+  deactivate(match: PongMatch): void {
+    const isPlayerOne = match.ballState.yVelocity > 0;
+
+    match.paddleStates[Number(isPlayerOne)].isReversedControl = false;
+  }
+
+
 }

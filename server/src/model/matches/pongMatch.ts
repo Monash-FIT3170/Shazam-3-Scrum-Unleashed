@@ -147,6 +147,7 @@ export class PongMatch implements Match {
           Math.abs(uncollectedPowerup.y - newBallY) < POWERUP_SIZE
         ) {
           uncollectedPowerup.powerup.activate(this);
+          setTimeout(() => uncollectedPowerup.powerup.deactivate(this), 1000);
           return false;
         }
         return true;

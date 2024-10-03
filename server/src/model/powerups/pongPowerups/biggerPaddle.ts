@@ -11,4 +11,11 @@ export class BiggerPaddle implements PongPowerup {
     const isPlayerTwo = match.ballState.yVelocity < 0;
     match.paddleStates[Number(isPlayerTwo)].width = 30;
   }
+
+  deactivate(match: PongMatch): void {
+    const isPlayerTwo = match.ballState.yVelocity < 0;
+    match.paddleStates[Number(isPlayerTwo)].width = 20;
+  }
+
+
 }
