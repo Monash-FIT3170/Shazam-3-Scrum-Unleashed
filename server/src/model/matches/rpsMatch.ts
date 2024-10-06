@@ -39,7 +39,7 @@ export class RpsMatch implements Match {
     this.p2Action = null;
     this.timeOutHandler = null;
     this.powerupSpawn = undefined;
-    this.powerupEnabled = false;
+    this.powerupEnabled = powerupEnabled;
     this.playerPowerups = [null, null];
     this.roundCounter = 0;
     this.p1wins = false;
@@ -244,15 +244,19 @@ export class RpsMatch implements Match {
     }
   }
 
-  canSpawnPowerup(){
+  canSpawnPowerup() {
     return this.powerupEnabled; // Add more conditions as required
   }
 
   spawnPowerup() {
     const actions = ["ROCK", "PAPER", "SCISSORS"];
     const powerUps = ["MOVEKILLER", "SHIELD", "TIEBREAKER"];
-    const action = actions[Math.floor(Math.random() * actions.length)] as Action;
-    const powerup = powerUps[Math.floor(Math.random() * powerUps.length)] as RPSPowerup;
+    const action = actions[
+      Math.floor(Math.random() * actions.length)
+    ] as Action;
+    const powerup = powerUps[
+      Math.floor(Math.random() * powerUps.length)
+    ] as RPSPowerup;
 
     this.powerupSpawn = { powerup: powerup, onAction: action };
   }

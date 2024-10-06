@@ -12,8 +12,8 @@ export const playDuel =
     const matchWinner = match.getMatchWinner();
     const matchWinnerUserID = matchWinner?.userID;
 
-    if (match.canSpawnPowerup()){
-        match.spawnPowerup();
+    if (match.canSpawnPowerup()) {
+      match.spawnPowerup();
     }
     io.to(match.matchRoomID).emit(
       "MATCH_RPS_DUEL_STATE",
