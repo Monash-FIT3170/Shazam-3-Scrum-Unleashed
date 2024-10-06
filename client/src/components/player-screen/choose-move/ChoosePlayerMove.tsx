@@ -42,23 +42,22 @@ const ChoosePlayerMove = ({
                 img={RockOption}
                 selection="ROCK"
                 onSelectMove={handleMoveSelection}
-                powerup={powerupSpawn ? powerupSpawn.onAction == "ROCK" : false}
+                powerupSpawn={powerupSpawn}
               />
               <MoveSelection
                 img={PaperOption}
                 selection="PAPER"
                 onSelectMove={handleMoveSelection}
-                powerup={
-                  powerupSpawn ? powerupSpawn.onAction == "PAPER" : false
+                powerupSpawn={
+                  powerupSpawn
                 }
               />
               <MoveSelection
                 img={ScissorsOption}
                 selection="SCISSORS"
                 onSelectMove={handleMoveSelection}
-                powerup={
-                  powerupSpawn ? powerupSpawn.onAction == "SCISSORS" : false
-                }
+                powerupSpawn={powerupSpawn}
+
               />
             </div>
           </div>
