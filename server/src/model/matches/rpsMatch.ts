@@ -1,5 +1,5 @@
 import Player from "../player";
-import { Action } from "../../../../types/types";
+import { Action, RPSPowerup, RPSPowerupSpawn } from "../../../../types/types";
 import { Server } from "socket.io";
 import { Events } from "../../../../types/socket/events";
 import { playDuel } from "../../controllers/socket/chooseAction";
@@ -20,8 +20,7 @@ export class RpsMatch implements Match {
   p2Action: Action;
   timeOutHandler: NodeJS.Timeout | null;
   powerupEnabled: boolean;
-  powerupLocation: boolean[] | null;
-  powerup: Powerup | null;
+  powerupSpawn: RPSPowerupSpawn | undefined;
   playerPowerups: (Powerup | null)[];
   p1wins: boolean;
   p2wins: boolean;
@@ -32,12 +31,6 @@ export class RpsMatch implements Match {
     ["SCISSORS", "PAPER"],
   ]);
 
-  private powerupList: Powerup[] = [
-    new MovekillerPowerup(),
-    new ShieldPowerup(),
-    new TiebreakerPowerup(),
-  ];
-
   constructor(players: Player[], duelsToWin: number, powerupEnabled = false) {
     this.players = players;
     this.duelsToWin = duelsToWin;
@@ -45,9 +38,8 @@ export class RpsMatch implements Match {
     this.p1Action = null;
     this.p2Action = null;
     this.timeOutHandler = null;
-    this.powerupLocation = null;
-    this.powerup = null;
-    this.powerupEnabled = powerupEnabled;
+    this.powerupSpawn = undefined;
+    this.powerupEnabled = false;
     this.playerPowerups = [null, null];
     this.roundCounter = 0;
     this.p1wins = false;
@@ -62,7 +54,6 @@ export class RpsMatch implements Match {
   }
 
   public updateScores() {
-    const actions = ["ROCK", "PAPER", "SCISSORS"];
     const player1 = this.players[0];
     const player2 = this.players[1];
     const scorePowerupPrio = [-1, -1];
@@ -133,15 +124,17 @@ export class RpsMatch implements Match {
         player2.score++;
       }
 
-      if (this.powerupLocation) {
-        const p1Index = actions.findIndex((action) => action === this.p1Action);
-        const p2Index = actions.findIndex((action) => action === this.p2Action);
-        if (this.powerupLocation[p1Index]) {
-          const player2Powerup = this.playerPowerups[1];
-          this.playerPowerups = [this.powerup, player2Powerup];
-        } else if (this.powerupLocation[p2Index]) {
-          const player1Powerup = this.playerPowerups[0];
-          this.playerPowerups = [player1Powerup, this.powerup];
+      if (this.powerupSpawn) {
+        if (this.powerupSpawn.onAction == this.p1Action) {
+          this.playerPowerups[0] = this.createPowerup(
+            this.powerupSpawn.powerup,
+          );
+        }
+
+        if (this.powerupSpawn.onAction == this.p2Action) {
+          this.playerPowerups[1] = this.createPowerup(
+            this.powerupSpawn.powerup,
+          );
         }
       }
       // checking whether the powerup has been allocated to a player
@@ -232,27 +225,36 @@ export class RpsMatch implements Match {
     if (this.timeOutHandler) {
       clearTimeout(this.timeOutHandler);
     }
-    // spawn a powerup halfway through the match
-    if (this.roundCounter === this.duelsToWin && this.powerupEnabled) {
-      this.spawnPowerup(io);
-    }
-    // for testing purposes spawn a powerup every round after first
-    if (this.powerupEnabled) {
-      this.spawnPowerup(io);
-    }
     playDuel(tournament, io)(this);
   }
 
-  spawnPowerup(io: Server<Events>) {
-    const powerupLocations = [false, false, false];
-    const location = Math.floor(Math.random() * 3);
-    powerupLocations[location] = true;
-    this.powerupLocation = powerupLocations;
-    this.powerupList[Math.floor(Math.random() * this.powerupList.length)];
-    io.to(this.matchRoomID).emit(
-      "MATCH_POWERUP_SPAWN_LOCATION",
-      this.powerupLocation,
-    );
+  createPowerup(powerup: RPSPowerup) {
+    switch (powerup) {
+      case "MOVEKILLER":
+        return new MovekillerPowerup();
+      case "SHIELD":
+        return new ShieldPowerup();
+      case "TIEBREAKER":
+        return new TiebreakerPowerup();
+      default:
+        console.log(
+          "Default Case Happened for Powerup, need to check if power ups are actually set up properly",
+        );
+        return new ShieldPowerup();
+    }
+  }
+
+  canSpawnPowerup(){
+    return this.powerupEnabled; // Add more conditions as required
+  }
+
+  spawnPowerup() {
+    const actions = ["ROCK", "PAPER", "SCISSORS"];
+    const powerUps = ["MOVEKILLER", "SHIELD", "TIEBREAKER"];
+    const action = actions[Math.floor(Math.random() * actions.length)] as Action;
+    const powerup = powerUps[Math.floor(Math.random() * powerUps.length)] as RPSPowerup;
+
+    this.powerupSpawn = { powerup: powerup, onAction: action };
   }
 
   type(): MatchType {
