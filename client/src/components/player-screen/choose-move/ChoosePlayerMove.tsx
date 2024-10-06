@@ -48,16 +48,13 @@ const ChoosePlayerMove = ({
                 img={PaperOption}
                 selection="PAPER"
                 onSelectMove={handleMoveSelection}
-                powerupSpawn={
-                  powerupSpawn
-                }
+                powerupSpawn={powerupSpawn}
               />
               <MoveSelection
                 img={ScissorsOption}
                 selection="SCISSORS"
                 onSelectMove={handleMoveSelection}
                 powerupSpawn={powerupSpawn}
-
               />
             </div>
           </div>

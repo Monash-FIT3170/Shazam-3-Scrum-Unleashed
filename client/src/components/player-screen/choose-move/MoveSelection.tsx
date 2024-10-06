@@ -1,5 +1,5 @@
 import React from "react";
-import {Action, RPSPowerupSpawn} from "../../../../../types/types.ts";
+import { Action, RPSPowerupSpawn } from "../../../../../types/types.ts";
 import PowerupLightning from "../../../assets/choose-move/PowerupLightning.svg";
 
 interface MoveSelectionProps {
@@ -12,7 +12,8 @@ interface MoveSelectionProps {
 const MoveSelection: React.FC<MoveSelectionProps> = ({
   img,
   selection,
-  onSelectMove,powerupSpawn,
+  onSelectMove,
+  powerupSpawn,
 }) => {
   return (
     <button
@@ -20,7 +21,7 @@ const MoveSelection: React.FC<MoveSelectionProps> = ({
       className="w-1/5 focus:outline-none mr-5"
       data-testid={selection?.toLocaleLowerCase()}
     >
-      {powerupSpawn &&  powerupSpawn.onAction == selection && (
+      {powerupSpawn && powerupSpawn.onAction == selection && (
         <img
           src={PowerupLightning}
           alt="Powerup avaliable"
