@@ -8,6 +8,7 @@ export interface Match {
   players: Player[];
   matchRoomID: string;
   duelsToWin: number;
+  powerupsEnabled: boolean;
 
   getMatchWinner(): Player | null;
   startMatch(io: Server<Events>, tournament: Tournament): void;

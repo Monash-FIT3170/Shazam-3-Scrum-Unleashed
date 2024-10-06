@@ -6,7 +6,6 @@ import { Events } from "../../../../types/socket/events";
 import Tournament from "../tournament";
 import { roundChecker } from "../../controllers/helper/roundHelper";
 import { MatchType } from "../../../../types/socket/eventArguments";
-import * as crypto from "node:crypto";
 import { BiggerPaddle } from "../powerups/pongPowerups/biggerPaddle";
 import { ShrinkPaddle } from "../powerups/pongPowerups/shrinkPaddle";
 import { PongPowerup } from "../powerups/pongPowerups/pongPowerup";
@@ -37,6 +36,7 @@ export class PongMatch implements Match {
   intervalHandler: NodeJS.Timeout | undefined;
   uncollectedPowerups: PongPowerupSpawn[];
   tickCounter: number;
+  powerupsEnabled: boolean;
 
   constructor(players: Player[], duelsToWin: number, tournament: Tournament) {
     this.players = players;
@@ -68,6 +68,7 @@ export class PongMatch implements Match {
     this.intervalHandler = undefined;
     this.uncollectedPowerups = [];
     this.tickCounter = 0;
+    this.powerupsEnabled = tournament.powerupsEnabled;
   }
 
   startMatch(io: Server<Events>): void {
@@ -132,7 +133,7 @@ export class PongMatch implements Match {
 
   tick(io: Server<Events>): void {
     this.tickCounter += 1;
-    if (this.tickCounter % (POLL_RATE * 5) == 0) {
+    if (this.powerupsEnabled && this.tickCounter % (POLL_RATE * 5) == 0) {
       this.spawnPowerup();
     }
 

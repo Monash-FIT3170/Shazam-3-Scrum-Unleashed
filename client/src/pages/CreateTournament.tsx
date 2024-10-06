@@ -20,6 +20,7 @@ async function postTournament(
   duelTime: number,
   roundTime: number,
   matchType: MatchType[],
+  powerupsEnabled: boolean,
 ) {
   try {
     const res = await fetch(
@@ -35,6 +36,7 @@ async function postTournament(
           duelTime,
           roundTime,
           matchType,
+          powerupsEnabled,
         }),
       },
     );
@@ -50,6 +52,7 @@ const CreateTournament = () => {
   const [duelsToWin, setDuelsToWin] = useState(defaultDuelsToWin);
   const [duelTime, setDuelTime] = useState(defaultDuelTime);
   const [roundTime, setRoundTime] = useState(defaultRoundTime);
+  const [powerupsEnabled, setPowerupsEnabled] = useState(false);
   const [inputErrors, setInputError] = useState([false, false, false]);
   const [matchType, setMatchType] = useState<MatchType[]>(["RPS"]);
   const [loading, setLoading] = useState(false);
@@ -84,6 +87,7 @@ const CreateTournament = () => {
       duelTime,
       roundTime,
       matchType,
+      powerupsEnabled,
     );
     if (code) {
       setTournamentCode(code.tournamentCode);
@@ -137,6 +141,25 @@ const CreateTournament = () => {
             transparentUnits={false}
             errorCallback={changeInputError(2)}
           />
+          <div className="flex justify-between items-center lg:w-2/3 w-full">
+            <span className="text-white text-md lg:text-2xl uppercase font-bold">
+              {"Power Ups"}
+            </span>
+            <div
+              className={`flex justify-center items-center gap-5 text-white font-bold`}
+            >
+              <label className="px-36 inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="powerup-toggle"
+                  value=""
+                  className="sr-only peer relative"
+                  onChange={() => setPowerupsEnabled(!powerupsEnabled)}
+                />
+                <div className="relative w-16 h-8 bg-gray-400 ring-2 ring-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-7 after:w-7 after:transition-all dark:border-white peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+          </div>
         </div>
       </div>
 
