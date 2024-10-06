@@ -267,13 +267,13 @@ const Pong: React.FC<PongProps> = React.memo(
         }
 
         if (gameState.current.pointWinner != undefined) {
-          ctx.font = "28px serif";
+          ctx.font = "bold 28px sans-serif";
           if (
             (isPlayerOne && gameState.current.pointWinner == 0) ||
             (!isPlayerOne && gameState.current.pointWinner == 1)
           ) {
             ctx.fillStyle = "#2ed573";
-            ctx.fillText("YOU WON THE POINT", 60, GAME_HEIGHT / 2 + 10);
+            ctx.fillText("YOU WON THE POINT", 50, GAME_HEIGHT / 2 + 10);
           }
 
           if (
@@ -281,17 +281,13 @@ const Pong: React.FC<PongProps> = React.memo(
             (isPlayerOne && gameState.current.pointWinner == 1)
           ) {
             ctx.fillStyle = "#ff4757";
-            ctx.fillText("YOU LOST THE POINT", 60, GAME_HEIGHT / 2 + 10);
+            ctx.fillText("YOU LOST THE POINT", 50, GAME_HEIGHT / 2 + 10);
           }
-          ctx.strokeStyle = "#FFFFFF";
-          ctx.lineWidth = 3;
-          ctx.strokeRect(55, GAME_HEIGHT / 2 - 15, 300, 30);
-          ctx.lineWidth = STROKE_WIDTH;
         }
 
         // Score
         ctx.fillStyle = "#ff4757";
-        ctx.font = "40px serif";
+        ctx.font = "bold 40px sans-serif";
         ctx.fillText(
           gameState.current.opponentScore.toString(),
           5,
