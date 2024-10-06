@@ -2,7 +2,7 @@ import { useState } from "react";
 import RockOption from "../../../assets/choose-move/RockOption.svg";
 import PaperOption from "../../../assets/choose-move/PaperOption.svg";
 import ScissorsOption from "../../../assets/choose-move/ScissorOption.svg";
-import { Action } from "../../../../../types/types.ts";
+import { Action, RPSPowerupSpawn } from "../../../../../types/types.ts";
 import MoveSelection from "./MoveSelection.tsx";
 import { socket } from "../../../App.tsx";
 import WaitingForOpponent from "../waiting-screens/WaitingForOpponent.tsx";
@@ -11,13 +11,13 @@ import CountDownTimer from "../match-overlay/CountDownTimer.tsx";
 interface ChoosePlayerMoveProps {
   tournamentCode: string;
   duelTime: number;
-  powerup: boolean[];
+  powerupSpawn: RPSPowerupSpawn | undefined;
 }
 
 const ChoosePlayerMove = ({
   tournamentCode,
   duelTime,
-  powerup,
+  powerupSpawn,
 }: ChoosePlayerMoveProps) => {
   const [selectedAction, setSelectedAction] = useState<Action | null>(null);
 
@@ -42,19 +42,19 @@ const ChoosePlayerMove = ({
                 img={RockOption}
                 selection="ROCK"
                 onSelectMove={handleMoveSelection}
-                powerup={powerup[0]}
+                powerupSpawn={powerupSpawn}
               />
               <MoveSelection
                 img={PaperOption}
                 selection="PAPER"
                 onSelectMove={handleMoveSelection}
-                powerup={powerup[1]}
+                powerupSpawn={powerupSpawn}
               />
               <MoveSelection
                 img={ScissorsOption}
                 selection="SCISSORS"
                 onSelectMove={handleMoveSelection}
-                powerup={powerup[2]}
+                powerupSpawn={powerupSpawn}
               />
             </div>
           </div>
