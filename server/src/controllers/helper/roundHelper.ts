@@ -146,11 +146,19 @@ function createMatch(players: Player[], tournament: Tournament) {
     ];
   switch (nextMatchType) {
     case "RPS":
-      return new RpsMatch(players, tournament.duelsToWin);
+      return new RpsMatch(
+        players,
+        tournament.duelsToWin,
+        tournament.powerupsEnabled,
+      );
     case "PONG":
       return new PongMatch(players, tournament.duelsToWin, tournament);
     default:
-      return new RpsMatch(players, tournament.duelsToWin);
+      return new RpsMatch(
+        players,
+        tournament.duelsToWin,
+        tournament.powerupsEnabled,
+      );
   }
 }
 
