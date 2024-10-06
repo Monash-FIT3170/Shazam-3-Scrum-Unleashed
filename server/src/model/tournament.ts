@@ -13,7 +13,7 @@ export default class Tournament {
   roundCounter: number;
   roundTimeoutHandler: NodeJS.Timeout | null;
   inProgress: boolean;
-  powerupsEnabled:boolean;
+  powerupsEnabled: boolean;
 
   constructor(
     hostID: string,
