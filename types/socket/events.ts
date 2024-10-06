@@ -4,7 +4,15 @@
  * Please add any new events, data or fix any formatting
  */
 
-import {Action, PlayerAttributes, PongBallState, PongPaddleState, PongPowerupSprite, ReactionData} from "../types";
+import {
+    Action,
+    PlayerAttributes,
+    PongBallState,
+    PongPaddleState,
+    PongPowerupSprite,
+    ReactionData, RPSPowerup,
+    RPSPowerupSpawn
+} from "../types";
 import {MatchType} from "./eventArguments";
 
 /**
@@ -34,6 +42,12 @@ interface PlayerToServerEvents {
         tournamentCode: string,
         playerUserID: string,
         action: Action
+    ) => void;
+
+    RPS_CHOOSE_POWERUP: (
+        tournamentCode: string,
+        playerUserID: string,
+        powerup: RPSPowerup
     ) => void;
 
     ADD_REACTION: (
@@ -74,7 +88,8 @@ interface ServerToPlayerEvents {
 
     MATCH_RPS_DUEL_STATE: (
         p1Action: Action,
-        p2Action: Action
+        p2Action: Action,
+        powerupSpawn : RPSPowerupSpawn | undefined
     ) => void;
 
     MATCH_PONG_BALL_STATE: (
@@ -83,8 +98,6 @@ interface ServerToPlayerEvents {
     ) => void;
 
     REACTION_ADDED: (reaction: ReactionData) => void;
-
-    MATCH_POWERUP_SPAWN_LOCATION: (location: boolean[]) => void;
   
     MATCH_PONG_PADDLE_STATE: (
         paddleStates: PongPaddleState[],
