@@ -20,7 +20,8 @@ const PADDLE_HEIGHT = GAME_HEIGHT * 0.02;
 const SCALING_FACTOR = GAME_HEIGHT / 100;
 const STROKE_WIDTH = 2;
 const POWERUP_SIZE = 5;
-const POINT_WINNER_TIMEOUT = 3000;
+const POINT_WINNER_TIMEOUT = 1500;
+const START_TIMER = 3000;
 
 type PongProps = {
   tournamentCode: string;
@@ -110,6 +111,7 @@ const Pong: React.FC<PongProps> = React.memo(
       playerScore: 0,
       opponentScore: 0,
       pointWinner: undefined as number | undefined,
+      spawnTimer: undefined as number | undefined,
     });
 
     const updateScores = useCallback((players: PlayerAttributes[]) => {
@@ -130,17 +132,40 @@ const Pong: React.FC<PongProps> = React.memo(
 
       setTimeout(() => {
         gameState.current.pointWinner = undefined;
+        startSpawnTimer();
       }, POINT_WINNER_TIMEOUT);
 
-      console.log(gameState);
       gameState.current = {
         ...gameState.current,
         playerScore: players[Number(!isPlayerOne)].score,
         opponentScore: players[Number(isPlayerOne)].score,
         pointWinner: pointWinner,
       };
-      console.log(gameState);
     }, []);
+
+    const startSpawnTimer = () => {
+      if (
+        gameState.current.ball.yVelocity === 0 &&
+        gameState.current.ball.xVelocity === 0 &&
+        (gameState.current.spawnTimer === undefined ||
+          gameState.current.spawnTimer === -1)
+      ) {
+        gameState.current.spawnTimer = START_TIMER / 1000;
+        const interval = setInterval(() => {
+          if (
+            gameState.current.spawnTimer === undefined ||
+            gameState.current.spawnTimer === -1
+          ) {
+            clearInterval(interval);
+            return;
+          }
+          gameState.current.spawnTimer -= 1;
+        }, 1000);
+      }
+    };
+
+    // Start on Page Load
+    startSpawnTimer();
 
     const updatePaddleState = useCallback((paddleStates: PongPaddleState[]) => {
       gameState.current = {
@@ -208,15 +233,6 @@ const Pong: React.FC<PongProps> = React.memo(
         ctx.stroke();
         ctx.setLineDash([]);
 
-        const adjustedRadius = BALL_RADIUS * SCALING_FACTOR - STROKE_WIDTH;
-        ctx.fillStyle = "#ff00ff";
-        ctx.beginPath();
-        ctx.arc(ball.x, ball.y, adjustedRadius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = "white";
-        ctx.lineWidth = STROKE_WIDTH;
-        ctx.stroke();
-
         // Paddles
         const drawPaddle = (
           paddle: PongPaddleState,
@@ -266,7 +282,32 @@ const Pong: React.FC<PongProps> = React.memo(
           ctx.restore();
         }
 
-        if (gameState.current.pointWinner != undefined) {
+        // Draw Ball
+        if (gameState.current.pointWinner == undefined) {
+          const adjustedRadius = BALL_RADIUS * SCALING_FACTOR - STROKE_WIDTH;
+          ctx.fillStyle = "#ff00ff";
+          ctx.beginPath();
+          ctx.arc(ball.x, ball.y, adjustedRadius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = "white";
+          ctx.lineWidth = STROKE_WIDTH;
+          ctx.stroke();
+
+          if (
+            gameState.current.spawnTimer !== undefined &&
+            gameState.current.spawnTimer > 0 &&
+            gameState.current.ball.yVelocity === 0 &&
+            gameState.current.ball.xVelocity === 0
+          ) {
+            ctx.font = "bold 32px sans-serif";
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillText(
+              `${gameState.current.spawnTimer}`,
+              GAME_WIDTH / 2 + 20,
+              GAME_HEIGHT / 2 + 10,
+            );
+          }
+        } else {
           ctx.font = "bold 28px sans-serif";
           if (
             (isPlayerOne && gameState.current.pointWinner == 0) ||
