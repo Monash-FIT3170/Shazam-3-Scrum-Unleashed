@@ -14,10 +14,14 @@ const Home = () => {
           linkPath={JOIN_GAME_PATH}
           text={"JOIN GAME"}
         ></ButtonComponent>
-        <BorderedButtonComponent
-          linkPath={CREATE_TOURNAMENT_PATH}
-          text={"CREATE GAME"}
-        ></BorderedButtonComponent>
+        <div className="flex gap-10">
+          <div className="hidden lg:block">
+            <BorderedButtonComponent
+              linkPath={CREATE_TOURNAMENT_PATH}
+              text={"CREATE GAME"}
+            ></BorderedButtonComponent>
+          </div>
+        </div>
       </div>
     </div>
   );
