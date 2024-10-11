@@ -16,29 +16,30 @@ const WaitingForMatchStart = ({
 
   const showTutorial = () => {
     setShowPopup(true);
-  }
+  };
 
   return (
     <>
       {/*      <div className="fixed top-0 md:right-20 ">
         <ButtonComponent linkPath="/" text={"Quit Tournament"} />
       </div>*/}
-      
-      {/*Tutorial Button */}
-        <div>
-          {/*dunno why its gotta be absolute to be pressable but it works
-            suspect its the reaction screen not allowing it */}
-          <button 
-            className="absolute bg-primary hover:bg-primary text-white font-bold rounded-xl border-4 border-white text-2xl w-80 md:w-48 lg:w-56 py-2 px-4 top-5 inset-x-0 mx-auto z-10"
-            onClick={showTutorial}>
-            HOW TO PLAY
-          </button>
-        </div>
 
-        <TutorialPopup
-          show={showPopup}
-          onClose={() => setShowPopup(false)}
-        ></TutorialPopup>
+      {/*Tutorial Button */}
+      <div>
+        {/*dunno why its gotta be absolute to be pressable but it works
+            suspect its the reaction screen not allowing it */}
+        <button
+          className="absolute bg-primary hover:bg-primary text-white font-bold rounded-xl border-4 border-white text-2xl w-80 md:w-48 lg:w-56 py-2 px-4 top-5 inset-x-0 mx-auto z-10"
+          onClick={showTutorial}
+        >
+          HOW TO PLAY
+        </button>
+      </div>
+
+      <TutorialPopup
+        show={showPopup}
+        onClose={() => setShowPopup(false)}
+      ></TutorialPopup>
 
       <div className=" items-center size-60 w-full">
         <DisplayLogo />
