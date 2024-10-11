@@ -2,17 +2,24 @@ import { useState } from "react";
 import RockOption from "../../../assets/choose-move/RockOption.svg";
 import PaperOption from "../../../assets/choose-move/PaperOption.svg";
 import ScissorsOption from "../../../assets/choose-move/ScissorOption.svg";
-import { Action } from "../../../../../types/types.ts";
+import { Action, RPSPowerupSpawn } from "../../../../../types/types.ts";
 import MoveSelection from "./MoveSelection.tsx";
 import { socket } from "../../../App.tsx";
 import WaitingForOpponent from "../waiting-screens/WaitingForOpponent.tsx";
 import { Selection } from "../../../../../types/types.ts";
+import CountDownTimer from "../match-overlay/CountDownTimer.tsx";
 
 interface ChoosePlayerMoveProps {
   tournamentCode: string;
+  duelTime: number;
+  powerupSpawn: RPSPowerupSpawn | undefined;
 }
 
-const ChoosePlayerMove = ({ tournamentCode }: ChoosePlayerMoveProps) => {
+const ChoosePlayerMove = ({
+  tournamentCode,
+  duelTime,
+  powerupSpawn,
+}: ChoosePlayerMoveProps) => {
   const [selectedAction, setSelectedAction] = useState<Action | null>(null);
 
   const handleMoveSelection = (move: Selection) => {
@@ -29,6 +36,7 @@ const ChoosePlayerMove = ({ tournamentCode }: ChoosePlayerMoveProps) => {
 
   return (
     <>
+      <CountDownTimer time={duelTime} />
       {selectedAction !== null ? (
         <WaitingForOpponent moveAction={selectedAction} />
       ) : (
@@ -40,16 +48,19 @@ const ChoosePlayerMove = ({ tournamentCode }: ChoosePlayerMoveProps) => {
                 img={RockOption}
                 selection="ROCK"
                 onSelectMove={handleMoveSelection}
+                powerupSpawn={powerupSpawn}
               />
               <MoveSelection
                 img={PaperOption}
                 selection="PAPER"
                 onSelectMove={handleMoveSelection}
+                powerupSpawn={powerupSpawn}
               />
               <MoveSelection
                 img={ScissorsOption}
                 selection="SCISSORS"
                 onSelectMove={handleMoveSelection}
+                powerupSpawn={powerupSpawn}
               />
             </div>
           </div>

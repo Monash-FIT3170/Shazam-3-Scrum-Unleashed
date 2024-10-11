@@ -6,8 +6,13 @@ type AdverseUserInteraction = "refresh" | "leave" | "slow";
 async function createTournament(page: Page) {
   await page.goto("/");
   await page.getByText("CREATE GAME").click();
-  await page.getByText("MASHUP / PARTY MODE").click();
-  await page.getByText("Create Tournament").click();
+  await page.getByTestId("mashup").click();
+  await page.getByText("CREATE GAME").click();
+
+  // Wait for the popup and click the confirm button
+  await page.waitForSelector("text=Confirm"); // Adjust the selector if necessary
+  await page.getByText("Confirm").click();
+
   const gameCode = await page.getByTestId("tournament-code").textContent();
   return { gameCode, page };
 }
@@ -98,7 +103,7 @@ async function autoClickMoves(
       // If error is thrown, stop making moves
       break;
     }
-    // Make sure the buttons disspear after you click them
+    // Make sure the buttons disappear after you click them
     await expect(page.getByTestId(move)).toBeHidden();
   }
 }

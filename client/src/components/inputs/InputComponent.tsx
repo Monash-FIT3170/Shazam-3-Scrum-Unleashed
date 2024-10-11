@@ -3,12 +3,13 @@ type InputComponentProps = {
   callback: (value: string) => void;
   placeholder: string;
   disabled: boolean;
+  additionalClass?: string;
 };
 
 const InputComponent = ({ callback, ...props }: InputComponentProps) => {
   return (
     <input
-      className="bg-primary-dark rounded-xl w-1/3 h-10 mt-4 border-2 pl-2 focus:outline-none focus:ring-1 text-white border-white focus:ring-blue-400 focus:border-blue-400"
+      className={`bg-primary-dark rounded-xl w-1/3 h-10 mt-4 border-2 pl-2 focus:outline-none focus:ring-1 text-white border-white focus:ring-blue-400 focus:border-blue-400 ${props.additionalClass ?? ""} `}
       onChange={(event) => {
         callback(event.target.value);
       }}

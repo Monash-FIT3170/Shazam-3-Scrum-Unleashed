@@ -10,6 +10,9 @@ import ReactionOverlay from "../components/reactions/ReactionsOverlay.tsx";
 import { Pong } from "../components/pong/Pong.tsx";
 import { MatchType } from "../../../types/socket/eventArguments.ts";
 import { RPS } from "../components/rps/RPS.tsx";
+import DuelInProgressAnimation from "../components/player-screen/DuelInProgressAnimation.tsx";
+
+const DEFAULT_DUEL_TIME = 15; // seconds
 
 const PlayerScreen = () => {
   const { loadedTournamentCode, loadedPlayerName } = useLoaderData() as {
@@ -27,6 +30,8 @@ const PlayerScreen = () => {
   const [isSpectator, setIsSpectator] = useState(false);
   const [matchType, setMatchType] = useState<MatchType>();
   const [isPlayerOne, setIsPlayerOne] = useState(false);
+  const [duelTime, setDuelTime] = useState(DEFAULT_DUEL_TIME);
+  const [showAnimation, setShowAnimation] = useState(false);
 
   function setPlayers(players: PlayerAttributes[]) {
     for (let i = 0; i < players.length; i++) {
@@ -66,15 +71,27 @@ const PlayerScreen = () => {
   }
 
   useEffect(() => {
-    socket.on("MATCH_START", (players, matchType) => {
+    socket.on("MATCH_START", (players, matchType, duelTime) => {
       setPlayers(players);
       setMatchType(matchType);
       setIsSpectator(getIsSpectator(players));
+      setDuelTime(duelTime);
+      const storedMatchState = localStorage.getItem("matchStarted");
+      if (matchType === "RPS" && storedMatchState !== "true") {
+        // Only have RPS animation atm, dont show for PONG
+        setShowAnimation(true);
+        setTimeout(() => localStorage.setItem("matchStarted", "true"), 3000);
+      }
     });
 
     socket.on("MATCH_DATA", (players, winnerUserID) => {
-      setMatchWinnerID(winnerUserID);
       setPlayers(players);
+      setTimeout(() => {
+        setMatchWinnerID(winnerUserID);
+        if (winnerUserID) {
+          localStorage.setItem("matchStarted", "false");
+        }
+      }, 1500); // to delay match outcome screen
     });
 
     socket.on("TOURNAMENT_COMPLETE", (playerName) => {
@@ -89,7 +106,6 @@ const PlayerScreen = () => {
   }, []);
 
   let content = null;
-
   // FIXME would like to make this simpler
   if (tournamentWinner !== undefined) {
     content = <TournamentWin playerName={tournamentWinner} />;
@@ -106,13 +122,14 @@ const PlayerScreen = () => {
         player={userPlayer}
         opponent={opponent}
         isWin={matchWinnerID === userPlayer.userID}
+        isSpectator={isSpectator}
       />
     );
     setTimeout(() => {
       setMatchWinnerID(undefined);
       setOpponent(undefined);
     }, MATCH_COMPLETION_TIME);
-  } else {
+  } else if (!showAnimation) {
     switch (matchType) {
       case "PONG": {
         content = (
@@ -127,11 +144,19 @@ const PlayerScreen = () => {
             player={userPlayer}
             opponent={opponent}
             isPlayerOne={isPlayerOne}
+            isSpectator={isSpectator}
+            duelTime={duelTime}
           />
         );
         break;
       }
     }
+  } else {
+    // Show animation
+    content = <DuelInProgressAnimation />;
+    setTimeout(() => {
+      setShowAnimation(false);
+    }, 3000);
   }
 
   return (
@@ -142,15 +167,23 @@ const PlayerScreen = () => {
           spectatingID={isSpectator ? userPlayer!.userID : null}
         />
       }
-      <div className="overflow-hidden h-screen relative">
+      {/* TODO: Extract below... reused for player spectators... */}
+      {isSpectator && (
+        <div
+          className={
+            "fixed border-8 top-0 left-0 w-screen h-screen border-spectator-bg shadow-[inset_0_0_50px_0px_theme(colors.spectator-bg)]"
+          }
+        />
+      )}
+      <div className={`h-screen relative`}>
         <div className="pt-12">
           <div className="flex flex-col items-center justify-center mt-10">
             {userPlayer !== undefined && opponent !== undefined && (
               <PlayerAndSpectatorsInfo
                 userPlayer={userPlayer}
                 opponent={opponent}
+                isSpectator={isSpectator}
               />
-              // TODO probably only want to display during a match and not after a match
             )}
             {content}
           </div>

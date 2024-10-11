@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 type ButtonInputs = {
   linkPath: string;
   image: string;
+  onClick?: () => void;
 };
 
 const LargeButton = ({ linkPath, image }: ButtonInputs) => {

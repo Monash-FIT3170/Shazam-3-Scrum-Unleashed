@@ -1,13 +1,24 @@
 #root {
   max-width: 1280px;
-  width: 100%;
+  width: 100dvw;
+  height: 100dvh;
   margin: 0 auto;
+
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  outline: none;
 
   text-align: center;
   text-transform: uppercase;
 }
 
 body {
+  overflow: clip;
   background-color: #22026c;
 }
 
@@ -76,7 +87,7 @@ body {
 }
 .player-card-1 {
   background-color: #22026c;
-  border: 3px solid #ff5959;
+  border: 3px solid #377ae3;
   border-radius: 10px;
   width: 125px;
   height: 60px;
@@ -107,4 +118,16 @@ body {
   margin: 10px;
   text-align: center;
   display: inline-block;
+}
+
+.large-input,
+.large-btn {
+  max-width: 415px;
+}
+
+@media screen and (max-width: 700px) {
+  .large-input,
+  .large-btn {
+    width: 90% !important;
+  }
 }
