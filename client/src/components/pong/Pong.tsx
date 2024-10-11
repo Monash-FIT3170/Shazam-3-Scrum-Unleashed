@@ -278,10 +278,6 @@ const Pong: React.FC<PongProps> = React.memo(
         if (paddle1) drawPaddle(paddle1, "#ff4757", true);
         if (paddle2) drawPaddle(paddle2, "#2ed573");
 
-        if (isPlayerOne) {
-          ctx.restore();
-        }
-
         // Draw Ball
         if (gameState.current.pointWinner == undefined) {
           const adjustedRadius = BALL_RADIUS * SCALING_FACTOR - STROKE_WIDTH;
@@ -292,6 +288,10 @@ const Pong: React.FC<PongProps> = React.memo(
           ctx.strokeStyle = "white";
           ctx.lineWidth = STROKE_WIDTH;
           ctx.stroke();
+
+          if (isPlayerOne) {
+            ctx.restore();
+          }
 
           if (
             gameState.current.spawnTimer !== undefined &&
