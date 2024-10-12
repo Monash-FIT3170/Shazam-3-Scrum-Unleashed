@@ -91,8 +91,8 @@ const JoinTournament = () => {
 
   return (
     <div>
-      <div className="fixed top-0 left-1/2 -translate-x-1/2">
-        <ButtonComponent linkPath="/" text={"BACK TO HOME"} />
+      <div className="flex fixed md:top-0 md:right-5 w-full justify-center md:justify-end">
+        <ButtonComponent linkPath="/" text={"Back"} />
       </div>
       <div className="flex flex-col items-center justify-center h-screen overflow-hidden">
         <div className=" items-center size-80 w-full py-10">
