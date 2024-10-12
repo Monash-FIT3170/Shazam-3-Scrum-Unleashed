@@ -165,7 +165,9 @@ const Pong: React.FC<PongProps> = React.memo(
     };
 
     // Start on Page Load
-    startSpawnTimer();
+    useEffect(() => {
+      startSpawnTimer();
+    }, []);
 
     const updatePaddleState = useCallback((paddleStates: PongPaddleState[]) => {
       gameState.current = {
@@ -233,6 +235,18 @@ const Pong: React.FC<PongProps> = React.memo(
         ctx.stroke();
         ctx.setLineDash([]);
 
+        // Draw Ball
+        if (gameState.current.pointWinner == undefined) {
+          const adjustedRadius = BALL_RADIUS * SCALING_FACTOR - STROKE_WIDTH;
+          ctx.fillStyle = "#ff00ff";
+          ctx.beginPath();
+          ctx.arc(ball.x, ball.y, adjustedRadius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = "white";
+          ctx.lineWidth = STROKE_WIDTH;
+          ctx.stroke();
+        }
+
         // Paddles
         const drawPaddle = (
           paddle: PongPaddleState,
@@ -275,8 +289,9 @@ const Pong: React.FC<PongProps> = React.memo(
           ctx.stroke();
         });
 
-        if (paddle1) drawPaddle(paddle1, "#ff4757", true);
-        if (paddle2) drawPaddle(paddle2, "#2ed573");
+        if (paddle1)
+          drawPaddle(paddle1, isPlayerOne ? "#2ed573" : "#ff4757", true);
+        if (paddle2) drawPaddle(paddle2, isPlayerOne ? "#ff4757" : "#2ed573");
 
         if (isPlayerOne) {
           ctx.restore();
@@ -284,15 +299,6 @@ const Pong: React.FC<PongProps> = React.memo(
 
         // Draw Ball
         if (gameState.current.pointWinner == undefined) {
-          const adjustedRadius = BALL_RADIUS * SCALING_FACTOR - STROKE_WIDTH;
-          ctx.fillStyle = "#ff00ff";
-          ctx.beginPath();
-          ctx.arc(ball.x, ball.y, adjustedRadius, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.strokeStyle = "white";
-          ctx.lineWidth = STROKE_WIDTH;
-          ctx.stroke();
-
           if (
             gameState.current.spawnTimer !== undefined &&
             gameState.current.spawnTimer > 0 &&

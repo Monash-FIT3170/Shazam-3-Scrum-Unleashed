@@ -19,7 +19,7 @@ export class RpsMatch implements Match {
   p1Action: Action;
   p2Action: Action;
   timeOutHandler: NodeJS.Timeout | null;
-  powerupEnabled: boolean;
+  powerupsEnabled: boolean;
   powerupSpawn: RPSPowerupSpawn | undefined;
   playerPowerups: (Powerup | null)[];
   p1wins: boolean;
@@ -39,7 +39,7 @@ export class RpsMatch implements Match {
     this.p2Action = null;
     this.timeOutHandler = null;
     this.powerupSpawn = undefined;
-    this.powerupEnabled = powerupEnabled;
+    this.powerupsEnabled = powerupEnabled;
     this.playerPowerups = [null, null];
     this.roundCounter = 0;
     this.p1wins = false;
@@ -245,7 +245,7 @@ export class RpsMatch implements Match {
   }
 
   canSpawnPowerup() {
-    return this.powerupEnabled; // Add more conditions as required
+    return this.powerupsEnabled; // Add more conditions as required
   }
 
   spawnPowerup() {
