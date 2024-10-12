@@ -42,6 +42,7 @@ export async function reconnectionHandler(
                 match.players,
                 match.type(),
                 tournament.duelTime / 1000,
+                tournament.duelsToWin,
               );
 
               match.emitMatchState(io);

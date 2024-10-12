@@ -23,6 +23,7 @@ const HostSpectatorScreen = ({
   stopSpectating,
 }: PlayerScreenProps) => {
   const MATCH_COMPLETION_TIME = 4000;
+  const DEFAULT_DUELS_TO_WIN = 3;
   const [playerName] = useState("HOST");
 
   const [userPlayer, setUserPlayer] = useState<PlayerAttributes>(); // spectating player
@@ -32,6 +33,7 @@ const HostSpectatorScreen = ({
   const [matchType, setMatchType] = useState<MatchType>();
   const [isPlayerOne, setIsPlayerOne] = useState(false);
   const [duelTime, setDuelTime] = useState(15);
+  const [duelsToWin, setDuelsToWin] = useState(DEFAULT_DUELS_TO_WIN);
 
   function setPlayers(players: PlayerAttributes[]) {
     for (let i = 0; i < players.length; i++) {
@@ -67,10 +69,11 @@ const HostSpectatorScreen = ({
   }, [matchData]);
 
   useEffect(() => {
-    socket.on("MATCH_START", (players, matchType, duelTime) => {
+    socket.on("MATCH_START", (players, matchType, duelTime, numDuelsToWin) => {
       setPlayers(players);
       setMatchType(matchType);
       setDuelTime(duelTime);
+      setDuelsToWin(numDuelsToWin);
     });
 
     socket.on("MATCH_DATA", (players, winnerUserID) => {
@@ -165,6 +168,7 @@ const HostSpectatorScreen = ({
               userPlayer={userPlayer}
               opponent={opponent}
               isSpectator={true}
+              duelsToWin={duelsToWin}
             />
             // TODO probably only want to display during a match and not after a match
           )}
