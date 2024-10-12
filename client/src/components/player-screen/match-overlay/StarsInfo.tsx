@@ -28,16 +28,19 @@ const StarsInfo = ({
         {isSpectator && !isOpponent ? (
           <img src={eyeIcon} alt="Eye Icon" className="block mr-3" />
         ) : null}
-        {playerName} <p className={`${duelLimit <= 5 ? 'md:hidden' : 'md:block'} sm:block`}> {`: ${score}`}</p>
+        {playerName}
+        <p className={`${duelLimit <= 5 ? "md:hidden" : "md:block"} sm:block`}>
+          {`: ${score}`}
+        </p>
       </p>
       <div className="mx-auto max-w-max inset-x-0 space-x-3 mt-1 scale-90 hidden sm:flex">
-        {
-          duelLimit <= 5 && Array.from(
-            { length: duelLimit }, (_, index) => (
-              <img key={index} src={`${index + 1 <= score ? filledStar : unfilledStar}`} />
-            )
-          )
-        }
+        {duelLimit <= 5 &&
+          Array.from({ length: duelLimit }, (_, index) => (
+            <img
+              key={index}
+              src={`${index + 1 <= score ? filledStar : unfilledStar}`}
+            />
+          ))}
       </div>
     </div>
   );

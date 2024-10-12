@@ -14,8 +14,8 @@ const PlayerAndSpectatorsInfo = ({
   userPlayer,
   opponent,
   isSpectator,
-  duelsToWin
-  }: PlayerAndSpectatorsInfoProps) => {
+  duelsToWin,
+}: PlayerAndSpectatorsInfoProps) => {
   return (
     <div>
       <div className="hidden">
