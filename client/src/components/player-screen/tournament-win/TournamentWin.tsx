@@ -70,8 +70,8 @@ const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
           className="lg:w-44 w-32 hidden md:block translate-x-16 lg:translate-x-24"
         />
       </div>
-      <div className="absolute inset-x-0 bottom-10 z-50">
-        <ButtonComponent linkPath="/" text={"Home Screen"} />
+      <div className="fixed inset-x-0 bottom-10 z-50">
+        <ButtonComponent linkPath="/" text={"HOME SCREEN"} />
       </div>
     </div>
   );

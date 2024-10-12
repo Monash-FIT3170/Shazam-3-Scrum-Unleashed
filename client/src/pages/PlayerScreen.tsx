@@ -191,7 +191,7 @@ const PlayerScreen = () => {
       {isSpectator && (
         <div
           className={
-            "fixed border-8 top-0 left-0 w-screen h-screen border-spectator-bg shadow-[inset_0_0_50px_0px_theme(colors.spectator-bg)]"
+            "fixed border-8 top-0 left-0 w-dvw h-dvh border-spectator-bg shadow-[inset_0_0_50px_0px_theme(colors.spectator-bg)]"
           }
         />
       )}
