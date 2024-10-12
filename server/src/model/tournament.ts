@@ -13,6 +13,7 @@ export default class Tournament {
   roundCounter: number;
   roundTimeoutHandler: NodeJS.Timeout | null;
   inProgress: boolean;
+  powerupsEnabled: boolean;
 
   constructor(
     hostID: string,
@@ -20,6 +21,7 @@ export default class Tournament {
     duelTime: number,
     matchTime: number,
     matchTypesOrder: MatchType[],
+    powerupsEnabled = false,
   ) {
     this.hostUID = hostID;
     this.duelsToWin = duelsToWin;
@@ -31,6 +33,7 @@ export default class Tournament {
     this.roundCounter = 0;
     this.roundTimeoutHandler = null;
     this.inProgress = false;
+    this.powerupsEnabled = powerupsEnabled;
   }
 
   public addPlayer(player: Player) {

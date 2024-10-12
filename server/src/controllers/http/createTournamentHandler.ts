@@ -10,25 +10,37 @@ interface CreateTournamentBody {
   duelTime: number | undefined;
   roundTime: number | undefined;
   matchType: MatchType[] | undefined;
+  powerupsEnabled: boolean | undefined;
 }
 
 export function createTournamentHandler(req: Request, res: Response) {
-  const { userID, duelsToWin, duelTime, roundTime, matchType } =
-    req.body as CreateTournamentBody;
+  const {
+    userID,
+    duelsToWin,
+    duelTime,
+    roundTime,
+    matchType,
+    powerupsEnabled,
+  } = req.body as CreateTournamentBody;
 
   if (
     userID === undefined ||
     duelsToWin === undefined ||
     duelTime === undefined ||
     roundTime === undefined ||
-    matchType === undefined
+    matchType === undefined ||
+    powerupsEnabled === undefined
   ) {
     console.log("Invalid Host or Game Data sent");
     res.sendStatus(422);
     return;
   }
 
-  console.log(`Host ${userID} is creating a game`);
+  if (powerupsEnabled) {
+    console.log(`Host ${userID} is creating a game with power ups`);
+  } else {
+    console.log(`Host ${userID} is creating a game with no power ups`);
+  }
 
   const tournament: Tournament = new Tournament(
     userID,
@@ -36,6 +48,7 @@ export function createTournamentHandler(req: Request, res: Response) {
     Number(duelTime) * 1000,
     Number(roundTime) * 1000,
     matchType,
+    powerupsEnabled,
   );
 
   let tournamentCode;

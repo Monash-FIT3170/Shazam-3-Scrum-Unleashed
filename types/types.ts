@@ -9,6 +9,10 @@ export interface PlayerAttributes {
 
 export type Action = "ROCK" | "PAPER" | "SCISSORS" | null;
 
+export type RPSPowerup = "SHIELD" | "MOVEKILLER" | "TIEBREAKER" | null;
+
+export type RPSPowerupSpawn = {powerup: RPSPowerup, onAction:Action};
+
 export type ReactionType =
     | "HEART"
     | "LAUGHING"

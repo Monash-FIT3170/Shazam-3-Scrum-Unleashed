@@ -11,7 +11,7 @@ const LoadingEffect = ({ isOpponent }: LoadingEffectProps) => {
     <div
       className={
         "fixed mx-auto max-w-max inset-x-0 scale-[0.78] md:scale-100 pointer-events-none select-none" +
-        ` ${isOpponent ? "top-[6.5%] md:top-[5%]" : "bottom-[6.5%] md:bottom-[5%]"}`
+        ` ${isOpponent ? "top-[6.5%] md:top-[5.5%]" : "bottom-[9.5%] md:bottom-[5%]"}`
       }
     >
       <div className="animate-[spin_4s_linear_infinite]">

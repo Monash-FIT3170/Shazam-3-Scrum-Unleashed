@@ -11,6 +11,7 @@ import { Pong } from "../components/pong/Pong.tsx";
 import { MatchType } from "../../../types/socket/eventArguments.ts";
 import { RPS } from "../components/rps/RPS.tsx";
 import DuelInProgressAnimation from "../components/player-screen/DuelInProgressAnimation.tsx";
+import PongMatchStartAnimation from "../components/player-screen/PongMatchStartAnimation.tsx";
 
 const DEFAULT_DUEL_TIME = 15; // seconds
 const DEFAULT_DUELS_TO_WIN = 3;
@@ -80,10 +81,14 @@ const PlayerScreen = () => {
       setDuelTime(duelTime);
       setDuelsToWin(numDuelsToWin);
       const storedMatchState = localStorage.getItem("matchStarted");
-      if (matchType === "RPS" && storedMatchState !== "true") {
-        // Only have RPS animation atm, dont show for PONG
-        setShowAnimation(true);
-        setTimeout(() => localStorage.setItem("matchStarted", "true"), 3000);
+      if (storedMatchState !== "true") {
+        if (matchType === "RPS") {
+          setShowAnimation(true);
+          setTimeout(() => localStorage.setItem("matchStarted", "true"), 3000);
+        } else if (matchType === "PONG") {
+          setShowAnimation(true);
+          setTimeout(() => localStorage.setItem("matchStarted", "true"), 1500);
+        }
       }
     });
 
@@ -156,10 +161,22 @@ const PlayerScreen = () => {
     }
   } else {
     // Show animation
-    content = <DuelInProgressAnimation />;
-    setTimeout(() => {
-      setShowAnimation(false);
-    }, 3000);
+    switch (matchType) {
+      case "PONG": {
+        content = <PongMatchStartAnimation />;
+        setTimeout(() => {
+          setShowAnimation(false);
+        }, 1500);
+        break;
+      }
+      case "RPS": {
+        content = <DuelInProgressAnimation />;
+        setTimeout(() => {
+          setShowAnimation(false);
+        }, 3000);
+        break;
+      }
+    }
   }
 
   return (

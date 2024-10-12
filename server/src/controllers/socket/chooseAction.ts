@@ -11,10 +11,15 @@ export const playDuel =
     match.updateScores();
     const matchWinner = match.getMatchWinner();
     const matchWinnerUserID = matchWinner?.userID;
+
+    if (match.canSpawnPowerup()) {
+      match.spawnPowerup();
+    }
     io.to(match.matchRoomID).emit(
       "MATCH_RPS_DUEL_STATE",
       match.p1Action,
       match.p2Action,
+      match.powerupSpawn,
     );
     match.resetActions();
 

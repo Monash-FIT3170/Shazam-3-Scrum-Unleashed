@@ -6,7 +6,6 @@ import { Events } from "../../../../types/socket/events";
 import Tournament from "../tournament";
 import { roundChecker } from "../../controllers/helper/roundHelper";
 import { MatchType } from "../../../../types/socket/eventArguments";
-import * as crypto from "node:crypto";
 import { BiggerPaddle } from "../powerups/pongPowerups/biggerPaddle";
 import { ShrinkPaddle } from "../powerups/pongPowerups/shrinkPaddle";
 import { PongPowerup } from "../powerups/pongPowerups/pongPowerup";
@@ -37,6 +36,7 @@ export class PongMatch implements Match {
   intervalHandler: NodeJS.Timeout | undefined;
   uncollectedPowerups: PongPowerupSpawn[];
   tickCounter: number;
+  powerupsEnabled: boolean;
 
   constructor(players: Player[], duelsToWin: number, tournament: Tournament) {
     this.players = players;
@@ -68,6 +68,7 @@ export class PongMatch implements Match {
     this.intervalHandler = undefined;
     this.uncollectedPowerups = [];
     this.tickCounter = 0;
+    this.powerupsEnabled = tournament.powerupsEnabled;
   }
 
   startMatch(io: Server<Events>): void {
@@ -84,7 +85,7 @@ export class PongMatch implements Match {
       this.intervalHandler = setInterval(() => {
         this.tick(io);
       }, 1000 / POLL_RATE);
-    }, 1000); // This will start the pong match after a short delay.
+    }, 3200); // This will start the pong match after a short delay.
   }
 
   emitMatchState(io: Server<Events>): void {
@@ -133,7 +134,7 @@ export class PongMatch implements Match {
 
   tick(io: Server<Events>): void {
     this.tickCounter += 1;
-    if (this.tickCounter % (POLL_RATE * 5) == 0) {
+    if (this.powerupsEnabled && this.tickCounter % (POLL_RATE * 5) == 0) {
       this.spawnPowerup();
     }
 
@@ -233,12 +234,12 @@ export class PongMatch implements Match {
 
     // Score (can only happen when paddle did not collide)
     let winner = null;
+    let scored = false;
     if (!paddleCollision) {
       if (newBallY >= GAME_HEIGHT) {
         newBallY = GAME_HEIGHT / 2;
         newBallX = GAME_WIDTH / 2;
-        this.ballState.yVelocity = INITIAL_BALL_Y_SPEED;
-        this.ballState.xVelocity = 1;
+        this.resetBall(true, io);
         this.players[0].score += 1;
         winner = this.getMatchWinner();
         io.to(this.matchRoomID).emit(
@@ -246,12 +247,12 @@ export class PongMatch implements Match {
           this.players,
           winner?.userID,
         );
+        scored = true;
       }
       if (newBallY <= 0) {
         newBallY = GAME_HEIGHT / 2;
         newBallX = GAME_WIDTH / 2;
-        this.ballState.yVelocity = -INITIAL_BALL_Y_SPEED;
-        this.ballState.xVelocity = 1;
+        this.resetBall(false, io);
         this.players[1].score += 1;
         winner = this.getMatchWinner();
         io.to(this.matchRoomID).emit(
@@ -259,6 +260,7 @@ export class PongMatch implements Match {
           this.players,
           winner?.userID,
         );
+        scored = true;
       }
     }
 
@@ -272,7 +274,7 @@ export class PongMatch implements Match {
 
     io.to(this.matchRoomID).emit("MATCH_PONG_PADDLE_STATE", this.paddleStates);
 
-    if (this.tickCounter % (POLL_RATE / 2) === 0) {
+    if (scored || this.tickCounter % (POLL_RATE / 2) === 0) {
       this.emitPongState(io);
     }
 
@@ -280,6 +282,19 @@ export class PongMatch implements Match {
       roundChecker(this.tournament, io);
       clearInterval(this.intervalHandler);
     }
+  }
+
+  resetBall(moveUp: boolean, io: Server) {
+    this.ballState.yVelocity = 0;
+    this.ballState.xVelocity = 0;
+
+    setTimeout(() => {
+      this.ballState.yVelocity = moveUp
+        ? -INITIAL_BALL_Y_SPEED
+        : INITIAL_BALL_Y_SPEED;
+      this.ballState.xVelocity = 1;
+      this.emitPongState(io);
+    }, 4600);
   }
 
   private spawnPowerup() {
