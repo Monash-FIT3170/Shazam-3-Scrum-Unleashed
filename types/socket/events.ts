@@ -78,7 +78,8 @@ interface ServerToPlayerEvents {
     MATCH_START: (
         players: PlayerAttributes[],
         matchType: MatchType,
-        duelTime: number
+        duelTime: number,
+        duelsToWin: number
     ) => void;
 
     MATCH_DATA: (

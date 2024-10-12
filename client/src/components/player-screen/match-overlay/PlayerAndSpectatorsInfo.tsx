@@ -7,12 +7,14 @@ type PlayerAndSpectatorsInfoProps = {
   userPlayer: PlayerAttributes;
   opponent: PlayerAttributes;
   isSpectator: boolean;
+  duelsToWin: number;
 };
 
 const PlayerAndSpectatorsInfo = ({
   userPlayer,
   opponent,
   isSpectator,
+  duelsToWin,
 }: PlayerAndSpectatorsInfoProps) => {
   return (
     <div>
@@ -23,6 +25,7 @@ const PlayerAndSpectatorsInfo = ({
         <StarsInfo
           playerName={opponent.name}
           score={opponent.score}
+          duelLimit={duelsToWin}
           isOpponent={true}
           isSpectator={isSpectator}
         />
@@ -35,6 +38,7 @@ const PlayerAndSpectatorsInfo = ({
         <StarsInfo
           playerName={userPlayer.name}
           score={userPlayer.score}
+          duelLimit={duelsToWin}
           isOpponent={false}
           isSpectator={isSpectator}
         />

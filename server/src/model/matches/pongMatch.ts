@@ -77,6 +77,7 @@ export class PongMatch implements Match {
       this.players,
       this.type(),
       this.tournament.duelTime / 1000,
+      this.tournament.duelsToWin,
     );
 
     setTimeout(() => {
