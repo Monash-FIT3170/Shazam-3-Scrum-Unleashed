@@ -17,6 +17,7 @@ export async function roundStartEmitter(
           match.players,
           match.type(),
           tournament.duelTime / 1000,
+          tournament.duelsToWin,
         );
       }
 
@@ -27,6 +28,7 @@ export async function roundStartEmitter(
           match.players,
           match.type(),
           tournament.duelTime / 1000,
+          tournament.duelsToWin,
         );
       }
     }
