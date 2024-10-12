@@ -95,7 +95,7 @@ const JoinTournament = () => {
         <ButtonComponent linkPath="/" text={"Back"} />
       </div>
       <div className="flex flex-col items-center justify-center h-screen overflow-hidden">
-        <div className=" items-center size-60 w-full">
+        <div className=" items-center size-80 w-full py-10">
           <DisplayLogo />
         </div>
 
@@ -117,7 +117,7 @@ const JoinTournament = () => {
         />
 
         <FormButton
-          text={"Join Game"}
+          text={"JOIN GAME"}
           loading={loading}
           callback={joinTournament}
           additionalClass={"large-btn"}
