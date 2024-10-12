@@ -16,7 +16,8 @@ const PlayerCard = ({
 }: PlayerCardProps) => {
   // card name of varying borders
   const cardName = "player-card-" + (cardNum % 4);
-  const playerName = player.name.length > 8 ? player.name.substring(0,7) + "..." : player.name;
+  const playerName =
+    player.name.length > 8 ? player.name.substring(0, 7) + "..." : player.name;
   return (
     <div
       className={`${cardName} relative hover:brightness-75 ${!inProgress ? "animate-enterAndShake" : ""} ${player.isEliminated ? "animate-elimbox" : ""}`}
