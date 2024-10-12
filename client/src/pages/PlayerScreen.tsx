@@ -13,6 +13,7 @@ import { RPS } from "../components/rps/RPS.tsx";
 import DuelInProgressAnimation from "../components/player-screen/DuelInProgressAnimation.tsx";
 
 const DEFAULT_DUEL_TIME = 15; // seconds
+const DEFAULT_DUELS_TO_WIN = 3;
 
 const PlayerScreen = () => {
   const { loadedTournamentCode, loadedPlayerName } = useLoaderData() as {
@@ -31,6 +32,7 @@ const PlayerScreen = () => {
   const [matchType, setMatchType] = useState<MatchType>();
   const [isPlayerOne, setIsPlayerOne] = useState(false);
   const [duelTime, setDuelTime] = useState(DEFAULT_DUEL_TIME);
+  const [duelsToWin, setDuelsToWin] = useState(DEFAULT_DUELS_TO_WIN);
   const [showAnimation, setShowAnimation] = useState(false);
 
   function setPlayers(players: PlayerAttributes[]) {
@@ -71,11 +73,12 @@ const PlayerScreen = () => {
   }
 
   useEffect(() => {
-    socket.on("MATCH_START", (players, matchType, duelTime) => {
+    socket.on("MATCH_START", (players, matchType, duelTime, numDuelsToWin) => {
       setPlayers(players);
       setMatchType(matchType);
       setIsSpectator(getIsSpectator(players));
       setDuelTime(duelTime);
+      setDuelsToWin(numDuelsToWin);
       const storedMatchState = localStorage.getItem("matchStarted");
       if (matchType === "RPS" && storedMatchState !== "true") {
         // Only have RPS animation atm, dont show for PONG
@@ -183,6 +186,7 @@ const PlayerScreen = () => {
                 userPlayer={userPlayer}
                 opponent={opponent}
                 isSpectator={isSpectator}
+                duelsToWin={duelsToWin}
               />
             )}
             {content}
