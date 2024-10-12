@@ -11,7 +11,7 @@ const TutorialPopup: React.FC<TutorialPopupProps> = ({ show, onClose }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50 p-4">
       <div className="relative bg-back text-white p-2 rounded-lg md:max-h-lg w-full max-w-md md:max-w-lg text-center border-4 border-white normal-case">
-        <div className="max-h-[60vh] overflow-y-scroll p-2">
+        <div className="max-h-[60vh] overflow-y-scroll p-2 custom-scrollbar">
           <h1 className="text-3xl font-bold uppercase">How to Play</h1>
           <h2 className="text-xl font-bold mt-4">Aim of the Game</h2>
           <p className="text-m mt-2">
