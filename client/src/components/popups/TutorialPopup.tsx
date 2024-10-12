@@ -12,46 +12,46 @@ const TutorialPopup: React.FC<TutorialPopupProps> = ({ show, onClose }) => {
     return (
       <div>
         <h2 className="text-xl font-bold mt-4">Rock Paper Scissors (RPS)</h2>
-      <p className="text-m mt-2">
-        Overcome your opponents by choosing an action that beats theirs!
-      </p>
-      <p className="text-m mt-2">
-        Rock beats Scissors, Scissors beats Paper, Paper beats Rock.
-        Choosing the same move is a tie.
-      </p>
-      <p className="text-m mt-2">
-        You have a limited amount of time to choose your move.
-      </p>
+        <p className="text-m mt-2">
+          Overcome your opponents by choosing an action that beats theirs!
+        </p>
+        <p className="text-m mt-2">
+          Rock beats Scissors, Scissors beats Paper, Paper beats Rock. Choosing
+          the same move is a tie.
+        </p>
+        <p className="text-m mt-2">
+          You have a limited amount of time to choose your move.
+        </p>
       </div>
-    )
-  }
+    );
+  };
 
   const pongPopupContent = () => {
     return (
       <div>
         <h2 className="text-xl font-bold mt-4">Pong</h2>
-          <p className="text-m mt-2">
-            Beat your opponents by hitting the ball past their paddle into their
-            goal!
-          </p>
-          <p className="text-m mt-2">
-            Move your paddle left and right using their respective buttons on
-            screen or the left and right arrow keys (keyboard).
-          </p>
-          <p className="text-m mt-2">
-            The longer a duel goes on for, the faster the ball gets.
-          </p>
+        <p className="text-m mt-2">
+          Beat your opponents by hitting the ball past their paddle into their
+          goal!
+        </p>
+        <p className="text-m mt-2">
+          Move your paddle left and right using their respective buttons on
+          screen or the left and right arrow keys (keyboard).
+        </p>
+        <p className="text-m mt-2">
+          The longer a duel goes on for, the faster the ball gets.
+        </p>
       </div>
-    )
-  }
+    );
+  };
 
   const rpsPowerupContent = () => {
     return (
       <div>
         <h2 className="text-xl font-bold mt-4">RPS Powerups</h2>
         <p className="text-m mt-2">
-          Powerups can spawn on one of the moves and you can only use and
-          store one.
+          Powerups can spawn on one of the moves and you can only use and store
+          one.
         </p>
         <p className="text-m mt-2">
           Choosing that action will give you a random powerup if your opponent
@@ -69,39 +69,41 @@ const TutorialPopup: React.FC<TutorialPopupProps> = ({ show, onClose }) => {
           current duel
         </p>
         <p className="text-m mt-2">
-          <a className="font-bold">Tie Breaker</a> will win in the instance of
-          a tie
-        </p><br></br>
+          <a className="font-bold">Tie Breaker</a> will win in the instance of a
+          tie
+        </p>
+        <br></br>
       </div>
-    )
-  }
+    );
+  };
 
   const pongPowerupContent = () => {
     return (
       <div>
         <h2 className="text-xl font-bold mt-4">Pong Powerups</h2>
-          <p className="text-m mt-2">
-            Powerups may spawn on field and if you hit a ball into it you gain
-            the powerup for a short period of time.
-          </p>
-          <p className="text-m mt-2">
-            Powerups include Bigger Paddle, Shrunken Paddle and Invert Controls.
-          </p>
-          <p className="text-m">
-            <a className="font-bold">Bigger Paddle</a> will increase the size of
-            your paddle
-          </p>
-          <p className="text-m">
-            <a className="font-bold">Shrunken Paddle</a> will decrease the size
-            of your opponent&apos;s paddle
-          </p>
-          <p className="text-m">
-            <a className="font-bold">Invert Controls</a> will reverse the
-            direction of your opponent&apos;s paddle movement
-          </p><br></br>
+        <p className="text-m mt-2">
+          Powerups may spawn on field and if you hit a ball into it you gain the
+          powerup for a short period of time.
+        </p>
+        <p className="text-m mt-2">
+          Powerups include Bigger Paddle, Shrunken Paddle and Invert Controls.
+        </p>
+        <p className="text-m">
+          <a className="font-bold">Bigger Paddle</a> will increase the size of
+          your paddle
+        </p>
+        <p className="text-m">
+          <a className="font-bold">Shrunken Paddle</a> will decrease the size of
+          your opponent&apos;s paddle
+        </p>
+        <p className="text-m">
+          <a className="font-bold">Invert Controls</a> will reverse the
+          direction of your opponent&apos;s paddle movement
+        </p>
+        <br></br>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50 p-4">
@@ -118,7 +120,6 @@ const TutorialPopup: React.FC<TutorialPopupProps> = ({ show, onClose }) => {
           {rpsPowerupContent()}
           {pongPopupContent()}
           {pongPowerupContent()}
-        
         </div>
 
         <button
