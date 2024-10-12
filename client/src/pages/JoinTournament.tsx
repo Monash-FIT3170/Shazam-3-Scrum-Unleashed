@@ -56,7 +56,7 @@ const JoinTournament = () => {
   };
 
   const playerNameValidation = () => {
-    return playerName.length > 0 && playerName.length < 15;
+    return playerName.length > 0 && playerName.length <= 20;
   };
 
   const joinTournament = async () => {
@@ -66,7 +66,7 @@ const JoinTournament = () => {
     }
 
     if (!playerNameValidation()) {
-      setStatus("Name should be 1-15 characters");
+      setStatus("Name should be 1 to 20 characters");
       return;
     }
 
