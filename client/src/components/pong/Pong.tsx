@@ -165,7 +165,9 @@ const Pong: React.FC<PongProps> = React.memo(
     };
 
     // Start on Page Load
-    startSpawnTimer();
+    useEffect(() => {
+      startSpawnTimer();
+    }, []);
 
     const updatePaddleState = useCallback((paddleStates: PongPaddleState[]) => {
       gameState.current = {
@@ -287,8 +289,9 @@ const Pong: React.FC<PongProps> = React.memo(
           ctx.stroke();
         });
 
-        if (paddle1) drawPaddle(paddle1, "#ff4757", true);
-        if (paddle2) drawPaddle(paddle2, "#2ed573");
+        if (paddle1)
+          drawPaddle(paddle1, isPlayerOne ? "#2ed573" : "#ff4757", true);
+        if (paddle2) drawPaddle(paddle2, isPlayerOne ? "#ff4757" : "#2ed573");
 
         if (isPlayerOne) {
           ctx.restore();
