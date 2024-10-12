@@ -100,7 +100,7 @@ const TutorialPopup: React.FC<TutorialPopupProps> = ({ show, onClose }) => {
 
         <br></br>
         <button
-          className="bg-primary hover:bg-primary text-white font-bold rounded-xl border-4 border-primary text-3xl w-80 md:w-48 lg:w-56 py-2 px-4"
+          className="bg-primary hover:bg-primary-light-dark text-white font-bold rounded-xl border-4 border-white text-3xl w-80 md:w-48 lg:w-56 py-2 px-4"
           onClick={onClose}
         >
           CLOSE

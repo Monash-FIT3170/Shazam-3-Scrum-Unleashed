@@ -5,6 +5,7 @@ export default {
     extend: {
       colors: {
         primary: "#377AE3",
+        "primary-light-dark": "#103774",
         back: "#22026c",
         "primary-dark": "#14171D",
         "spectator-bg": "#1A88AB",
