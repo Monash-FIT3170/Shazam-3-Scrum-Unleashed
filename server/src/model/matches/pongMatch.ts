@@ -85,7 +85,7 @@ export class PongMatch implements Match {
       this.intervalHandler = setInterval(() => {
         this.tick(io);
       }, 1000 / POLL_RATE);
-    }, 3200); // This will start the pong match after a short delay.
+    }, 5100); // This will start the pong match after a short delay.
   }
 
   emitMatchState(io: Server<Events>): void {
