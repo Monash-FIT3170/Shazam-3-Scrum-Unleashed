@@ -275,18 +275,28 @@ const Pong: React.FC<PongProps> = React.memo(
           );
         };
 
-        // Power up
+        // Preload the images
+        const biggerPaddleImg = new Image();
+        biggerPaddleImg.src = BiggerPaddle;
+
+        const shrunkenPaddleImg = new Image();
+        shrunkenPaddleImg.src = ShrunkenPaddle;
+
+        const invertControlsImg = new Image();
+        invertControlsImg.src = InvertControls;
+
+        // Power up rendering
         uncollectedPowerups.map((powerup) => {
-          if (powerup.name = "Bigger Paddle") {
-            ctx.fillStyle = BiggerPaddle;
-          }
-          else if (powerup.name = "Invert Controls") {
-            ctx.fillStyle = InvertControls;
-          }
-          else if (powerup.name = "Shrunken Paddle") {
-            ctx.fillStyle = ShrunkenPaddle;
+          let img;
+          if (powerup.name === "Bigger Paddle") {
+            img = biggerPaddleImg;
+          } else if (powerup.name === "Invert Controls") {
+            img = invertControlsImg;
+          } else if (powerup.name === "Shrunken Paddle") {
+            img = shrunkenPaddleImg;
           }
 
+          // Draw the power-up circle
           ctx.fillStyle = "#ffffff";
           ctx.beginPath();
           ctx.arc(
@@ -294,12 +304,24 @@ const Pong: React.FC<PongProps> = React.memo(
             powerup.y,
             POWERUP_SIZE * SCALING_FACTOR,
             0,
-            Math.PI * 2,
+            Math.PI * 2
           );
           ctx.fill();
           ctx.strokeStyle = "white";
           ctx.lineWidth = STROKE_WIDTH;
           ctx.stroke();
+
+          // Draw the SVG icon in the center of the circle
+          if (img) {
+            const iconSize = POWERUP_SIZE * SCALING_FACTOR * 0.8; // Adjust size as needed
+            ctx.drawImage(
+              img,
+              powerup.x - iconSize / 2,  // Center the image horizontally
+              powerup.y - iconSize / 2,  // Center the image vertically
+              iconSize,
+              iconSize
+            );
+          }
         });
 
         if (paddle1)
