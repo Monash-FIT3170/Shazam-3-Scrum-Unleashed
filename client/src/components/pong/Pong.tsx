@@ -363,7 +363,7 @@ const Pong: React.FC<PongProps> = React.memo(
       gameState.current.ball.y += gameState.current.ball.yVelocity * deltaTime;
 
       let lerp = 0.01;
-      if (
+      if (gameState.current.ball.xVelocity === 0 && gameState.current.ball.yVelocity === 0 ||
         gameState.current.ball.dy / SCALING_FACTOR > 10 ||
         gameState.current.ball.dx / SCALING_FACTOR > 10
       ) {
