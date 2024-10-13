@@ -166,7 +166,7 @@ const PlayerScreen = () => {
         content = <PongMatchStartAnimation />;
         setTimeout(() => {
           setShowAnimation(false);
-        }, 1500);
+        }, 2000);
         break;
       }
       case "RPS": {
