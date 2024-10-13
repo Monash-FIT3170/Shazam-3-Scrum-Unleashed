@@ -4,7 +4,7 @@ export default abstract class Powerup {
   description: string;
   targetSelf: boolean; //whether this effect will hit the user or the opponent
   instantUse: boolean; //instant use is whether it activates immediately. Other powerups are used at the end of the round to check who won.
-  public priority: number; //higher number means higher priority. for non-instant powerups, this means the larger numbers are used later, as they will be more impactful.
+  priority: number; //higher number means higher priority. for non-instant powerups, this means the larger numbers are used later, as they will be more impactful.
 
   constructor(
     name: string,

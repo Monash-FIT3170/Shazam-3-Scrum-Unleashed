@@ -2,7 +2,7 @@ import { useState } from "react";
 import RockOption from "../../../assets/choose-move/RockOption.svg";
 import PaperOption from "../../../assets/choose-move/PaperOption.svg";
 import ScissorsOption from "../../../assets/choose-move/ScissorOption.svg";
-import { Action, RPSPowerupSpawn } from "../../../../../types/types.ts";
+import {Action, RPSPowerup, RPSPowerupSpawn} from "../../../../../types/types.ts";
 import MoveSelection from "./MoveSelection.tsx";
 import { socket } from "../../../App.tsx";
 import WaitingForOpponent from "../waiting-screens/WaitingForOpponent.tsx";
@@ -12,6 +12,8 @@ interface ChoosePlayerMoveProps {
   tournamentCode: string;
   duelTime: number;
   powerupSpawn: RPSPowerupSpawn | undefined;
+  userPowerup: RPSPowerup | undefined;
+  opponentPowerup: RPSPowerup | undefined;
 }
 
 const ChoosePlayerMove = ({
@@ -19,6 +21,7 @@ const ChoosePlayerMove = ({
   duelTime,
   powerupSpawn,
 }: ChoosePlayerMoveProps) => {
+
   const [selectedAction, setSelectedAction] = useState<Action | null>(null);
 
   const handleMoveSelection = (move: Action) => {

@@ -15,11 +15,14 @@ export const playDuel =
     if (match.canSpawnPowerup()) {
       match.spawnPowerup();
     }
+
     io.to(match.matchRoomID).emit(
       "MATCH_RPS_DUEL_STATE",
       match.p1Action,
       match.p2Action,
       match.powerupSpawn,
+        match.playerPowerups[0],
+        match.playerPowerups[1]
     );
     match.resetActions();
 

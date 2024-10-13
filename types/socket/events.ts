@@ -89,7 +89,9 @@ interface ServerToPlayerEvents {
     MATCH_RPS_DUEL_STATE: (
         p1Action: Action,
         p2Action: Action,
-        powerupSpawn : RPSPowerupSpawn | undefined
+        powerupSpawn : RPSPowerupSpawn | undefined,
+        player1Powerup: RPSPowerup,
+        player2Powerup: RPSPowerup
     ) => void;
 
     MATCH_PONG_BALL_STATE: (
