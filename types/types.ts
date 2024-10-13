@@ -13,6 +13,8 @@ export type RPSPowerup = "SHIELD" | "MOVEKILLER" | "TIEBREAKER" | null;
 
 export type RPSPowerupSpawn = {powerup: RPSPowerup, onAction:Action};
 
+export type PongPowerup = "Bigger Paddle" | "Shrunken Paddle" | "Invert Controls" | null
+
 export type ReactionType =
     | "HEART"
     | "LAUGHING"
@@ -44,5 +46,5 @@ export interface PongPaddleState {
 export interface PongPowerupSprite {
     x: number;
     y: number;
-    name: string;
+    name: PongPowerup;
 }

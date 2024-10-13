@@ -12,6 +12,9 @@ import LeftButtonDown from "../../assets/pong-buttons/LEFT-BUTTON-DOWN.svg";
 import RightButton from "../../assets/pong-buttons/RIGHT.svg";
 import RightButtonDown from "../../assets/pong-buttons/RIGHT-BUTTON-DOWN.svg";
 import PropTypes from "prop-types";
+import BiggerPaddle from "../../assets/power-ups/BiggerPaddle.svg"
+import ShrunkenPaddle from "../../assets/power-ups/ShrunkenPaddle.svg"
+import InvertControls from "../../assets/power-ups/InvertControls.svg"
 
 const GAME_WIDTH = 375;
 const GAME_HEIGHT = 500;
@@ -274,6 +277,16 @@ const Pong: React.FC<PongProps> = React.memo(
 
         // Power up
         uncollectedPowerups.map((powerup) => {
+          if (powerup.name = "Bigger Paddle") {
+            ctx.fillStyle = BiggerPaddle;
+          }
+          else if (powerup.name = "Invert Controls") {
+            ctx.fillStyle = InvertControls;
+          }
+          else if (powerup.name = "Shrunken Paddle") {
+            ctx.fillStyle = ShrunkenPaddle;
+          }
+
           ctx.fillStyle = "#ffffff";
           ctx.beginPath();
           ctx.arc(
