@@ -46,8 +46,9 @@ const TutorialPopup: React.FC<TutorialPopupProps> = ({ show, onClose }) => {
   };
 
   const rpsPowerupContent = () => {
+    // remove hidden to show content
     return (
-      <div>
+      <div className="hidden">
         <h2 className="text-xl font-bold mt-4">RPS Powerups</h2>
         <p className="text-m mt-2">
           Powerups can spawn on one of the moves and you can only use and store
@@ -78,25 +79,26 @@ const TutorialPopup: React.FC<TutorialPopupProps> = ({ show, onClose }) => {
   };
 
   const pongPowerupContent = () => {
+    // remove the hidden to show content
     return (
-      <div>
+      <div className="hidden">
         <h2 className="text-xl font-bold mt-4">Pong Powerups</h2>
         <p className="text-m mt-2">
           Powerups may spawn on field and if you hit a ball into it you gain the
-          powerup for a short period of time.
+          powerup.
         </p>
         <p className="text-m mt-2">
           Powerups include Bigger Paddle, Shrunken Paddle and Invert Controls.
         </p>
-        <p className="text-m">
+        <p className="text-m mt-2">
           <a className="font-bold">Bigger Paddle</a> will increase the size of
           your paddle
         </p>
-        <p className="text-m">
+        <p className="text-m mt-2">
           <a className="font-bold">Shrunken Paddle</a> will decrease the size of
           your opponent&apos;s paddle
         </p>
-        <p className="text-m">
+        <p className="text-m mt-2">
           <a className="font-bold">Invert Controls</a> will reverse the
           direction of your opponent&apos;s paddle movement
         </p>
@@ -121,7 +123,7 @@ const TutorialPopup: React.FC<TutorialPopupProps> = ({ show, onClose }) => {
           {pongPopupContent()}
           {pongPowerupContent()}
         </div>
-
+        <br></br>
         <button
           className="bg-primary hover:bg-primary-light-dark text-white font-bold rounded-xl border-4 border-white text-3xl w-80 md:w-48 lg:w-56 py-2 px-4"
           onClick={onClose}
