@@ -239,6 +239,8 @@ export class PongMatch implements Match {
       if (newBallY >= GAME_HEIGHT) {
         newBallY = GAME_HEIGHT / 2;
         newBallX = GAME_WIDTH / 2;
+        paddle0 = (GAME_WIDTH - PADDLE_WIDTH) / 2;
+        paddle1 = (GAME_WIDTH - PADDLE_WIDTH) / 2;
         this.resetBall(true, io);
         this.players[0].score += 1;
         winner = this.getMatchWinner();
@@ -252,6 +254,8 @@ export class PongMatch implements Match {
       if (newBallY <= 0) {
         newBallY = GAME_HEIGHT / 2;
         newBallX = GAME_WIDTH / 2;
+        paddle0 = (GAME_WIDTH - PADDLE_WIDTH) / 2;
+        paddle1 = (GAME_WIDTH - PADDLE_WIDTH) / 2;
         this.resetBall(false, io);
         this.players[1].score += 1;
         winner = this.getMatchWinner();
@@ -274,7 +278,7 @@ export class PongMatch implements Match {
 
     io.to(this.matchRoomID).emit("MATCH_PONG_PADDLE_STATE", this.paddleStates);
 
-    if (scored || this.tickCounter % (POLL_RATE / 2) === 0) {
+    if (scored || this.tickCounter % (POLL_RATE / 5) === 0) {
       this.emitPongState(io);
     }
 
