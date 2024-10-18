@@ -22,8 +22,11 @@ This application is an online knock-out styled tournament where players compete 
 - Rory Tobin-Underwood (rtob0002@student.monash.edu)
 - Thomas Rumble (trum0001@student.monash.edu)
 
-## Developed Application
-The developed application is currently available [here](https://3170.fit/) to be enjoyed. The server is being currently being hosted on [Digital Ocean](https://www.digitalocean.com/) and the front end is hosted on [Cloud Flare](https://pages.cloudflare.com/). 
+## Application Deployment
+The deployed application is currently available [here](https://3170.fit/) to be enjoyed. The server is being currently being hosted on [Digital Ocean](https://www.digitalocean.com/) and the front end is hosted on [Cloud Flare](https://pages.cloudflare.com/).
+
+The application can be easily redeployed on other servers by forking the repo and updating the values in Github Secrets panel. The deployment pipeline is set up via Github Actions and automates deployment to production.
+
 
 ## Repo Structure
 - [client](client) : contains all the front end components required for the web client.
