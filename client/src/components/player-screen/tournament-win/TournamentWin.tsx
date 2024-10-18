@@ -63,7 +63,7 @@ const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
       <div className="h-60">
         <DisplayLogo />
       </div>
-      <br/>
+      <br />
       <div className="flex justify-center transform -mb-80 pointer-events-none select-none">
         <img
           src={goldenWinnerCup}

@@ -40,7 +40,7 @@ const MatchOutcomeScreen = ({
   return (
     <div>
       {/* Audio element is no longer needed as we're using the Audio API directly */}
-      
+
       {/* Outcome Trophy or Cross Image */}
       <div
         className={
@@ -62,8 +62,8 @@ const MatchOutcomeScreen = ({
               ? `${player.name.slice(0, 15)} WON!`
               : `${player.name.slice(0, 15)} LOST!`
             : isWin
-            ? "YOU WON!"
-            : "YOU LOST!"}
+              ? "YOU WON!"
+              : "YOU LOST!"}
         </h1>
       </div>
 
@@ -72,7 +72,9 @@ const MatchOutcomeScreen = ({
         <h1>
           <span className={isWin ? "text-[#65DB71]" : ""}>{player.score}</span>
           {" - "}
-          <span className={isWin ? "" : "text-[#FF5959]"}>{opponent.score}</span>
+          <span className={isWin ? "" : "text-[#FF5959]"}>
+            {opponent.score}
+          </span>
         </h1>
       </div>
 
