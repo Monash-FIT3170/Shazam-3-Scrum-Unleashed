@@ -3,7 +3,7 @@ import cross from "../../../assets/misc/Cross.svg";
 import { PlayerAttributes } from "../../../../../types/types.ts";
 import { useEffect, useRef } from "react";
 import victorySound from "../../../assets/sfx/victory-sound.mp3";
-import defeatSound from "../../../assets/sounds/defeat-sound.mp3";
+import defeatSound from "../../../assets/sfx/defeat-sound.mp3";
 
 type MatchOutcomeScreenProps = {
   player: PlayerAttributes;
