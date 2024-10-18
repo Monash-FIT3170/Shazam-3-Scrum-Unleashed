@@ -1,6 +1,9 @@
 # Shazam-3-Scrum-Unleashed
 
 ### Project 3 - FIT3170 - 2024
+![Front Page](/logo.png)
+
+This application is an online knock-out styled tournament where players compete in a variety of 1 v 1 games such as Rock, Paper, Scissors and Pong. Special power ups can also be enabled to add more variety into the game. Players who lose will start spectating the winner, where they can then cheer on the winner with emojis. This application was built with the combined effort of 16 individuals as a part of a full year project at Monash University.
 
 ## Team Members
 - Aaron Abbott (aabb0010@student.monash.edu)
@@ -20,17 +23,15 @@
 - Thomas Rumble (trum0001@student.monash.edu)
 
 ## Developed Application
-The developed application is currently available [here](https://3170.fit/) to be enjoyed.
+The developed application is currently available [here](https://3170.fit/) to be enjoyed. The server is being currently being hosted on [Digital Ocean](https://www.digitalocean.com/) and the front end is hosted on [Cloud Flare](https://pages.cloudflare.com/). 
 
 ## Repo Structure
-
 - [client](client) : contains all the front end components required for the web client.
 - [server](server)  : contains all the backend (networking, storage and game logic) for the server.
 - [types](types) : contains interfaces and types which both the client and server will use, generally for communicate with each other.
 - [tests](tests) : contains E2E tests for our application to ensure functionality.
 
 ## Prepare for development
-
 1. Ensure you have the latest version of node v22 installed on your machine. You can download it from the following link: https://nodejs.org/en/
 2. Move into the [client](client) directory of the project by typing the command `cd client`.
 3. Open another terminal and then move into the [server](server) directory `cd server`.
@@ -38,7 +39,6 @@ The developed application is currently available [here](https://3170.fit/) to be
 5. Run both the [client](client) and [server](server) by running `npm run dev` in both terminals.
 
 ## Recommended steps (not strictly required)
-
 1. Use vscode as your code editor.
 2. Install the following extensions:
    - Prettier - Code formatter
