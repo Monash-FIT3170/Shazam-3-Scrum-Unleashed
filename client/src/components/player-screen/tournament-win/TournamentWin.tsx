@@ -2,8 +2,9 @@ import DisplayLogo from "../../DisplayLogo.tsx";
 import goldenWinnerCup from "../../../assets/trophies/GoldenWinnerCup.svg";
 import star from "../../../assets/misc/PlainStar.svg";
 import Confetti from "react-confetti";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ButtonComponent from "../../buttons/ButtonComponent.tsx";
+import victorySound from "../assets/sfx/victory-sound.mp3";
 
 interface TournamentWinScreenProps {
   playerName: string;
@@ -17,23 +18,43 @@ const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
 
   const [showConfetti, setShowConfetti] = useState(true);
 
-  function windowSizeHandler() {
-    setWindowSize({
-      width: window.innerWidth,
-      height: window.innerHeight,
-    });
-  }
+  // Reference to the audio element
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
-    window.onresize = () => windowSizeHandler();
+    // Handler for window resizing
+    function windowSizeHandler() {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
 
-    setTimeout(() => {
+    // Add event listener for window resize
+    window.addEventListener("resize", windowSizeHandler);
+
+    // Play the victory sound when the component mounts
+    if (audioRef.current) {
+      audioRef.current.play();
+    }
+
+    // Confetti timeout for 30 seconds
+    const confettiTimeout = setTimeout(() => {
       setShowConfetti(false);
-    }, 30000); // 30s
-  });
+    }, 30000); // 30 seconds
+
+    // Cleanup on unmount
+    return () => {
+      window.removeEventListener("resize", windowSizeHandler);
+      clearTimeout(confettiTimeout);
+    };
+  }, []); // Empty dependencies array ensures this runs once on mount
 
   return (
     <div>
+      {/* Audio element for victory sound */}
+      <audio ref={audioRef} src={victorySound} />
+
       <div className="fixed top-0 left-0 w-screen h-screen">
         {showConfetti && (
           <Confetti width={windowSize.width} height={windowSize.height} />
@@ -42,7 +63,7 @@ const TournamentWin = ({ playerName }: TournamentWinScreenProps) => {
       <div className="h-60">
         <DisplayLogo />
       </div>
-      <br></br>
+      <br/>
       <div className="flex justify-center transform -mb-80 pointer-events-none select-none">
         <img
           src={goldenWinnerCup}
