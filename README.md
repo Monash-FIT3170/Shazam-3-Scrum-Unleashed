@@ -62,6 +62,21 @@ To run the E2E tests locally, complete the following instructions.
 3. Install dependencies in [tests](tests) by running `npm install` in the terminal.
 4. Run the test by running `npm run test` in terminal.
 
+## Pull Request (PR) Strategy
+To submit a Pull Request (PR) for contributing to Rock Paper Shazam:
+1. Create a New Branch from dev: Work on a feature or bug fix in a branch named descriptively (Example: bugfix: fix pong timer, feature: Pong power ups).
+2. Make Commits: Ensure each commit is clear and descriptive. Follow the commit message convention (fix: resolve pong ball bug).
+3. Submit PR: Open a PR to the dev branch, providing a detailed description of your changes, referencing any other issues. 
+4. Review Process: The PR will be reviewed by at least one developer. Any requested changes must be addressed before merging.
+
+## Versioning Strategy
+For all future releases use Semantic Versioning (SemVer). 
+Versions will be in the format MAJOR.MINOR.PATCH.
+* MAJOR: Increased for major changes
+* MINOR: Incremented for new features that are backward compatible.
+* PATCH: Incremented for bug fixes/minor updates that do not affect functionality.
+Examples: Version 1.3.0 means a third minor release with no new major features, while 2.0.0 introduces major features. 
+
 ### Notes
 - Running `npm run test -- --headed` will create and display the tabs on the local device.
 - Occasionally the test will stall when a client browser fails to join, this can be fixed by manually clicking the join button.
